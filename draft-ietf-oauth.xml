@@ -82,59 +82,198 @@
         delegation-specific credentials (token).
       </t>
       <t>
-        OAuth consists of two main parts: obtaining a token, and using a token. In the first part,
-        the client obtain a token from an authorization server by having the resource owner grant
-        access or by presenting other credentials. In the second part, the client uses the token to
-        authenticate with the resource server and access protected resources.
-      </t>
-      <t>
-        OAuth provides multiple methods for obtaining a token.
-      </t>
-      <t>
         The use of OAuth with any other transport protocol than <xref target='RFC2616'>HTTP</xref>
         is undefined.
       </t>
 
       <section title='Terminology'>
         <t>
-          <list style='hanging' hangIndent="6">
+          <list style='hanging' hangIndent='6'>
             <t hangText='resource server'>
+              <vspace />
               An <xref target='RFC2616'>HTTP</xref> server capable of accepting authenticated
               resource requests using the OAuth protocol.
             </t>
             <t hangText='protected resource'>
+              <vspace />
               An access-restricted resource which can be obtained from a resource server using
               an authenticated request.
             </t>
             <t hangText='client'>
+              <vspace />
               An <xref target='RFC2616'>HTTP</xref> client capable of making authenticated
               requests for protected resources using the OAuth protocol.
             </t>
             <t hangText='resource owner'>
+              <vspace />
 	          An entity capable of granting access to a protected resource.
             </t>
             <t hangText='access token'>
+              <vspace />
               A unique identifier used by the client to make authenticated requests on behalf of
               the resource owner. Access tokens may have a matching secret.
             </t>
             <t hangText='authorization server'>
+              <vspace />
               An <xref target='RFC2616'>HTTP</xref> server capable of issuing tokens after
               successfully authenticating the resource owner and obtaining authorization. The
               authorization server may be the same as the resource server.
             </t>
             <t hangText='client identifier'>
+              <vspace />
               An unique identifier issued by the client to identify itself to the authorization
               server. Client identifiers may have a matching secret.
             </t>
             <t hangText='refresh token'>
+              <vspace />
               A unique identifier used by the client to replace an expired access token with a new
               access token without having to involve the resource owner. A refresh token is used
               when the access token is valid for a shorter time period than the duration of the
               access grant approved by the resource owner.
             </t>
+            <t hangText='end user'>
+	          <vspace />
+	          A human resource owner.
+	        </t>
           </list>
         </t>
       </section>
+
+	  <section title='Overview'>
+	    <t>
+		  Clients interact with protected resources, first by requesting access (which is granted
+		  in the form of an access token) from the authorization server, and then by authenticating
+		  with the resource server by presenting the access token. Different credentials types and
+		  flows can be used to obtain authorization, but once authorized, the client is provided an
+		  access token, and (optionally) a refresh token to obtain new access tokens.
+	    </t>
+        <figure anchor='Figure 1'>
+	      <preamble>
+		    The following diagram demonstrates the flow between the client and authorization
+			server (A, B), and the flow between the client and resource server (C, D), where the
+			client is acting autonomously (the client is also the resource owner):
+		  </preamble>
+	      <artwork><![CDATA[
+  +---+                                  +---------------+
+  |   |--(A)------ Credentials --------->| Authorization |
+  | C |                                  |    Server     |
+  | l |<-(B)------ Access Token ---------|               |
+  | i |      (w/ Optional Refresh Token) +---------------+
+  | e |
+  | n |            HTTP Request          +---------------+
+  | t |--(C)--- with Access Token ------>|    Resource   |
+  |   |                                  |     Server    |
+  |   |<-(D)------ HTTP Response --------|               |
+  +---+                                  +---------------+
+]]>
+          </artwork>
+        </figure>
+        <t>
+		  Access tokens can have any format agreed to between the authorization server and the
+		  resource server, but is opaque to the client. Since the access token provides the client
+		  access to the protected resource for the life of the access token, the authorization
+		  server should issue access tokens which expire within an appropriate time.
+		</t>
+		<t>
+	      When an access token expires, the client can request a new access token from the
+	      authorization server by presenting its credentials again (<xref target='Figure 1' />), or
+	      by using the refresh token instead (if present when the access token was issued) as
+	      demonstrated in <xref target='Figure 2' />. Once an expired access token has been
+	      replaced with a new access token (A, B), the client uses the new access token as before
+	      (C, D).
+	    </t>
+        <figure anchor='Figure 2'>
+		   <artwork><![CDATA[
+  +---+                                  +---------------+
+  |   |--(A)------ Refresh Token ------->| Authorization |
+  | C |                                  |    Server     |
+  | l |<-(B)------ Access Token ---------|               |
+  | i |                                  +---------------+
+  | e |
+  | n |            HTTP Request          +---------------+
+  | t |--(C)--- with Access Token ------>|    Resource   |
+  |   |                                  |     Server    |
+  |   |<-(D)----- HTTP Response ---------|               |
+  +---+                                  +---------------+
+]]>
+		  </artwork>
+		</figure>
+		<t>
+	      This specification defines a number of authorization flows to support different client
+	      types and scenarios. These authorization flows can be separated into two groups:
+	      autonomous flows where the client is acting for itself (the client is also the resource
+	      owner), and user delegation flows where the client is acting on behalf of a resource
+	      owner (typically an end user). Additional authorization flows may be defined by other
+	      specifications to cover different scenarios and client types.
+        </t>
+        <t>
+	      The autonomous authorization profiles defined by this specifications are:
+	
+	      <list style='hanging' hangIndent='6'>
+		    <t hangText='Client Credentials'>
+              <vspace />
+			  The client is provisioned with an account name and corresponding secret by the
+			  authorization server. The client presents the account name and secret to the
+			  authorization Server in exchange for an access token. The client secret is assumed to
+			  be high-entropy since it is not designed to be memorize by an end user.
+			</t>
+		    <t hangText='SAML Assertion'>
+              <vspace />
+			  The client presents a <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion to
+			  the authorization server in exchange for an access token. The methods through which
+			  the client obtains the assertions are beyond the scope of this specification.
+			</t>
+		  </list>
+		<t>
+	    <t>
+		  The user delegation authorization profiles defined by this specifications are:
+
+		  <list style='hanging' hangIndent='6'>
+			<t hangText='Web Server'>
+              <vspace />
+		    </t>
+			<t hangText='Web Client'>
+              <vspace />
+		    </t>
+			<t hangText='Device'>
+              <vspace />
+		    </t>
+			<t hangText='Username and Password'>
+              <vspace />
+			While
+	        the User may use a username and password to authenticate to the
+	        Authorization Server, it is undesirable for the Client to store the
+	        User's username and password. In this profile the User provides their
+	        username and password to an application (Client) they have installed
+	        on their device. The Client presents a Client Identifier, the username
+	        and password (credentials) to the Access Token URL at the
+	        Authorization Server in exchange for an Access Token and a Refresh
+	        Token
+		    </t>
+	      </list>
+		<t>
+		<figure anchor='Figure 3'>
+		  <artwork><![CDATA[
+  +---------+ 
+  | Web App |
+  | Client  |
+  +---------+
+    v    ^
+	|    |
+   (A)  (C)
+    |    |
+	\    \
+  +---------+                                 +---------------+
+  |         |\---(C)-- Verification Code ----<|               |
+  |   User  |                                 | Authorization |
+  |    at   |<---(B)-- User authenticates --->| Server        |
+  | Browser |                                 |               |
+  |         |\---(A)-- Client Identifier ---->|               |
+  +---------+                                 +---------------+
+]]>
+          </artwork>
+		</figure>
+	  </section>
 
       <section title='Example'>
         <t>
@@ -152,8 +291,8 @@
 
       <section title='Authors'>
 	    <t>
-		  This specification was authored by Allen Tom, Brian Eaton, Brent Goldman, Luke Shepard,
-		  Raffi Krikorian, and Yaron Goland.
+		  This specification was authored with the participation and based on the work of
+		  Allen Tom, Brian Eaton, Brent Goldman, Luke Shepard, Raffi Krikorian, and Yaron Goland.
 		</t>
 	  </section>
 
@@ -226,8 +365,7 @@
         <t>
           This flow is suitable when the client is a web application calling the
           protected resource on behalf of a resource owner. It enables clients to act on
-          behalf of resource owners without acquiring their credentials (often known as
-          the 'password anti-pattern').
+          behalf of resource owners without acquiring their credentials.
         </t>
         <t>
           Prior to making a request using this flow, the client MUST have obtained a
