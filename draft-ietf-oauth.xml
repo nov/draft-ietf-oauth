@@ -76,9 +76,9 @@
       </t>
       <t>
         For example, a web user (resource owner) can grant a printing service (client) access to
-        her private photos stored at a photo sharing service (resource server), without sharing her
-        username and password with the printing service. Instead, she authenticates directly with
-        the photo sharing service (authorization server) which issues the printing service
+        her private photos stored at a photo sharing service (server), without sharing her username
+        and password with the printing service. Instead, she authenticates directly with the photo
+        sharing service (authorization endpoint) which issues the printing service
         delegation-specific credentials (token).
       </t>
       <t>
@@ -89,40 +89,46 @@
       <section title='Terminology'>
         <t>
           <list style='hanging' hangIndent='6'>
-            <t hangText='resource server'>
+            <t hangText='server'>
               <vspace />
               An <xref target='RFC2616'>HTTP</xref> server capable of accepting authenticated
               resource requests using the OAuth protocol.
             </t>
             <t hangText='protected resource'>
               <vspace />
-              An access-restricted resource which can be obtained from a resource server using
-              an authenticated request.
+              An access-restricted resource which can be obtained from a server using an
+              OAuth-authenticated request.
             </t>
             <t hangText='client'>
               <vspace />
-              An <xref target='RFC2616'>HTTP</xref> client capable of making authenticated
-              requests for protected resources using the OAuth protocol.
+              An HTTP client capable of making authenticated requests for protected resources using
+              the OAuth protocol.
             </t>
             <t hangText='resource owner'>
               <vspace />
 	          An entity capable of granting access to a protected resource.
             </t>
+            <t hangText='end user'>
+	          <vspace />
+	          A human resource owner.
+	        </t>
             <t hangText='access token'>
               <vspace />
               A unique identifier used by the client to make authenticated requests on behalf of
               the resource owner. Access tokens may have a matching secret.
             </t>
-            <t hangText='authorization server'>
+            <t hangText='authorization endpoint'>
               <vspace />
-              An <xref target='RFC2616'>HTTP</xref> server capable of issuing tokens after
-              successfully authenticating the resource owner and obtaining authorization. The
-              authorization server may be the same as the resource server.
+              An HTTP endpoint capable of issuing tokens after successfully authenticating the
+              resource owner (or client) and obtaining authorization. The authentication endpoint
+              uses a parameter to differentiate between different supported authorization flows.
+              The authorization endpoint may reside on the same as server as the protected resource
+              or on a separate authorization server.
             </t>
             <t hangText='client identifier'>
               <vspace />
               An unique identifier issued by the client to identify itself to the authorization
-              server. Client identifiers may have a matching secret.
+              endpoint. Client identifiers may have a matching secret.
             </t>
             <t hangText='refresh token'>
               <vspace />
@@ -131,10 +137,6 @@
               when the access token is valid for a shorter time period than the duration of the
               access grant approved by the resource owner.
             </t>
-            <t hangText='end user'>
-	          <vspace />
-	          A human resource owner.
-	        </t>
           </list>
         </t>
       </section>
