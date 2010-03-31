@@ -201,9 +201,13 @@
 		</figure>
 		<t>
 	      This specification defines a number of authorization flows to support different client
-	      types and scenarios. These authorization flows can be separated into two groups:
-	      autonomous flows where the client is acting for itself (the client is also the resource
-	      owner), and user delegation flows where the client is acting on behalf of an end user.
+	      types and scenarios. These authorization flows can be separated into three groups:
+	      user delegation flows where the client is acting on behalf of an end user, end user
+	      credentials flows where the client uses the end user's credentials directly to obtain
+	      authorization, and autonomous flows where the client is acting for itself (the client is
+	      also the resource owner).
+	    </t>
+	    <t>
 	      Additional authorization flows may be defined by other specifications to cover different
 	      scenarios and client types.
         </t>
@@ -223,6 +227,12 @@
               <vspace />
               This flow is described in <xref target='device_flow' />.
 		    </t>
+		  </list>
+		</t>
+		<t>
+	      The end user credentials flow defined by this specification is:
+	
+	      <list style='hanging' hangIndent='6'>
 			<t hangText='Username and Password Flow'>
               <vspace />
 			  While the User may use a username and password to authenticate to the
@@ -230,7 +240,7 @@
 	          User's username and password. In this flow the User provides their
 	          username and password to an application (Client) they have installed
 	          on their device. The Client presents a Client Identifier, the username
-	          and password (credentials) to the Access Token URL at the
+	          and password (credentials) to the Access Token URI at the
 	          Authorization Server in exchange for an Access Token and a Refresh
 	          Token. This flow is described in <xref target='username_password_flow' />.
 		    </t>
@@ -257,27 +267,6 @@
 			</t>
 		  </list>
 		</t>
-		<figure anchor='Figure 3'>
-		  <artwork><![CDATA[
-  +---------+ 
-  | Web App |
-  | Client  |
-  +---------+
-    v    ^
-	|    |
-   (A)  (C)
-    |    |
-	\    \
-  +---------+                                 +---------------+
-  |         |\---(C)-- Verification Code ----<|               |
-  |   User  |                                 | Authorization |
-  |    at   |<---(B)-- User authenticates --->| Server        |
-  | Browser |                                 |               |
-  |         |\---(A)-- Client Identifier ---->|               |
-  +---------+                                 +---------------+
-]]>
-          </artwork>
-		</figure>
 	  </section>
 
       <section title='Example'>
@@ -356,22 +345,62 @@
 	    </t>
       </section>
 
+      <section title='Client Credentials'>
+	    <t>
+		  When requesting access from the authorization server, the client identifies itself using
+		  its authorization-server-issued client credentials. The client credentials include a
+		  client identifier and an optional symmetric shared secret. The means through which the
+		  client obtains these credentials are beyond the scope of this specification, but usually
+		  involve registration with the authorization server.
+		</t>
+		<t>
+	      The client identifier is used by the authorization server to establish the identity of
+	      the client for the purpose of presenting information to the resource owner prior to
+	      granting access, as well as for providing different service levels to different clients.
+	      They can also be used to block unauthorized clients from requesting access.
+	    </t>
+	    <t>
+		  Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
+		  about the confidentiality of client credentials without establishing trust with the
+		  client operator. 
+		</t>
+	  </section>
+
       <section title='User Delegation Flows'>
 	    <t>
+		  User delegation flows are used to grant client access to protected resources by the
+		  end user without sharing the end user credentials (typically a username and password)
+		  with the client. Instead, the end user authenticates directly with the authorization
+		  server, and grants client access to its protected resources.
 		</t>
 		
         <section title='Web Callback Flow' anchor='web_callback_flow'>
           <t>
             The web callback flow is a user delegation flow suitable for clients capable of
-            interacting with the end user's user-agent (typically a web browser) and receiving
-            callback requests from the server.
+            interacting with the end user's user-agent (typically a web browser) and capable of
+            receiving callback requests from the server.
           </t>
-          <t>
-            Prior to making a request using this flow, the client MUST have obtained a
-            client identifier and user authorization request endpoint URI from the
-            authorization server. The authorization server MAY require the client to
-            pre-register their callback URI.
-          </t>
+		  <figure anchor='Figure 3'>
+		    <artwork><![CDATA[
+  +---------+ 
+  | Web App |
+  | Client  |
+  +---------+
+    v    ^
+	|    |
+   (A)  (C)
+    |    |
+	\    \
+  +---------+                                 +---------------+
+  |         |\---(C)-- Verification Code ----<|               |
+  |   User  |                                 | Authorization |
+  |    at   |<---(B)-- User authenticates --->| Server        |
+  | Browser |                                 |               |
+  |         |\---(A)-- Client Identifier ---->|               |
+  +---------+                                 +---------------+
+]]>
+            </artwork>
+		  </figure>
           <t>
             The client MUST first send the resource owner's user-agent (commonly his or her
             web browser) to the authorization server's user authorization request endpoint.
@@ -387,11 +416,11 @@
 	            <vspace />
                 The client identifier.
               </t>
-              <t hangText='callback_url'>
+              <t hangText='callback_uri'>
 	            <vspace />
-                An absolute URI to which the authorization server will redirect the
-                resource owner back when the resource owner authorization step is
-                completed.
+                An absolute URI to which the authorization server will redirect the end user back
+                when the end user authorization step is completed. The authorization server MAY
+                require the client to pre-register their callback URI.
               </t>
             </list>
           </t>
@@ -424,7 +453,7 @@
             </preamble>
             <artwork><![CDATA[
   GET /user_authorization?mode=flow_web_server&client_id=s6BhdRkqt3&c
-      allback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+      allback_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
             </artwork>
@@ -523,7 +552,7 @@
 	            <vspace />
                 The verification code.
               </t>
-              <t hangText='callback_url'>
+              <t hangText='callback_uri'>
 	            <vspace />
                 The callback URI from the user authorization request.
               </t>
@@ -545,7 +574,7 @@
   Host: server.example.com
 
   client_id=s6BhdRkqt3&client_secret=gX1fBat3bV&verification_code=i1WsR
-  n1uB1&callback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+  n1uB1&callback_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
             </artwork>
           </figure>
@@ -609,7 +638,7 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='error_reason'>
 	            <vspace />
-                Value must be one of 'callback_url_mismatch' or
+                Value must be one of 'callback_uri_mismatch' or
                 'expired_verification_code' (case sensitive).
               </t>
             </list>
@@ -646,12 +675,10 @@
             Specifically, as the access token flows directly to the user-agent, it should
             only be used when it is acceptable for the end-user to have direct access to
             the access token. Additionally, care should be taken to choose a good callback
-            URL, as described below.
+            URI, as described below.
           </t>
           <t>
-            Prior to making a request using this flow, the client MUST have obtained a
-            client identifier and user authorization request endpoint URI from the
-            authorization server. The authorization server SHOULD require the client to
+            The authorization server SHOULD require the client to
             pre-register their callback URI.
           </t>
           <t>
@@ -669,7 +696,7 @@
 	            <vspace />
                 The client identifier.
               </t>
-              <t hangText='callback_url'>
+              <t hangText='callback_uri'>
 	            <vspace />
                 An absolute URI to which the authorization server will redirect the
                 resource owner back when the authorization step is completed. The
@@ -710,7 +737,7 @@
             </preamble>
             <artwork><![CDATA[
   GET /user_authorization?mode=flow_web_client&client_id=s6BhdRkqt3&c
-      allback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+      allback_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
             </artwork>
@@ -718,7 +745,7 @@
           <figure>
             <artwork><![CDATA[
   GET /user_authorization?mode=flow_web_client&client_id=s6BhdRkqt3&c
-      allback_url=http%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb# HTTP/1.1
+      allback_uri=http%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb# HTTP/1.1
   Host: server.example.com
 ]]>
             </artwork>
@@ -906,9 +933,9 @@
 	            <vspace />
                 The user verification code.
               </t>
-              <t hangText='verification_url'>
+              <t hangText='verification_uri'>
 	            <vspace />
-                The user verification URL on the authorization server.
+                The user verification URI on the authorization server.
               </t>
             </list>
           </t>
@@ -923,7 +950,7 @@
               <t hangText='verification_rate_limit'>
 	            <vspace />
                 The minimum amount of time in seconds that the client SHOULD wait
-                between polling requests to the device authorization URL.
+                between polling requests to the device authorization URI.
               </t>
             </list>
           </t>
@@ -935,14 +962,14 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  device_code=74tq5miHKB&user_code=94248&verification_url=http%3A%2F%2
+  device_code=74tq5miHKB&user_code=94248&verification_uri=http%3A%2F%2
   Fwww%2Eexample%2Ecom%2Fdevice&verification_rate_limit=3
 ]]>
             </artwork>
           </figure>
           <t>
-            The client MUST display the user verification URL and the user verification
-            code to the end-user, instruct them to visit the user verification URL in a web
+            The client MUST display the user verification URI and the user verification
+            code to the end-user, instruct them to visit the user verification URI in a web
             browser, and to enter the user verification token upon doing so (a user
             authorization request).
           </t>
@@ -1082,6 +1109,12 @@
             </artwork>
           </figure>
         </section>
+
+      </section>
+
+      <section title='End User Credentials Flows'>
+	    <t>
+		</t>
 
         <section title='Username and Password Flow' anchor='username_password_flow'>
           <t>
@@ -1677,10 +1710,10 @@
           </figure>
         </section>
 
-        <section title='URL Query Parameter'>
+        <section title='URI Query Parameter'>
           <t>
             The protected resource MAY allow clients to make authenticated requests by including
-            the access token as a URL query parameter. Prior to making a request, the client MUST
+            the access token as a URI query parameter. Prior to making a request, the client MUST
             have obtained a valid access token and the API request endpoint URI. While the
             following examples use the HTTP 'GET' method, there's nothing limiting a client to
             use query parameters with other HTTP methods.
