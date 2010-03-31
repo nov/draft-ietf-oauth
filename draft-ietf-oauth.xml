@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -207,6 +207,32 @@
 	      Additional authorization flows may be defined by other specifications to cover different
 	      scenarios and client types.
         </t>
+	    <t>
+		  The user delegation authorization profiles defined by this specifications are:
+
+		  <list style='hanging' hangIndent='6'>
+			<t hangText='Web Server'>
+              <vspace />
+		    </t>
+			<t hangText='Web Client'>
+              <vspace />
+		    </t>
+			<t hangText='Device'>
+              <vspace />
+		    </t>
+			<t hangText='Username and Password'>
+              <vspace />
+			  While the User may use a username and password to authenticate to the
+	          Authorization Server, it is undesirable for the Client to store the
+	          User's username and password. In this profile the User provides their
+	          username and password to an application (Client) they have installed
+	          on their device. The Client presents a Client Identifier, the username
+	          and password (credentials) to the Access Token URL at the
+	          Authorization Server in exchange for an Access Token and a Refresh
+	          Token.
+		    </t>
+	      </list>
+	    </t>
         <t>
 	      The autonomous authorization profiles defined by this specifications are:
 	
@@ -225,34 +251,7 @@
 			  the client obtains the assertions are beyond the scope of this specification.
 			</t>
 		  </list>
-		<t>
-	    <t>
-		  The user delegation authorization profiles defined by this specifications are:
-
-		  <list style='hanging' hangIndent='6'>
-			<t hangText='Web Server'>
-              <vspace />
-		    </t>
-			<t hangText='Web Client'>
-              <vspace />
-		    </t>
-			<t hangText='Device'>
-              <vspace />
-		    </t>
-			<t hangText='Username and Password'>
-              <vspace />
-			While
-	        the User may use a username and password to authenticate to the
-	        Authorization Server, it is undesirable for the Client to store the
-	        User's username and password. In this profile the User provides their
-	        username and password to an application (Client) they have installed
-	        on their device. The Client presents a Client Identifier, the username
-	        and password (credentials) to the Access Token URL at the
-	        Authorization Server in exchange for an Access Token and a Refresh
-	        Token
-		    </t>
-	      </list>
-		<t>
+		</t>
 		<figure anchor='Figure 3'>
 		  <artwork><![CDATA[
   +---------+ 
@@ -278,7 +277,7 @@
 
       <section title='Example'>
         <t>
-          
+          [[ Todo ]]
         </t>
       </section>
 
@@ -287,6 +286,12 @@
           The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
           NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as
           described in <xref target='RFC2119' />.
+        </t>
+        <t>
+          This document uses the Augmented Backus-Naur Form (ABNF) notation of
+          <xref target="I-D.ietf-httpbis-p1-messaging" />. Additionally, the realm and auth-param
+          rules are included from <xref target="RFC2617" />, and the URI-Reference rule from
+          <xref target="RFC3986" />.
         </t>
       </section>
 
@@ -301,20 +306,20 @@
 
     <section title='Obtaining an Access Token' anchor='get_token'>
       <t>
-        The client discovers the following three URI endpoints from the server (such as via
-        reading documentation or a discovery process beyond the scope of this document):
+        The client obtains an access token by using one of the authorization flows supported by the
+        authorization server. The authorization flows all use the same authorization endpoint, each
+        with a different set of request parameters and values. The client obtains the URI of the
+        authorization endpoint from the server's documentation, or by making an unauthorized
+        protected resource request (from the <xref target='authn_header'>WWW-Authenticate</xref>
+        response header).
       </t>
       <t>
-        The three URIs advertised by the server MAY include a query component as defined by
-        <xref target='RFC3986' /> section 3, but if present, the query MUST NOT contain any
-        parameters beginning with the 'oauth_' prefix, to avoid conflicts with the protocol
-        parameters added to the URIs when used.
+        The authorization endpoint advertised by the server MUST NOT include a query or fragment
+        components as defined by <xref target='RFC3986' /> section 3.
       </t>
       <t>
-        The methods in which the servers advertise and document its three endpoints are
-        beyond the scope of this specification. Clients should avoid making assumptions
-        about the size of tokens and other server-generated values, which are left
-        undefined by this specification.
+        Clients should avoid making assumptions about the size of tokens and other server-generated
+        values, which are left undefined by this specification.
       </t>
       <t>
 	    [[ Open Issue ]]
@@ -327,198 +332,6 @@
         further encoding. Clients and servers should not make other assumptions about the possible
         range of their values.
       </t>
-
-      <section title='Client Credentials' anchor='client_profile'>
-        <t>
-          This flow is suitable when the client acts autonomously in seeking access and is thus not
-          accessing protected resources within the context of a given end-user. For example, when a
-          client is accessing non-private data or modifying data about itself. This flow SHOULD NOT
-          be used when the client is acting on behalf of an end-user.
-        </t>
-        <t>
-          Prior to making a request using this flow, the client MUST have obtained a client
-          identifier, client secret, and access token request endpoint URI from the
-          authorization server.
-        </t>
-        <t>
-          The client constructs an HTTP 'POST' request to the access token request endpoint and
-          includes the following REQUIRED parameters:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
-              The parameter value MUST be set to 'flow_client' (case sensitive).
-            </t>
-            <t hangText='oauth_client_identifier'>
-              The client identifier.
-            </t>
-            <t hangText='oauth_client_secret'>
-              The client secret.
-            </t>
-          </list>
-        </t>
-
-        <t>
-          The client MAY also include the following OPTIONAL parameters:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_scope'>
-              If the authorization server has defined a manner for the client to request certain
-              capabilities of the access token, this parameter SHOULD be used to do so.
-            </t>
-          </list>
-        </t>
-        <t>
-          Since the request results in the transmission of plain text credentials in both the HTTP
-          request and response, the authorization server MUST require the use of a transport-layer
-          mechanism such as TLS or SSL (or a secure channel with equivalent protections).
-        </t>
-        <figure>
-          <preamble>
-            For example, the client makes the following HTTPS request:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /access_token HTTP/1.1
-  Host: server.example.com
-  
-  oauth_client_identifier=s6BhdRkqt3&oauth_client_secret=8eSEIpnqmM&oauth_mode=flow_client
-]]>
-          </artwork>
-        </figure>
-        <t>
-          The authorization server MUST verify that the resource owner has authorized the
-          provisioning of an access token to the client. If the request is authorized, the access
-          token is included in the HTTP response body using the 'application/x-www-form-urlencoded'
-          content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 200 status
-          code (OK).
-        </t>
-        <t>
-          The response contains the following REQUIRED parameter:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
-              The access token.
-            </t>
-          </list>
-        </t>
-        <t>
-          The authorization server MAY also include the following parameters:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
-              The lifetime of the access token in seconds.
-            </t>
-            <t hangText='oauth_refresh_token'>
-              The refresh token.
-            </t>
-          </list>
-        </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  HTTP/1.1 200 OK
-  Content-Type: application/x-www-form-urlencoded
-
-  oauth_access_token=FJQbwq9OD8&oauth_refresh_token=gO3CHNqpH8
-]]>
-          </artwork>
-        </figure>
-        <t>
-          The authorization server must retain the scope, duration, and other attributes approved
-          by the resource owner, and enforce these restrictions when receiving a client request
-          made with the tokens issued.
-        </t>
-        <t>
-          Once the client receives and stores the token credentials, it can proceed to access
-          protected resources on behalf of the resource owner by making authenticated requests
-          (<xref target='access_resource' />) using the access token received. Alternatively, it
-          can refresh the access token and request an access secret to use in the signature flow
-          (<xref target='refresh_token' />).
-        </t>
-        <t>
-          If the request fails verification, the authorization server SHOULD respond with the
-          appropriate HTTP response status code. The authorization server MAY include further
-          details about why the request was rejected in the response body.
-        </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='example'
-]]>
-          </artwork>
-        </figure>
-      </section>
-
-      <section title="SAML Assertion">
-        <t>
-	      The SAML assertion flow requires the client to obtain a
-	      <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion from an assertion issuer
-	      prior to initiating this flow. The process in which the assertion is obtained is defined
-	      by the assertion issuer and the authorization server, and is beyond the scope of this
-	      specification.
-	    </t>
-        <t>
-	      The client makes an HTTPS request to the authorization endpoint using POST. The request
-	      contains the following parameters:
-
-          <list style="hanging">
-            <t hangText="oauth_assertion_format">
-	          <vspace />
-	          REQUIRED. The format of the assertion as defined by the authorization server.
-	        </t>
-            <t hangText="oauth_assertion">
-	          <vspace />
-	          REQUIRED. The assertion.
-	        </t>
-            <t hangText="oauth_scope">
-	          <vspace />
-	          OPTIONAL. The authorization server MAY define authorization scope values for the
-	          client to include.
-	        </t>
-            <t hangText="Additional parameters">
-	          <vspace />
-	          Any additional parameters as defined by the authorization server.
-	        </t>
-          </list>
-        </t>
-        <t>
-	      If successful, the authorization server returns an HTTP 200 response code (OK) with the
-	      access token in the response body. The response body contains the following parameters:
-
-          <list style="hanging">
-            <t hangText="oauth_access_token">
-	          <vspace />
-	          REQUIRED. The Access Token.
-	        </t>
-            <t hangText="oauth_access_token_expires_in">
-	          <vspace />
-	          OPTIONAL. The lifetime of the Access Token in seconds. For example, 3600 represents
-	          one hour.
-	        </t>
-            <t hangText="Additional parameters">
-	          <vspace />
-	          Any additional parameters, as defined by the authorization server.
-	        </t>
-          </list>
-        </t>
-        <t>
-	      If the assertion is not valid, the authorization server MUST respond with an HTTP 401
-	      (Unauthorized) response code. The Client MUST obtain a new valid assertion before
-	      retrying the request.
-	    </t>
-        <t>
-	      Authorization servers SHOULD issue access tokens with a limited lifetime and require
-	      clients to refresh them by requesting a new access token using the same assertion if it
-	      is still valid. Otherwise the client MUST obtain a new valid assertion.
-	    </t>
-      </section>
 
       <section title='Web Server Flow' anchor='web_profile'>
         <t>
@@ -539,13 +352,16 @@
           parameters to the user authorization endpoint URI:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_web_server' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
+	          <vspace />
               The client identifier.
             </t>
-            <t hangText='oauth_callback_url'>
+            <t hangText='callback_url'>
+	          <vspace />
               An absolute URI to which the authorization server will redirect the
               resource owner back when the resource owner authorization step is
               completed.
@@ -556,11 +372,13 @@
           The client MAY also include the following OPTIONAL parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_client_state'>
+            <t hangText='client_state'>
+	          <vspace />
               An opaque value that clients can use to maintain state associated with
               this request.
             </t>
-            <t hangText='oauth_scope'>
+            <t hangText='scope'>
+	          <vspace />
               If the authorization server has defined a manner for the client to
               request certain capabilities of the access token, this parameter SHOULD
               be used to do so.
@@ -575,11 +393,12 @@
         <figure>
           <preamble>
             For example, the client directs the resource owner's user-agent to make the
-            following HTTPS requests:
+            following HTTPS requests (line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
-  GET /user_authorization?oauth_mode=flow_web_server&oauth_client_identifier=s6BhdRkqt3&oauth_callback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+  GET /user_authorization?mode=flow_web_server&client_id=s6BhdRkqt3&c
+      allback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
           </artwork>
@@ -595,17 +414,19 @@
         <t>
           After receiving an authorization decision from the resource owner, the server
           redirects the resource owner to the callback URI if one was provided in the
-          'oauth_callback' parameter or pre-registered by other means. The authorization
+          'callback' parameter or pre-registered by other means. The authorization
           server constructs the request URI by adding one of the two following REQUIRED
           parameters to the callback URI query component depending on if the resource
-          owner approved (oauth_verification_code) or declined (oauth_error_reason) the
+          owner approved (verification_code) or declined (error_reason) the
           authorization request:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_verification_code'>
+            <t hangText='verification_code'>
+	          <vspace />
               The verification code.
             </t>
-            <t hangText='oauth_error_reason'>
+            <t hangText='error_reason'>
+	          <vspace />
               The parameter value MUST be set to 'owner_denied' (case sensitive).
             </t>
           </list>
@@ -614,7 +435,8 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_client_state'>
+            <t hangText='client_state'>
+	          <vspace />
               REQUIRED if the client sent the parameter in its request.
             </t>
           </list>
@@ -623,7 +445,7 @@
           If the callback URI already includes a query component as defined by
           <xref target='RFC3986' /> section 3, the server MUST append the OAuth
           parameters to the end of the existing query. The callback URI's query component
-          MUST NOT contain any parameters beginning with the 'oauth_' prefix.
+          MUST NOT contain any parameters beginning with the '' prefix.
         </t>
         <figure>
           <preamble>
@@ -632,7 +454,7 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?oauth_verification_code=i1WsRn1uB1
+  Location: https://client.example.com/cb?verification_code=i1WsRn1uB1
 ]]>
           </artwork>
         </figure>
@@ -643,7 +465,7 @@
           </preamble>
           <artwork>
             <![CDATA[
-  GET /cb?oauth_verification_code=i1WsRn1uB1 HTTP/1.1
+  GET /cb?verification_code=i1WsRn1uB1 HTTP/1.1
   Host: client.example.com
 ]]>
           </artwork>
@@ -651,7 +473,7 @@
         <figure>
           <artwork>
             <![CDATA[
-  GET /cb?oauth_error_reason=owner_denied HTTP/1.1
+  GET /cb?error_reason=owner_denied HTTP/1.1
   Host: client.example.com
 ]]>
           </artwork>
@@ -662,19 +484,24 @@
           REQUIRED parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_web_app' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
+	          <vspace />
               The client identifier.
             </t>
-            <t hangText='oauth_client_secret'>
+            <t hangText='client_secret'>
+	          <vspace />
               The client secret.
             </t>
-            <t hangText='oauth_verification_code'>
+            <t hangText='verification_code'>
+	          <vspace />
               The verification code.
             </t>
-            <t hangText='oauth_callback_url'>
+            <t hangText='callback_url'>
+	          <vspace />
               The callback URI from the user authorization request.
             </t>
           </list>
@@ -687,13 +514,16 @@
         </t>
         <figure>
           <preamble>
-            For example, the client makes the following HTTPS request:
+            For example, the client makes the following HTTPS request (line breaks are for display
+            purposes only):
           </preamble>
           <artwork>
             <![CDATA[
   POST /access_token HTTP/1.1
   Host: server.example.com
-  oauth_client_identifier=s6BhdRkqt3&oauth_client_secret=gX1fBat3bV&oauth_verification_code=i1WsRn1uB1&oauth_callback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+
+  client_id=s6BhdRkqt3&client_secret=gX1fBat3bV&verification_code=i1WsR
+  n1uB1&callback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
           </artwork>
         </figure>
@@ -704,7 +534,8 @@
           response contains the following REQUIRED parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
+            <t hangText='access_token'>
+	          <vspace />
               The access token.
             </t>
           </list>
@@ -713,10 +544,12 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
+            <t hangText='expires'>
+	          <vspace />
               The lifetime of the access token in seconds.
             </t>
-            <t hangText='oauth_refresh_token'>
+            <t hangText='refresh_token'>
+	          <vspace />
               The refresh token.
             </t>
           </list>
@@ -730,7 +563,7 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  oauth_access_token=SlAV32hkKG&oauth_refresh_token=8xLOxBtZp8
+  access_token=SlAV32hkKG&refresh_token=8xLOxBtZp8
 ]]>
           </artwork>
         </figure>
@@ -753,7 +586,8 @@
           code (Unauthorized). The response contains the following OPTIONAL parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_error_reason'>
+            <t hangText='error_reason'>
+	          <vspace />
               Value must be one of 'callback_url_mismatch' or
               'expired_verification_code' (case sensitive).
             </t>
@@ -768,7 +602,7 @@
   HTTP/1.1 401 Authorization Required
   WWW-Authenticate: OAuth realm='example'
 
-  oauth_error_reason=expired_verification_code
+  error_reason=expired_verification_code
 ]]>
           </artwork>
         </figure>
@@ -807,13 +641,16 @@
           endpoint URI:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_web_client' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
+	          <vspace />
               The client identifier.
             </t>
-            <t hangText='oauth_callback_url'>
+            <t hangText='callback_url'>
+	          <vspace />
               An absolute URI to which the authorization server will redirect the
               resource owner back when the authorization step is completed. The
               client MUST make use of at least one of either a transport-layer
@@ -828,11 +665,13 @@
           The client MAY also include the following OPTIONAL parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_client_state'>
+            <t hangText='client_state'>
+	          <vspace />
               An opaque value that clients can use to maintain state associated with
               this request.
             </t>
-            <t hangText='oauth_scope'>
+            <t hangText='scope'>
+	          <vspace />
               If the authorization server has defined a manner for the client to
               request certain capabilities of the access token, this parameter SHOULD
               be used to do so.
@@ -847,11 +686,12 @@
         <figure>
           <preamble>
             For example, the client directs the resource owner's user-agent to make one
-            of the following HTTPS requests:
+            of the following HTTPS requests (line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
-  GET /user_authorization?oauth_mode=flow_web_client&oauth_client_identifier=s6BhdRkqt3&oauth_callback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+  GET /user_authorization?mode=flow_web_client&client_id=s6BhdRkqt3&c
+      allback_url=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
           </artwork>
@@ -859,7 +699,8 @@
         <figure>
           <artwork>
             <![CDATA[
-  GET /user_authorization?oauth_mode=flow_web_client&oauth_client_identifier=s6BhdRkqt3&oauth_callback_url=http%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb# HTTP/1.1
+  GET /user_authorization?mode=flow_web_client&client_id=s6BhdRkqt3&c
+      allback_url=http%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb# HTTP/1.1
   Host: server.example.com
 ]]>
           </artwork>
@@ -872,7 +713,7 @@
         </t>
         <t>
           If the Client has previously registered a callback URI with the authorization
-          server, it MUST verify that the callback URI provided in the 'oauth_callback'
+          server, it MUST verify that the callback URI provided in the 'callback'
           parameter is valid given the pre-registered URI.
         </t>
         <t>
@@ -882,7 +723,8 @@
           callback URI query component:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
+            <t hangText='access_token'>
+	          <vspace />
               The access token.
             </t>
           </list>
@@ -891,10 +733,12 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
+            <t hangText='expires'>
+	          <vspace />
               The lifetime of the access token in seconds.
             </t>
-            <t hangText='oauth_refresh_token'>
+            <t hangText='refresh_token'>
+	          <vspace />
               The refresh token.
             </t>
           </list>
@@ -905,7 +749,7 @@
           parameters to the end of the existing query. If the callback URI includes a
           fragment (#), then the OAuth parameters MUST be appended to the end of the
           query, after the fragment. The callback URI's query component MUST NOT contain
-          any parameters beginning with the 'oauth_' prefix.
+          any parameters beginning with the '' prefix.
         </t>
         <figure>
           <preamble>
@@ -914,7 +758,7 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?oauth_access_token=FJQbwq9OD8&oauth_expires=10800
+  Location: https://example.com/cb?access_token=FJQbwq9OD&expires=10800
 ]]>
           </artwork>
         </figure>
@@ -922,7 +766,7 @@
           <artwork>
             <![CDATA[
    HTTP/1.1 302 Found
-   Location: http://client.example.com/cb#?oauth_access_token=FJQbwq9OD8&oauth_expires=10800
+   Location: http://example.com/cb#access_token=FJQbwq9OD&expires=10800
 ]]>
           </artwork>
         </figure>
@@ -933,7 +777,7 @@
           </preamble>
           <artwork>
             <![CDATA[
-  GET /cb?oauth_access_token=FJQbwq9OD8&oauth_expires=10800 HTTP/1.1
+  GET /cb?access_token=FJQbwq9OD8&expires=10800 HTTP/1.1
   Host: client.example.com
 ]]>
           </artwork>
@@ -941,7 +785,7 @@
         <figure>
           <artwork>
             <![CDATA[
-  GET /cb#?oauth_access_token=FJQbwq9OD8&oauth_expires=10800 HTTP/1.1
+  GET /cb#?access_token=FJQbwq9OD8&expires=10800 HTTP/1.1
   Host: client.example.com
 ]]>
           </artwork>
@@ -995,10 +839,12 @@
           endpoint and includes the following REQUIRED parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_device' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
+	          <vspace />
               The client identifier.
             </t>
           </list>
@@ -1008,7 +854,8 @@
           additional parameters as defined by the authorization server:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_scope'>
+            <t hangText='scope'>
+	          <vspace />
               If the authorization server has defined a manner for the client to
               request certain capabilities of the access token, this parameter SHOULD
               be used to do so.
@@ -1027,7 +874,7 @@
           </preamble>
           <artwork>
             <![CDATA[
-  GET /access_token?oauth_client_identifier=s6BhdRkqt3&oauth_mode=flow_device HTTP/1.1
+  GET /access_token?client_id=s6BhdRkqt3&mode=flow_device HTTP/1.1
   Host: server.example.com
 ]]>
           </artwork>
@@ -1041,13 +888,16 @@
           response contains the following REQUIRED parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_device_code'>
+            <t hangText='device_code'>
+	          <vspace />
               The device verification code.
             </t>
-            <t hangText='oauth_user_code'>
+            <t hangText='user_code'>
+	          <vspace />
               The user verification code.
             </t>
-            <t hangText='oauth_verification_url'>
+            <t hangText='verification_url'>
+	          <vspace />
               The user verification URL on the authorization server.
             </t>
           </list>
@@ -1056,10 +906,12 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
+            <t hangText='expires'>
+	          <vspace />
               The lifetime of the two verification codes in seconds.
             </t>
-            <t hangText='oauth_verification_rate_limit'>
+            <t hangText='verification_rate_limit'>
+	          <vspace />
               The minimum amount of time in seconds that the client SHOULD wait
               between polling requests to the device authorization URL.
             </t>
@@ -1067,14 +919,15 @@
         </t>
         <figure>
           <preamble>
-            For example:
+            For example (line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-   oauth_device_code=74tq5miHKB&oauth_user_code=94248&oauth_verification_url=http%3A%2F%2Fwww%2Eexample%2Ecom%2Fdevice&oauth_verification_rate_limit=3
+  device_code=74tq5miHKB&user_code=94248&verification_url=http%3A%2F%2
+  Fwww%2Eexample%2Ecom%2Fdevice&verification_rate_limit=3
 ]]>
           </artwork>
         </figure>
@@ -1110,13 +963,16 @@
           endpoint and includes the following REQUIRED parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_device' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
+	          <vspace />
               The client identifier.
             </t>
-            <t hangText='oauth_device_verification_code'>
+            <t hangText='device_verification_code'>
+	          <vspace />
               The device verification code.
             </t>
           </list>
@@ -1129,11 +985,13 @@
         </t>
         <figure>
           <preamble>
-            For example, the client makes the following HTTPS request:
+            For example, the client makes the following HTTPS request (line breaks are for display
+            purposes only):
           </preamble>
           <artwork>
             <![CDATA[
-  GET /access_token?oauth_client_identifier=s6BhdRkqt3&oauth_device_verification_code=J2vC42OifV HTTP/1.1
+  GET /access_token?client_id=s6BhdRkqt3&device_verification_code=J2v
+      C42OifV HTTP/1.1
   Host: server.example.com
 ]]>
           </artwork>
@@ -1145,7 +1003,8 @@
           response contains the following REQUIRED parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
+            <t hangText='access_token'>
+	          <vspace />
               The access token.
             </t>
           </list>
@@ -1154,10 +1013,12 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
+            <t hangText='expires'>
+	          <vspace />
               The lifetime of the access token in seconds.
             </t>
-            <t hangText='oauth_refresh_token'>
+            <t hangText='refresh_token'>
+	          <vspace />
               The refresh token.
             </t>
           </list>
@@ -1171,7 +1032,7 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  oauth_access_token=FJQbwq9OD8&oauth_expires=600
+  access_token=FJQbwq9OD8&expires=600
 ]]>
           </artwork>
         </figure>
@@ -1194,7 +1055,8 @@
           code (Unauthorized). The response contains the following REQUIRED parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_error_reason'>
+            <t hangText='error_reason'>
+	          <vspace />
               Value must be one of 'authorization_declined', 'authorization_pending',
               'slow_down', or 'verification_code_expired' (case sensitive).
             </t>
@@ -1209,7 +1071,7 @@
   HTTP/1.1 401 Authorization Required
   WWW-Authenticate: OAuth realm='example'
 
-  oauth_error_reason=authorization_pending
+  error_reason=authorization_pending
 ]]>
           </artwork>
         </figure>
@@ -1246,17 +1108,21 @@
           endpoint and includes the following REQUIRED parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_mode'>
+            <t hangText='mode'>
+	          <vspace />
               The parameter value MUST be set to 'flow_username_password' (case sensitive).
             </t>
-            <t hangText='oauth_client_identifier'>
+            <t hangText='client_id'>
               The client identifier.
+	          <vspace />
             </t>
-            <t hangText='oauth_username'>
+            <t hangText='username'>
               The resource owner's username.
+	          <vspace />
             </t>
-            <t hangText='oauth_password'>
+            <t hangText='password'>
               The resource owner's password.
+	          <vspace />
             </t>
           </list>
         </t>
@@ -1265,7 +1131,8 @@
           additional parameters as defined by the authorization server:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_scope'>
+            <t hangText='scope'>
+	          <vspace />
               If the authorization server has defined a manner for the client to
               request certain capabilities of the access token, this parameter SHOULD
               be used to do so.
@@ -1280,14 +1147,16 @@
         </t>
         <figure>
           <preamble>
-            For example, the client makes the following HTTPS request:
+            For example, the client makes the following HTTPS request (line breaks are for display
+            purposes only):
           </preamble>
           <artwork>
             <![CDATA[
   POST /access_token HTTP/1.1
   Host: server.example.com
   
-  oauth_client_identifier=s6BhdRkqt3&oauth_username=daveman692&oauth_password=1password&oauth_mode=flow_username_password
+  client_id=s6BhdRkqt3&username=daveman692&password=1password&mode=flow
+  _username_password
 ]]>
           </artwork>
         </figure>
@@ -1302,7 +1171,8 @@
           The response contains the following REQUIRED parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
+            <t hangText='access_token'>
+	          <vspace />
               The access token.
             </t>
           </list>
@@ -1311,10 +1181,12 @@
           The authorization server MAY also include the following parameters:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_expires'>
+            <t hangText='expires'>
+	          <vspace />
               The lifetime of the access token in seconds.
             </t>
-            <t hangText='oauth_refresh_token'>
+            <t hangText='refresh_token'>
+	          <vspace />
               The refresh token.
             </t>
           </list>
@@ -1328,7 +1200,7 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  oauth_access_token=FJQbwq9OD8&oauth_refresh_token=gO3CHNqpH8
+  access_token=FJQbwq9OD8&refresh_token=gO3CHNqpH8
 ]]>
           </artwork>
         </figure>
@@ -1361,6 +1233,197 @@
           </artwork>
         </figure>
       </section>
+
+      <section title='Client Credentials Flow' anchor='client_profile'>
+        <t>
+          This flow is suitable when the client acts autonomously in seeking access and is thus not
+          accessing protected resources within the context of a given end-user. For example, when a
+          client is accessing non-private data or modifying data about itself. This flow SHOULD NOT
+          be used when the client is acting on behalf of an end-user.
+        </t>
+        <t>
+          Prior to making a request using this flow, the client MUST have obtained a client
+          identifier, client secret, and access token request endpoint URI from the
+          authorization server.
+        </t>
+        <t>
+          The client constructs an HTTP 'POST' request to the access token request endpoint and
+          includes the following REQUIRED parameters:
+
+          <list style='hanging' hangIndent='6'>
+            <t hangText='mode'>
+	          <vspace />
+              The parameter value MUST be set to 'flow_client' (case sensitive).
+            </t>
+            <t hangText='client_id'>
+	          <vspace />
+              The client identifier.
+            </t>
+            <t hangText='client_secret'>
+	          <vspace />
+              The client secret.
+            </t>
+          </list>
+        </t>
+        <t>
+          The client MAY also include the following OPTIONAL parameters:
+
+          <list style='hanging' hangIndent='6'>
+            <t hangText='scope'>
+	          <vspace />
+              If the authorization server has defined a manner for the client to request certain
+              capabilities of the access token, this parameter SHOULD be used to do so.
+            </t>
+          </list>
+        </t>
+        <t>
+          Since the request results in the transmission of plain text credentials in both the HTTP
+          request and response, the authorization server MUST require the use of a transport-layer
+          mechanism such as TLS or SSL (or a secure channel with equivalent protections).
+        </t>
+        <figure>
+          <preamble>
+            For example, the client makes the following HTTPS request:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  POST /access_token HTTP/1.1
+  Host: server.example.com
+  
+  client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM&mode=flow_client
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The authorization server MUST verify that the resource owner has authorized the
+          provisioning of an access token to the client. If the request is authorized, the access
+          token is included in the HTTP response body using the 'application/x-www-form-urlencoded'
+          content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 200 status
+          code (OK).
+        </t>
+        <t>
+          The response contains the following REQUIRED parameter:
+
+          <list style='hanging' hangIndent='6'>
+            <t hangText='access_token'>
+	          <vspace />
+              The access token.
+            </t>
+          </list>
+        </t>
+        <t>
+          The authorization server MAY also include the following parameters:
+
+          <list style='hanging' hangIndent='6'>
+            <t hangText='expires'>
+	          <vspace />
+              The lifetime of the access token in seconds.
+            </t>
+            <t hangText='refresh_token'>
+	          <vspace />
+              The refresh token.
+            </t>
+          </list>
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  HTTP/1.1 200 OK
+  Content-Type: application/x-www-form-urlencoded
+
+  access_token=FJQbwq9OD8&refresh_token=gO3CHNqpH8
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The authorization server must retain the scope, duration, and other attributes approved
+          by the resource owner, and enforce these restrictions when receiving a client request
+          made with the tokens issued.
+        </t>
+        <t>
+          Once the client receives and stores the token credentials, it can proceed to access
+          protected resources on behalf of the resource owner by making authenticated requests
+          (<xref target='access_resource' />) using the access token received. Alternatively, it
+          can refresh the access token and request an access secret to use in the signature flow
+          (<xref target='refresh_token' />).
+        </t>
+        <t>
+          If the request fails verification, the authorization server SHOULD respond with the
+          appropriate HTTP response status code. The authorization server MAY include further
+          details about why the request was rejected in the response body.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  HTTP/1.1 401 Authorization Required
+  WWW-Authenticate: OAuth realm='example'
+]]>
+          </artwork>
+        </figure>
+      </section>
+
+      <section title="SAML Assertion Flow">
+        <t>
+	      The SAML assertion flow requires the client to obtain a
+	      <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion from an assertion issuer
+	      prior to initiating this flow. The process in which the assertion is obtained is defined
+	      by the assertion issuer and the authorization server, and is beyond the scope of this
+	      specification.
+	    </t>
+        <t>
+	      The client makes an HTTPS request to the authorization endpoint using POST. The request
+	      contains the following parameters:
+
+          <list style="hanging">
+            <t hangText="assertion_format">
+	          <vspace />
+	          REQUIRED. The format of the assertion as defined by the authorization server.
+	        </t>
+            <t hangText="assertion">
+	          <vspace />
+	          REQUIRED. The assertion.
+	        </t>
+            <t hangText="scope">
+	          <vspace />
+	          OPTIONAL. The authorization server MAY define authorization scope values for the
+	          client to include.
+	        </t>
+          </list>
+        </t>
+        <t>
+	      If successful, the authorization server returns an HTTP 200 response code (OK) with the
+	      access token in the response body. The response body contains the following parameters:
+
+          <list style="hanging">
+            <t hangText="access_token">
+	          <vspace />
+	          REQUIRED. The Access Token.
+	        </t>
+            <t hangText="expires">
+	          <vspace />
+	          OPTIONAL. The lifetime of the Access Token in seconds. For example, 3600 represents
+	          one hour.
+	        </t>
+          </list>
+        </t>
+        <t>
+	      If the assertion is not valid, the authorization server MUST respond with an HTTP 401
+	      (Unauthorized) response code. The Client MUST obtain a new valid assertion before
+	      retrying the request.
+	    </t>
+        <t>
+	      Authorization servers SHOULD issue access tokens with a limited lifetime and require
+	      clients to refresh them by requesting a new access token using the same assertion if it
+	      is still valid. Otherwise the client MUST obtain a new valid assertion.
+	    </t>
+      </section>
+
     </section>
 
     <section title='Refreshing an Access Token' anchor='refresh_token'>
@@ -1382,13 +1445,16 @@
         includes the following REQUIRED parameters:
 
         <list style='hanging' hangIndent='6'>
-          <t hangText='oauth_mode'>
+          <t hangText='mode'>
+	        <vspace />
             The parameter value MUST be set to 'refresh_token' (case sensitive).
           </t>
-          <t hangText='oauth_client_identifier'>
+          <t hangText='client_id'>
+	        <vspace />
             The client identifier.
           </t>
-          <t hangText='oauth_refresh_token'>
+          <t hangText='refresh_token'>
+	        <vspace />
             The refresh token associated with the access token to be refreshed.
           </t>
         </list>
@@ -1398,7 +1464,8 @@
         to the request:
 
         <list style='hanging' hangIndent='6'>
-          <t hangText='oauth_client_secret'>
+          <t hangText='client_secret'>
+	        <vspace />
             The client secret.
           </t>
         </list>
@@ -1408,7 +1475,8 @@
         via signatures, the following parameters MUST also be added to the request:
 
         <list style='hanging' hangIndent='6'>
-          <t hangText='oauth_want_secret'>
+          <t hangText='want_secret'>
+	        <vspace />
             The parameter value MUST be set to 'true' (case sensitive).
           </t>
         </list>
@@ -1427,7 +1495,7 @@
   POST /refresh_token HTTP/1.1
   Host: server.example.com
   
-  oauth_client_identifier=s6BhdRkqt3&oauth_client_secret=8eSEIpnqmM&oauth_refresh_token=n4E9O119d
+  client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM&refresh_token=n4E9O119d
 ]]>
         </artwork>
       </figure>
@@ -1447,7 +1515,8 @@
         The response contains the following REQUIRED parameters:
 
         <list style='hanging' hangIndent='6'>
-          <t hangText='oauth_access_token'>
+          <t hangText='access_token'>
+	        <vspace />
             The access token.
           </t>
         </list>
@@ -1456,13 +1525,16 @@
         The authorization server MAY also include the following parameters:
 
         <list style='hanging' hangIndent='6'>
-          <t hangText='oauth_expires'>
+          <t hangText='expires'>
+	        <vspace />
             The lifetime of the access token in seconds.
           </t>
-          <t hangText='oauth_access_token_secret'>
+          <t hangText='access_token_secret'>
+	        <vspace />
             A corresponding access token secret if the client requested one.
           </t>
-          <t hangText='oauth_signature_methods'>
+          <t hangText='signature_methods'>
+	        <vspace />
             A comma-separated list of signature methods supported by the protected resource,
             ordered by preference. REQUIRED if an access token secret is being returned. Possible
             values include 'HMAC-SHA1' and 'HMAC-SHA256' (case-sensitive) as well as any other
@@ -1472,14 +1544,14 @@
       </t>
       <figure>
         <preamble>
-          For example:
+          For example (line breaks are for display purposes only):
         </preamble>
         <artwork>
           <![CDATA[
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  oauth_access_token=8F44J2HGMl
+  access_token=8F44J2HGMl
 ]]>
         </artwork>
       </figure>
@@ -1489,7 +1561,8 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  oauth_access_token=8F44J2HGMl&oauth_access_token_secret=h3B2Tw1CHw&oauth_signature_methods=HMAC-SHA1,HMAC-SHA256
+  access_token=8F44J2HGMl&access_token_secret=h3B2Tw1CHw&signature_meth
+  ods=HMAC-SHA1,HMAC-SHA256
 ]]>
         </artwork>
       </figure>
@@ -1525,12 +1598,19 @@
         MUST respond with a HTTP 400 'Bad Request' error code.
       </t>
 
-      <section title='Using TLS/SSL solely with an access token' anchor='using_ssl'>
+      <section title='Bearer Token Requests' anchor='using_ssl'>
         <t>
-          When using TLS/SSL, clients MUST present an access token to authenticate to a protected resource. Use of the HTTP 'Authorization' header field as defined by <xref target='RFC2617' /> is RECOMMENDED, since HTTP implementations are aware that this header has special security properties and may require special treatment in caches and logs. Protected resources SHOULD take precautions to ensure that access tokens are not inadvertently logged or captured. It is RECOMMENDED that clients verify the authenticity of the certificate provided when establishing a TLS/SSL connection to the protected resource.
+          When using TLS/SSL, clients MUST present an access token to authenticate to a protected
+          resource. Use of the HTTP 'Authorization' header field as defined by
+          <xref target='RFC2617' /> is RECOMMENDED, since HTTP implementations are aware that this
+          header has special security properties and may require special treatment in caches and
+          logs. Protected resources SHOULD take precautions to ensure that access tokens are not
+          inadvertently logged or captured. It is RECOMMENDED that clients verify the authenticity
+          of the certificate provided when establishing a TLS/SSL connection to the protected
+          resource.
         </t>
 
-        <section title='Client Calls Protected Resource Using HTTP Header'>
+        <section title='HTTP Header'>
           <t>
             The protected resource SHOULD allow clients to make authenticated requests by including
             the access token in the HTTP 'Authorization' header. Prior to making a request, the
@@ -1554,7 +1634,7 @@
               <![CDATA[
   GET /user/daveman692.json HTTP/1.1
   Host: api.example.com
-  Authorization: OAuth oauth_access_token='vF9dft4qmT'
+  Authorization: OAuth access_token='vF9dft4qmT'
 ]]>
             </artwork>
           </figure>
@@ -1567,7 +1647,7 @@
               <![CDATA[
   GET /user/daveman692.json HTTP/1.1
   Host: api.example.com
-  Authorization:  OAuth  oauth_access_token = vF9dft4qmT
+  Authorization:  OAuth  access_token = vF9dft4qmT
 ]]>
             </artwork>
           </figure>
@@ -1589,7 +1669,7 @@
           </figure>
         </section>
 
-        <section title='Client Calls Protected Resource Using URL Query Parameter'>
+        <section title='URL Query Parameter'>
           <t>
             The protected resource MAY allow clients to make authenticated requests by including
             the access token as a URL query parameter. Prior to making a request, the client MUST
@@ -1602,7 +1682,8 @@
             to the API request endpoint:
 
             <list style='hanging' hangIndent='6'>
-              <t hangText='oauth_access_token'>
+              <t hangText='access_token'>
+  	           <vspace />
                 The access token.
               </t>
             </list>
@@ -1618,7 +1699,7 @@
             </preamble>
             <artwork>
               <![CDATA[
-  GET /user/daveman692.json?oauth_access_token=vF9dft4qmT HTTP/1.1
+  GET /user/daveman692.json?access_token=vF9dft4qmT HTTP/1.1
   Host: api.example.com
 ]]>
             </artwork>
@@ -1641,7 +1722,7 @@
           </figure>
         </section>
 
-        <section title='Client Calls Protected Resource Using Body Parameter'>
+        <section title='Form-Encoded Body Parameter'>
           <t>
             The protected resource MAY allow clients to make authenticated requests by including
             the access token as a parameter in the body of a HTTP request. Prior to making a
@@ -1653,7 +1734,8 @@
             endpoint and includes the following REQUIRED parameter:
 
             <list style='hanging' hangIndent='6'>
-              <t hangText='oauth_access_token'>
+              <t hangText='access_token'>
+	            <vspace />
                 The access token.
               </t>
             </list>
@@ -1672,7 +1754,7 @@
   POST /blog/entry HTTP/1.1
   Host: api.example.com
   
-  oauth_access_token=vF9dft4qmT
+  access_token=vF9dft4qmT
 ]]>
             </artwork>
           </figure>
@@ -1693,55 +1775,52 @@
             </artwork>
           </figure>
         </section>
+
       </section>
 
-      <section title='Using Signatures' anchor='using_signatures'>
+      <section title='Signed Requests' anchor='using_signatures'>
         <t>
           When using signatures, clients MAY use TLS/SSL as the transport to authenticate to a
-          protected resource. Use of the 'Authorization' header field is RECOMMENDED, as HTTP
-          implementations are aware that this header has special security properties and may
-          require special treatment in caches and logs.
-        </t>
-        <t>
-          Editor's note: This draft bases it's signature mechanism off of the
-          <xref target='I-D.hammer-oauth'>OAuth 1.0 Protocol</xref> and it's possible that
-          parts of the mechanism will change in future drafts.
+          protected resource.
         </t>
         <t>
           The following parameters are obtained (or computed) by clients in order to make protected
           resource requests:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='oauth_access_token'>
-              The access token obtained through a refresh token call with the 'oauth_want_secret'
+            <t hangText='access_token'>
+              <vspace />
+              The access token obtained through a refresh token call with the 'want_secret'
               parameter included (<xref target='refresh_token'/>).
             </t>
-            <t hangText='oauth_signature_method'>
+            <t hangText='signature_method'>
+              <vspace />
               The signature method used by the client to sign the request. The method MUST be one
-              of those listed in the 'oauth_signature_methods' parameter returned with the access
+              of those listed in the 'signature_methods' parameter returned with the access
               token secret (<xref target='refresh_token' />).
             </t>
-            <t hangText='oauth_timestamp'>
+            <t hangText='timestamp'>
+              <vspace />
               Unless otherwise specified by the server's documentation, the timestamp is expressed in
               the number of seconds since January 1, 1970 00:00:00 GMT. It MUST be a positive integer.
             </t>
-            <t hangText='oauth_nonce'>
+            <t hangText='nonce'>
+              <vspace />
               A nonce is a random string, uniquely generated by the client to allow the server to
               verify that a request has never been made before and helps prevent replay attacks when
               requests are made over a non-secure channel. The nonce value MUST be unique across all
               requests with the same timestamp and token combinations.
             </t>
-            <t hangText='oauth_signature'>
+            <t hangText='signature'>
+              <vspace />
               The computed signature value ensuring the integrity of this request
               (<xref target='compute_sig' />).
             </t>
           </list>
         </t>
         <t>
-          The protocol parameters are added to the request using one of the three transmission
-          methods: <xref target='sig_headers'>HTTP Headers</xref>,
-          <xref target='sig_query'>HTTP query parameters</xref>, or
-          <xref target='sig_body'>HTTP body parameters</xref>.
+          The protocol parameters are added to the request using the
+          <xref target='sig_headers'>HTTP Header</xref>.
         </t>
         <t>
           Construction of the signature base string follows the process detailed in section 3.4.1
@@ -1757,10 +1836,10 @@
   Host: api.example.com
   Content-Type: application/x-www-form-urlencoded
   Authorization: OAuth
-                 oauth_access_token='vF9dft4qmT',
-                 oauth_signature_method='HMAC-SHA1',
-                 oauth_timestamp='1268998408',
-                 oauth_nonce='7d8f3e4a',
+                 access_token='vF9dft4qmT',
+                 signature_method='HMAC-SHA1',
+                 timestamp='1268998408',
+                 nonce='7d8f3e4a',
 
   c2&a3=2+q
 ]]>
@@ -1768,11 +1847,15 @@
         </figure>
         <figure>
           <preamble>
-            Is represented by the following signature base string:
+            Is represented by the following signature base string (line breaks are for display
+            purposes only):
           </preamble>
           <artwork>
             <![CDATA[
-  GET&amp;http%3A%2F%2Fapi.example.com%2Fuser%2Fdaveman692.json&amp;a2%3Dr%2520b%26a3%3D2%252Bq%26a3%3Da%26b5%3D%253D%2525%253D%26c%2540%3D%26c2%3D%26oauth_nonce%3D7d8f3e4a%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1268998408%26oauth_access_token%3DvF9dft4qmT%26oauth_version%3D2.0
+  GET&amp;http%3A%2F%2Fapi.example.com%2Fuser%2Fdaveman692.json&amp;a2%
+  3Dr%2520b%26a3%3D2%252Bq%26a3%3Da%26b5%3D%253D%2525%253D%26c%2540%3D%
+  26c2%3D%26nonce%3D7d8f3e4a%26signature_method%3DHMAC-SHA1%26timestamp
+  %3D1268998408%26access_token%3DvF9dft4qmT%26version%3D2.0
 ]]>
           </artwork>
         </figure>
@@ -1780,10 +1863,10 @@
         <section title='Computing the signature' anchor='compute_sig'>
           <t>
             The authorization server declares which signature methods it accepts via the
-            'oauth_signature_methods' returned as part of obtaining an access token secret
+            'signature_methods' returned as part of obtaining an access token secret
             (<xref target='refresh_token' />). The client declares which signature method is used
-            for this request via the 'oauth_signature_method' parameter. It then generates a
-            signature, and includes it in the 'oauth_signature' parameter. The server verifies the
+            for this request via the 'signature_method' parameter. It then generates a
+            signature, and includes it in the 'signature' parameter. The server verifies the
             signature as specified for each method.
           </t>
           <t>
@@ -1811,23 +1894,10 @@
                   is set to the value of the signature base string.
                 </t>
                 <t hangText='key'>
-                  is set to the concatenated values of:
-
-                  <list style='numbers'>
-                    <t>
-                      The client secret, after being encoded (TODO: ref)
-                    </t>
-                    <t>
-                      An '&amp;' character (ASCII code 38), which MUST be included even when either
-                      secret is empty.
-                    </t>
-                    <t>
-                      The access token secret, after being encoded (TODO: ref).
-                    </t>
-                  </list>
+                  is set to the access token secret.
                 </t>
                 <t hangText='digest'>
-                  is used to set the value of the 'oauth_signature' protocol parameter, after the
+                  is used to set the value of the 'signature' protocol parameter, after the
                   result octet string is base64-encoded per section 6.8 of <xref target='RFC2045' />.
                 </t>
               </list>
@@ -1860,11 +1930,11 @@
   Host: api.example.com
   Content-Type: application/x-www-form-urlencoded
   Authorization: OAuth
-                 oauth_access_token='vF9dft4qmT',
-                 oauth_signature_method='HMAC-SHA1',
-                 oauth_timestamp='1268998408',
-                 oauth_nonce='7d8f3e4a',
-                 oauth_signature='hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D'
+                 access_token='vF9dft4qmT',
+                 signature_method='HMAC-SHA1',
+                 timestamp='1268998408',
+                 nonce='7d8f3e4a',
+                 signature='hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D'
 
   c2&a3=2+q
 ]]>
@@ -1888,92 +1958,128 @@
           </figure>
         </section>
 
-        <section title='Client Calls Protected Resource Using URL Query Parameters' anchor='sig_query'>
-          <t>
-            The protected resource MAY allow clients to make authenticated requests by including
-            the access token as a URL query parameter. Prior to making a request, the client MUST
-            have obtained a valid access token, a valid access token secret, and the API request
-            endpoint URI. It MUST have also constructed the signature base string and
-            <xref target='compute_sig'>computed the signature</xref>. While the following examples
-            use the HTTP 'GET' method, there's nothing limiting a client to use query parameters
-            with other HTTP methods.
-          </t>
-          <t>
-            The client constructs the request URI by adding the protocol parameters and the
-            signature computed in <xref target='compute_sig' />.
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTP request:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  GET /user/daveman692.json?oauth_access_token=vF9dft4qmT&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1268998408&oauth_nonce=7d8f3e4a&oauth_signature=hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D
-  Host: api.example.com
-]]>
-            </artwork>
-          </figure>
-          <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body or headers.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='Example'
-]]>
-            </artwork>
-          </figure>
-        </section>
-
-        <section title='Client Calls Protected Resource Using Body Parameters' anchor='sig_body'>
-          <t>
-            The protected resource MAY allow clients to make authenticated requests by including
-            the access token as a parameter in the body of a HTTP 'POST' request. Prior to making a
-            request, the client MUST have obtained a valid access token, a valid access token
-            secret, and the API request endpoint URI. It MUST have also constructed the signature
-            base string and <xref target='compute_sig'>computed the signature</xref>.
-          </t>
-          <t>
-            The client constructs a HTTP 'POST' request to the API request endpoint and includes
-            the protocol parameters and the signature computed in <xref target='compute_sig' />.
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTP request:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  GET /user/daveman692.json
-  Host: api.example.com
-  
-  oauth_access_token=vF9dft4qmT&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1268998408&oauth_nonce=7d8f3e4a&oauth_signature=hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D
-]]>
-            </artwork>
-          </figure>
-          <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body or headers.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='Example'
-]]>
-            </artwork>
-          </figure>
-        </section>
       </section>
+
+    </section>
+
+    <section title="The WWW-Authenticate Response Header" anchor="authn_header">
+      <t>
+        A server receiving a request for a protected resource without a valid
+        <xref target="authz_header">Authorization header field</xref> MUST respond with a 401
+        status code (Unauthorized), and includes at least one
+        <spanx style="verb">WWW-Authenticate</spanx> header field including a token scheme
+        challenge.
+      </t>
+      <t>
+        The <spanx style="verb">WWW-Authenticate</spanx> header field uses the framework defined by
+        <xref target="RFC2617" /> as follows:
+      </t>
+      <figure>
+        <artwork xml:space="preserve"><![CDATA[
+ challenge       = "Token" RWS token-challenge
+   
+ token-challenge = realm
+                   [ CS authz-uri ]
+                   [ CS timestamp ]
+
+ authz-uri       = "authorization-uri" "=" URI-Reference
+ timestamp       = "timestamp" "=" <"> 1*DIGIT <">
+ 
+ CS              = OWF "," OWF
+]]>
+        </artwork>
+      </figure>
+
+      <section title="The 'realm' Attribute">
+        <t>
+        </t>
+      </section>
+
+      <section title="The 'authorization-uri' Attribute">
+        <t>
+        </t>
+      </section>
+
+      <section title="The 'timestamp' Attribute">
+        <t>
+          Signature-based and hash-based authentication methods use timestamps in combination with
+          unique nonce values to protect against replay attacks when used over an insecure channel.
+        </t>
+        <t>
+          The timestamp attribute is used by the server to publish its current time, enabling
+          clients to synchronize their close with the server. The timestamp value is the current
+          time expressed in the number of seconds since January 1, 1970 00:00:00 GMT, and MUST be a
+          positive integer.
+        </t>
+        <t>
+          To avoid the need to retain an infinite number of nonce values for future checks, servers
+          MAY choose to restrict the time period after which a request with an old timestamp is
+          rejected. Servers applying such a restriction SHOULD provide their current time to the
+          client either in every challenge or when a request fails due to a timestamp outside the
+          allowed window.
+        </t>
+      </section>
+
+    </section>
+
+    <section title="The Authorization Request Header" anchor="authz_header">
+      <t>
+        A client making a request for a protected resource either directly, or in retrying a
+        request after receiving a 401 status code (Unauthorized) with a token challenge, MUST
+        include at least one <spanx style="verb">Authorization</spanx> header field including
+        token scheme credentials.
+      </t>
+      <t>
+        The <spanx style="verb">Authorization</spanx> header field uses the framework defined by
+        <xref target="RFC2617" /> as follows:
+      </t>
+      <figure>
+        <artwork xml:space="preserve"><![CDATA[
+ credentials    = "Token" RWS token-response
+   
+ token-response = token-id
+                  [ CS nonce ]
+                  [ CS timestamp ]
+                  [ CS auth ]
+
+ token-id         = "token" "=" <"> token <">
+ nonce            = "nonce" "=" <"> token <">
+ auth             = "signature" "=" <"> token <">
+]]>
+        </artwork>
+      </figure>
+
+      <section title="The 'token' Attribute">
+        <t>
+          The value used to identify the set of token credentials used by the client to
+          authenticate. The token identifier can be an opaque string or use a well-defined internal
+          structure.
+        </t>
+      </section>
+
+      <section title="The 'nonce' Attribute">
+        <t>
+          A random string, uniquely generated by the client to allow the server to verify that a
+          request has never been made before and helps prevent replay attacks when requests are
+          made over a non-secure channel. The nonce value MUST be unique across all requests with
+          the same timestamp and token combinations.
+        </t>
+      </section>
+
+      <section title="The 'timestamp' Attribute">
+        <t>
+          The timestamp value is the current time expressed in the number of seconds since
+          January 1, 1970 00:00:00 GMT, and MUST be a positive integer.
+        </t>
+      </section>
+
+      <section title="The 'signature' Attribute">
+        <t>
+          The output of the authentication method function after applying it to the selected
+          coverage.
+        </t>
+      </section>
+
     </section>
 
     <section title='Security Considerations'>
@@ -2020,23 +2126,25 @@
 
     <references title='Normative References'>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2045.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2104.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html40-19980424.xml'?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2045.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2104.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html40-19980424.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-09.xml"?>
 
     </references>
 
     <references title='Informative References'>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-10.xml'?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hardt-oauth-01.xml'?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-10.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hardt-oauth-01.xml' ?>
 
     </references>
 
