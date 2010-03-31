@@ -76,9 +76,9 @@
       </t>
       <t>
         For example, a web user (resource owner) can grant a printing service (client) access to
-        her private photos stored at a photo sharing service (server), without sharing her username
-        and password with the printing service. Instead, she authenticates directly with the photo
-        sharing service (authorization endpoint) which issues the printing service
+        her private photos stored at a photo sharing service (resource server), without sharing her
+        username and password with the printing service. Instead, she authenticates directly with
+        the photo sharing service (authorization server) which issues the printing service
         delegation-specific credentials (token).
       </t>
       <t>
@@ -89,15 +89,15 @@
       <section title='Terminology'>
         <t>
           <list style='hanging' hangIndent='6'>
-            <t hangText='server'>
+            <t hangText='resource server'>
               <vspace />
               An <xref target='RFC2616'>HTTP</xref> server capable of accepting authenticated
               resource requests using the OAuth protocol.
             </t>
             <t hangText='protected resource'>
               <vspace />
-              An access-restricted resource which can be obtained from a server using an
-              OAuth-authenticated request.
+              An access-restricted resource which can be obtained from a resource server using
+              an OAuth-authenticated request.
             </t>
             <t hangText='client'>
               <vspace />
@@ -117,18 +117,21 @@
               A unique identifier used by the client to make authenticated requests on behalf of
               the resource owner. Access tokens may have a matching secret.
             </t>
+            <t hangText='authorization server'>
+              <vspace />
+              An HTTP server capable of issuing tokens after successfully authenticating the
+              resource owner and obtaining authorization. The authorization server may be the same
+              server as the resource server, or a separate entity.
+            </t>
             <t hangText='authorization endpoint'>
               <vspace />
-              An HTTP endpoint capable of issuing tokens after successfully authenticating the
-              resource owner (or client) and obtaining authorization. The authentication endpoint
-              uses a parameter to differentiate between different supported authorization flows.
-              The authorization endpoint may reside on the same as server as the protected resource
-              or on a separate authorization server.
+              The authorization server's HTTP endpoint authenticating the resource owner, obtaining
+              authorization, issuing tokens, and refreshing expired tokens.
             </t>
             <t hangText='client identifier'>
               <vspace />
               An unique identifier issued by the client to identify itself to the authorization
-              endpoint. Client identifiers may have a matching secret.
+              server. Client identifiers may have a matching secret.
             </t>
             <t hangText='refresh token'>
               <vspace />
@@ -143,18 +146,14 @@
 
 	  <section title='Overview'>
 	    <t>
-		  Clients interact with protected resources, first by requesting access (which is granted
+		  Clients interact with a protected resource, first by requesting access (which is granted
 		  in the form of an access token) from the authorization server, and then by authenticating
-		  with the resource server by presenting the access token. Different credentials types and
-		  flows can be used to obtain authorization, but once authorized, the client is provided an
-		  access token, and (optionally) a refresh token to obtain new access tokens.
+		  with the resource server by presenting the access token. <xref target='Figure 1' />
+		  demonstrates the flow between the client and authorization server (A, B), and the flow
+		  between the client and resource server (C, D), when the client is acting autonomously
+		  (the client is also the resource owner).
 	    </t>
         <figure anchor='Figure 1'>
-	      <preamble>
-		    The following diagram demonstrates the flow between the client and authorization
-			server (A, B), and the flow between the client and resource server (C, D), where the
-			client is acting autonomously (the client is also the resource owner):
-		  </preamble>
 	      <artwork><![CDATA[
   +---+                                  +---------------+
   |   |--(A)------ Credentials --------->| Authorization |
@@ -171,18 +170,18 @@
           </artwork>
         </figure>
         <t>
-		  Access tokens can have any format agreed to between the authorization server and the
-		  resource server, but is opaque to the client. Since the access token provides the client
-		  access to the protected resource for the life of the access token, the authorization
-		  server should issue access tokens which expire within an appropriate time.
+		  Access token strings can use any internal structure agreed upon between the authorization
+		  server and the resource server, but their structure is opaque to the client. Since the
+		  access token provides the client access to the protected resource for the life of the
+		  access token, the authorization server should issue access tokens which expire within an
+		  appropriate time, usually much shorter than the duration of the access grant.
 		</t>
 		<t>
 	      When an access token expires, the client can request a new access token from the
 	      authorization server by presenting its credentials again (<xref target='Figure 1' />), or
-	      by using the refresh token instead (if present when the access token was issued) as
-	      demonstrated in <xref target='Figure 2' />. Once an expired access token has been
-	      replaced with a new access token (A, B), the client uses the new access token as before
-	      (C, D).
+	      by using the refresh token (if issued with the access token) as shown in
+	      <xref target='Figure 2' />. Once an expired access token has been replaced with a new
+	      access token (A, B), the client uses the new access token as before (C, D).
 	    </t>
         <figure anchor='Figure 2'>
 		   <artwork><![CDATA[
@@ -204,9 +203,9 @@
 	      This specification defines a number of authorization flows to support different client
 	      types and scenarios. These authorization flows can be separated into two groups:
 	      autonomous flows where the client is acting for itself (the client is also the resource
-	      owner), and user delegation flows where the client is acting on behalf of a resource
-	      owner (typically an end user). Additional authorization flows may be defined by other
-	      specifications to cover different scenarios and client types.
+	      owner), and user delegation flows where the client is acting on behalf of an end user.
+	      Additional authorization flows may be defined by other specifications to cover different
+	      scenarios and client types.
         </t>
         <t>
 	      The autonomous authorization profiles defined by this specifications are:
