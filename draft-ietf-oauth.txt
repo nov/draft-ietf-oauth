@@ -73,15 +73,15 @@ Table of Contents
    1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1.  Terminology  . . . . . . . . . . . . . . . . . . . . . . .  4
      1.2.  Overview . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     1.3.  Example  . . . . . . . . . . . . . . . . . . . . . . . . .  8
+     1.3.  Example  . . . . . . . . . . . . . . . . . . . . . . . . .  7
      1.4.  Notational Conventions . . . . . . . . . . . . . . . . . .  8
      1.5.  Authors  . . . . . . . . . . . . . . . . . . . . . . . . .  8
    2.  Obtaining an Access Token  . . . . . . . . . . . . . . . . . .  8
      2.1.  Authorization Endpoint . . . . . . . . . . . . . . . . . .  8
-     2.2.  Flow Parameters  . . . . . . . . . . . . . . . . . . . . .  9
+     2.2.  Flow Parameters  . . . . . . . . . . . . . . . . . . . . .  8
      2.3.  Client Credentials . . . . . . . . . . . . . . . . . . . .  9
      2.4.  User Delegation Flows  . . . . . . . . . . . . . . . . . .  9
-       2.4.1.  Web Callback Flow  . . . . . . . . . . . . . . . . . . 10
+       2.4.1.  Web Callback Flow  . . . . . . . . . . . . . . . . . .  9
        2.4.2.  Web Client Flow  . . . . . . . . . . . . . . . . . . . 15
        2.4.3.  Device Flow  . . . . . . . . . . . . . . . . . . . . . 18
      2.5.  End User Credentials Flows . . . . . . . . . . . . . . . . 22
@@ -348,41 +348,41 @@ Internet-Draft                  OAuth 2.0                     April 2010
    The user delegation authorization flows defined by this
    specifications are:
 
-   Web Callback Flow
-         This flow is described in Section 2.4.1.
+   o  Web Callback Flow - This flow is described in Section 2.4.1.
 
-   Web Client Flow
-         This flow is described in Section 2.4.2.
+   o  Web Client Flow - This flow is described in Section 2.4.2.
 
-   Device Flow
-         This flow is described in Section 2.4.3.
+   o  Device Flow - This flow is described in Section 2.4.3.
 
    The end user credentials flow defined by this specification is:
 
-   Username and Password Flow
-         While the User may use a username and password to authenticate
-         to the Authorization Server, it is undesirable for the Client
-         to store the User's username and password.  In this flow the
-         User provides their username and password to an application
-         (Client) they have installed on their device.  The Client
-         presents a Client Identifier, the username and password
-         (credentials) to the Access Token URI at the Authorization
-         Server in exchange for an Access Token and a Refresh Token.
-         This flow is described in Section 2.5.1.
+   o  Username and Password Flow - This flow is used in cases where the
+      end user trusts the client to handle its credentials but it is
+      still undesirable for the client to store the end user's username
+      and password.  The client uses its client identifier and the end
+      user's username and password to obtain an access token.  This flow
+      is described in Section 2.5.1.
 
    The autonomous authorization flows defined by this specifications
    are:
 
-   Client Credentials Flow
-         The client is provisioned with an account name and
-         corresponding secret by the authorization server.  The client
-         presents the account name and secret to the authorization
-         Server in exchange for an access token.  The client secret is
-         assumed to be high-entropy since it is not designed to be
-         memorize by an end user.  This flow is described in
-         Section 2.6.1.
+   o  Client Credentials Flow - The client is provisioned with an
+      account name and corresponding secret by the authorization server.
+      The client presents the account name and secret to the
+      authorization Server in exchange for an access token.  The client
+      secret is assumed to be high-entropy since it is not designed to
+      be memorize by an end user.  This flow is described in
+      Section 2.6.1.
 
+   o  SAML Assertion Flow - The client presents a SAML
+      [OASIS.saml-core-2.0-os] assertion to the authorization server in
+      exchange for an access token.  The methods through which the
+      client obtains the assertions are beyond the scope of this
+      specification.  This flow is described in Section 2.6.2.
 
+1.3.  Example
+
+   [[ Todo ]]
 
 
 
@@ -392,17 +392,6 @@ Hammer-Lahav, et al.     Expires October 3, 2010                [Page 7]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
-
-   SAML Assertion Flow
-         The client presents a SAML [OASIS.saml-core-2.0-os] assertion
-         to the authorization server in exchange for an access token.
-         The methods through which the client obtains the assertions are
-         beyond the scope of this specification.  This flow is described
-         in Section 2.6.2.
-
-1.3.  Example
-
-   [[ Todo ]]
 
 1.4.  Notational Conventions
 
@@ -439,15 +428,12 @@ Internet-Draft                  OAuth 2.0                     April 2010
    The authorization endpoint advertised by the server MUST NOT include
    a query or fragment components as defined by [RFC3986] section 3.
 
-
-
-
-
-
-Hammer-Lahav, et al.     Expires October 3, 2010                [Page 8]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
+   Since requests to the authorization endpoint result in the
+   transmission of plain text credentials in the HTTP request and
+   response, the authorization server MUST require the use of a
+   transport-layer mechanism such as TLS or SSL (or a secure channel
+   with equivalent protections) when sending requests to the
+   authorization endpoints.
 
 2.2.  Flow Parameters
 
@@ -455,6 +441,13 @@ Internet-Draft                  OAuth 2.0                     April 2010
    other server-generated values, which are left undefined by this
    specification.  Servers should document the expected size of any
    value they issue.
+
+
+
+Hammer-Lahav, et al.     Expires October 3, 2010                [Page 8]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
 
    [[ Open Issue ]] It is RECOMMENDED that authorization servers make
    their identifiers, secrets, and tokens string shorter than 255
@@ -497,6 +490,13 @@ Internet-Draft                  OAuth 2.0                     April 2010
    resources by the end user without sharing the end user credentials
    (typically a username and password) with the client.  Instead, the
    end user authenticates directly with the authorization server, and
+   grants client access to its protected resources.
+
+2.4.1.  Web Callback Flow
+
+   The web callback flow is a user delegation flow suitable for clients
+   capable of interacting with the end user's user-agent (typically a
+   web browser) and capable of receiving callback requests from the
 
 
 
@@ -505,13 +505,6 @@ Hammer-Lahav, et al.     Expires October 3, 2010                [Page 9]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   grants client access to its protected resources.
-
-2.4.1.  Web Callback Flow
-
-   The web callback flow is a user delegation flow suitable for clients
-   capable of interacting with the end user's user-agent (typically a
-   web browser) and capable of receiving callback requests from the
    server.
 
      +----------+         Client Identifier       +---------------+
@@ -552,6 +545,13 @@ Internet-Draft                  OAuth 2.0                     April 2010
         provided earlier.  The authorization includes a verification
         code for the client to use to obtain an access token.
 
+   (D)  The client requests an access token from the authorization
+        server by including its client credentials (identifier and
+        secret), as well as the verification code received in the
+        previous step.
+
+
+
 
 
 
@@ -561,15 +561,10 @@ Hammer-Lahav, et al.     Expires October 3, 2010               [Page 10]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   (D)  The client requests an access token from the authorization
-        server by including its client credentials (identifier and
-        secret), as well as the verification code received in the
-        previous step.
-
    (E)  The authorization server validates the client credentials and
         the verification token and responds back with the access token.
 
-2.4.1.1.  Authorization Request
+2.4.1.1.  Client Requests Access
 
    In order for the end user to grant the client access, the client
    sends the end user to the authorization server.  The client
@@ -577,10 +572,10 @@ Internet-Draft                  OAuth 2.0                     April 2010
    parameters to the user authorization endpoint URI:
 
    mode
-         REQUIRED.  The parameter value MUST be set to "flow_web_server"
-         (case sensitive).
+         REQUIRED.  The parameter value MUST be set to
+         "web_callback_access_request" (case sensitive).
 
-   id
+   client_id
          REQUIRED.  The client identifier as described in Section 2.3.
 
    callback
@@ -604,11 +599,16 @@ Internet-Draft                  OAuth 2.0                     April 2010
    For example, the client directs the end user's user-agent to make the
    following HTTPS requests (line breaks are for display purposes only):
 
-     GET /authorization?mode=flow_web_server&id=s6BhdRkqt3&callback=
-         https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+     GET /authorization?mode=web_callback_access_request&client_id=
+         s6BhdRkqt3&callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+          HTTP/1.1
      Host: server.example.com
 
 
+   The way in which the server authenticates the end user (e.g. username
+   and password login, OpenID, session cookies) and in which the server
+   obtains the end user's authorization, including whether it uses a
+   secure channel such as TLS/SSL, is beyond the scope of this
 
 
 
@@ -617,10 +617,6 @@ Hammer-Lahav, et al.     Expires October 3, 2010               [Page 11]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   The way in which the server authenticates the end user (e.g. username
-   and password login, OpenID, session cookies) and in which the server
-   obtains the end user's authorization, including whether it uses a
-   secure channel such as TLS/SSL, is beyond the scope of this
    specification.  However, the server MUST first verify the identity of
    the end user.
 
@@ -628,6 +624,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
    the authorization server sends the end user's user-agent to the
    provided client callback URI using an HTTP redirection response, or
    by other means available to it via the end user's user-agent.
+
+2.4.1.1.1.  End User Grants Access
 
    If the end user authorizes the access request, the authorization
    server generates a verification code and associates it with the
@@ -657,6 +655,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
      GET /cb?code=i1WsRn1uB1 HTTP/1.1
      Host: client.example.com
 
+
+2.4.1.1.2.  End User Denies Access
 
    If the end user denied the access request, the authorization server
    constructs the request URI by adding the following parameters to the
@@ -689,32 +689,32 @@ Internet-Draft                  OAuth 2.0                     April 2010
      Host: client.example.com
 
 
-2.4.1.2.  Access Token Request
+   The authorization flow concludes unsuccessfully.
 
-   If the client receives a verification code, it constructs an HTTP
-   'POST' request to the access token request endpoint and includes the
-   following REQUIRED parameters:
+2.4.1.2.  Client Requests Access Token
+
+   The client obtains an access token from the authorization server by
+   making an HTTP "POST" request to the authorization endpoint.  The
+   client constructs a request URI by adding the following REQUIRED
+   parameters to the request:
 
    mode
-         The parameter value MUST be set to 'flow_web_app' (case
-         sensitive).
+         The parameter value MUST be set to "web_callback_token_request"
+         (case sensitive).
 
    client_id
-         The client identifier.
+         The client identifier as described in Section 2.3.
 
    client_secret
-         The client secret.
+         The client secret as described in Section 2.3.
 
-   verification_code
-         The verification code.
+   code
+         The verification code received from the authorization server.
 
    callback
-         The callback URI from the user authorization request.
+         The callback URI used in the initial request.
 
-   Since the request results in the transmission of plain text
-   credentials in the HTTP request and response, the authorization
-   server MUST require the use of a transport-layer mechanism such as
-   TLS or SSL (or a secure channel with equivalent protections).
+
 
 
 
@@ -732,51 +732,51 @@ Internet-Draft                  OAuth 2.0                     April 2010
    For example, the client makes the following HTTPS request (line
    breaks are for display purposes only):
 
-   POST /access_token HTTP/1.1
-   Host: server.example.com
+     POST /access_token HTTP/1.1
+     Host: server.example.com
 
-   client_id=s6BhdRkqt3&client_secret=gX1fBat3bV&verification_code=i1WsR
-   n1uB1&callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+     mode=web_callback_token_request&client_id=s6BhdRkqt3&
+     client_secret=gX1fBat3bV&code=i1WsRn1uB1&
+     callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 
 
-   If the request is authorized, the access token is included in the
-   HTTP response body using the 'application/x-www-form-urlencoded'
-   content type as defined by [W3C.REC-html40-19980424] with a 200
-   status code (OK).  The response contains the following REQUIRED
-   parameter:
+   The authorization server MUST verify that the verification code,
+   client identity, client secret, and callback URI are all valid and
+   match its stored association.  If the request is valid, the
+   authorization server issues an access token and delivers it to the
+   client in the HTTP response body using the
+   "application/x-www-form-urlencoded" content type as defined by
+   [W3C.REC-html40-19980424] with a 200 status code (OK).
+
+   The response contains the following parameters:
 
    access_token
-         The access token.
-
-   The authorization server MAY also include the following parameters:
+         REQUIRED.  The access token issued by the authorization server.
 
    expires
-         The lifetime of the access token in seconds.
+         OPTIONAL.  The lifetime of the access token in seconds.
 
    refresh_token
-         The refresh token.
+         OPTIONAL.  The refresh token used to obtain new access tokens
+         using the same end user access grant as described in Section 3.
 
    For example:
 
      HTTP/1.1 200 OK
      Content-Type: application/x-www-form-urlencoded
 
-     access_token=SlAV32hkKG&refresh_token=8xLOxBtZp8
+     access_token=SlAV32hkKG&refresh_token=8xLOxBtZp8&expires=3600
 
 
-   The authorization server must retain the scope, duration, and other
-   attributes approved by the resource owner, and enforce these
-   restrictions when receiving a client request made with the tokens
-   issued.
+   The authorization server MUST retain the scope, duration, and other
+   access attributes approved by the end user, and enforce these
+   restrictions when receiving a protected resource request made with
+   the token issued.
 
-   Once the client receives and stores the token credentials, it can
-   proceed to access protected resources on behalf of the resource owner
-   by making authenticated requests (Section 4) using the access token
-   received.  Alternatively, it can refresh the access token and request
-   an access secret to use in the signature flow (Section 3).
-
-   If the authorization server is unable to issue an access token to the
-   client, the HTTP response body uses the 'application/
+   If the request is invalid, the authorization server returns an error
+   message in the HTTP response body using the
+   "application/x-www-form-urlencoded" content type as defined by
+   [W3C.REC-html40-19980424] with a 400 status code (Bad Request).
 
 
 
@@ -785,18 +785,16 @@ Hammer-Lahav, et al.     Expires October 3, 2010               [Page 14]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   x-www-form-urlencoded' content type as defined by
-   [W3C.REC-html40-19980424] with a 401 status code (Unauthorized).  The
-   response contains the following OPTIONAL parameter:
+   The response contains the following parameter:
 
    error_reason
-         Value must be one of 'callback_mismatch' or
-         'expired_verification_code' (case sensitive).
+         OPTIONAL.  The parameter value MUST be set to either
+         "callback_mismatch" or "expired_verification_code" (case
+         sensitive).
 
    For example:
 
-     HTTP/1.1 401 Authorization Required
-     WWW-Authenticate: OAuth realm='example'
+     HTTP/1.1 400 Bad Request
 
      error_reason=expired_verification_code
 
@@ -831,7 +829,9 @@ Internet-Draft                  OAuth 2.0                     April 2010
    client constructs the request URI by adding the following REQUIRED
    query parameters to the user authorization endpoint URI:
 
-
+   mode
+         The parameter value MUST be set to 'flow_web_client' (case
+         sensitive).
 
 
 
@@ -840,10 +840,6 @@ Hammer-Lahav, et al.     Expires October 3, 2010               [Page 15]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
-
-   mode
-         The parameter value MUST be set to 'flow_web_client' (case
-         sensitive).
 
    client_id
          The client identifier.
@@ -889,6 +885,10 @@ Internet-Draft                  OAuth 2.0                     April 2010
    such as TLS/SSL is beyond the scope of this specification.  However,
    the server MUST first verify the identity of the resource owner.
 
+   If the Client has previously registered a callback URI with the
+   authorization server, it MUST verify that the callback URI provided
+   in the 'callback' parameter is valid given the pre-registered URI.
+
 
 
 
@@ -896,10 +896,6 @@ Hammer-Lahav, et al.     Expires October 3, 2010               [Page 16]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
-
-   If the Client has previously registered a callback URI with the
-   authorization server, it MUST verify that the callback URI provided
-   in the 'callback' parameter is valid given the pre-registered URI.
 
    After receiving an authorization decision from the resource owner,
    the server redirects the resource owner to the callback URI.  The
@@ -947,14 +943,16 @@ Internet-Draft                  OAuth 2.0                     April 2010
      Host: client.example.com
 
 
+   The authorization server must retain the scope, duration, and other
+   attributes approved by the resource owner, and enforce these
+
+
 
 Hammer-Lahav, et al.     Expires October 3, 2010               [Page 17]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   The authorization server must retain the scope, duration, and other
-   attributes approved by the resource owner, and enforce these
    restrictions when receiving a client request made with the tokens
    issued.
 
@@ -1001,6 +999,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
    credentials in the HTTP response, the authorization server MUST
    require the use of a transport-layer mechanism such as TLS or SSL (or
    a secure channel with equivalent protections).
+
+
 
 
 
