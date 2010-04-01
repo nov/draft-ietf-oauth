@@ -40,11 +40,12 @@
 
     <abstract>
       <t>
-		OAuth provides a method for making authenticated HTTP requests using a token - an
-        identifier used to denote an access grant with specific scope, duration, and other
-        attributes. Tokens are issued to third-party clients by an authorization server with the
-        approval of the resource owner. OAuth defines multiple flows for obtaining a token to
-        support a wide range of client types and user experience.
+	    This specification describes the OAuth 2.0 protocol. OAuth provides a method for making
+	    authenticated HTTP requests using a token - an identifier used to denote an access grant
+	    with specific scope, duration, and other attributes. Tokens are issued to third-party
+	    clients by an authorization server with the approval of the resource owner. OAuth defines
+	    multiple flows for obtaining a token to support a wide range of client types and user
+	    experience.
       </t>
     </abstract>
   </front>
@@ -106,12 +107,12 @@
             </t>
             <t hangText='resource owner'>
               <vspace />
-	          An entity capable of granting access to a protected resource.
+	            An entity capable of granting access to a protected resource.
             </t>
             <t hangText='end user'>
-	          <vspace />
-	          A human resource owner.
-	        </t>
+	            <vspace />
+	            A human resource owner.
+	          </t>
             <t hangText='access token'>
               <vspace />
               A unique identifier used by the client to make authenticated requests on behalf of
@@ -144,17 +145,17 @@
         </t>
       </section>
 
-	  <section title='Overview'>
-	    <t>
-		  Clients interact with a protected resource, first by requesting access (which is granted
-		  in the form of an access token) from the authorization server, and then by authenticating
-		  with the resource server by presenting the access token. <xref target='Figure 1' />
-		  demonstrates the flow between the client and authorization server (A, B), and the flow
-		  between the client and resource server (C, D), when the client is acting autonomously
-		  (the client is also the resource owner).
-	    </t>
+	    <section title='Overview'>
+	      <t>
+		      Clients interact with a protected resource, first by requesting access (which is granted
+		      in the form of an access token) from the authorization server, and then by authenticating
+		      with the resource server by presenting the access token. <xref target='Figure 1' />
+		      demonstrates the flow between the client and authorization server (A, B), and the flow
+		      between the client and resource server (C, D), when the client is acting autonomously
+		      (the client is also the resource owner).
+	      </t>
         <figure anchor='Figure 1'>
-	      <artwork><![CDATA[
+	        <artwork><![CDATA[
   +---+                                  +---------------+
   |   |--(A)------ Credentials --------->| Authorization |
   | C |                                  |    Server     |
@@ -170,21 +171,21 @@
           </artwork>
         </figure>
         <t>
-		  Access token strings can use any internal structure agreed upon between the authorization
-		  server and the resource server, but their structure is opaque to the client. Since the
-		  access token provides the client access to the protected resource for the life of the
-		  access token, the authorization server should issue access tokens which expire within an
-		  appropriate time, usually much shorter than the duration of the access grant.
-		</t>
-		<t>
-	      When an access token expires, the client can request a new access token from the
-	      authorization server by presenting its credentials again (<xref target='Figure 1' />), or
-	      by using the refresh token (if issued with the access token) as shown in
-	      <xref target='Figure 2' />. Once an expired access token has been replaced with a new
-	      access token (A, B), the client uses the new access token as before (C, D).
-	    </t>
+		      Access token strings can use any internal structure agreed upon between the authorization
+		      server and the resource server, but their structure is opaque to the client. Since the
+		      access token provides the client access to the protected resource for the life of the
+		      access token, the authorization server should issue access tokens which expire within an
+		      appropriate time, usually much shorter than the duration of the access grant.
+		    </t>
+		    <t>
+	        When an access token expires, the client can request a new access token from the
+	        authorization server by presenting its credentials again (<xref target='Figure 1' />), or
+	        by using the refresh token (if issued with the access token) as shown in
+	        <xref target='Figure 2' />. Once an expired access token has been replaced with a new
+	        access token (A, B), the client uses the new access token as before (C, D).
+	      </t>
         <figure anchor='Figure 2'>
-		   <artwork><![CDATA[
+		      <artwork><![CDATA[
   +---+                                  +---------------+
   |   |--(A)------ Refresh Token ------->| Authorization |
   | C |                                  |    Server     |
@@ -197,77 +198,77 @@
   |   |<-(D)----- HTTP Response ---------|               |
   +---+                                  +---------------+
 ]]>
-		  </artwork>
-		</figure>
-		<t>
-	      This specification defines a number of authorization flows to support different client
-	      types and scenarios. These authorization flows can be separated into three groups:
-	      user delegation flows where the client is acting on behalf of an end user, end user
-	      credentials flows where the client uses the end user's credentials directly to obtain
-	      authorization, and autonomous flows where the client is acting for itself (the client is
-	      also the resource owner).
-	    </t>
-	    <t>
-	      Additional authorization flows may be defined by other specifications to cover different
-	      scenarios and client types.
+		      </artwork>
+		    </figure>
+		    <t>
+	        This specification defines a number of authorization flows to support different client
+	        types and scenarios. These authorization flows can be separated into three groups:
+	        user delegation flows where the client is acting on behalf of an end user, end user
+	        credentials flows where the client uses the end user's credentials directly to obtain
+	        authorization, and autonomous flows where the client is acting for itself (the client is
+	        also the resource owner).
+	      </t>
+	      <t>
+	        Additional authorization flows may be defined by other specifications to cover different
+	        scenarios and client types.
         </t>
-	    <t>
-		  The user delegation authorization flows defined by this specifications are:
+	      <t>
+		      The user delegation authorization flows defined by this specifications are:
 
-		  <list style='hanging' hangIndent='6'>
-			<t hangText='Web Callback Flow'>
+		      <list style='hanging' hangIndent='6'>
+			      <t hangText='Web Callback Flow'>
               <vspace />
               This flow is described in <xref target='web_callback_flow' />.
-		    </t>
-			<t hangText='Web Client Flow'>
+		        </t>
+			      <t hangText='Web Client Flow'>
               <vspace />
               This flow is described in <xref target='web_client_flow' />.
-		    </t>
-			<t hangText='Device Flow'>
+		        </t>
+			      <t hangText='Device Flow'>
               <vspace />
               This flow is described in <xref target='device_flow' />.
+		        </t>
+		      </list>
 		    </t>
-		  </list>
-		</t>
-		<t>
-	      The end user credentials flow defined by this specification is:
+		    <t>
+	        The end user credentials flow defined by this specification is:
 	
-	      <list style='hanging' hangIndent='6'>
-			<t hangText='Username and Password Flow'>
+	        <list style='hanging' hangIndent='6'>
+			      <t hangText='Username and Password Flow'>
               <vspace />
-			  While the User may use a username and password to authenticate to the
-	          Authorization Server, it is undesirable for the Client to store the
-	          User's username and password. In this flow the User provides their
-	          username and password to an application (Client) they have installed
-	          on their device. The Client presents a Client Identifier, the username
-	          and password (credentials) to the Access Token URI at the
-	          Authorization Server in exchange for an Access Token and a Refresh
-	          Token. This flow is described in <xref target='username_password_flow' />.
-		    </t>
-	      </list>
-	    </t>
+			        While the User may use a username and password to authenticate to the
+	            Authorization Server, it is undesirable for the Client to store the
+	            User's username and password. In this flow the User provides their
+	            username and password to an application (Client) they have installed
+	            on their device. The Client presents a Client Identifier, the username
+	            and password (credentials) to the Access Token URI at the
+              Authorization Server in exchange for an Access Token and a Refresh
+              Token. This flow is described in <xref target='username_password_flow' />.
+		        </t>
+	        </list>
+	      </t>
         <t>
-	      The autonomous authorization flows defined by this specifications are:
+	        The autonomous authorization flows defined by this specifications are:
 	
-	      <list style='hanging' hangIndent='6'>
-		    <t hangText='Client Credentials Flow'>
+	        <list style='hanging' hangIndent='6'>
+		        <t hangText='Client Credentials Flow'>
               <vspace />
-			  The client is provisioned with an account name and corresponding secret by the
-			  authorization server. The client presents the account name and secret to the
-			  authorization Server in exchange for an access token. The client secret is assumed to
-			  be high-entropy since it is not designed to be memorize by an end user. This flow is
-			  described in <xref target='client_credentials_flow' />.
-			</t>
-		    <t hangText='SAML Assertion Flow'>
+			        The client is provisioned with an account name and corresponding secret by the
+			        authorization server. The client presents the account name and secret to the
+			        authorization Server in exchange for an access token. The client secret is assumed to
+			        be high-entropy since it is not designed to be memorize by an end user. This flow is
+			        described in <xref target='client_credentials_flow' />.
+			      </t>
+		        <t hangText='SAML Assertion Flow'>
               <vspace />
-			  The client presents a <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion to
-			  the authorization server in exchange for an access token. The methods through which
-			  the client obtains the assertions are beyond the scope of this specification. This
-			  flow is described in <xref target='saml_assertion_flow' />.
-			</t>
-		  </list>
-		</t>
-	  </section>
+			        The client presents a <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion to
+			        the authorization server in exchange for an access token. The methods through which
+			        the client obtains the assertions are beyond the scope of this specification. This
+			        flow is described in <xref target='saml_assertion_flow' />.
+			      </t>
+		      </list>
+		    </t>
+	    </section>
 
       <section title='Example'>
         <t>
@@ -290,11 +291,11 @@
       </section>
 
       <section title='Authors'>
-	    <t>
-		  This specification was authored with the participation and based on the work of
-		  Allen Tom, Brian Eaton, Brent Goldman, Luke Shepard, Raffi Krikorian, and Yaron Goland.
-		</t>
-	  </section>
+	      <t>
+		      This specification was authored with the participation and based on the work of
+		      Allen Tom, Brian Eaton, Brent Goldman, Luke Shepard, Raffi Krikorian, and Yaron Goland.
+		    </t>
+	    </section>
 
     </section>
 
@@ -325,54 +326,54 @@
           expected size of any value they issue.
         </t>
         <t>
-	      [[ Open Issue ]]
-	      It is RECOMMENDED that authorization servers make their identifiers, secrets, and tokens
-	      string shorter than 255 characters in length in order to ease client implementations.
+	        [[ Open Issue ]]
+	        It is RECOMMENDED that authorization servers make their identifiers, secrets, and tokens
+	        string shorter than 255 characters in length in order to ease client implementations.
         </t>
         <t>
           The values of the request and response parameters defined in this section MUST only contain
           the following characters:
         </t>
         <figure>
-	      <artwork><![CDATA[
+	        <artwork><![CDATA[
   value-char  = ALPHA / DIGIT / "-" / "." / "_" / "~" / "%"
 ]]>
           </artwork>
         </figure>
         <t>
-	      Servers which require the use of other characters MUST specify how such values are to be
-	      encoded to comply with the character-set restriction.
-	    </t>
+	        Servers which require the use of other characters MUST specify how such values are to be
+	        encoded to comply with the character-set restriction.
+	      </t>
       </section>
 
       <section title='Client Credentials' anchor='client_id'>
-	    <t>
-		  When requesting access from the authorization server, the client identifies itself using
-		  its authorization-server-issued client credentials. The client credentials include a
-		  client identifier and an optional symmetric shared secret. The means through which the
-		  client obtains these credentials are beyond the scope of this specification, but usually
-		  involve registration with the authorization server.
-		</t>
-		<t>
-	      The client identifier is used by the authorization server to establish the identity of
-	      the client for the purpose of presenting information to the resource owner prior to
-	      granting access, as well as for providing different service levels to different clients.
-	      They can also be used to block unauthorized clients from requesting access.
-	    </t>
-	    <t>
-		  Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-		  about the confidentiality of client credentials without establishing trust with the
-		  client operator. 
-		</t>
-	  </section>
+	      <t>
+		      When requesting access from the authorization server, the client identifies itself using
+		      its authorization-server-issued client credentials. The client credentials include a
+		      client identifier and an optional symmetric shared secret. The means through which the
+		      client obtains these credentials are beyond the scope of this specification, but usually
+		      involve registration with the authorization server.
+		    </t>
+		    <t>
+	        The client identifier is used by the authorization server to establish the identity of
+	        the client for the purpose of presenting information to the resource owner prior to
+	        granting access, as well as for providing different service levels to different clients.
+	        They can also be used to block unauthorized clients from requesting access.
+	      </t>
+	      <t>
+		      Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
+		      about the confidentiality of client credentials without establishing trust with the
+		      client operator. 
+		    </t>
+	    </section>
 
       <section title='User Delegation Flows'>
-	    <t>
-		  User delegation flows are used to grant client access to protected resources by the
-		  end user without sharing the end user credentials (typically a username and password)
-		  with the client. Instead, the end user authenticates directly with the authorization
-		  server, and grants client access to its protected resources.
-		</t>
+	      <t>
+		      User delegation flows are used to grant client access to protected resources by the
+		      end user without sharing the end user credentials (typically a username and password)
+		      with the client. Instead, the end user authenticates directly with the authorization
+		      server, and grants client access to its protected resources.
+		    </t>
 		
         <section title='Web Callback Flow' anchor='web_callback_flow'>
           <t>
@@ -380,15 +381,15 @@
             interacting with the end user's user-agent (typically a web browser) and capable of
             receiving callback requests from the server.
           </t>
-		  <figure anchor='Figure 3'>
-		    <artwork><![CDATA[
+		      <figure anchor='Figure 3'>
+		        <artwork><![CDATA[
   +----------+         Client Identifier       +---------------+
-  |          |----(A)-- & Callback URI ------->|               |
+  |         -+----(A)-- & Callback URI ------->|               |
   | End User |                                 | Authorization |
   |    at    |<---(B)-- User authenticates --->|     Server    |
   | Browser  |                                 |               |
-  |          |----(C)-- Verification Code ----<|               |
-  +----------+                                 +---------------+
+  |         -+----(C)-- Verification Code ----<|               |
+  +-|----|---+           & Callback URI        +---------------+
     |    |                                         ^      v
     |    |                                         |      |
    (A)  (C)                                        |      |
@@ -402,40 +403,40 @@
   +---------+
 ]]>
             </artwork>
-		  </figure>
+		      </figure>
           <t>
-	        The web callback flow illustrated in <xref target='Figure 3' /> includes the following
-	        steps:
+	          The web callback flow illustrated in <xref target='Figure 3' /> includes the following
+	          steps:
 	
-	        <list style='format (%C)'>
-		      <t>
-			    The web client initiates the flow by redirecting the end user's user-agent to the
-			    authorization endpoint with its client identifier and a callback URI to which the
-			    server will send the end user back once authorization is received (or denied).
-			  </t>
-			  <t>
-				The authorization server authenticates the end user and prompts the end user to
-				grant of deny the client's access request.
-			  </t>
-			  <t>
-				Assuming the end user granted access, the authorization server redirects the
-				user-agent back to the client to the callback URI provided earlier. The
-				authorization includes a verification code for the client to use to obtain an
-				access token.
-			  </t>
-			  <t>
-				The client requests an access token from the authorization server by including its
-				client credentials (identifier and secret), as well as the verification code
-				received in the previous step.
-			  </t>
-			  <t>
-				The authorization server validates the client credentials and the verification
-				token and responds back with the access token.
-			  </t>
-		    </list>
-	      </t>
+	          <list style='format (%C)'>
+		          <t>
+			          The web client initiates the flow by redirecting the end user's user-agent to the
+			          authorization endpoint with its client identifier and a callback URI to which the
+			          server will send the end user back once authorization is received (or denied).
+			        </t>
+			        <t>
+				        The authorization server authenticates the end user and prompts the end user to
+				        grant of deny the client's access request.
+			        </t>
+			        <t>
+				        Assuming the end user granted access, the authorization server redirects the
+				        user-agent back to the client to the callback URI provided earlier. The
+				        authorization includes a verification code for the client to use to obtain an
+				        access token.
+			        </t>
+			        <t>
+				        The client requests an access token from the authorization server by including its
+				        client credentials (identifier and secret), as well as the verification code
+				        received in the previous step.
+			        </t>
+			        <t>
+				        The authorization server validates the client credentials and the verification
+				        token and responds back with the access token.
+			        </t>
+		        </list>
+	        </t>
 	
-	      <section title='Authorization Request'>
+	        <section title='Authorization Request'>
             <t>
               In order for the end user to grant the client access, the client sends the end user
               to the authorization server. The client constructs the request URI by adding the
@@ -443,15 +444,16 @@
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='mode'>
-	              <vspace />
-                  REQUIRED. The parameter value MUST be set to 'flow_web_server' (case sensitive).
+	                <vspace />
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>flow_web_server</spanx> (case sensitive).
                 </t>
                 <t hangText='id'>
-	              <vspace />
+	                <vspace />
                   REQUIRED. The client identifier as described in <xref target='client_id' />.
                 </t>
                 <t hangText='callback'>
-	              <vspace />
+	                <vspace />
                   An absolute URI to which the authorization server will redirect the end user back
                   when the end user authorization step is completed. The authorization server MAY
                   require the client to pre-register their callback URI. The callback URI MUST NOT
@@ -460,7 +462,7 @@
                   and authorization server via other means.
                 </t>
                 <t hangText='state'>
-	              <vspace />
+	                <vspace />
                   An OPTIONAL opaque value used by the client to maintain state between the request
                   and callback.
                 </t>
@@ -492,60 +494,75 @@
             </t>
             <t>
               After receiving an authorization decision from the resource owner, the authorization
-              server sends the end user to the provided client callback URI using an HTTP
-              redirection response, or by other means available to it via the end user's
+              server sends the end user's user-agent to the provided client callback URI using an
+              HTTP redirection response, or by other means available to it via the end user's
               user-agent.
             </t>
             <t>
               If the end user authorizes the access request, the authorization server generates a
-              verification code and associates it with the client identifier and callback URI.
-            </t>
-            <t>
-              The authorization server constructs the request URI by adding one of the two following REQUIRED
-              parameters to the callback URI query component depending on if the resource
-              owner approved (verification_code) or declined (error_reason) the
-              authorization request:
+              verification code and associates it with the client identifier and callback URI. The
+              authorization server constructs the request URI by adding the following parameters to
+              the query component of callback URI provided by the client:
 
               <list style='hanging' hangIndent='6'>
-                <t hangText='verification_code'>
-	              <vspace />
-                  The verification code.
-                </t>
-                <t hangText='error_reason'>
-	              <vspace />
-                  The parameter value MUST be set to 'owner_denied' (case sensitive).
+                <t hangText='code'>
+	                <vspace />
+                  REQUIRED. The verification code generated by the authorization server.
                 </t>
                 <t hangText='state'>
-	              <vspace />
+	                <vspace />
                   REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
-                  client authorization request.
+                  client authorization request. Set the the exact value received from the client.
                 </t>
               </list>
             </t>
             <figure>
               <preamble>
-                For example, the server redirects the resource owner's user-agent:
+                For example, the server redirects the end user's user-agent by sending the
+                following HTTP response:
               </preamble>
               <artwork><![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?verification_code=i1WsRn1uB1
+  Location: https://client.example.com/cb?code=i1WsRn1uB1
 ]]>
               </artwork>
             </figure>
             <figure>
               <preamble>
-                Continuing the example, this results in the resource owner's user-agent
-                making the following HTTPS 'GET' request:
+                In turn, the end user's user-agent makes the following HTTPS
+                <spanx style='verb'>GET</spanx> request:
               </preamble>
               <artwork><![CDATA[
-  GET /cb?verification_code=i1WsRn1uB1 HTTP/1.1
+  GET /cb?code=i1WsRn1uB1 HTTP/1.1
   Host: client.example.com
 ]]>
               </artwork>
             </figure>
+            <t>
+              If the end user denied the access request, the authorization server constructs the
+              request URI by adding the following parameters to the query component of callback URI
+              provided by the client:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='error'>
+	              	<vspace />
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>user_denied</spanx> (case sensitive).
+                </t>
+                <t hangText='state'>
+	              	<vspace />
+                  REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
+                  client authorization request. Set the the exact value received from the client.
+                </t>
+              </list>
+            </t>
             <figure>
+              <preamble>
+                For example, the authorization server directs the client to make the following HTTP
+                request:
+              </preamble>
               <artwork><![CDATA[
-  GET /cb?error_reason=owner_denied HTTP/1.1
+  GET /cb?error=user_denied HTTP/1.1
   Host: client.example.com
 ]]>
               </artwork>
@@ -560,23 +577,23 @@
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='mode'>
-	              <vspace />
+	                <vspace />
                   The parameter value MUST be set to 'flow_web_app' (case sensitive).
                 </t>
                 <t hangText='client_id'>
-	              <vspace />
+	                <vspace />
                   The client identifier.
                 </t>
                 <t hangText='client_secret'>
-	              <vspace />
+	                <vspace />
                   The client secret.
                 </t>
                 <t hangText='verification_code'>
-	              <vspace />
+	                <vspace />
                   The verification code.
                 </t>
                 <t hangText='callback'>
-	              <vspace />
+	                <vspace />
                   The callback URI from the user authorization request.
                 </t>
               </list>
@@ -609,7 +626,7 @@
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='access_token'>
-	              <vspace />
+	                <vspace />
                   The access token.
                 </t>
               </list>
@@ -619,11 +636,11 @@
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='expires'>
-	              <vspace />
+	                <vspace />
                   The lifetime of the access token in seconds.
                 </t>
                 <t hangText='refresh_token'>
-	              <vspace />
+	                <vspace />
                   The refresh token.
                 </t>
               </list>
@@ -660,7 +677,7 @@
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='error_reason'>
-	              <vspace />
+	                <vspace />
                   Value must be one of 'callback_mismatch' or
                   'expired_verification_code' (case sensitive).
                 </t>
@@ -714,15 +731,15 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='mode'>
-	            <vspace />
+	              <vspace />
                 The parameter value MUST be set to 'flow_web_client' (case sensitive).
               </t>
               <t hangText='client_id'>
-	            <vspace />
+	              <vspace />
                 The client identifier.
               </t>
               <t hangText='callback'>
-	            <vspace />
+	              <vspace />
                 An absolute URI to which the authorization server will redirect the
                 resource owner back when the authorization step is completed. The
                 client MUST make use of at least one of either a transport-layer
@@ -738,7 +755,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='client_state'>
-	            <vspace />
+	              <vspace />
                 An opaque value that clients can use to maintain state associated with
                 this request.
               </t>
@@ -788,7 +805,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='access_token'>
-	            <vspace />
+	              <vspace />
                 The access token.
               </t>
             </list>
@@ -798,11 +815,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='expires'>
-	            <vspace />
+	              <vspace />
                 The lifetime of the access token in seconds.
               </t>
               <t hangText='refresh_token'>
-	            <vspace />
+	              <vspace />
                 The refresh token.
               </t>
             </list>
@@ -897,11 +914,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='mode'>
-	            <vspace />
+	              <vspace />
                 The parameter value MUST be set to 'flow_device' (case sensitive).
               </t>
               <t hangText='client_id'>
-	            <vspace />
+	              <vspace />
                 The client identifier.
               </t>
             </list>
@@ -932,15 +949,15 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='device_code'>
-	            <vspace />
+	              <vspace />
                 The device verification code.
               </t>
               <t hangText='user_code'>
-	            <vspace />
+	              <vspace />
                 The user verification code.
               </t>
               <t hangText='verification_uri'>
-	            <vspace />
+	              <vspace />
                 The user verification URI on the authorization server.
               </t>
             </list>
@@ -950,11 +967,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='expires'>
-	            <vspace />
+	              <vspace />
                 The lifetime of the two verification codes in seconds.
               </t>
               <t hangText='verification_rate_limit'>
-	            <vspace />
+	              <vspace />
                 The minimum amount of time in seconds that the client SHOULD wait
                 between polling requests to the device authorization URI.
               </t>
@@ -1006,15 +1023,15 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='mode'>
-	            <vspace />
+	              <vspace />
                 The parameter value MUST be set to 'flow_device' (case sensitive).
               </t>
               <t hangText='client_id'>
-	            <vspace />
+	              <vspace />
                 The client identifier.
               </t>
               <t hangText='device_verification_code'>
-	            <vspace />
+	              <vspace />
                 The device verification code.
               </t>
             </list>
@@ -1045,7 +1062,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='access_token'>
-	            <vspace />
+	              <vspace />
                 The access token.
               </t>
             </list>
@@ -1055,11 +1072,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='expires'>
-	            <vspace />
+	              <vspace />
                 The lifetime of the access token in seconds.
               </t>
               <t hangText='refresh_token'>
-	            <vspace />
+	              <vspace />
                 The refresh token.
               </t>
             </list>
@@ -1096,7 +1113,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='error_reason'>
-	            <vspace />
+	              <vspace />
                 Value must be one of 'authorization_declined', 'authorization_pending',
                 'slow_down', or 'verification_code_expired' (case sensitive).
               </t>
@@ -1119,8 +1136,8 @@
       </section>
 
       <section title='End User Credentials Flows'>
-	    <t>
-		</t>
+	      <t>
+		    </t>
 
         <section title='Username and Password Flow' anchor='username_password_flow'>
           <t>
@@ -1154,19 +1171,19 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='mode'>
-	            <vspace />
+	              <vspace />
                 The parameter value MUST be set to 'flow_username_password' (case sensitive).
               </t>
               <t hangText='client_id'>
-	            <vspace />
+	              <vspace />
                 The client identifier.
               </t>
               <t hangText='username'>
- 	            <vspace />
+ 	              <vspace />
                 The resource owner's username.
               </t>
               <t hangText='password'>
-	            <vspace />
+	              <vspace />
                 The resource owner's password.
               </t>
             </list>
@@ -1203,7 +1220,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='access_token'>
-	            <vspace />
+	              <vspace />
                 The access token.
               </t>
             </list>
@@ -1213,11 +1230,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='expires'>
-	            <vspace />
+	              <vspace />
                 The lifetime of the access token in seconds.
               </t>
               <t hangText='refresh_token'>
-	            <vspace />
+	              <vspace />
                 The refresh token.
               </t>
             </list>
@@ -1266,8 +1283,8 @@
       </section>
 
       <section title='Autonomous Client Flows'>
-	    <t>
-		</t>
+	      <t>
+		    </t>
 
         <section title='Client Credentials Flow' anchor='client_credentials_flow'>
           <t>
@@ -1287,15 +1304,15 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='mode'>
-	            <vspace />
+	              <vspace />
                 The parameter value MUST be set to 'flow_client' (case sensitive).
               </t>
               <t hangText='client_id'>
-	            <vspace />
+	              <vspace />
                 The client identifier.
               </t>
               <t hangText='client_secret'>
-	            <vspace />
+	              <vspace />
                 The client secret.
               </t>
             </list>
@@ -1329,7 +1346,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='access_token'>
-	            <vspace />
+	              <vspace />
                 The access token.
               </t>
             </list>
@@ -1339,11 +1356,11 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='expires'>
-	            <vspace />
+	              <vspace />
                 The lifetime of the access token in seconds.
               </t>
               <t hangText='refresh_token'>
-	            <vspace />
+	              <vspace />
                 The refresh token.
               </t>
             </list>
@@ -1391,53 +1408,53 @@
 
         <section title="SAML Assertion Flow" anchor='saml_assertion_flow'>
           <t>
-	        The SAML assertion flow requires the client to obtain a
-	        <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion from an assertion issuer
-	        prior to initiating this flow. The process in which the assertion is obtained is defined
-	        by the assertion issuer and the authorization server, and is beyond the scope of this
-	        specification.
-	      </t>
+	          The SAML assertion flow requires the client to obtain a
+	          <xref target="OASIS.saml-core-2.0-os">SAML</xref> assertion from an assertion issuer
+	          prior to initiating this flow. The process in which the assertion is obtained is defined
+	          by the assertion issuer and the authorization server, and is beyond the scope of this
+	          specification.
+	        </t>
           <t>
-	        The client makes an HTTPS request to the authorization endpoint using POST. The request
-	        MUST contains the following parameters:
+	          The client makes an HTTPS request to the authorization endpoint using POST. The request
+	          MUST contains the following parameters:
 
             <list style="hanging">
               <t hangText="assertion_format">
-	            <vspace />
-	            The format of the assertion as defined by the authorization server.
-	          </t>
+	              <vspace />
+	              The format of the assertion as defined by the authorization server.
+	            </t>
               <t hangText="assertion">
-	            <vspace />
-	            The assertion.
-	          </t>
+	              <vspace />
+	              The assertion.
+	            </t>
             </list>
           </t>
           <t>
-	        If successful, the authorization server returns an HTTP 200 response code (OK) with the
-	        access token in the response body. The response body contains the following parameters:
+	          If successful, the authorization server returns an HTTP 200 response code (OK) with the
+	          access token in the response body. The response body contains the following parameters:
 
             <list style="hanging">
               <t hangText="access_token">
-	            <vspace />
-	            REQUIRED. The Access Token.
-	          </t>
+	              <vspace />
+	              REQUIRED. The Access Token.
+	            </t>
               <t hangText="expires">
-	            <vspace />
-	            OPTIONAL. The lifetime of the Access Token in seconds. For example, 3600 represents
-	            one hour.
-	          </t>
+	              <vspace />
+	              OPTIONAL. The lifetime of the Access Token in seconds. For example, 3600 represents
+	              one hour.
+	            </t>
             </list>
           </t>
           <t>
-	        If the assertion is not valid, the authorization server MUST respond with an HTTP 401
-	        (Unauthorized) response code. The Client MUST obtain a new valid assertion before
-	        retrying the request.
-	      </t>
+	          If the assertion is not valid, the authorization server MUST respond with an HTTP 401
+	          (Unauthorized) response code. The Client MUST obtain a new valid assertion before
+	          retrying the request.
+	        </t>
           <t>
-	        Authorization servers SHOULD issue access tokens with a limited lifetime and require
-	        clients to refresh them by requesting a new access token using the same assertion if it
-	        is still valid. Otherwise the client MUST obtain a new valid assertion.
-	      </t>
+	          Authorization servers SHOULD issue access tokens with a limited lifetime and require
+	          clients to refresh them by requesting a new access token using the same assertion if it
+	          is still valid. Otherwise the client MUST obtain a new valid assertion.
+	        </t>
         </section>
 
       </section>
@@ -1464,15 +1481,15 @@
 
         <list style='hanging' hangIndent='6'>
           <t hangText='mode'>
-	        <vspace />
+	          <vspace />
             The parameter value MUST be set to 'refresh_token' (case sensitive).
           </t>
           <t hangText='client_id'>
-	        <vspace />
+	          <vspace />
             The client identifier.
           </t>
           <t hangText='refresh_token'>
-	        <vspace />
+	          <vspace />
             The refresh token associated with the access token to be refreshed.
           </t>
         </list>
@@ -1483,7 +1500,7 @@
 
         <list style='hanging' hangIndent='6'>
           <t hangText='client_secret'>
-	        <vspace />
+	          <vspace />
             The client secret.
           </t>
         </list>
@@ -1494,7 +1511,7 @@
 
         <list style='hanging' hangIndent='6'>
           <t hangText='want_secret'>
-	        <vspace />
+	          <vspace />
             The parameter value MUST be set to 'true' (case sensitive).
           </t>
         </list>
@@ -1534,7 +1551,7 @@
 
         <list style='hanging' hangIndent='6'>
           <t hangText='access_token'>
-	        <vspace />
+	          <vspace />
             The access token.
           </t>
         </list>
@@ -1544,15 +1561,15 @@
 
         <list style='hanging' hangIndent='6'>
           <t hangText='expires'>
-	        <vspace />
+	          <vspace />
             The lifetime of the access token in seconds.
           </t>
           <t hangText='access_token_secret'>
-	        <vspace />
+	          <vspace />
             A corresponding access token secret if the client requested one.
           </t>
           <t hangText='signature_methods'>
-	        <vspace />
+	          <vspace />
             A comma-separated list of signature methods supported by the protected resource,
             ordered by preference. REQUIRED if an access token secret is being returned. Possible
             values include 'HMAC-SHA1' and 'HMAC-SHA256' (case-sensitive) as well as any other
@@ -1753,7 +1770,7 @@
 
             <list style='hanging' hangIndent='6'>
               <t hangText='access_token'>
-	            <vspace />
+	              <vspace />
                 The access token.
               </t>
             </list>
