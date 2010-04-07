@@ -227,10 +227,7 @@
 		      <list style='symbols'>
 			      <t>
               Web Callback Flow - This flow is optimized for cases where the client is part of a
-              web server application. When an HTTP server is integrated with the client, the client
-              can utilize HTTP server resources (such as send user-agent redirect requests and
-              receive incoming callback requests) to enhance its interaction with the end user.
-              This flow is described in <xref target='web_callback_flow' />.
+              web server application. This flow is described in <xref target='web_callback_flow' />.
 		        </t>
 		        <t>
 		          Native Application Flow - This flow is use by clients running as native code on the
@@ -243,7 +240,9 @@
               authorization server. This flow is described in <xref target='user_agent_flow' />.
 		        </t>
 			      <t>
-              Device Flow - This flow is described in <xref target='device_flow' />.
+              Device Flow - This flow suitable for clients executing on limited devices, but where
+              the end user has separate access to a user-agent on another computer or device. This
+              flow is described in <xref target='device_flow' />.
 		        </t>
 		      </list>
 		    </t>
@@ -254,11 +253,8 @@
 			      <t>
               Username and Password Flow - This flow is used in cases where the end user trusts
               the client to handle its credentials but it is still undesirable for the client to
-              store the end user's username and password. The client uses its client identifier
-              and the end user's username and password to obtain an access token. Since the flow
-              requires exposing end user credentials to the client, it should only be used where
-              other delegation flows cannot be used and the client can be trusted. This flow is
-              described in <xref target='username_password_flow' />.
+              store the end user's username and password. This flow is described in
+              <xref target='username_password_flow' />.
 		        </t>
 	        </list>
 	      </t>
@@ -267,17 +263,13 @@
 	
 	        <list style='symbols'>
 		        <t>
-              Client Credentials Flow - The client is provisioned with an account name and
-              corresponding secret by the authorization server. The client presents the account
-              name and secret to the authorization Server in exchange for an access token. The
-              client secret is assumed to be high-entropy since it is not designed to be memorize
-              by an end user. This flow is described in <xref target='client_credentials_flow' />.
+              Client Credentials Flow - The client uses its credentials to obtain an access token.
+              This flow is described in <xref target='client_credentials_flow' />.
 			      </t>
 		        <t>
 		          Assertion Flow - The client presents an assertion such as a 
 		          <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion to the authorization
-		          server in exchange for an access token. The methods through which the client obtains
-		          the assertions are beyond the scope of this specification. This flow is described in
+		          server in exchange for an access token. This flow is described in
 		          <xref target='assertion_flow' />.
 			      </t>
 		      </list>
@@ -316,6 +308,15 @@
         When issuing an access token, the authorization server MUST retain the scope, duration, and
         other access attributes grated by the resource owner, and enforce these restrictions when
         receiving a protected resource request made with the access token issued.
+      </t>
+      <t>
+        In many cases it is desirable to issue access tokens with a shorter lifetime than the
+        duration of the authorization grant. However, it is undesirable to require the resource
+        owner to authorize the request again. Instead, the authorization server issues a refresh
+        token in addition to the access token. When the access token expires, the client can
+        request a new access token without involving the resource owner as long as the
+        authorization grant is still valid. The token refresh method is described in
+        <xref target='token_refresh' />.
       </t>
 
       <section title='Authorization Endpoint'>
@@ -399,8 +400,8 @@
   |   Web   |           Verification Code,                |
   |  Client |            & Callback URI                   |
   |         |                                             |
-  |         |<---(E)-- Access Token ----------------------'
-  +---------+
+  |         |<---(E)------- Access Token -----------------'
+  +---------+        (w/ Optional Refresh Token)
 ]]>
             </artwork>
 		      </figure>
@@ -658,7 +659,7 @@
                 <t hangText='refresh_token'>
 	                <vspace />
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
-                  end user access grant as described in <xref target='refresh_token' />.
+                  end user access grant as described in <xref target='token_refresh' />.
                 </t>
               </list>
             </t>
@@ -748,8 +749,8 @@
   +---------+                                      |      |
   |  Native |>---(E)-- Verification Code ----------'      |
   |   App   |                                             |
-  |  Client |<---(F)-- Access Token ----------------------'
-  +---------+
+  |  Client |<---(F)--------- Access Token ---------------'
+  +---------+          (w/ Optional Refresh Token)
 ]]>
             </artwork>
 		      </figure>
@@ -989,7 +990,7 @@
                 <t hangText='refresh_token'>
 	                <vspace />
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
-                  end user access grant as described in <xref target='refresh_token' />.
+                  end user access grant as described in <xref target='token_refresh' />.
                 </t>
               </list>
             </t>
@@ -1068,8 +1069,8 @@
   User   |          |                                |     Server     |
          |          |<---(C)-- Redirection URI -----<|                |
          |  Client  |         with Access Token      |                |
-         |    in    |            in Fragment         +----------------+
-         |  Browser |
+         |    in    |    (w/ Optional Refresh Token) +----------------+
+         |  Browser |            in Fragment
          |          |                                +----------------+
          |          |>---(D)-- Redirection URI ----->|                |
          |          |          without Fragment      |   Web Server   |
@@ -1291,11 +1292,11 @@
 
         <section title='Device Flow' anchor='device_flow'>
           <t>
-            The device flow is suitable for clients executing on devices which do not have an easy
-            data-entry method (e.g. game consoles or media server), but where the end user has
-            separate access to a user-agent on another computer or device (e.g. home computer, a
-            laptop, or a smartphone). The client is incapable of receiving callback requests from
-            the server (incapable of acting as an HTTP server).
+            The device flow is a user delegation flow suitable for clients executing on devices
+            which do not have an easy data-entry method (e.g. game consoles or media server), but
+            where the end user has separate access to a user-agent on another computer or device
+            (e.g. home computer, a laptop, or a smartphone). The client is incapable of receiving
+            callback requests from the server (incapable of acting as an HTTP server).
           </t>
           <t>
             Instead of interacting with the end user's user-agent, the client instructs the end
@@ -1322,7 +1323,7 @@
   |          |>---(E)--->                     |                |
   |          |                                |  Authorization |
   |          |<---(F)-- Access Token --------<|     Server     |
-  +----------+                                |                |
+  +----------+  (w/ Optional Refresh Token)   |                |
         v                                     |                |
         :                                     |                |
        (C) User Code & Verification URI       |                |
@@ -1472,11 +1473,14 @@
             <t>
               Since the client is unable to receive callbacks from the authorization server, it
               polls the server repeatedly until the end user grants or denies the request, or the
-              client verification code expires. The client makes the following request at an
-              arbitrary but reasonable interval that MUST NOT exceed the minimum interval rate
-              provided by the server (if present via the <spanx style='verb'>interval</spanx>
-              parameter). Alternatively, the client MAY provide a user interface for the end user
-              to manually inform it when authorization was granted.
+              client verification code expires.
+            </t>
+            <t>
+              The client makes the following request at an arbitrary but reasonable interval which
+              MUST NOT exceed the minimum interval rate provided by the server (if present via the
+              <spanx style='verb'>interval</spanx> parameter). Alternatively, the client MAY
+              provide a user interface for the end user to manually inform it when authorization
+              was granted.
             </t>
             <t>
               The client requests an access token by making an HTTP <spanx style='verb'>GET</spanx>
@@ -1619,471 +1623,561 @@
 
       <section title='End User Credentials Flows'>
 	      <t>
+		      End user credential flows are used to grant client access to protected resources by the
+		      end user directly sharing the end user credentials (typically a username and password)
+		      with the client. Unlike user delegation flows, end user credentials flows require a much
+		      higher degree of trust between the client and end user.
+	      </t>
+	      <t>
+		      These flows are suitable in cases where the end user already has a trust relationship
+		      with the client, such as its computer operating system or highly privileged applications.
+		      Servers SHOULD take special care when enabling user credentials flows, and SHOULD only do
+		      so when other delegation flows are not viable.
 		    </t>
+	      <t>
+		      However, unlike the HTTP Basic authentication scheme defined in
+		      <xref target='RFC2617' />, the end user's credentials are used in a single request and
+		      are exchanged for an access token and refresh token which eliminates the client need to
+		      store them for future use.
+	      </t>
 
         <section title='Username and Password Flow' anchor='username_password_flow'>
           <t>
-            This flow is used when the authorization server generally trusts the client to
-            temporarily collect the end-user's username and password and it is impossible
-            to use one of the other authorization flows. This flow enables a client to act
-            on behalf of the resource owner without having to permanently store their
-            username and password. This flow also enables clients who previously used
-            username and password to perform a conversion to token based credentials.
+            The username and password flow is an end user credentials flow suitable for clients
+            capable of asking end users for their usernames and passwords. It is also used to
+            migrate existing clients using direct authentication schemes such as HTTP Basic or
+            Digest authentication to OAuth by converting the end user credentials stored with
+            tokens.
           </t>
           <t>
-            Prior to making a request using this flow, the client MUST have obtained a
-            client identifier and access token request endpoint URI from the authorization
-            server. How the client prompts the resource owner for their username and
-            password is beyond the scope of this specification. The client must discard the
-            resource owner's username and password once an access token has been obtained.
+            The methods through which the client prompts end users for their usernames and
+            passwords is beyond the scope of this specification. The client MUST discard the
+            usernames and passwords once an access token has been obtained.
           </t>
-          <t>
-            Because the end-user's username and password flows through the client, it is
-            RECOMMENDED that authorization servers only allow 'trusted' clients to have
-            access to this flow; it is RECOMMENDED that, by default, a client does not have
-            access to this flow, and it must have its abilities elevated somehow. In the
-            case of allowing a client to convert usernames and passwords to tokens, it is
-            RECOMMENDED that a client only be given access to this flow for a set time
-            duration. The method by which to elevate permissions is out of scope for this
-            document.
-          </t>
-          <t>
-            The client constructs an HTTP 'POST' request to the access token request
-            endpoint and includes the following REQUIRED parameters:
-
-            <list style='hanging' hangIndent='6'>
-              <t hangText='type'>
-	              <vspace />
-                The parameter value MUST be set to 'flow_username_password' (case sensitive).
-              </t>
-              <t hangText='client_id'>
-	              <vspace />
-                REQUIRED. The client identifier as described in <xref target='client_id' />.
-              </t>
-              <t hangText='username'>
- 	              <vspace />
-                The resource owner's username.
-              </t>
-              <t hangText='password'>
-	              <vspace />
-                The resource owner's password.
-              </t>
-            </list>
-          </t>
-          <t>
-            Since the request results in the transmission of plain text credentials in both
-            the HTTP request and response, the authorization server MUST require the use of
-            a transport-layer mechanism such as TLS or SSL (or a secure channel with
-            equivalent protections).
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTPS request (line breaks are for display
-              purposes only):
-            </preamble>
-            <artwork><![CDATA[
-  POST /access_token HTTP/1.1
-  Host: server.example.com
-  
-  client_id=s6BhdRkqt3&username=daveman692&password=1password&type=flow
-  _username_password
+          <figure anchor='Figure 7'>
+          	<artwork><![CDATA[
+   End User
+      v      	  
+      :
+     (A)
+      :
+      v   	  
+  +--------+                                  +---------------+
+  |        |          Client Credentials      |               |
+  |        |>--(B)--- & User Credentials ---->| Authorization |
+  | Client |                                  |     Server    |
+  |        |<--(C)---- Access Token ---------<|               |
+  |        |     (w/ Optional Refresh Token)  |               |
+  +--------+                                  +---------------+
 ]]>
             </artwork>
-          </figure>
+		      </figure>
           <t>
-            The authorization server MUST verify that the resource owner's credentials are
-            accurate and MAY verify that the client is authorized to use this flow. If the
-            request is authorized, the access token is included in the HTTP response body
-            using the 'application/x-www-form-urlencoded' content type as defined by
-            <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
-          </t>
-          <t>
-            The response contains the following REQUIRED parameter:
+	          The username and password flow illustrated in <xref target='Figure 7' /> includes the
+	          following steps:
 
-            <list style='hanging' hangIndent='6'>
-              <t hangText='access_token'>
-	              <vspace />
-                The access token.
+	          <list style='format (%C)'>
+		          <t>
+		            The end user provides the client with its username and password.
+	            </t>
+	            <t>
+	              The client sends an access token request to the authorization server and includes
+	              its client identifier and client secret, and the end user's username and password.
               </t>
+	            <t>
+				        The authorization server validates the end user credentials and the client
+				        credentials and issues an access token.
+			        </t>
             </list>
           </t>
-          <t>
-            The authorization server MAY also include the following parameters:
+          
+          <section title='Client Requests Access Token'>
+            <t>
+              The client requests an access token by making an HTTP <spanx style='verb'>POST</spanx>
+              request to the authorization endpoint. The client constructs a request URI by adding
+              the following parameters to the request:
 
-            <list style='hanging' hangIndent='6'>
-              <t hangText='expires_in'>
-	              <vspace />
-                The duration in seconds of the access token lifetime.
-              </t>
-              <t hangText='refresh_token'>
-	              <vspace />
-                The refresh token.
-              </t>
-            </list>
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork><![CDATA[
+              <list style='hanging' hangIndent='6'>
+                <t hangText='type'>
+	                <vspace />
+                  The parameter value MUST be set to 'username_password_request' (case sensitive).
+                </t>
+                <t hangText='client_id'>
+	                <vspace />
+                  REQUIRED. The client identifier as described in <xref target='client_id' />.
+                </t>
+                <t hangText='client_secret'>
+                  <vspace />
+                  REQUIRED. The client secret as described in <xref target='client_id' />. OPTIONAL
+                  if no client secret was issued.
+                </t>
+                <t hangText='username'>
+ 	                <vspace />
+                  REQUIRED. The end user's username.
+                </t>
+                <t hangText='password'>
+	                <vspace />
+                  REQUIRED. The end user's password.
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example, the client makes the following HTTPS request (line breaks are for
+                display purposes only):
+              </preamble>
+              <artwork><![CDATA[
+  POST /authorize HTTP/1.1
+  Host: server.example.com
+  
+  type=username_password_request&client_id=s6BhdRkqt3&client_secret=
+  47HDu8s&username=johndoe&password=A3ddj3w
+]]>
+              </artwork>
+            </figure>
+            <t>
+              The authorization server MUST validate the client credentials and end user credentials
+              and if valid issue an access token and deliver to the client in the HTTP response body
+              using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
+              defined by <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
+            </t>
+            <t>
+              The response contains the following parameters:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='access_token'>
+	                <vspace />
+                  REQUIRED. The access token.
+                </t>
+                <t hangText='expires_in'>
+	                <vspace />
+                  OPTIONAL. The duration in seconds of the access token lifetime.
+                </t>
+                <t hangText='refresh_token'>
+	                <vspace />
+                  OPTIONAL. The refresh token.
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
   access_token=FJQbwq9OD8&refresh_token=gO3CHNqpH8
 ]]>
-            </artwork>
-          </figure>
-          <t>
-            The authorization server must retain the scope, duration, and other attributes approved
-            by the resource owner, and enforce these restrictions when receiving a client request
-            made with the tokens issued.
-          </t>
-          <t>
-            Once the client receives and stores the token credentials, it can proceed to access
-            protected resources on behalf of the resource owner by making authenticated requests
-            (<xref target='access_resource' />) using the access token received. Alternatively, it
-            can refresh the access token and request an access secret to use in the signature flow
-            (<xref target='refresh_token' />).
-          </t>
-          <t>
-            If the request fails verification, the authorization server SHOULD respond with the
-            appropriate HTTP response status code. The authorization server MAY include further
-            details about why the request was rejected in the response body.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork><![CDATA[
-  HTTP/1.1 401 Unauthorized
+              </artwork>
+            </figure>
+            <t>
+              If the request is invalid, the authorization server returns an error message in the
+              HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+              by <xref target='W3C.REC-html40-19980424' /> with a 400 status code (Bad Request).
+            </t>
+            <t>
+              The response contains the following parameter:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='error'>
+	                <vspace />
+                  OPTIONAL. The parameter value MUST be set to either
+                  <spanx style='verb'>incorrect_credentials</spanx> or
+                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
+
+  error=incorrect_credentials
 ]]>
-            </artwork>
-          </figure>
+              </artwork>
+            </figure>
+          </section>
+          
         </section>
 
       </section>
 
       <section title='Autonomous Client Flows'>
 	      <t>
+		      Autonomous client flows are used to grant client access to protected resources controlled
+		      by the client (i.e. the client is the resource owner). For example, these flows are
+		      useful when a service provides both client-specific resources in addition to end user
+		      resources.
 		    </t>
 
         <section title='Client Credentials Flow' anchor='client_credentials_flow'>
           <t>
-            This flow is suitable when the client acts autonomously in seeking access and is thus not
-            accessing protected resources within the context of a given end-user. For example, when a
-            client is accessing non-private data or modifying data about itself. This flow SHOULD NOT
-            be used when the client is acting on behalf of an end-user.
+            The client credentials flow is used when the client acts autonomously without acting on
+            behalf of a separate resource owner. The client secret is assumed to be high-entropy
+            since it is not designed to be memorize by an end user.
           </t>
-          <t>
-            Prior to making a request using this flow, the client MUST have obtained a client
-            identifier, client secret, and access token request endpoint URI from the
-            authorization server.
-          </t>
-          <t>
-            The client constructs an HTTP 'POST' request to the access token request endpoint and
-            includes the following REQUIRED parameters:
-
-            <list style='hanging' hangIndent='6'>
-              <t hangText='type'>
-	              <vspace />
-                The parameter value MUST be set to 'flow_client' (case sensitive).
-              </t>
-              <t hangText='client_id'>
-	              <vspace />
-                REQUIRED. The client identifier as described in <xref target='client_id' />.
-              </t>
-              <t hangText='client_secret'>
-	              <vspace />
-                The client secret.
-              </t>
-            </list>
-          </t>
-          <t>
-            Since the request results in the transmission of plain text credentials in both the HTTP
-            request and response, the authorization server MUST require the use of a transport-layer
-            mechanism such as TLS or SSL (or a secure channel with equivalent protections).
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTPS request:
-            </preamble>
-            <artwork><![CDATA[
-  POST /access_token HTTP/1.1
-  Host: server.example.com
-  
-  client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM&type=flow_client
+          <figure anchor='Figure 8'>
+          	<artwork><![CDATA[
+  +--------+                                  +---------------+
+  |        |                                  |               |
+  |        |>--(A)--- Client Credentials ---->| Authorization |
+  | Client |                                  |     Server    |
+  |        |<--(B)---- Access Token ---------<|               |
+  |        |                                  |               |
+  +--------+                                  +---------------+
 ]]>
             </artwork>
-          </figure>
+		      </figure>
           <t>
-            The authorization server MUST verify that the resource owner has authorized the
-            provisioning of an access token to the client. If the request is authorized, the access
-            token is included in the HTTP response body using the 'application/x-www-form-urlencoded'
-            content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 200 status
-            code (OK).
-          </t>
-          <t>
-            The response contains the following REQUIRED parameter:
+	          The client credential flow illustrated in <xref target='Figure 8' /> includes the
+	          following steps:
 
-            <list style='hanging' hangIndent='6'>
-              <t hangText='access_token'>
-	              <vspace />
-                The access token.
+	          <list style='format (%C)'>
+	            <t>
+	              The client sends an access token request to the authorization server and includes
+	              its client identifier and client secret.
               </t>
+	            <t>
+				        The authorization server validates the client credentials and issues an access
+				        token.
+			        </t>
             </list>
           </t>
-          <t>
-            The authorization server MAY also include the following parameters:
+          
+          <section title='Client Requests Access Token'>
+            <t>
+              The client requests an access token by making an HTTP <spanx style='verb'>POST</spanx>
+              request to the authorization endpoint. The client constructs a request URI by adding
+              the following parameters to the request:
 
-            <list style='hanging' hangIndent='6'>
-              <t hangText='expires_in'>
-	              <vspace />
-                The duration in seconds of the access token lifetime.
-              </t>
-              <t hangText='refresh_token'>
-	              <vspace />
-                The refresh token.
-              </t>
-            </list>
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork><![CDATA[
+              <list style='hanging' hangIndent='6'>
+                <t hangText='type'>
+	                <vspace />
+                  The parameter value MUST be set to 'client_cred_request' (case sensitive).
+                </t>
+                <t hangText='client_id'>
+	                <vspace />
+                  REQUIRED. The client identifier as described in <xref target='client_id' />.
+                </t>
+                <t hangText='client_secret'>
+                  <vspace />
+                  REQUIRED. The client secret as described in <xref target='client_id' />. OPTIONAL
+                  if no client secret was issued.
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example, the client makes the following HTTPS request (line breaks are for
+                display purposes only):
+              </preamble>
+              <artwork><![CDATA[
+  POST /authorize HTTP/1.1
+  Host: server.example.com
+  
+  type=client_cred_request&client_id=s6BhdRkqt3&client_secret=47HDu8s
+]]>
+              </artwork>
+            </figure>
+            <t>
+              The authorization server MUST validate the client credentials and if valid issue an
+              access token and deliver to the client in the HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+              by <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
+            </t>
+            <t>
+              The response contains the following parameters:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='access_token'>
+	                <vspace />
+                  REQUIRED. The access token.
+                </t>
+                <t hangText='expires_in'>
+	                <vspace />
+                  OPTIONAL. The duration in seconds of the access token lifetime.
+                </t>
+             </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  access_token=FJQbwq9OD8&refresh_token=gO3CHNqpH8
+  access_token=FJQbwq9OD8
 ]]>
-            </artwork>
-          </figure>
-          <t>
-            The authorization server must retain the scope, duration, and other attributes approved
-            by the resource owner, and enforce these restrictions when receiving a client request
-            made with the tokens issued.
-          </t>
-          <t>
-            Once the client receives and stores the token credentials, it can proceed to access
-            protected resources on behalf of the resource owner by making authenticated requests
-            (<xref target='access_resource' />) using the access token received. Alternatively, it
-            can refresh the access token and request an access secret to use in the signature flow
-            (<xref target='refresh_token' />).
-          </t>
-          <t>
-            If the request fails verification, the authorization server SHOULD respond with the
-            appropriate HTTP response status code. The authorization server MAY include further
-            details about why the request was rejected in the response body.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork><![CDATA[
-  HTTP/1.1 401 Unauthorized
+              </artwork>
+            </figure>
+            <t>
+              If the request is invalid, the authorization server returns an error message in the
+              HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+              by <xref target='W3C.REC-html40-19980424' /> with a 400 status code (Bad Request).
+            </t>
+            <t>
+              The response contains the following parameter:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='error'>
+	                <vspace />
+                  OPTIONAL. The parameter value MUST be set to either
+                  <spanx style='verb'>incorrect_credentials</spanx> or
+                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
+
+  error=incorrect_credentials
 ]]>
-            </artwork>
-          </figure>
+              </artwork>
+            </figure>
+          </section>
+          
         </section>
 
         <section title='Assertion Flow' anchor='assertion_flow'>
           <t>
 	          The assertion flow requires the client to obtain a assertion such as a
 	          <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion from an assertion issuer
-	          prior to initiating this flow. The process in which the assertion is obtained is defined
+	          prior to initiating the flow. The process in which the assertion is obtained is defined
 	          by the assertion issuer and the authorization server, and is beyond the scope of this
 	          specification.
 	        </t>
           <t>
-	          The client makes an HTTPS request to the authorization endpoint using POST. The request
-	          MUST contains the following parameters:
+            The client credentials flow is used when the client acts autonomously without acting on
+            behalf of a separate resource owner.
+          </t>
+          <figure anchor='Figure 9'>
+          	<artwork><![CDATA[
+  +--------+                                  +---------------+
+  |        |                                  |               |
+  |        |>--(A)------ Assertion ---------->| Authorization |
+  | Client |                                  |     Server    |
+  |        |<--(B)---- Access Token ---------<|               |
+  |        |                                  |               |
+  +--------+                                  +---------------+
+]]>
+            </artwork>
+		      </figure>
+          <t>
+	          The client credential flow illustrated in <xref target='Figure 9' /> includes the
+	          following steps:
 
-            <list style='hanging'>
-              <t hangText='assertion_format'>
-	              <vspace />
-	              The format of the assertion as defined by the authorization server.
-	            </t>
-              <t hangText='assertion'>
-	              <vspace />
-	              The assertion.
-	            </t>
+	          <list style='format (%C)'>
+	            <t>
+	              The client sends an access token request to the authorization server and includes
+	              an assertion.
+              </t>
+	            <t>
+				        The authorization server validates the assertion and issues an access token.
+			        </t>
             </list>
           </t>
-          <t>
-	          If successful, the authorization server returns an HTTP 200 response code (OK) with the
-	          access token in the response body. The response body contains the following parameters:
+          
+          <section title='Client Requests Access Token'>
+            <t>
+              The client requests an access token by making an HTTP <spanx style='verb'>POST</spanx>
+              request to the authorization endpoint. The client constructs a request URI by adding
+              the following parameters to the request:
 
-            <list style='hanging'>
-              <t hangText='access_token'>
-	              <vspace />
-	              REQUIRED. The Access Token.
-	            </t>
-              <t hangText='expires_in'>
-	              <vspace />
-	              OPTIONAL. The duration in seconds of the access token lifetime.
-	            </t>
-            </list>
-          </t>
-          <t>
-	          If the assertion is not valid, the authorization server MUST respond with an HTTP 401
-	          (Unauthorized) response code. The Client MUST obtain a new valid assertion before
-	          retrying the request.
-	        </t>
-          <t>
-	          Authorization servers SHOULD issue access tokens with a limited lifetime and require
-	          clients to refresh them by requesting a new access token using the same assertion if it
-	          is still valid. Otherwise the client MUST obtain a new valid assertion.
-	        </t>
+              <list style='hanging' hangIndent='6'>
+                <t hangText='type'>
+	                <vspace />
+                  The parameter value MUST be set to 'assertion_request' (case sensitive).
+                </t>
+                <t hangText='format'>
+	                <vspace />
+	                The format of the assertion as defined by the authorization server.
+	              </t>
+                <t hangText='assertion'>
+	                <vspace />
+	                The assertion.
+	              </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example, the client makes the following HTTPS request (line breaks are for
+                display purposes only):
+              </preamble>
+              <artwork><![CDATA[
+  POST /authorize HTTP/1.1
+  Host: server.example.com
+  
+  format=_______&assertion=_______
+]]>
+              </artwork>
+            </figure>
+            <t>
+              The authorization server MUST validate the assertion and if valid issue an access
+              token and deliver to the client in the HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+              by <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
+            </t>
+            <t>
+              The response contains the following parameters:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='access_token'>
+	                <vspace />
+                  REQUIRED. The access token.
+                </t>
+                <t hangText='expires_in'>
+	                <vspace />
+                  OPTIONAL. The duration in seconds of the access token lifetime.
+                </t>
+             </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
+  HTTP/1.1 200 OK
+  Content-Type: application/x-www-form-urlencoded
+
+  access_token=FJQbwq9OD8
+]]>
+              </artwork>
+            </figure>
+            <t>
+              If the assertion is invalid, the authorization server returns an error message in the
+              HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+              by <xref target='W3C.REC-html40-19980424' /> with a 400 status code (Bad Request).
+            </t>
+            <t>
+              The response contains the following parameter:
+
+              <list style='hanging' hangIndent='6'>
+                <t hangText='error'>
+	                <vspace />
+                  OPTIONAL. The parameter value MUST be set to either
+                  <spanx style='verb'>incorrect_credentials</spanx> or
+                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example:
+              </preamble>
+              <artwork><![CDATA[
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
+
+  error=incorrect_credentials
+]]>
+              </artwork>
+            </figure>
+            <t>
+	            Authorization servers SHOULD issue access tokens with a limited lifetime and require
+	            clients to refresh them by requesting a new access token using the same assertion if it
+	            is still valid. Otherwise the client MUST obtain a new valid assertion.
+	          </t>
+          </section>
+          
         </section>
 
       </section>
 
     </section>
 
-    <section title='Refreshing an Access Token' anchor='refresh_token'>
+    <section title='Refreshing an Access Token' anchor='token_refresh'>
       <t>
-        Authorization servers MAY issue access tokens that expire and thus require clients to
-        refresh them. A client determines that an access token needs refreshing either by using the
-        access token's expiration information or upon receiving the HTTP 401 Unauthorized response
-        when accessing protected resources per <xref target='access_resource' />. A client will
-        also refresh a token if it wishes to obtain a corresponding access token secret for use
-        when accessing protected resources via signatures (<xref target='using_signatures'/>).
+        Token refresh is used when the lifetime of an access token is shorter than the lifetime of
+        the authorization grant. It allows clients to obtain a new access token without having to
+        go through the authorization flow again or involve the resource owner. It is also used to
+        obtain a new token with different security properties (e.g. bearer token, token with
+        shared symmetric secret).
       </t>
       <t>
-        Prior to making a request using this flow, the client MUST have obtained a client
-        identifier, client secret, and access token request endpoint URI from the
-        authorization server.
-      </t>
-      <t>
-        The client constructs an HTTP 'POST' request to the access token request endpoint and
-        includes the following REQUIRED parameters:
+        To refresh a token, the client constructs an HTTP <spanx style='verb'>POST</spanx> request
+        to the authorization endpoint and includes the following parameters in the HTTP request
+        body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type
+        as defined by <xref target='W3C.REC-html40-19980424' />:
 
         <list style='hanging' hangIndent='6'>
           <t hangText='type'>
 	          <vspace />
-            The parameter value MUST be set to 'refresh_token' (case sensitive).
+            REQUIRED. The parameter value MUST be set to 'refresh_token' (case sensitive).
           </t>
           <t hangText='client_id'>
 	          <vspace />
             REQUIRED. The client identifier as described in <xref target='client_id' />.
           </t>
-          <t hangText='refresh_token'>
-	          <vspace />
-            The refresh token associated with the access token to be refreshed.
-          </t>
-        </list>
-      </t>
-      <t>
-        If the client has access to the client secret, the following parameter SHOULD also be added
-        to the request:
-
-        <list style='hanging' hangIndent='6'>
           <t hangText='client_secret'>
 	          <vspace />
-            The client secret.
+            REQUIRED if the client was issued a secret. The client secret.
           </t>
-        </list>
-      </t>
-      <t>
-        If the client wishes to obtain an access token for use when accessing protected resources
-        via signatures, the following parameters MUST also be added to the request:
-
-        <list style='hanging' hangIndent='6'>
-          <t hangText='want_secret'>
+          <t hangText='refresh_token'>
 	          <vspace />
-            The parameter value MUST be set to 'true' (case sensitive).
+            REQUIRED. The refresh token associated with the access token to be refreshed.
+          </t>
+          <t hangText='secret_type'>
+            <vspace />
+            OPTIONAL. This specification defines two values: <spanx style='verb'>none</spanx> for 
+            an access token without a secret (bearer token) and <spanx style='verb'>mac</spanx> for
+            a token with a shared symmetric secret suitable for signing requests using a MAC
+            cryptographic algorithm. The value defaults to <spanx style='verb'>none</spanx> if
+            omitted. Using token secrets is described in <xref target='using_signatures' />.
           </t>
         </list>
-      </t>
-      <t>
-        Since the request results in the transmission of plain text credentials in both the HTTP
-        request and response, the authorization server MUST require the use of a transport-layer
-        mechanism such as TLS or SSL (or a secure channel with equivalent protections).
       </t>
       <figure>
         <preamble>
-          For example, the client makes the following HTTPS request:
+          For example, the client makes the following HTTPS request (line break are for display
+          purposes only):
         </preamble>
         <artwork>
           <![CDATA[
-  POST /refresh_token HTTP/1.1
+  POST /authorize HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
   
-  client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM&refresh_token=n4E9O119d
+  type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
+  &refresh_token=n4E9O119d&secret_type=mac
 ]]>
         </artwork>
       </figure>
       <t>
-        The authorization server MUST verify that the resource owner has still authorized the
-        provisioning of an access token to the client and that the refresh token is valid. If the
-        request is authorized, the access token is included in the HTTP response body using the
-        'application/x-www-form-urlencoded' content type as defined by
-        <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
-      </t>
-      <t>
-        If an access token secret is included in the response, the protected resource MUST NOT
-        allow the use of the corresponding access token without its secret
-        (<xref target='using_ssl' />).
-      </t>
-      <t>
-        The response contains the following REQUIRED parameters:
+        The authorization server MUST verify the client credential, the validity of the refresh
+        token, and that the resource owner's authorization is still valid. If the request is valid,
+        the authorization server issues a new access token and includes the following parameters in
+        the HTTP response body using the
+        <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined by
+        <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK):
 
         <list style='hanging' hangIndent='6'>
           <t hangText='access_token'>
 	          <vspace />
-            The access token.
+            REQUIRED. The access token.
           </t>
-        </list>
-      </t>
-      <t>
-        The authorization server MAY also include the following parameters:
-
-        <list style='hanging' hangIndent='6'>
           <t hangText='expires_in'>
 	          <vspace />
-            The duration in seconds of the access token lifetime.
+            OPTIONAL. The duration in seconds of the access token lifetime.
           </t>
           <t hangText='access_token_secret'>
 	          <vspace />
-            A corresponding access token secret if the client requested one.
-          </t>
-          <t hangText='signature_methods'>
-	          <vspace />
-            A comma-separated list of signature methods supported by the protected resource,
-            ordered by preference. REQUIRED if an access token secret is being returned. Possible
-            values include 'HMAC-SHA1' and 'HMAC-SHA256' (case-sensitive) as well as any other
-            values defined by extensions to this protocol.
+            REQUIRED if requested by the client. The corresponding access token secret as requested
+            by the client.
           </t>
         </list>
-      </t>
-      <figure>
-        <preamble>
-          For example (line breaks are for display purposes only):
-        </preamble>
-        <artwork>
-          <![CDATA[
-  HTTP/1.1 200 OK
-  Content-Type: application/x-www-form-urlencoded
-
-  access_token=8F44J2HGMl
-]]>
-        </artwork>
-      </figure>
-      <figure>
-        <artwork>
-          <![CDATA[
-  HTTP/1.1 200 OK
-  Content-Type: application/x-www-form-urlencoded
-
-  access_token=8F44J2HGMl&access_token_secret=h3B2Tw1CHw&signature_meth
-  ods=HMAC-SHA1,HMAC-SHA256
-]]>
-        </artwork>
-      </figure>
-      <t>
-        If the request fails verification, the authorization server SHOULD respond with the
-        appropriate HTTP response status code. The authorization server MAY include further details
-        about why the request was rejected in the response body.
       </t>
       <figure>
         <preamble>
@@ -2091,7 +2185,44 @@
         </preamble>
         <artwork>
           <![CDATA[
-  HTTP/1.1 401 Unauthorized
+  HTTP/1.1 200 OK
+  Content-Type: application/x-www-form-urlencoded
+
+  access_token=8F44J2HGMl&access_token_secret=hfd83hjd&expires_in=3600
+]]>
+        </artwork>
+      </figure>
+      <t>
+        The authorization server MUST invalidate the old access token being replaced.
+      </t>
+      <t>
+        If the request fails verification, the authorization server returns an error message in the
+        HTTP response body using the
+        <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as defined
+        by <xref target='W3C.REC-html40-19980424' /> with a 400 status code (Bad Request).
+      </t>
+      <t>
+        The response contains the following parameter:
+
+        <list style='hanging' hangIndent='6'>
+          <t hangText='error'>
+	          <vspace />
+            OPTIONAL. The parameter value MUST be set to either
+            <spanx style='verb'>incorrect_credentials</spanx>,
+            <spanx style='verb'>authorization_expired</spanx>, or
+            <spanx style='verb'>unsupported_secret_type</spanx> (case sensitive).
+          </t>
+        </list>
+      </t>
+      <figure>
+        <preamble>
+          For example:
+        </preamble>
+        <artwork><![CDATA[
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
+
+  error=incorrect_credentials
 ]]>
         </artwork>
       </figure>
@@ -2304,13 +2435,13 @@
             <t hangText='access_token'>
               <vspace />
               The access token obtained through a refresh token call with the 'want_secret'
-              parameter included (<xref target='refresh_token'/>).
+              parameter included (<xref target='token_refresh'/>).
             </t>
             <t hangText='signature_method'>
               <vspace />
               The signature method used by the client to sign the request. The method MUST be one
               of those listed in the 'signature_methods' parameter returned with the access
-              token secret (<xref target='refresh_token' />).
+              token secret (<xref target='token_refresh' />).
             </t>
             <t hangText='timestamp'>
               <vspace />
@@ -2377,7 +2508,7 @@
           <t>
             The authorization server declares which signature methods it accepts via the
             'signature_methods' returned as part of obtaining an access token secret
-            (<xref target='refresh_token' />). The client declares which signature method is used
+            (<xref target='token_refresh' />). The client declares which signature method is used
             for this request via the 'signature_method' parameter. It then generates a
             signature, and includes it in the 'signature' parameter. The server verifies the
             signature as specified for each method.
