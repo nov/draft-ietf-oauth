@@ -312,6 +312,11 @@
         authorization server. The authorization flows all use the same authorization endpoint, each
         with a different set of request parameters and values.
       </t>
+      <t>
+        When issuing an access token, the authorization server MUST retain the scope, duration, and
+        other access attributes grated by the resource owner, and enforce these restrictions when
+        receiving a protected resource request made with the access token issued.
+      </t>
 
       <section title='Authorization Endpoint'>
         <t>
@@ -431,7 +436,7 @@
 		        </list>
 	        </t>
 	
-	        <section title='Client Requests Access'>
+	        <section title='Client Requests Authorization'>
             <t>
               In order for the end user to grant the client access, the client sends the end user
               to the authorization server. The client constructs the request URI by adding the
@@ -474,7 +479,7 @@
                 following HTTPS requests (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /authorization?type=web_callback_access_request&client_id=
+  GET /authorize?type=web_callback_access_request&client_id=
       s6BhdRkqt3&callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
        HTTP/1.1
   Host: server.example.com
@@ -500,7 +505,7 @@
               available to it via the end user's user-agent.
             </t>
             
-            <section title='End User Grants Access'>
+            <section title='End User Grants Authorization'>
               <t>
                 If the end user authorizes the access request, the authorization server generates a
                 verification code and associates it with the client identifier and callback URI. The
@@ -547,7 +552,7 @@
               </figure>
             </section>
             
-            <section title='End User Denies Access'>
+            <section title='End User Denies Authorization'>
               <t>
                 If the end user denied the access request, the authorization server constructs the
                 request URI by adding the following parameters to the query component of callback URI
@@ -620,8 +625,9 @@
                 purposes only):
               </preamble>
               <artwork><![CDATA[
-  POST /access_token HTTP/1.1
+  POST /authorize HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
 
   type=web_callback_token_request&client_id=s6BhdRkqt3&
   client_secret=gX1fBat3bV&code=i1WsRn1uB1&
@@ -664,15 +670,10 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  access_token=SlAV32hkKG&refresh_token=8xLOxBtZp8&expires_in=3600
+  access_token=SlAV32hkKG&expires_in=3600&refresh_token=8xLOxBtZp8
 ]]>
               </artwork>
             </figure>
-            <t>
-              The authorization server MUST retain the scope, duration, and other access attributes
-              approved by the end user, and enforce these restrictions when receiving a protected
-              resource request made with the token issued.
-            </t>
             <t>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
@@ -683,7 +684,7 @@
                The response contains the following parameter:
 
               <list style='hanging' hangIndent='6'>
-                <t hangText='error_reason'>
+                <t hangText='error'>
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to either
                   <spanx style='verb'>callback_mismatch</spanx> or
@@ -697,8 +698,9 @@
               </preamble>
               <artwork><![CDATA[
   HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
 
-  error_reason=expired_verification_code
+  error=expired_verification_code
 ]]>
               </artwork>
             </figure>
@@ -786,7 +788,7 @@
             </list>
           </t>
 
-	        <section title='Client Requests Access'>
+	        <section title='Client Requests Authorization'>
             <t>
               In order for the end user to grant the client access, the client sends the end user
               to the authorization server. The client constructs the request URI by adding the
@@ -820,7 +822,7 @@
                 following HTTPS requests (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /authorization?type=native_app_access_request&client_id=
+  GET /authorize?type=native_app_access_request&client_id=
       s6BhdRkqt3 HTTP/1.1
   Host: server.example.com
 ]]>
@@ -839,7 +841,7 @@
               machine-readable parameters and human-readable instructions.
             </t>
             
-            <section title='End User Grants Access'>
+            <section title='End User Grants Authorization'>
               <t>
                 If the end user authorizes the access request, the authorization server generates a
                 verification code and associates it with the client identifier. The authorization
@@ -863,7 +865,8 @@
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
                 defined by <xref target='W3C.REC-html40-19980424' />, and appending the string to
                 the content of the HTML <spanx style='verb'>&lt;title&gt;</spanx> element enclosed
-                in parenthesis <spanx style='verb'>()</spanx>.
+                in parenthesis <spanx style='verb'>()</spanx>. The document is returned in the HTTP
+                response body with a 200 status code (OK).
               </t>
               <figure>
                 <preamble>
@@ -885,7 +888,7 @@
               </t>
             </section>
             
-            <section title='End User Denies Access'>
+            <section title='End User Denies Authorization'>
               <t>
                 If the end user denied the access request, the authorization server generates an
                 <xref target='W3C.REC-html40-19980424'>HTML</xref> document response with the
@@ -909,7 +912,8 @@
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
                 defined by <xref target='W3C.REC-html40-19980424' />, and appending the string to
                 the content of the HTML <spanx style='verb'>&lt;title&gt;</spanx> element enclosed
-                in parenthesis <spanx style='verb'>()</spanx>.
+                in parenthesis <spanx style='verb'>()</spanx>. The document is returned in the HTTP
+                response body with a 401 status code (Unauthorized).
               </t>
               <figure>
                 <preamble>
@@ -954,8 +958,9 @@
                 For example, the client makes the following HTTPS request:
               </preamble>
               <artwork><![CDATA[
-  POST /access_token HTTP/1.1
+  POST /authorize HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
 
   type=native_app_token_request&client_id=s6BhdRkqt3&code=i1WsRn1uB1
 ]]>
@@ -996,15 +1001,10 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  access_token=SlAV32hkKG&refresh_token=8xLOxBtZp8&expires_in=3600
+  access_token=SlAV32hkKG&expires_in=3600&refresh_token=8xLOxBtZp8
 ]]>
               </artwork>
             </figure>
-            <t>
-              The authorization server MUST retain the scope, duration, and other access attributes
-              approved by the end user, and enforce these restrictions when receiving a protected
-              resource request made with the token issued.
-            </t>
             <t>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
@@ -1015,7 +1015,7 @@
                The response contains the following parameter:
 
               <list style='hanging' hangIndent='6'>
-                <t hangText='error_reason'>
+                <t hangText='error'>
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to
                   <spanx style='verb'>expired_verification_code</spanx> (case sensitive).
@@ -1028,8 +1028,9 @@
               </preamble>
               <artwork><![CDATA[
   HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
 
-  error_reason=expired_verification_code
+  error=expired_verification_code
 ]]>
               </artwork>
             </figure>
@@ -1114,7 +1115,7 @@
             </list>
           </t>
           
-	        <section title='Client Requests Access'>
+	        <section title='Client Requests Authorization'>
             <t>
               In order for the end user to grant the client access, the client sends the end user
               to the authorization server. The client constructs the request URI by adding the
@@ -1157,7 +1158,7 @@
                 HTTPS request (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /user_authorization?type=flow_web_client&client_id=s6BhdRkqt3&
+  GET /authorize?type=flow_web_client&client_id=s6BhdRkqt3&
       redirection=https%3A%2F%2FEexample%2Ecom%2Frd HTTP/1.1
   Host: server.example.com
 ]]>
@@ -1181,7 +1182,7 @@
               provided client redirection URI using an HTTP redirection response.
             </t>
           
-            <section title='End User Grants Access'>
+            <section title='End User Grants Authorization'>
               <t>
                 If the end user authorizes the access request, the authorization server issues an
                 access token and delivers it to the client by adding the following parameters, using
@@ -1221,7 +1222,7 @@
               </figure>
             </section>
             
-            <section title='End User Denies Access'>
+            <section title='End User Denies Authorization'>
               <t>
                 If the end user denied the access request, the authorization server responds to the
                 client by adding the following parameters, using the
@@ -1311,19 +1312,20 @@
   +----------+                                +----------------+
   |          |>---(A)-- Client Identifier --->|                |
   |          |                                |                |
-  |          |<---(B)-- Verification Codes --<|                |
-  |          |               & URI            |                |
+  |          |<---(B)----- Client Code, -----<|                |
+  |          |              User Code,        |                |
+  |          |         & Verification URI     |                |
   |  Device  |                                |                |
   |  Client  |          Client Identifier &   |                |
-  |          |>---(E)-- Verification Codes -->|                |
-  |          |>---(E)--->                     |                |
+  |          |>---(E)------ Client Code ----->|                |
+  |          |    ...                         |                |
   |          |>---(E)--->                     |                |
   |          |                                |  Authorization |
   |          |<---(F)-- Access Token --------<|     Server     |
   +----------+                                |                |
         v                                     |                |
         :                                     |                |
-       (C) User Verification Code & URI       |                |
+       (C) User Code & Verification URI       |                |
         :                                     |                |
         v                                     |                |
   +----------+                                |                |
@@ -1344,7 +1346,7 @@
 		            identifier in the request.
 	            </t>
 	            <t>
-	              The authorization server issues a device verification code, a user verification
+	              The authorization server issues a client verification code, a user verification
 	              code, and provides the end user authorization URI.
               </t>
               <t>
@@ -1360,37 +1362,34 @@
 			        <t>
 			          While the end user authorizes (or denies) the client's request (D), the client
 			          repeatedly polls the authorization server to find out if the end user completed the
-			          user authorization step. The client includes the device verification code, the user
-			          verification code, and its client identifier.
+			          user authorization step. The client includes the client verification code and its
+			          client identifier.
 		          </t>
 			        <t>
-				        Assuming the end user granted access, the authorization server validates the codes
-				        provided by the client and responds back with the access token.
+				        Assuming the end user granted access, the authorization server validates the
+				        client code provided by the client and responds back with the access token.
 			        </t>
             </list>
           </t>
          
-          <section title='Client Requests Access'>
+          <section title='Client Requests Authorization'>
             <t>
-              The client constructs an HTTP 'GET' request to the access token request
-              endpoint and includes the following REQUIRED parameters:
+              The client initiates the flow by requesting a set of verification codes from the
+              authorization server by making an HTTP <spanx style='verb'>GET</spanx> request to the
+              authorization endpoint. The client constructs a request URI by adding the following
+              parameters to the request:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'device_access_request' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to 'device_access_request' (case
+                  sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
-                  The client identifier.
+                  REQUIRED. The client identifier as described in <xref target='client_id' />.
                 </t>
               </list>
-            </t>
-            <t>
-              Since the request results in the transmission of temporary plain text
-              credentials in the HTTP response, the authorization server MUST require the use
-              of a transport-layer mechanism such as TLS or SSL (or a secure channel with
-              equivalent protections).
             </t>
             <figure>
               <preamble>
@@ -1398,41 +1397,40 @@
                 display purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /access_token?client_id=s6BhdRkqt3&type=device_access_request
-       HTTP/1.1
+  GET /authorize?type=device_access_request&client_id=s6BhdRkqt3
+        HTTP/1.1
   Host: server.example.com
 ]]>
               </artwork>
             </figure>
             <t>
-              Upon receiving an authorization request by the client, the authorization server
-              generates a device verification code and a user verification code. These are
-              included in the HTTP response body using the
-              'application/x-www-form-urlencoded' content type as defined by
+              In response, the authorization server generates a device verification code and a user
+              verification code and includes them in the HTTP response body using the
+              <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
               <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK). The
               response contains the following parameters:
 
               <list style='hanging' hangIndent='6'>
-                <t hangText='device_code'>
+                <t hangText='code'>
 	                <vspace />
-                  REQUIRED. The device verification code.
+                  REQUIRED. The client verification code.
                 </t>
                 <t hangText='user_code'>
 	                <vspace />
                   REQUIRED. The user verification code.
                 </t>
-                <t hangText='verification_uri'>
+                <t hangText='user_uri'>
 	                <vspace />
-                  REQUIRED. The user verification URI on the authorization server.
+                  REQUIRED. The user authorization URI on the authorization server.
                 </t>
                 <t hangText='expires_in'>
 	                <vspace />
                   OPTIONAL. The duration in seconds of the verification code lifetime.
                 </t>
-                <t hangText='verification_rate_limit'>
+                <t hangText='interval'>
 	                <vspace />
                   OPTIONAL. The minimum amount of time in seconds that the client SHOULD wait
-                  between polling requests to the device authorization URI.
+                  between polling requests to the authorization endpoint.
                 </t>
               </list>
             </t>
@@ -1444,62 +1442,61 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  device_code=74tq5miHKB&user_code=94248&verification_uri=http%3A%2F%2
-  Fwww%2Eexample%2Ecom%2Fdevice&verification_rate_limit=3
+  device_code=74tq5miHKB&user_code=94248&user_uri=http%3A%2F%2
+  Fwww%2Eexample%2Ecom%2Fdevice&interval=5
 ]]>
               </artwork>
             </figure>
             <t>
-              The client MUST display the user verification URI and the user verification
-              code to the end-user, instruct them to visit the user verification URI in a web
-              browser, and to enter the user verification token upon doing so (a user
-              authorization request).
+              The client displays the user verification code and the user authorization URI to the
+              end-user, and instructs the end user to visit the URI using a user-agent and enter
+              the user verification code.
             </t>
             <t>
-              The way in which the authorization server handles the user authorization
-              request, including whether it uses a secure channel such as TLS/SSL is beyond
-              the scope of this specification. However, the server MUST first verify the
-              identity of the resource owner. After doing so, the server MUST prompt the
-              end-user to enter the user verification code.
+              The end user manually types the provided URI and authenticates with the authorization
+              server. The way in which the server authenticates the end user (e.g. username and
+              password login, OpenID, session cookies) and in which the server obtains the end
+              user's authorization, including whether it uses a secure channel such as TLS/SSL, is
+              beyond the scope of this specification. However, the server MUST first verify the
+              identity of the end user.
             </t>
             <t>
-              The authorization server MUST verify that the user verification code is valid
-              and MAY verify that the client is authorized to use this flow. If the request
-              is authorized, the authorization server directs the end-user to go back to the
-              client device and follow its instructions.
+              The authorization server prompts the end user to authorize the client's request by
+              entering the user verification code provided by the client. Once the end user
+              approves or denies the request, the authorization server informs the end user to
+              return to the device for further instructions.
+            </t>
+          </section>
+          
+	        <section title='Client Requests Access Token'>
+            <t>
+              Since the client is unable to receive callbacks from the authorization server, it
+              polls the server repeatedly until the end user grants or denies the request, or the
+              client verification code expires. The client makes the following request at an
+              arbitrary but reasonable interval that MUST NOT exceed the minimum interval rate
+              provided by the server (if present via the <spanx style='verb'>interval</spanx>
+              parameter). Alternatively, the client MAY provide a user interface for the end user
+              to manually inform it when authorization was granted.
             </t>
             <t>
-              The client MAY have an interface element (such as a button) that the end-user
-              interacts with to communicate that they have finished the authorization
-              process. The client MAY initiate the following request at an arbitrary but
-              reasonable interval in order to create a more responsive user experience though
-              MUST NOT exceed the verification rate limit if one is specified. The client
-              MUST either poll or have an interface element, or both.
-            </t>
-            <t>
-              The client constructs an HTTP 'GET' request to the access token request
-              endpoint and includes the following REQUIRED parameters:
+              The client requests an access token by making an HTTP <spanx style='verb'>GET</spanx>
+              request to the authorization endpoint. The client constructs a request URI by adding
+              the following parameters to the request:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'flow_device' (case sensitive).
+                  The parameter value MUST be set to 'device_token_request' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
-                  The client identifier.
+                  REQUIRED. The client identifier as described in <xref target='client_id' />.
                 </t>
-                <t hangText='device_verification_code'>
+                <t hangText='code'>
 	                <vspace />
-                  The device verification code.
+                  The device verification code received from the authorization server.
                 </t>
               </list>
-            </t>
-            <t>
-              Since the request results in the transmission of plain text credentials in the
-              HTTP response, the authorization server MUST require the use of a
-              transport-layer mechanism such as TLS or SSL (or a secure channel with
-              equivalent protections).
             </t>
             <figure>
               <preamble>
@@ -1507,83 +1504,113 @@
                 purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /access_token?client_id=s6BhdRkqt3&device_verification_code=J2v
-      C42OifV HTTP/1.1
+  GET /authorize?type=device_token_request&client_id=s6BhdRkqt3
+       &code=J2vC42OifV HTTP/1.1
   Host: server.example.com
 ]]>
               </artwork>
             </figure>
-            <t>
-              If the request is authorized, the access token is included in the HTTP response
-              body using the 'application/x-www-form-urlencoded' content type as defined by
-              <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK). The
-              response contains the following parameters:
+            
+            <section title='End User Grants Authorization'>
+              <t>
+                If the end user authorized the request, the authorization server issues and access
+                token and delivers is to the client by including it in the HTTP response
+                body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx>
+                content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 200
+                status code (OK). The response contains the following parameters:
 
-              <list style='hanging' hangIndent='6'>
-                <t hangText='access_token'>
-	                <vspace />
-                  REQUIRED. The access token.
-                </t>
-                <t hangText='expires_in'>
-	                <vspace />
-                  OPTIONAL. The duration in seconds of the access token lifetime.
-                </t>
-                <t hangText='refresh_token'>
-	                <vspace />
-                  OPTIONAL. The refresh token.
-                </t>
-              </list>
-            </t>
-            <figure>
-              <preamble>
-                For example:
-              </preamble>
-              <artwork><![CDATA[
+                <list style='hanging' hangIndent='6'>
+                  <t hangText='access_token'>
+	                  <vspace />
+                    REQUIRED. The access token.
+                  </t>
+                  <t hangText='expires_in'>
+	                  <vspace />
+                    OPTIONAL. The duration in seconds of the access token lifetime.
+                  </t>
+                  <t hangText='refresh_token'>
+	                  <vspace />
+                    OPTIONAL. The refresh token.
+                  </t>
+                </list>
+              </t>
+              <figure>
+                <preamble>
+                  For example:
+                </preamble>
+                <artwork><![CDATA[
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  access_token=FJQbwq9OD8&expires_in=600
+  access_token=FJQbwq9OD8&expires_in=3600
 ]]>
-              </artwork>
-            </figure>
-            <t>
-              The authorization server must retain the scope, duration, and other attributes
-              approved by the resource owner, and enforce these restrictions when receiving a
-              client request made with the tokens issued.
-            </t>
-            <t>
-              Once the client receives and stores the token credentials, it can proceed to
-              access protected resources on behalf of the resource owner by making
-              authenticated requests (<xref target='access_resource' />) using the access
-              token received. Alternatively, it can refresh the access token and request an
-              access secret to use in the signature flow (<xref target='refresh_token' />).
-            </t>
-            <t>
-              If the authorization server is unable to issue an access token to the client,
-              the HTTP response body uses the 'application/x-www-form-urlencoded' content
-              type as defined by <xref target='W3C.REC-html40-19980424' /> with a 401 status
-              code (Unauthorized). The response contains the following REQUIRED parameter:
+                </artwork>
+              </figure>
+            </section>
+            
+            <section title='End User Denies Authorization'>
+              <t>
+                If the end user denied the request, the authorization server provides the client
+                with the error message in the HTTP response body using the
+                <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
+                defined by <xref target='W3C.REC-html40-19980424' /> with a 401 status code
+                (Unauthorized). The response contains the following parameters:
 
-              <list style='hanging' hangIndent='6'>
-                <t hangText='error_reason'>
-	                <vspace />
-                  Value must be one of 'authorization_declined', 'authorization_pending',
-                  'slow_down', or 'verification_code_expired' (case sensitive).
-                </t>
-              </list>
-            </t>
-            <figure>
-              <preamble>
-                For example:
-              </preamble>
-              <artwork><![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='example'
+                <list style='hanging' hangIndent='6'>
+                  <t hangText='error'>
+	                  <vspace />
+                    REQUIRED. Value must be set to
+                    <spanx style='verb'>authorization_declined</spanx>.
+                  </t>
+                </list>
+              </t>
+              <figure>
+                <preamble>
+                  For example:
+                </preamble>
+                <artwork><![CDATA[
+  HTTP/1.1 401 Unauthorized
+  Content-Type: application/x-www-form-urlencoded
 
-  error_reason=authorization_pending
+  error=authorization_declined
 ]]>
-              </artwork>
-            </figure>
+                </artwork>
+              </figure>
+            </section>
+            
+            <section title='End User Authorization Pending or Expired'>
+              <t>
+                If the end user authorization is pending or expired without receiving any response
+                from the end user, or the client is exceeding the allowed polling interval, the 
+                authorization server provides the client with the error message in the HTTP
+                response body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> 
+                content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 401
+                status code (Unauthorized). The response contains the following parameters:
+
+                <list style='hanging' hangIndent='6'>
+                  <t hangText='error'>
+	                  <vspace />
+                    REQUIRED. Value MUST be set to
+                    <spanx style='verb'>authorization_pending</spanx>,
+                    <spanx style='verb'>slow_down</spanx>, or
+                    <spanx style='verb'>code_expired</spanx> (case sensitive).
+                  </t>
+                </list>
+              </t>
+              <figure>
+                <preamble>
+                  For example:
+                </preamble>
+                <artwork><![CDATA[
+  HTTP/1.1 401 Unauthorized
+  Content-Type: application/x-www-form-urlencoded
+
+  error=authorization_pending
+]]>
+                </artwork>
+              </figure>
+            </section>
+          
           </section>
           
         </section>
@@ -1631,7 +1658,7 @@
               </t>
               <t hangText='client_id'>
 	              <vspace />
-                The client identifier.
+                REQUIRED. The client identifier as described in <xref target='client_id' />.
               </t>
               <t hangText='username'>
  	              <vspace />
@@ -1728,8 +1755,7 @@
               For example:
             </preamble>
             <artwork><![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='example'
+  HTTP/1.1 401 Unauthorized
 ]]>
             </artwork>
           </figure>
@@ -1764,7 +1790,7 @@
               </t>
               <t hangText='client_id'>
 	              <vspace />
-                The client identifier.
+                REQUIRED. The client identifier as described in <xref target='client_id' />.
               </t>
               <t hangText='client_secret'>
 	              <vspace />
@@ -1854,8 +1880,7 @@
               For example:
             </preamble>
             <artwork><![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='example'
+  HTTP/1.1 401 Unauthorized
 ]]>
             </artwork>
           </figure>
@@ -1940,7 +1965,7 @@
           </t>
           <t hangText='client_id'>
 	          <vspace />
-            The client identifier.
+            REQUIRED. The client identifier as described in <xref target='client_id' />.
           </t>
           <t hangText='refresh_token'>
 	          <vspace />
@@ -2066,8 +2091,7 @@
         </preamble>
         <artwork>
           <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='example'
+  HTTP/1.1 401 Unauthorized
 ]]>
         </artwork>
       </figure>
