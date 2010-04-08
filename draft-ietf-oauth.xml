@@ -306,7 +306,7 @@
       </t>
       <t>
         When issuing an access token, the authorization server MUST retain the scope, duration, and
-        other access attributes grated by the resource owner, and enforce these restrictions when
+        other access attributes granted by the resource owner, and enforce these restrictions when
         receiving a protected resource request made with the access token issued.
       </t>
       <t>
@@ -417,7 +417,7 @@
 			        </t>
 			        <t>
 				        The authorization server authenticates the end user (via the user-agent) and
-				        prompts the end user to grant or deny the client's access request.
+				        establishes whether the end user grants or denies the client's access request.
 			        </t>
 			        <t>
 				        Assuming the end user granted access, the authorization server redirects the
@@ -464,8 +464,22 @@
                 </t>
                 <t hangText='state'>
 	                <vspace />
-                  An OPTIONAL opaque value used by the client to maintain state between the request
+                  OPTIONAL. An opaque value used by the client to maintain state between the request
                   and callback.
+                </t>
+                <t hangText='immediate'>
+                  <space />
+                  OPTIONAL. The parameter value must be set to <spanx style='verb'>true</spanx> or
+                  <spanx style='verb'>false</spanx> (case sensitive). If set to
+                  <spanx style='verb'>true</spanx>, the authorization server MUST NOT prompt the
+                  end user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end user's identity via other means (e.g. browser
+                  cookies) and checks if the end user has previously approved an identical access
+                  request by the same client and if that access grant is still active. If the
+                  authorization server does not support an immediate check or if it is unable to
+                  establish the end user's identity or approval status, it MUST deny the request
+                  without prompting the end user. Defaults to <spanx style='verb'>no</spanx> is
+                  omitted.
                 </t>
               </list>
             </t>
@@ -765,7 +779,7 @@
 			        </t>
 			        <t>
 				        The authorization server authenticates the end user (via the user-agent) and
-				        prompts the end user to grant or deny the client's access request.
+				        establishes whether the end user grants or denies the client's access request.
 			        </t>
 			        <t>
 				        Assuming the end user granted access, the authorization server display the
@@ -807,7 +821,7 @@
                 </t>
                 <t hangText='state'>
 	                <vspace />
-                  An OPTIONAL opaque value used by the client to maintain state between the request
+                  OPTIONAL. An opaque value used by the client to maintain state between the request
                   and callback.
                 </t>
               </list>
@@ -1093,7 +1107,7 @@
 	            </t>
 	            <t>
 				        The authorization server authenticates the end user (via the user-agent) and
-				        prompts the end user to grant or deny the client's access request.
+				        establishes whether the end user grants or denies the client's access request.
 			        </t>
 			        <t>
 				        Assuming the end user granted access, the authorization server redirects the
@@ -1143,8 +1157,8 @@
                 </t>
                 <t hangText='state'>
                   <vspace />
-                  An OPTIONAL opaque value used by the client to maintain state between the request
-                  and redirection.
+                  OPTIONAL. An opaque value used by the client to maintain state between the request
+                  and callback.
                 </t>
               </list>
             </t>
@@ -2326,7 +2340,7 @@
             to the API request endpoint:
 
             <list style='hanging' hangIndent='6'>
-              <t hangText='access_token'>
+              <t hangText='oauth_token'>
   	           <vspace />
                 The access token.
               </t>
@@ -2343,7 +2357,7 @@
             </preamble>
             <artwork>
               <![CDATA[
-  GET /user/daveman692.json?access_token=vF9dft4qmT HTTP/1.1
+  GET /user/daveman692.json?oauth_token=vF9dft4qmT HTTP/1.1
   Host: api.example.com
 ]]>
             </artwork>
@@ -2378,7 +2392,7 @@
             endpoint and includes the following REQUIRED parameter:
 
             <list style='hanging' hangIndent='6'>
-              <t hangText='access_token'>
+              <t hangText='oauth_token'>
 	              <vspace />
                 The access token.
               </t>
@@ -2398,7 +2412,7 @@
   POST /blog/entry HTTP/1.1
   Host: api.example.com
   
-  access_token=vF9dft4qmT
+  oauth_token=vF9dft4qmT
 ]]>
             </artwork>
           </figure>
