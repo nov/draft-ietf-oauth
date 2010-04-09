@@ -135,8 +135,8 @@
             </t>
             <t hangText='authorization endpoint'>
               <vspace />
-              The authorization server's HTTP endpoint authenticating the resource owner, obtaining
-              authorization, issuing tokens, and refreshing expired tokens.
+              The authorization server's HTTP endpoint capable of authenticating the resource
+              owner, obtaining authorization, issuing tokens, and refreshing expired tokens.
             </t>
             <t hangText='client identifier'>
               <vspace />
@@ -183,8 +183,9 @@
 		      Access token strings can use any internal structure agreed upon between the authorization
 		      server and the resource server, but their structure is opaque to the client. Since the
 		      access token provides the client access to the protected resource for the life of the
-		      access token, the authorization server should issue access tokens which expire within an
-		      appropriate time, usually much shorter than the duration of the access grant.
+		      access token (or under revoked), the authorization server should issue access tokens
+		      which expire within an appropriate time, usually much shorter than the duration of the
+		      access grant.
 		    </t>
 		    <t>
 	        When an access token expires, the client can request a new access token from the
@@ -478,7 +479,7 @@
                   request by the same client and if that access grant is still active. If the
                   authorization server does not support an immediate check or if it is unable to
                   establish the end user's identity or approval status, it MUST deny the request
-                  without prompting the end user. Defaults to <spanx style='verb'>no</spanx> is
+                  without prompting the end user. Defaults to <spanx style='verb'>false</spanx> if
                   omitted.
                 </t>
               </list>
@@ -2243,6 +2244,11 @@
     </section>
 
     <section title='Accessing a Protected Resource' anchor='access_resource'>
+      <t>
+        The access tokens issued by the various authorization flows consist of an opaque string
+        and are intended for accessing one or more protected resources. The
+        <xref target='token_refresh'>token refresh 
+      </t>
       <t>
         OAuth 2.0 supports the ability for clients to make protected resource requests by using
         TLS/SSL (<xref target='using_ssl' />) and/or by signing their HTTP request with shared
