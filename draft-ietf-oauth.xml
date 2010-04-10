@@ -516,7 +516,7 @@
             </t>
             <t>
               After receiving (or establishing via other means) an authorization decision from the
-              resource owner, the authorization server sends the end user's user-agent to the
+              end user, the authorization server sends the end user's user-agent to the
               provided client callback URI using an HTTP redirection response, or by other means
               available to it via the end user's user-agent.
             </t>
@@ -853,7 +853,7 @@
             </t>
             <t>
               After receiving (or establishing via other means) an authorization decision from the
-              resource owner, the authorization server responds with an HTML document containing
+              end user, the authorization server responds with an HTML document containing
               machine-readable parameters and human-readable instructions.
             </t>
             
@@ -1170,7 +1170,7 @@
             </t>
             <figure>
               <preamble>
-                For example, the client directs the resource owner's user-agent to make the following
+                For example, the client directs the end user's user-agent to make the following
                 HTTPS request (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
@@ -1194,7 +1194,7 @@
             </t>
             <t>
               After receiving (or establishing via other means) an authorization decision from the
-              resource owner, the authorization server sends the end user's user-agent to the
+              end user, the authorization server sends the end user's user-agent to the
               provided client redirection URI using an HTTP redirection response.
             </t>
           
