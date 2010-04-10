@@ -469,7 +469,7 @@
                   and callback.
                 </t>
                 <t hangText='immediate'>
-                  <space />
+                  <vspace />
                   OPTIONAL. The parameter value must be set to <spanx style='verb'>true</spanx> or
                   <spanx style='verb'>false</spanx> (case sensitive). If set to
                   <spanx style='verb'>true</spanx>, the authorization server MUST NOT prompt the
@@ -2247,7 +2247,9 @@
       <t>
         The access tokens issued by the various authorization flows consist of an opaque string
         and are intended for accessing one or more protected resources. The
-        <xref target='token_refresh'>token refresh 
+        <xref target='token_refresh'>token refresh method</xref> enables clients to modify the
+        security properties of the access token, exchanging it with a new access token with a
+        matching secret.
       </t>
       <t>
         OAuth 2.0 supports the ability for clients to make protected resource requests by using
@@ -2258,7 +2260,7 @@
         and it is RECOMMENDED that clients make signature-based authenticated requests via TLS/SSL.
       </t>
       <t>
-        If a client includes more than one access token within the request, the protected resource
+        If a client includes more than one access token within the request, the resource server
         MUST respond with a HTTP 400 'Bad Request' error code.
       </t>
 
