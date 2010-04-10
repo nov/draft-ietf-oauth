@@ -296,6 +296,17 @@
           <xref target='RFC3986' />.
         </t>
       </section>
+      
+      <section title='Conformance'>
+        <t>
+          An implementation is not compliant if it fails to satisfy one or more of the MUST or
+          REQUIRED level requirements for the protocols it implements. An implementation that
+          satisfies all the MUST or REQUIRED level and all the SHOULD level requirements for its
+          protocols is said to be "unconditionally compliant"; one that satisfies all the MUST
+          level requirements but not all the SHOULD level requirements for its protocols is said to
+          be "conditionally compliant."
+        </t>
+      </section>
 
     </section>
 
@@ -2121,6 +2132,18 @@
         obtain a new token with different security properties (e.g. bearer token, token with
         shared symmetric secret).
       </t>
+      <figure anchor='Figure 10'>
+        <artwork><![CDATA[
+  +--------+          Client Credentials,     +---------------+
+  |        |            Refresh Token,        |               |
+  |        |>--(A)----- & Secret Type ------->| Authorization |
+  | Client |                                  |     Server    |
+  |        |<--(B)----- Access Token --------<|               |
+  |        |          & Optional Secret       |               |
+  +--------+                                  +---------------+
+]]>
+        </artwork>
+		  </figure>
       <t>
         To refresh a token, the client constructs an HTTP <spanx style='verb'>POST</spanx> request
         to the authorization endpoint and includes the following parameters in the HTTP request
@@ -2245,20 +2268,42 @@
 
     <section title='Accessing a Protected Resource' anchor='access_resource'>
       <t>
-        The access tokens issued by the various authorization flows consist of an opaque string
-        and are intended for accessing one or more protected resources. The
-        <xref target='token_refresh'>token refresh method</xref> enables clients to modify the
-        security properties of the access token, exchanging it with a new access token with a
-        matching secret.
+        Clients access protected resources by presenting an access token to the resource server.
+        The methods used by the resource server to validate the access token are beyond the scope
+        of this specification, but generally involve an interaction or coordination between the
+        resource server and authorization server.
       </t>
       <t>
-        OAuth 2.0 supports the ability for clients to make protected resource requests by using
-        TLS/SSL (<xref target='using_ssl' />) and/or by signing their HTTP request with shared
-        secrets (<xref target='using_signatures' />). Protected resources MUST support clients
-        making authenticated requests via TLS/SSL (<xref target='using_ssl' />). Protected
-        resources MAY also choose to also support signatures (<xref target='using_signatures' />),
-        and it is RECOMMENDED that clients make signature-based authenticated requests via TLS/SSL.
+        The method in which a client uses an access token depends on the security properties of the
+        access tokens. By default, access tokens are issued without a matching secret. The
+        <xref target='token_refresh'>token refresh method</xref> enables clients to request an
+        access token with different security properties by replacing it with a new access token
+        with a matching secret.
       </t>
+      
+      <section title='Bearer Access Token'>
+        <t>
+          The access tokens issued by the various authorization flows consist of a single token
+          string. When an access token does not include a matching secret, the access token acts as
+          a bearer token, where the token string is a shared symmetric secret. This requires
+          treating the access token with the same care as other secrets (e.g. user passwords).
+          Access tokens SHOULD NOT be sent in the clear over an insecure channel.
+        </t>
+        <t>
+          However, when it is necessary to transmit bearer access tokens in the clear without a
+          secure channel, authorization servers must issue access tokens with limited scope and
+          lifetime to reduce the potential risk from a compromised access token. Clients SHOULD
+          request and utilize an access token with a matching secret as described in
+          <xref target='crypto_token' /> when making protected resource requests over an insecure
+          channel (e.g. an HTTP request without using SSL/TLS).
+        </t>
+      </section>
+      
+      <section title='Cryptographic Access Token'>
+        <t>
+        </t>
+      </section>
+      
       <t>
         If a client includes more than one access token within the request, the resource server
         MUST respond with a HTTP 400 'Bad Request' error code.
