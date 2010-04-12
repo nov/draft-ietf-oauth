@@ -2,11 +2,11 @@
 
 
 Network Working Group                               E. Hammer-Lahav, Ed.
-Internet-Draft
+Internet-Draft                                                    Yahoo!
 Intended status: Standards Track                             D. Recordon
-Expires: October 12, 2010                                       Facebook
+Expires: October 14, 2010                                       Facebook
                                                                 D. Hardt
-                                                          April 10, 2010
+                                                          April 12, 2010
 
 
                          The OAuth 2.0 Protocol
@@ -37,7 +37,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 12, 2010.
+   This Internet-Draft will expire on October 14, 2010.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 1]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 1]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -63,6 +63,56 @@ Internet-Draft                  OAuth 2.0                     April 2010
    described in the Simplified BSD License.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 2]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
 Table of Contents
 
    1.  Authors  . . . . . . . . . . . . . . . . . . . . . . . . . . .  4
@@ -71,6 +121,7 @@ Table of Contents
      2.2.  Overview . . . . . . . . . . . . . . . . . . . . . . . . .  6
      2.3.  Example  . . . . . . . . . . . . . . . . . . . . . . . . .  8
      2.4.  Notational Conventions . . . . . . . . . . . . . . . . . .  8
+     2.5.  Conformance  . . . . . . . . . . . . . . . . . . . . . . .  8
    3.  Obtaining an Access Token  . . . . . . . . . . . . . . . . . .  8
      3.1.  Authorization Endpoint . . . . . . . . . . . . . . . . . .  9
      3.2.  Flow Parameters  . . . . . . . . . . . . . . . . . . . . .  9
@@ -86,39 +137,26 @@ Table of Contents
        3.6.1.  Client Credentials Flow  . . . . . . . . . . . . . . . 34
        3.6.2.  Assertion Flow . . . . . . . . . . . . . . . . . . . . 36
    4.  Refreshing an Access Token . . . . . . . . . . . . . . . . . . 38
-   5.  Accessing a Protected Resource . . . . . . . . . . . . . . . . 40
-     5.1.  Bearer Token Requests  . . . . . . . . . . . . . . . . . . 41
-       5.1.1.  HTTP Header  . . . . . . . . . . . . . . . . . . . . . 41
-       5.1.2.  URI Query Parameter  . . . . . . . . . . . . . . . . . 42
-       5.1.3.  Form-Encoded Body Parameter  . . . . . . . . . . . . . 43
-     5.2.  Signed Requests  . . . . . . . . . . . . . . . . . . . . . 44
-       5.2.1.  Computing the signature  . . . . . . . . . . . . . . . 45
-       5.2.2.  Client Calls Protected Resource Using HTTP Headers . . 46
-   6.  The WWW-Authenticate Response Header . . . . . . . . . . . . . 47
-     6.1.  The 'realm' Attribute  . . . . . . . . . . . . . . . . . . 47
-     6.2.  The 'authorization-uri' Attribute  . . . . . . . . . . . . 47
-     6.3.  The 'timestamp' Attribute  . . . . . . . . . . . . . . . . 47
-   7.  The Authorization Request Header . . . . . . . . . . . . . . . 48
-     7.1.  The 'token' Attribute  . . . . . . . . . . . . . . . . . . 48
-     7.2.  The 'nonce' Attribute  . . . . . . . . . . . . . . . . . . 48
-     7.3.  The 'timestamp' Attribute  . . . . . . . . . . . . . . . . 48
-     7.4.  The 'signature' Attribute  . . . . . . . . . . . . . . . . 48
-   8.  Security Considerations  . . . . . . . . . . . . . . . . . . . 49
-   9.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 49
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 2]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-   10. Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 49
+   5.  Accessing a Protected Resource . . . . . . . . . . . . . . . . 41
+     5.1.  Bearer Token Requests  . . . . . . . . . . . . . . . . . . 42
+       5.1.1.  URI Query Parameter  . . . . . . . . . . . . . . . . . 42
+       5.1.2.  Form-Encoded Body Parameter  . . . . . . . . . . . . . 43
+     5.2.  The Authorization Request Header . . . . . . . . . . . . . 44
+       5.2.1.  Cryptographic Tokens . . . . . . . . . . . . . . . . . 45
+   6.  Identifying a Protected Resource . . . . . . . . . . . . . . . 47
+     6.1.  The WWW-Authenticate Response Header . . . . . . . . . . . 48
+       6.1.1.  The 'realm' Attribute  . . . . . . . . . . . . . . . . 48
+       6.1.2.  The 'authorization-uri' Attribute  . . . . . . . . . . 48
+       6.1.3.  The 'algorithms' Attribute . . . . . . . . . . . . . . 48
+       6.1.4.  The 'error' Attribute  . . . . . . . . . . . . . . . . 48
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 48
+   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 48
+   9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 49
    Appendix A.  Differences from OAuth 1.0a . . . . . . . . . . . . . 49
    Appendix B.  Document History  . . . . . . . . . . . . . . . . . . 49
-   11. References . . . . . . . . . . . . . . . . . . . . . . . . . . 49
-     11.1. Normative References . . . . . . . . . . . . . . . . . . . 49
-     11.2. Informative References . . . . . . . . . . . . . . . . . . 50
+   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 49
+     10.1. Normative References . . . . . . . . . . . . . . . . . . . 49
+     10.2. Informative References . . . . . . . . . . . . . . . . . . 50
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 50
 
 
@@ -126,45 +164,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 3]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 3]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -220,7 +220,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 4]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 4]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -276,7 +276,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 5]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 5]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -332,7 +332,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 6]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 6]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -388,7 +388,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 7]
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 7]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -424,6 +424,16 @@ Internet-Draft                  OAuth 2.0                     April 2010
    param rules are included from [RFC2617], and the URI-Reference rule
    from [RFC3986].
 
+2.5.  Conformance
+
+   An implementation is not compliant if it fails to satisfy one or more
+   of the MUST or REQUIRED level requirements for the flows it
+   implements.  An implementation that satisfies all the MUST or
+   REQUIRED level and all the SHOULD level requirements for its flows is
+   said to be "unconditionally compliant"; one that satisfies all the
+   MUST level requirements but not all the SHOULD level requirements for
+   its flows is said to be "conditionally compliant."
+
 
 3.  Obtaining an Access Token
 
@@ -431,6 +441,13 @@ Internet-Draft                  OAuth 2.0                     April 2010
    flows supported by the authorization server.  The authorization flows
    all use the same authorization endpoint, each with a different set of
    request parameters and values.
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 8]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
 
    When issuing an access token, the authorization server MUST retain
    the scope, duration, and other access attributes granted by the
@@ -441,14 +458,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
    lifetime than the duration of the authorization grant.  However, it
    is undesirable to require the resource owner to authorize the request
    again.  Instead, the authorization server issues a refresh token in
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 8]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
    addition to the access token.  When the access token expires, the
    client can request a new access token without involving the resource
    owner as long as the authorization grant is still valid.  The token
@@ -459,7 +468,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
    The client obtains the URI of the authorization endpoint from the
    server's documentation, or by making an unauthorized protected
    resource request (from the "WWW-Authenticate" response header
-   authorization-uri (Section 6.2) attribute).
+   authorization-uri (Section 6.1.2) attribute).
 
    The authorization endpoint advertised by the server MUST NOT include
    a query or fragment components as defined by [RFC3986] section 3.
@@ -488,6 +497,14 @@ Internet-Draft                  OAuth 2.0                     April 2010
    specification, but usually involve registration with the
    authorization server.
 
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010                [Page 9]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
    The client identifier is used by the authorization server to
    establish the identity of the client for the purpose of presenting
    information to the resource owner prior to granting access, as well
@@ -497,14 +514,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    Due to the nature of some clients, authorization servers SHOULD NOT
    make assumptions about the confidentiality of client credentials
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010                [Page 9]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
    without establishing trust with the client operator.  Servers SHOULD
    NOT issue client secrets to the client incapable or keeping their
    secrets confidential.
@@ -544,6 +553,14 @@ Internet-Draft                  OAuth 2.0                     April 2010
      +---------+        (w/ Optional Refresh Token)
 
 
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 10]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
                                  Figure 3
 
    The web callback flow illustrated in Figure 3 includes the following
@@ -553,13 +570,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
         user-agent to the authorization endpoint with its client
         identifier and a callback URI to which the server will send the
         end user back once authorization is received (or denied).
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 10]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
 
    (B)  The authorization server authenticates the end user (via the
         user-agent) and establishes whether the end user grants or
@@ -599,23 +609,20 @@ Internet-Draft                  OAuth 2.0                     April 2010
          pre-register their callback URI.  The callback URI MUST NOT
          includes a query or a fragment components as defined by
          [RFC3986] section 3.  REQUIRED unless a callback URI has been
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 11]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
          established between the client and authorization server via
          other means.
 
    state
          OPTIONAL.  An opaque value used by the client to maintain state
          between the request and callback.
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 11]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
 
    immediate
          OPTIONAL.  The parameter value must be set to "true" or "false"
@@ -658,6 +665,14 @@ Internet-Draft                  OAuth 2.0                     April 2010
    After receiving (or establishing via other means) an authorization
    decision from the end user, the authorization server sends the end
    user's user-agent to the provided client callback URI using an HTTP
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 12]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
    redirection response, or by other means available to it via the end
    user's user-agent.
 
@@ -665,14 +680,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    If the end user authorizes the access request, the authorization
    server generates a verification code and associates it with the
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 12]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
    client identifier and callback URI.  The authorization server
    constructs the request URI by adding the following parameters to the
    query component of callback URI provided by the client:
@@ -713,21 +720,19 @@ Internet-Draft                  OAuth 2.0                     April 2010
          REQUIRED.  The parameter value MUST be set to "user_denied"
          (case sensitive).
 
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 13]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
    state
          REQUIRED if the "state" parameter was present in the client
          authorization request.  Set the the exact value received from
          the client.
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 13]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
 
    For example, the authorization server directs the client to make the
    following HTTP request:
@@ -773,18 +778,17 @@ Internet-Draft                  OAuth 2.0                     April 2010
      callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 
 
-   The authorization server MUST verify that the verification code,
-   client identity, client secret, and callback URI are all valid and
-   match its stored association.  If the request is valid, the
-   authorization server issues an access token and delivers it to the
 
 
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 14]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 14]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
+   The authorization server MUST verify that the verification code,
+   client identity, client secret, and callback URI are all valid and
+   match its stored association.  If the request is valid, the
+   authorization server issues an access token and delivers it to the
    client in the HTTP response body using the
    "application/x-www-form-urlencoded" content type as defined by
    [W3C.REC-html40-19980424] with a 200 status code (OK).
@@ -832,11 +836,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 15]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 15]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -892,7 +892,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 16]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 16]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -948,7 +948,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 17]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 17]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1004,7 +1004,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 18]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 18]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1060,7 +1060,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 19]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 19]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1116,7 +1116,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 20]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 20]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1172,7 +1172,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 21]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 21]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1228,7 +1228,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 22]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 22]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1284,7 +1284,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 23]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 23]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1340,7 +1340,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 24]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 24]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1396,7 +1396,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 25]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 25]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1452,7 +1452,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 26]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 26]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1508,7 +1508,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 27]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 27]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1564,7 +1564,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 28]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 28]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1620,7 +1620,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 29]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 29]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1676,7 +1676,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 30]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 30]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1732,7 +1732,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 31]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 31]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1788,7 +1788,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 32]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 32]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1844,7 +1844,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 33]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 33]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1900,7 +1900,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 34]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 34]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1956,7 +1956,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 35]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 35]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2012,7 +2012,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 36]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 36]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2068,7 +2068,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 37]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 37]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2116,18 +2116,34 @@ Internet-Draft                  OAuth 2.0                     April 2010
    used to obtain a new token with different security properties (e.g.
    bearer token, token with shared symmetric secret).
 
+
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 38]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+     +--------+          Client Credentials,     +---------------+
+     |        |            Refresh Token,        |               |
+     |        |>--(A)----- & Secret Type ------->| Authorization |
+     | Client |                                  |     Server    |
+     |        |<--(B)----- Access Token --------<|               |
+     |        |          & Optional Secret       |               |
+     +--------+                                  +---------------+
+
+
+                                 Figure 10
+
    To refresh a token, the client constructs an HTTP "POST" request to
    the authorization endpoint and includes the following parameters in
    the HTTP request body using the "application/x-www-form-urlencoded"
    content type as defined by [W3C.REC-html40-19980424]:
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 38]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
 
    type
          REQUIRED.  The parameter value MUST be set to 'refresh_token'
@@ -2145,11 +2161,11 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    secret_type
          OPTIONAL.  This specification defines two values: "none" for an
-         access token without a secret (bearer token) and "mac" for a
+         access token without a secret (bearer token) and "hmac" for a
          token with a shared symmetric secret suitable for signing
-         requests using a MAC cryptographic algorithm.  The value
-         defaults to "none" if omitted.  Using token secrets is
-         described in Section 5.2.
+         requests using an HMAC cryptographic algorithm (as defined in
+         [RFC2104]).  The value defaults to "none" if omitted.  Using
+         token secrets is described in Section 5.2.1.
 
    For example, the client makes the following HTTPS request (line break
    are for display purposes only):
@@ -2160,7 +2176,13 @@ Internet-Draft                  OAuth 2.0                     April 2010
      Content-Type: application/x-www-form-urlencoded
 
      type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
-     &refresh_token=n4E9O119d&secret_type=mac
+     &refresh_token=n4E9O119d&secret_type=hmac
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 39]
+
+Internet-Draft                  OAuth 2.0                     April 2010
 
 
    The authorization server MUST verify the client credential, the
@@ -2173,17 +2195,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    access_token
          REQUIRED.  The access token.
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 39]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
 
    expires_in
          OPTIONAL.  The duration in seconds of the access token
@@ -2217,6 +2228,19 @@ Internet-Draft                  OAuth 2.0                     April 2010
          "incorrect_credentials", "authorization_expired", or
          "unsupported_secret_type" (case sensitive).
 
+
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 40]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
    For example:
 
      HTTP/1.1 400 Bad Request
@@ -2228,483 +2252,451 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 5.  Accessing a Protected Resource
 
-   The access tokens issued by the various authorization flows consist
-   of an opaque string and are intended for accessing one or more
-   protected resources.  The token refresh method (Section 4) enables
-   clients to modify the security properties of the access token,
-   exchanging it with a new access token with a matching secret.
+   Clients access protected resources by presenting an access token to
+   the resource server.  The methods used by the resource server to
+   validate the access token are beyond the scope of this specification,
+   but generally involve an interaction or coordination between the
+   resource server and authorization server.
+
+   The method in which a client uses an access token depends on the
+   security properties of the access tokens.  By default, access tokens
+   are issued without a matching secret.  The token refresh method
+   (Section 4) enables clients to request an access token with different
+   security properties by replacing it with a new access token with a
+   matching secret.
+
+   When an access token does not include a matching secret, the access
+   token acts as a bearer token, where the token string is a shared
+   symmetric secret.  This requires treating the access token with the
+   same care as other secrets (e.g. user passwords).  Access tokens
+   SHOULD NOT be sent in the clear over an insecure channel.
+
+   However, when it is necessary to transmit bearer tokens in the clear
+   without a secure channel, authorization servers must issue access
+   tokens with limited scope and lifetime to reduce the potential risk
+   from a compromised access token.  Clients SHOULD request and utilize
+   an access token with a matching secret when making protected resource
+   requests over an insecure channel (e.g. an HTTP request without using
+   SSL/TLS).
+
+   When an access token includes a matching secret, the secret is not
+   included directly in the request but
+
+   Clients SHOULD NOT make authenticated requests with an access token
+   to unfamiliar servers, especially when using bearer tokens,
+   regardless of the presence of a secure channel.
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 40]
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 41]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
-
-   OAuth 2.0 supports the ability for clients to make protected resource
-   requests by using TLS/SSL (Section 5.1) and/or by signing their HTTP
-   request with shared secrets (Section 5.2).  Protected resources MUST
-   support clients making authenticated requests via TLS/SSL
-   (Section 5.1).  Protected resources MAY also choose to also support
-   signatures (Section 5.2), and it is RECOMMENDED that clients make
-   signature-based authenticated requests via TLS/SSL.
-
-   If a client includes more than one access token within the request,
-   the resource server MUST respond with a HTTP 400 'Bad Request' error
-   code.
 
 5.1.  Bearer Token Requests
 
-   When using TLS/SSL, clients MUST present an access token to
-   authenticate to a protected resource.  Use of the HTTP
-   'Authorization' header field as defined by [RFC2617] is RECOMMENDED,
-   since HTTP implementations are aware that this header has special
-   security properties and may require special treatment in caches and
-   logs.  Protected resources SHOULD take precautions to ensure that
-   access tokens are not inadvertently logged or captured.  It is
-   RECOMMENDED that clients verify the authenticity of the certificate
-   provided when establishing a TLS/SSL connection to the protected
-   resource.
+   Clients make bearer token requests by including the access token
+   using the HTTP "Authorization" request header with the "Token"
+   authentication scheme as described in Section 5.2.  The access token
+   is included using the "token" parameter.
 
-5.1.1.  HTTP Header
+   For example, the client makes the following HTTPS request:
 
-   The protected resource SHOULD allow clients to make authenticated
-   requests by including the access token in the HTTP 'Authorization'
-   header.  Prior to making a request, the client MUST have obtained a
-   valid access token and the API request endpoint URI.
+     GET /resource HTTP/1.1
+     Host: server.example.com
+     Authorization: Token token="vF9dft4qmT"
 
-   The client constructs a HTTP request to the API request endpoint URI
-   and includes the HTTP 'Authorization' header field with the auth-
-   scheme name set to 'OAuth' (case-insensitive).
 
-   Since the request results in the transmission of plain text
-   credentials in the HTTP request, the protected resource MUST require
-   the use of a transport-layer mechanism such as TLS or SSL (or a
-   secure channel with equivalent protections).
+   The resource server MUST validate the access token and ensure it has
+   not expired and that its scope covers the requested resource.  If the
+   token expired or is invalid, the resource server MUST reply with an
+   HTTP 401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
+
+   For example:
+
+     HTTP/1.1 401 Unauthorized
+     WWW-Authenticate: Token realm='Service', error='token_expired'
+
+
+   Alternatively, the client MAY include the access token using the HTTP
+   request URI in the query component as described in Section 5.1.1, or
+   in the HTTP body when using the "application/x-www-form-urlencoded"
+   content type as described in Section 5.1.2.  Clients SHOULD only use
+   the request URI or body when the "Authorization" request header is
+   not available, and MUST NOT use more than one method in each request.
+
+5.1.1.  URI Query Parameter
+
+   When including the access token in the HTTP request URI, the client
+   adds the access token to the request URI query component as defined
+   by [RFC3986] using the "oauth_token" parameter.
 
    For example, the client makes the following HTTPS request:
 
 
-     GET /user/daveman692.json HTTP/1.1
-     Host: api.example.com
-     Authorization: OAuth access_token='vF9dft4qmT'
+     GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
+     Host: server.example.com
+
+
+   The HTTP request URI query can include other request-specific
+   parameters, in which case, the "oauth_token" parameters SHOULD be
 
 
 
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 41]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 42]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   Note that per [RFC2617] section 1.2 the following request is also
-   valid:
+   appended following the request-specific parameters, properly
+   separated by an "&" character (ASCII code 38).
 
+   The resource server MUST validate the access token and ensure it has
+   not expired and its includes the requested resource.  If the resource
+   expired or is not valid, the resource server MUST reply with an HTTP
+   401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
 
-     GET /user/daveman692.json HTTP/1.1
-     Host: api.example.com
-     Authorization:  OAuth  access_token = vF9dft4qmT
+5.1.2.  Form-Encoded Body Parameter
 
+   When including the access token in the HTTP request entity-body, the
+   client adds the access token to the request body using the
+   "oauth_token" parameter.  The client can use this method only if the
+   following REQUIRED conditions are met:
 
-   If the request fails verification, the protected resource SHOULD
-   respond with the appropriate HTTP response status code.  The
-   protected resource MAY include further details about why the request
-   was rejected in the response body or headers.
+   o  The entity-body is single-part.
 
-   For example:
+   o  The entity-body follows the encoding requirements of the
+      "application/x-www-form-urlencoded" content-type as defined by
+      [W3C.REC-html40-19980424].
 
+   o  The HTTP request entity-header includes the "Content-Type" header
+      field set to "application/x-www-form-urlencoded".
 
-     HTTP/1.1 401 Authorization Required
-     WWW-Authenticate: OAuth realm='https://api.example.com/'
+   o  The HTTP request method is "POST", "PUT", or "DELETE".
 
-
-5.1.2.  URI Query Parameter
-
-   The protected resource MAY allow clients to make authenticated
-   requests by including the access token as a URI query parameter.
-   Prior to making a request, the client MUST have obtained a valid
-   access token and the API request endpoint URI.  While the following
-   examples use the HTTP 'GET' method, there's nothing limiting a client
-   to use query parameters with other HTTP methods.
-
-   The client constructs the request URI by adding the following
-   REQUIRED query parameter to the API request endpoint:
-
-   oauth_token
-         The access token.
-
-   Since the request results in the transmission of plain text
-   credentials in the HTTP request, the protected resource MUST require
-   the use of a transport-layer mechanism such as TLS or SSL (or a
-   secure channel with equivalent protections).
+   The entity-body can include other request-specific parameters, in
+   which case, the "oauth_token" parameters SHOULD be appended following
+   the request-specific parameters, properly separated by an "&"
+   character (ASCII code 38).
 
    For example, the client makes the following HTTPS request:
 
 
-     GET /user/daveman692.json?oauth_token=vF9dft4qmT HTTP/1.1
-     Host: api.example.com
-
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 42]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-   If the request fails verification, the protected resource SHOULD
-   respond with the appropriate HTTP response status code.  The
-   protected resource MAY include further details about why the request
-   was rejected in the response body.
-
-   For example:
-
-
-     HTTP/1.1 401 Authorization Required
-     WWW-Authenticate: OAuth realm='https://api.example.com/'
-
-
-5.1.3.  Form-Encoded Body Parameter
-
-   The protected resource MAY allow clients to make authenticated
-   requests by including the access token as a parameter in the body of
-   a HTTP request.  Prior to making a request, the client MUST have
-   obtained a valid access token and the API request endpoint URI.
-
-   The client constructs an HTTP 'POST', 'PUT', or 'DELETE' request to
-   the API request endpoint and includes the following REQUIRED
-   parameter:
-
-   oauth_token
-         The access token.
-
-   Since the request results in the transmission of plain text
-   credentials in the HTTP request, the protected resource MUST require
-   the use of a transport-layer mechanism such as TLS or SSL (or a
-   secure channel with equivalent protections).
-
-   For example, the client makes the following HTTPS request:
-
-
-     POST /blog/entry HTTP/1.1
-     Host: api.example.com
+     POST /resource HTTP/1.1
+     Host: server.example.com
+     Content-Type: application/x-www-form-urlencoded
 
      oauth_token=vF9dft4qmT
 
 
-   If the request fails verification, the protected resource SHOULD
-   respond with the appropriate HTTP response status code.  The
-   protected resource MAY include further details about why the request
-   was rejected in the response body.
+   The resource server MUST validate the access token and ensure it has
+   not expired and its includes the requested resource.  If the resource
+   expired or is not valid, the resource server MUST reply with an HTTP
+   401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
 
 
 
 
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 43]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 43]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
+
+5.2.  The Authorization Request Header
+
+   The "Authorization" request header field is used by clients to make
+   both bearer token and cryptographic token requests.  When making
+   bearer token requests, the client uses the "token" attribute to
+   include the access token in the request without any of the other
+   attributes.
 
    For example:
 
-
-     HTTP/1.1 401 Authorization Required
-     WWW-Authenticate: OAuth realm='https://api.example.com/'
-
-
-5.2.  Signed Requests
-
-   When using signatures, clients MAY use TLS/SSL as the transport to
-   authenticate to a protected resource.
-
-   The following parameters are obtained (or computed) by clients in
-   order to make protected resource requests:
-
-   access_token
-         The access token obtained through a refresh token call with the
-         'want_secret' parameter included (Section 4).
-
-   signature_method
-         The signature method used by the client to sign the request.
-         The method MUST be one of those listed in the
-         'signature_methods' parameter returned with the access token
-         secret (Section 4).
-
-   timestamp
-         Unless otherwise specified by the server's documentation, the
-         timestamp is expressed in the number of seconds since January
-         1, 1970 00:00:00 GMT.  It MUST be a positive integer.
-
-   nonce
-         A nonce is a random string, uniquely generated by the client to
-         allow the server to verify that a request has never been made
-         before and helps prevent replay attacks when requests are made
-         over a non-secure channel.  The nonce value MUST be unique
-         across all requests with the same timestamp and token
-         combinations.
-
-   signature
-         The computed signature value ensuring the integrity of this
-         request (Section 5.2.1).
-
-   The protocol parameters are added to the request using the HTTP
-   Header (Section 5.2.2).
-
-   Construction of the signature base string follows the process
-   detailed in section 3.4.1 of [I-D.hammer-oauth].
+     GET /resource HTTP/1.1
+     Host: server.example.com
+     Authorization: Token token="vF9dft4qmT"
 
 
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 44]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-   For example the request:
-
-
-     GET /user/daveman692.json?b5=%3D%25%3D&a3=a&c%40=&a2=r%20b HTTP/1.1
-     Host: api.example.com
-     Content-Type: application/x-www-form-urlencoded
-     Authorization: OAuth
-                    access_token='vF9dft4qmT',
-                    signature_method='HMAC-SHA1',
-                    timestamp='1268998408',
-                    nonce='7d8f3e4a',
-
-     c2&a3=2+q
-
-
-   Is represented by the following signature base string (line breaks
-   are for display purposes only):
-
-
-   GET&amp;http%3A%2F%2Fapi.example.com%2Fuser%2Fdaveman692.json&amp;a2%
-   3Dr%2520b%26a3%3D2%252Bq%26a3%3Da%26b5%3D%253D%2525%253D%26c%2540%3D%
-   26c2%3D%26nonce%3D7d8f3e4a%26signature_method%3DHMAC-SHA1%26timestamp
-   %3D1268998408%26access_token%3DvF9dft4qmT%26version%3D2.0
-
-
-5.2.1.  Computing the signature
-
-   The authorization server declares which signature methods it accepts
-   via the 'signature_methods' returned as part of obtaining an access
-   token secret (Section 4).  The client declares which signature method
-   is used for this request via the 'signature_method' parameter.  It
-   then generates a signature, and includes it in the 'signature'
-   parameter.  The server verifies the signature as specified for each
-   method.
-
-   There is no mandate for a particular signature method as each
-   implementation can have its own unique requirements.  Authorization
-   servers are free to implement and document their own custom methods.
-
-5.2.1.1.  HMAC-SHA1
-
-   The 'HMAC-SHA1' signature method uses the HMAC-SHA1 signature
-   algorithm as defined in [RFC2104]:
-
-      digest = HMAC-SHA1 (key, text)
-
-   The HMAC-SHA1 function variables are used in following way:
-
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 45]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-   text  is set to the value of the signature base string.
-
-   key   is set to the access token secret.
-
-   digest  is used to set the value of the 'signature' protocol
-         parameter, after the result octet string is base64-encoded per
-         section 6.8 of [RFC2045].
-
-5.2.2.  Client Calls Protected Resource Using HTTP Headers
-
-   The protected resource MAY allow clients to make authenticated
-   requests by including the access token in the HTTP 'Authorization'
-   header.  Prior to making a request, the client MUST have obtained a
-   valid access token, a valid access token secret, and the API request
-   endpoint URI.  It MUST have also constructed the signature base
-   string and computed the signature (Section 5.2.1).
-
-   The client constructs a HTTP request to the API request endpoint URI
-   and includes the HTTP 'Authorization' header field with the auth-
-   scheme name set to 'OAuth' (case-insensitive).  The protocol
-   parameters and the signature computed in Section 5.2.1 are included
-   in the Authorization header.
-
-   For example, a valid request follows the form of:
-
-
-     GET /user/daveman692.json?b5=%3D%25%3D&a3=a&c%40=&a2=r%20b HTTP/1.1
-     Host: api.example.com
-     Content-Type: application/x-www-form-urlencoded
-     Authorization: OAuth
-                    access_token='vF9dft4qmT',
-                    signature_method='HMAC-SHA1',
-                    timestamp='1268998408',
-                    nonce='7d8f3e4a',
-                    signature='hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D'
-
-     c2&a3=2+q
-
-
-   If the request fails verification, the protected resource SHOULD
-   respond with the appropriate HTTP response status code.  The
-   protected resource MAY include further details about why the request
-   was rejected in the response body or headers.
+   When making a cryptographic token request (using an access token with
+   a matching secret) the client uses the "token" attribute to include
+   the access token in the request, and uses the "nonce", "timestamp",
+   "algorithm", and "signature" attributes to apply the matching secret.
 
    For example:
 
-
-     HTTP/1.1 401 Authorization Required
-
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 46]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-     WWW-Authenticate: OAuth realm='Exmaple'
+     GET /resource HTTP/1.1
+     Host: server.example.com
+     Authorization: Token token="vF9dft4qmT",
+                          nonce="s8djwd",
+                          timestamp="137131200",
+                          algorithm="hmac:sha-256",
+                          signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
 
 
-
-6.  The WWW-Authenticate Response Header
-
-   A server receiving a request for a protected resource without a valid
-   Authorization header field (Section 7) MUST respond with a 401 status
-   code (Unauthorized), and includes at least one "WWW-Authenticate"
-   header field including a token scheme challenge.
-
-   The "WWW-Authenticate" header field uses the framework defined by
+   The "Authorization" header field uses the framework defined by
    [RFC2617] as follows:
 
-    challenge       = "Token" RWS token-challenge
 
-    token-challenge = realm
-                      [ CS authz-uri ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 44]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+     credentials    = "Token" RWS token-response
+
+     token-response = token-id
+                      [ CS nonce ]
                       [ CS timestamp ]
+                      [ CS algorithm ]
+                      [ CS signature ]
 
-    authz-uri       = "authorization-uri" "=" URI-Reference
-    timestamp       = "timestamp" "=" <"> 1*DIGIT <">
+     token-id         = "token" "=" <"> token <">
+     timestamp        = "timestamp" "=" <"> 1*DIGIT <">
+     nonce            = "nonce" "=" <"> token <">
 
-    CS              = OWF "," OWF
+     algorithm        = "algorithm" "=" algorithm-name
+     algorithm-name   = secret-type ":" function-type
+     secret-type      = "hmac" /
+                        token
+     function-type    = "sha-256" /
+                        token
+
+    signature        = "signature" "=" <"> token <">
 
 
-6.1.  The 'realm' Attribute
+5.2.1.  Cryptographic Tokens
 
-6.2.  The 'authorization-uri' Attribute
+5.2.1.1.  The 'nonce' and 'timestamp' Attributes
 
-6.3.  The 'timestamp' Attribute
+   Cryptographic token authentication uses timestamps in combination
+   with unique nonce values to protect against replay attacks when
+   transmitted over an insecure channel.
 
-   Signature-based and hash-based authentication methods use timestamps
-   in combination with unique nonce values to protect against replay
-   attacks when used over an insecure channel.
+   The nonce is a random string, uniquely generated by the client to
+   allow the server to verify that a request has never been made before
+   and helps prevent replay attacks when requests are made over a non-
+   secure channel.  The nonce value MUST be unique across all requests
+   with the same timestamp and token combinations.
 
-   The timestamp attribute is used by the server to publish its current
-   time, enabling clients to synchronize their close with the server.
    The timestamp value is the current time expressed in the number of
    seconds since January 1, 1970 00:00:00 GMT, and MUST be a positive
    integer.
 
    To avoid the need to retain an infinite number of nonce values for
    future checks, servers MAY choose to restrict the time period after
-   which a request with an old timestamp is rejected.  Servers applying
-   such a restriction SHOULD provide their current time to the client
-   either in every challenge or when a request fails due to a timestamp
-   outside the allowed window.
+   which a request with an old timestamp is rejected.  When servers
+   apply such a restriction, clients SHOULD synchronize their clocks by
+   using the server's time as indicated by the HTTP "Date" response
+   header field as defined in [RFC2616].
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 47]
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 45]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-7.  The Authorization Request Header
-
-   A client making a request for a protected resource either directly,
-   or in retrying a request after receiving a 401 status code
-   (Unauthorized) with a token challenge, MUST include at least one
-   "Authorization" header field including token scheme credentials.
-
-   The "Authorization" header field uses the framework defined by
-   [RFC2617] as follows:
-
-    credentials    = "Token" RWS token-response
-
-    token-response = token-id
-                     [ CS nonce ]
-                     [ CS timestamp ]
-                     [ CS auth ]
-
-    token-id         = "token" "=" <"> token <">
-    nonce            = "nonce" "=" <"> token <">
-    auth             = "signature" "=" <"> token <">
-
-
-7.1.  The 'token' Attribute
-
-   The value used to identify the set of token credentials used by the
-   client to authenticate.  The token identifier can be an opaque string
-   or use a well-defined internal structure.
-
-7.2.  The 'nonce' Attribute
-
-   A random string, uniquely generated by the client to allow the server
-   to verify that a request has never been made before and helps prevent
-   replay attacks when requests are made over a non-secure channel.  The
-   nonce value MUST be unique across all requests with the same
-   timestamp and token combinations.
-
-7.3.  The 'timestamp' Attribute
-
-   The timestamp value is the current time expressed in the number of
-   seconds since January 1, 1970 00:00:00 GMT, and MUST be a positive
-   integer.
-
-7.4.  The 'signature' Attribute
+5.2.1.2.  The 'algorithm' and 'signature' Attributes
 
    The output of the authentication method function after applying it to
    the selected coverage.
 
+5.2.1.2.1.  The 'hmac-sha-256' Method
+
+   The "hmac-sha-256" authentication method uses the HMAC algorithm as
+   defined in [RFC2104] together with the SHA-256 hash function defined
+   in [NIST FIPS-180-3]:
+
+     digest = HMAC-SHA256 (key, text)
+
+
+   The HMAC-SHA256 function variables are used in following way:
+
+   text
+         is set to the value of the normalize request string as
+         described in Section 5.2.1.2.2.
+
+   key
+         is set to the shared-secret associated with the token.
+
+   digest
+         is used to set the value of the "auth" attribute, after the
+         result octet string is base64-encoded per [RFC2045] section
+         6.8.
+
+5.2.1.2.2.  Normalized String Construction
+
+   The normalized request string is a consistent, reproducible
+   concatenation of several of the HTTP request elements into a single
+   string.  The string is used as an input to the selected cryptographic
+   method and includes the HTTP request method (e.g.  "GET", "POST",
+   etc.), the authority as declared by the HTTP "Host" request header,
+   and the request resource URI.
+
+   The normalized request string does not cover the entire HTTP request.
+   Most notably, it does not include the entity-body or most HTTP
+   entity-headers.  It is important to note that the server cannot
+   verify the authenticity of the excluded request elements without
+   using additional protections such as SSL/TLS.
+
+   The normalized request string is constructed by concatenating
+   together, in order, the following HTTP request elements:
+
+   1.   The request timestamp as described in Section 5.2.1.1.
 
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 48]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 46]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-8.  Security Considerations
+   2.   A "," character (ASCII code 44).
+
+   3.   The request nonce as described in Section 5.2.1.1.
+
+   4.   A "," character (ASCII code 44).
+
+   5.   The cryptographic algorithm used.
+
+   6.   A "," character (ASCII code 44).
+
+   7.   The HTTP request method in uppercase.  For example: "HEAD",
+        "GET", "POST", etc.
+
+   8.   A "," character (ASCII code 44).
+
+   9.   The hostname, colon-separated (ASCII code 58) from the TCP port
+        used to make the request as included in the HTTP request "Host"
+        header field.  The port MUST be included even if it is not
+        included in the "Host" header field (i.e. the default port for
+        the scheme).
+
+   10.  A "," character (ASCII code 44).
+
+   11.
+
+   12.  A "," character (ASCII code 44).
+
+   13.  The request resource URI.
+
+
+6.  Identifying a Protected Resource
+
+   Clients access protected resources after locating the appropriate
+   authorization endpoint and obtaining an access token.  In many cases,
+   interacting with a protected resource requires prior knowledge of the
+   protected resource properties and methods, as well as its
+   authentication requirements (i.e. establishing client identity,
+   locating the authorization endpoint).
+
+   However, there are cases in which clients are unfamiliar with the
+   protected resource, including whether the resource requires
+   authentication.  When clients attempt to access an unfamiliar
+   protected resource without an access token, the resource server
+   denies the request and informs the client of the required credentials
+   using an HTTP authentication challenge.
+
+   In addition, when receiving an invalid authenticated request, the
+   resource server issues an authentication challenge including the
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 47]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+   error type and message.
+
+6.1.  The WWW-Authenticate Response Header
+
+   A resource server receiving a request for a protected resource
+   without a valid access token MUST respond with a 401 HTTP status code
+   (Unauthorized), and includes at least one "Token" "WWW-Authenticate"
+   response header field challenge.
+
+   The "WWW-Authenticate" header field uses the framework defined by
+   [RFC2617] as follows:
+
+     challenge       = "Token" RWS token-challenge
+
+     token-challenge = realm
+                       [ CS authz-uri ]
+                       [ CS algorithms ]
+                       [ CS error ]
+
+     authz-uri       = "authorization-uri" "=" URI-Reference
+     algorithms      = "algorithms" "=" <"> 1#algorithm-name  <">
+     error           = "error" "=" <"> token <">
+
+     CS              = OWS "," OWS
+
+
+6.1.1.  The 'realm' Attribute
+
+   The "realm" attribute is used to provide the protected resources
+   partition as defined by [RFC2617].
+
+6.1.2.  The 'authorization-uri' Attribute
+
+6.1.3.  The 'algorithms' Attribute
+
+6.1.4.  The 'error' Attribute
+
+
+7.  Security Considerations
 
    [[ Todo ]]
 
 
-9.  IANA Considerations
+8.  IANA Considerations
 
    [[ Not Yet ]]
 
 
-10.  Acknowledgements
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 48]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+9.  Acknowledgements
 
    [[ Add OAuth 1.0a authors + WG contributors ]]
 
 
 Appendix A.  Differences from OAuth 1.0a
+
+   [[ Todo ]]
 
 
 Appendix B.  Document History
@@ -2716,9 +2708,9 @@ Appendix B.  Document History
    o  Initial draft based on a combination of WRAP and OAuth 1.0a.
 
 
-11.  References
+10.  References
 
-11.1.  Normative References
+10.1.  Normative References
 
    [I-D.ietf-httpbis-p1-messaging]
               Fielding, R., Gettys, J., Mogul, J., Nielsen, H.,
@@ -2726,6 +2718,10 @@ Appendix B.  Document History
               "HTTP/1.1, part 1: URIs, Connections, and Message
               Parsing", draft-ietf-httpbis-p1-messaging-09 (work in
               progress), March 2010.
+
+   [NIST FIPS-180-3]
+              National Institute of Standards and Technology, "Secure
+              Hash Standard (SHS). FIPS PUB 180-3, October 2008".
 
    [RFC2045]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
               Extensions (MIME) Part One: Format of Internet Message
@@ -2738,16 +2734,16 @@ Appendix B.  Document History
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 49]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 49]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
 
    [RFC2617]  Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S.,
               Leach, P., Luotonen, A., and L. Stewart, "HTTP
@@ -2773,7 +2769,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
               Recommendation REC-html40-19980424, April 1998,
               <http://www.w3.org/TR/1998/REC-html40-19980424>.
 
-11.2.  Informative References
+10.2.  Informative References
 
    [I-D.hammer-oauth]
               Hammer-Lahav, E., "The OAuth 1.0 Protocol",
@@ -2796,7 +2792,11 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 50]
+
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 50]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2804,6 +2804,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 Authors' Addresses
 
    Eran Hammer-Lahav (editor)
+   Yahoo!
 
    Email: eran@hueniverse.com
 
@@ -2851,7 +2852,6 @@ Authors' Addresses
 
 
 
-
-Hammer-Lahav, et al.    Expires October 12, 2010               [Page 51]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 51]
 
 

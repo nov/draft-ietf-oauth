@@ -16,7 +16,7 @@
     <title abbrev='OAuth 2.0'>The OAuth 2.0 Protocol</title>
 
     <author fullname='Eran Hammer-Lahav' surname='Hammer-Lahav' initials='E' role='editor'>
-      <organization />
+      <organization>Yahoo!</organization>
       <address>
         <email>eran@hueniverse.com</email>
       </address>
@@ -300,16 +300,16 @@
       <section title='Conformance'>
         <t>
           An implementation is not compliant if it fails to satisfy one or more of the MUST or
-          REQUIRED level requirements for the protocols it implements. An implementation that
+          REQUIRED level requirements for the flows it implements. An implementation that
           satisfies all the MUST or REQUIRED level and all the SHOULD level requirements for its
-          protocols is said to be "unconditionally compliant"; one that satisfies all the MUST
-          level requirements but not all the SHOULD level requirements for its protocols is said to
+          flows is said to be "unconditionally compliant"; one that satisfies all the MUST
+          level requirements but not all the SHOULD level requirements for its flows is said to
           be "conditionally compliant."
         </t>
       </section>
 
     </section>
-
+    
     <section title='Obtaining an Access Token' anchor='get_token'>
       <t>
         The client obtains an access token by using one of the authorization flows supported by the
@@ -2170,10 +2170,11 @@
           <t hangText='secret_type'>
             <vspace />
             OPTIONAL. This specification defines two values: <spanx style='verb'>none</spanx> for 
-            an access token without a secret (bearer token) and <spanx style='verb'>mac</spanx> for
-            a token with a shared symmetric secret suitable for signing requests using a MAC
-            cryptographic algorithm. The value defaults to <spanx style='verb'>none</spanx> if
-            omitted. Using token secrets is described in <xref target='using_signatures' />.
+            an access token without a secret (bearer token) and <spanx style='verb'>hmac</spanx> for
+            a token with a shared symmetric secret suitable for signing requests using an HMAC
+            cryptographic algorithm (as defined in <xref target='RFC2104' />). The value defaults
+            to <spanx style='verb'>none</spanx> if omitted. Using token secrets is described in
+            <xref target='crypto_tokens' />.
           </t>
         </list>
       </t>
@@ -2189,7 +2190,7 @@
   Content-Type: application/x-www-form-urlencoded
   
   type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
-  &refresh_token=n4E9O119d&secret_type=mac
+  &refresh_token=n4E9O119d&secret_type=hmac
 ]]>
         </artwork>
       </figure>
@@ -2280,62 +2281,78 @@
         access token with different security properties by replacing it with a new access token
         with a matching secret.
       </t>
-      
-      <section title='Bearer Access Token'>
-        <t>
-          The access tokens issued by the various authorization flows consist of a single token
-          string. When an access token does not include a matching secret, the access token acts as
-          a bearer token, where the token string is a shared symmetric secret. This requires
-          treating the access token with the same care as other secrets (e.g. user passwords).
-          Access tokens SHOULD NOT be sent in the clear over an insecure channel.
-        </t>
-        <t>
-          However, when it is necessary to transmit bearer access tokens in the clear without a
-          secure channel, authorization servers must issue access tokens with limited scope and
-          lifetime to reduce the potential risk from a compromised access token. Clients SHOULD
-          request and utilize an access token with a matching secret as described in
-          <xref target='crypto_token' /> when making protected resource requests over an insecure
-          channel (e.g. an HTTP request without using SSL/TLS).
-        </t>
-      </section>
-      
-      <section title='Cryptographic Access Token'>
-        <t>
-        </t>
-      </section>
-      
       <t>
-        If a client includes more than one access token within the request, the resource server
-        MUST respond with a HTTP 400 'Bad Request' error code.
+        When an access token does not include a matching secret, the access token acts as a bearer
+        token, where the token string is a shared symmetric secret. This requires treating the
+        access token with the same care as other secrets (e.g. user passwords). Access tokens
+        SHOULD NOT be sent in the clear over an insecure channel.
+      </t>
+      <t>
+        However, when it is necessary to transmit bearer tokens in the clear without a secure
+        channel, authorization servers must issue access tokens with limited scope and lifetime to
+        reduce the potential risk from a compromised access token. Clients SHOULD request and
+        utilize an access token with a matching secret when making protected resource requests over
+        an insecure channel (e.g. an HTTP request without using SSL/TLS).
+      </t>
+      <t>
+        When an access token includes a matching secret, the secret is not included directly in the
+        request but 
+      </t>
+      <t>
+         Clients SHOULD NOT make authenticated requests with an access token to unfamiliar servers,
+        especially when using bearer tokens, regardless of the presence of a secure channel.
       </t>
 
-      <section title='Bearer Token Requests' anchor='using_ssl'>
+      <section title='Bearer Token Requests'>
         <t>
-          When using TLS/SSL, clients MUST present an access token to authenticate to a protected
-          resource. Use of the HTTP 'Authorization' header field as defined by
-          <xref target='RFC2617' /> is RECOMMENDED, since HTTP implementations are aware that this
-          header has special security properties and may require special treatment in caches and
-          logs. Protected resources SHOULD take precautions to ensure that access tokens are not
-          inadvertently logged or captured. It is RECOMMENDED that clients verify the authenticity
-          of the certificate provided when establishing a TLS/SSL connection to the protected
-          resource.
+          Clients make bearer token requests by including the access token using the HTTP
+          <spanx style='verb'>Authorization</spanx> request header with the
+          <spanx style='verb'>Token</spanx> authentication scheme as described in
+          <xref target='authz_header' />. The access token is included using the
+          <spanx style='verb'>token</spanx> parameter.
+        </t>
+        <figure>
+          <preamble>
+            For example, the client makes the following HTTPS request:
+          </preamble>
+          <artwork><![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT"
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The resource server MUST validate the access token and ensure it has not expired and
+          that its scope covers the requested resource. If the token expired or is  invalid, the
+          resource server MUST reply with an HTTP 401 status code (Unauthorized) and include
+          the HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+          <xref target='authn_header' />.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork><![CDATA[
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: Token realm='Service', error='token_expired'
+]]>
+          </artwork>
+        </figure>
+        <t>
+          Alternatively, the client MAY include the access token using the HTTP request URI in the
+          query component as described in <xref target='query_param' />, or in the HTTP body when
+          using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
+          described in <xref target='body_param' />. Clients SHOULD only use the request URI or
+          body when the <spanx style='verb'>Authorization</spanx> request header is not available,
+          and MUST NOT use more than one method in each request.
         </t>
 
-        <section title='HTTP Header'>
+        <section title='URI Query Parameter' anchor='query_param'>
           <t>
-            The protected resource SHOULD allow clients to make authenticated requests by including
-            the access token in the HTTP 'Authorization' header. Prior to making a request, the
-            client MUST have obtained a valid access token and the API request endpoint URI.
-          </t>
-          <t>
-            The client constructs a HTTP request to the API request endpoint URI and includes the
-            HTTP 'Authorization' header field with the auth-scheme name set to 'OAuth'
-            (case-insensitive).
-          </t>
-          <t>
-            Since the request results in the transmission of plain text credentials in the HTTP
-            request, the protected resource MUST require the use of a transport-layer mechanism
-            such as TLS or SSL (or a secure channel with equivalent protections).
+            When including the access token in the HTTP request URI, the client adds the access
+            token to the request URI query component as defined by <xref target='RFC3986' /> using
+            the <spanx style='verb'>oauth_token</spanx> parameter.
           </t>
           <figure>
             <preamble>
@@ -2343,452 +2360,368 @@
             </preamble>
             <artwork>
               <![CDATA[
-  GET /user/daveman692.json HTTP/1.1
-  Host: api.example.com
-  Authorization: OAuth access_token='vF9dft4qmT'
+  GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
+  Host: server.example.com
 ]]>
             </artwork>
           </figure>
-          <figure>
-            <preamble>
-              Note that per <xref target='RFC2617' /> section 1.2 the following request is also
-              valid:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  GET /user/daveman692.json HTTP/1.1
-  Host: api.example.com
-  Authorization:  OAuth  access_token = vF9dft4qmT
-]]>
-            </artwork>
-          </figure>
-          <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body or headers.
+          <t>  
+            The HTTP request URI query can include other request-specific parameters, in which
+            case, the <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended
+            following the request-specific parameters, properly separated by an
+            <spanx style="verb">&amp;</spanx> character (ASCII code 38).
           </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='https://api.example.com/'
-]]>
-            </artwork>
-          </figure>
+          <t>
+            The resource server MUST validate the access token and ensure it has not expired and
+            its includes the requested resource. If the resource expired or is not valid, the 
+            resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
+            HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+            <xref target='authn_header' />.
+          </t>
         </section>
 
-        <section title='URI Query Parameter'>
+        <section title='Form-Encoded Body Parameter' anchor='body_param'>
           <t>
-            The protected resource MAY allow clients to make authenticated requests by including
-            the access token as a URI query parameter. Prior to making a request, the client MUST
-            have obtained a valid access token and the API request endpoint URI. While the
-            following examples use the HTTP 'GET' method, there's nothing limiting a client to
-            use query parameters with other HTTP methods.
-          </t>
-          <t>
-            The client constructs the request URI by adding the following REQUIRED query parameter
-            to the API request endpoint:
+            When including the access token in the HTTP request entity-body, the client adds the
+            access token to the request body using the <spanx style='verb'>oauth_token</spanx>
+            parameter. The client can use this method only if the following REQUIRED conditions are
+            met:
 
-            <list style='hanging' hangIndent='6'>
-              <t hangText='oauth_token'>
-  	           <vspace />
-                The access token.
+            <list style="symbols">
+              <t>
+                The entity-body is single-part.
+              </t>
+              <t>
+                The entity-body follows the encoding requirements of the
+                <spanx style="verb">application/x-www-form-urlencoded</spanx> content-type as
+                defined by <xref target="W3C.REC-html40-19980424" />.
+              </t>
+              <t>
+                The HTTP request entity-header includes the <spanx style="verb">Content-Type</spanx>
+                header field set to <spanx style="verb">application/x-www-form-urlencoded</spanx>.
+              </t>
+              <t>
+                The HTTP request method is <spanx style='verb'>POST</spanx>,
+                <spanx style='verb'>PUT</spanx>, or <spanx style='verb'>DELETE</spanx>.
               </t>
             </list>
           </t>
-          <t>
-            Since the request results in the transmission of plain text credentials in the HTTP
-            request, the protected resource MUST require the use of a transport-layer mechanism
-            such as TLS or SSL (or a secure channel with equivalent protections).
-          </t>
+          <t>  
+            The entity-body can include other request-specific parameters, in which case, the
+            <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended following the
+            request-specific parameters, properly separated by an <spanx style="verb">&amp;</spanx>
+            character (ASCII code 38).
+          </t>          
           <figure>
             <preamble>
               For example, the client makes the following HTTPS request:
             </preamble>
             <artwork>
               <![CDATA[
-  GET /user/daveman692.json?oauth_token=vF9dft4qmT HTTP/1.1
-  Host: api.example.com
-]]>
-            </artwork>
-          </figure>
-          <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='https://api.example.com/'
-]]>
-            </artwork>
-          </figure>
-        </section>
+  POST /resource HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
 
-        <section title='Form-Encoded Body Parameter'>
-          <t>
-            The protected resource MAY allow clients to make authenticated requests by including
-            the access token as a parameter in the body of a HTTP request. Prior to making a
-            request, the client MUST have obtained a valid access token and the API request
-            endpoint URI.
-          </t>
-          <t>
-            The client constructs an HTTP 'POST', 'PUT', or 'DELETE' request to the API request
-            endpoint and includes the following REQUIRED parameter:
-
-            <list style='hanging' hangIndent='6'>
-              <t hangText='oauth_token'>
-	              <vspace />
-                The access token.
-              </t>
-            </list>
-          </t>
-          <t>
-            Since the request results in the transmission of plain text credentials in the HTTP
-            request, the protected resource MUST require the use of a transport-layer mechanism
-            such as TLS or SSL (or a secure channel with equivalent protections).
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTPS request:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  POST /blog/entry HTTP/1.1
-  Host: api.example.com
-  
   oauth_token=vF9dft4qmT
 ]]>
             </artwork>
           </figure>
           <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body.
+            The resource server MUST validate the access token and ensure it has not expired and
+            its includes the requested resource. If the resource expired or is not valid, the 
+            resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
+            HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+            <xref target='authn_header' />.
           </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='https://api.example.com/'
-]]>
-            </artwork>
-          </figure>
         </section>
 
       </section>
 
-      <section title='Signed Requests' anchor='using_signatures'>
+      <section title='The Authorization Request Header' anchor='authz_header'>
         <t>
-          When using signatures, clients MAY use TLS/SSL as the transport to authenticate to a
-          protected resource.
-        </t>
-        <t>
-          The following parameters are obtained (or computed) by clients in order to make protected
-          resource requests:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='access_token'>
-              <vspace />
-              The access token obtained through a refresh token call with the 'want_secret'
-              parameter included (<xref target='token_refresh'/>).
-            </t>
-            <t hangText='signature_method'>
-              <vspace />
-              The signature method used by the client to sign the request. The method MUST be one
-              of those listed in the 'signature_methods' parameter returned with the access
-              token secret (<xref target='token_refresh' />).
-            </t>
-            <t hangText='timestamp'>
-              <vspace />
-              Unless otherwise specified by the server's documentation, the timestamp is expressed in
-              the number of seconds since January 1, 1970 00:00:00 GMT. It MUST be a positive integer.
-            </t>
-            <t hangText='nonce'>
-              <vspace />
-              A nonce is a random string, uniquely generated by the client to allow the server to
-              verify that a request has never been made before and helps prevent replay attacks when
-              requests are made over a non-secure channel. The nonce value MUST be unique across all
-              requests with the same timestamp and token combinations.
-            </t>
-            <t hangText='signature'>
-              <vspace />
-              The computed signature value ensuring the integrity of this request
-              (<xref target='compute_sig' />).
-            </t>
-          </list>
-        </t>
-        <t>
-          The protocol parameters are added to the request using the
-          <xref target='sig_headers'>HTTP Header</xref>.
-        </t>
-        <t>
-          Construction of the signature base string follows the process detailed in section 3.4.1
-          of <xref target='I-D.hammer-oauth' />.
+          The <spanx style='verb'>Authorization</spanx> request header field is used by clients to
+          make both bearer token and cryptographic token requests. When making bearer token
+          requests, the client uses the <spanx style='verb'>token</spanx> attribute to include the
+          access token in the request without any of the other attributes.
         </t>
         <figure>
           <preamble>
-            For example the request:
+            For example:
           </preamble>
-          <artwork>
-            <![CDATA[
-  GET /user/daveman692.json?b5=%3D%25%3D&a3=a&c%40=&a2=r%20b HTTP/1.1
-  Host: api.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: OAuth
-                 access_token='vF9dft4qmT',
-                 signature_method='HMAC-SHA1',
-                 timestamp='1268998408',
-                 nonce='7d8f3e4a',
-
-  c2&a3=2+q
+          <artwork><![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT"
 ]]>
           </artwork>
         </figure>
+        <t>
+          When making a cryptographic token request (using an access token with a matching secret)
+          the client uses the <spanx style='verb'>token</spanx> attribute to include the access
+          token in the request, and uses the <spanx style='verb'>nonce</spanx>,
+          <spanx style='verb'>timestamp</spanx>, <spanx style='verb'>algorithm</spanx>, and
+          <spanx style='verb'>signature</spanx> attributes to apply the matching secret.
+        </t>
         <figure>
           <preamble>
-            Is represented by the following signature base string (line breaks are for display
-            purposes only):
+            For example:
           </preamble>
-          <artwork>
-            <![CDATA[
-  GET&amp;http%3A%2F%2Fapi.example.com%2Fuser%2Fdaveman692.json&amp;a2%
-  3Dr%2520b%26a3%3D2%252Bq%26a3%3Da%26b5%3D%253D%2525%253D%26c%2540%3D%
-  26c2%3D%26nonce%3D7d8f3e4a%26signature_method%3DHMAC-SHA1%26timestamp
-  %3D1268998408%26access_token%3DvF9dft4qmT%26version%3D2.0
+          <artwork><![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT",
+                       nonce="s8djwd",
+                       timestamp="137131200",
+                       algorithm="hmac:sha-256",
+                       signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
+          <xref target='RFC2617' /> as follows:
+        </t>
+        <figure>
+          <artwork xml:space='preserve'><![CDATA[
+  credentials    = "Token" RWS token-response
+   
+  token-response = token-id
+                   [ CS nonce ]
+                   [ CS timestamp ]
+                   [ CS algorithm ]
+                   [ CS signature ]
+
+  token-id         = "token" "=" <"> token <">
+  timestamp        = "timestamp" "=" <"> 1*DIGIT <">
+  nonce            = "nonce" "=" <"> token <">
+ 
+  algorithm        = "algorithm" "=" algorithm-name
+  algorithm-name   = secret-type ":" function-type
+  secret-type      = "hmac" /
+                     token
+  function-type    = "sha-256" /
+                     token
+
+ signature        = "signature" "=" <"> token <">
 ]]>
           </artwork>
         </figure>
 
-        <section title='Computing the signature' anchor='compute_sig'>
-          <t>
-            The authorization server declares which signature methods it accepts via the
-            'signature_methods' returned as part of obtaining an access token secret
-            (<xref target='token_refresh' />). The client declares which signature method is used
-            for this request via the 'signature_method' parameter. It then generates a
-            signature, and includes it in the 'signature' parameter. The server verifies the
-            signature as specified for each method.
-          </t>
-          <t>
-            There is no mandate for a particular signature method as each implementation can have
-            its own unique requirements. Authorization servers are free to implement and document
-            their own custom methods.
-          </t>
-
-          <section title='HMAC-SHA1'>
+        <section title='Cryptographic Tokens' anchor='crypto_tokens'>
+          
+          <section title="The 'nonce' and 'timestamp' Attributes" anchor='nonce_ts'>
             <t>
-              The 'HMAC-SHA1' signature method uses the HMAC-SHA1 signature algorithm as defined in
-              <xref target='RFC2104' />:
-
-              <list>
-                <t>
-                  digest = HMAC-SHA1 (key, text)
-                </t>
-              </list>
+              Cryptographic token authentication uses timestamps in combination with unique nonce
+              values to protect against replay attacks when transmitted over an insecure channel.
             </t>
             <t>
-              The HMAC-SHA1 function variables are used in following way:
-
-              <list style='hanging' hangIndent='6'>
-                <t hangText='text'>
-                  is set to the value of the signature base string.
-                </t>
-                <t hangText='key'>
-                  is set to the access token secret.
-                </t>
-                <t hangText='digest'>
-                  is used to set the value of the 'signature' protocol parameter, after the
-                  result octet string is base64-encoded per section 6.8 of <xref target='RFC2045' />.
-                </t>
-              </list>
+              The nonce is a random string, uniquely generated by the client to allow the server to
+              verify that a request has never been made before and helps prevent replay attacks
+              when requests are made over a non-secure channel. The nonce value MUST be unique
+              across all requests with the same timestamp and token combinations.
+            </t>
+            <t>
+              The timestamp value is the current time expressed in the number of seconds since
+              January 1, 1970 00:00:00 GMT, and MUST be a positive integer.
+            </t>
+            <t>
+              To avoid the need to retain an infinite number of nonce values for future checks,
+              servers MAY choose to restrict the time period after which a request with an old
+              timestamp is rejected. When servers apply such a restriction, clients SHOULD
+              synchronize their clocks by using the server's time as indicated by the HTTP
+              <spanx style='verb'>Date</spanx> response header field as defined in
+              <xref target='RFC2616' />.
             </t>
           </section>
 
-        </section>
+          <section title="The 'algorithm' and 'signature' Attributes">
+            <t>
+              The output of the authentication method function after applying it to the selected
+              coverage.
+            </t>
+          
+            <section title="The 'hmac-sha-256' Method">
+              <t>
+                The <spanx style="verb">hmac-sha-256</spanx> authentication method uses the HMAC
+                algorithm as defined in <xref target="RFC2104" /> together with the SHA-256 hash
+                function defined in <xref target="NIST FIPS-180-3" />:
 
-        <section title='Client Calls Protected Resource Using HTTP Headers' anchor='sig_headers'>
-          <t>
-            The protected resource MAY allow clients to make authenticated requests by including
-            the access token in the HTTP 'Authorization' header. Prior to making a request, the
-            client MUST have obtained a valid access token, a valid access token secret, and the
-            API request endpoint URI. It MUST have also constructed the signature base string and
-            <xref target='compute_sig'>computed the signature</xref>.
-          </t>
-          <t>
-            The client constructs a HTTP request to the API request endpoint URI and includes the
-            HTTP 'Authorization' header field with the auth-scheme name set to 'OAuth'
-            (case-insensitive). The protocol parameters and the signature computed in
-            <xref target='compute_sig' /> are included in the Authorization header.
-          </t>
-          <figure>
-            <preamble>
-              For example, a valid request follows the form of:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  GET /user/daveman692.json?b5=%3D%25%3D&a3=a&c%40=&a2=r%20b HTTP/1.1
-  Host: api.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: OAuth
-                 access_token='vF9dft4qmT',
-                 signature_method='HMAC-SHA1',
-                 timestamp='1268998408',
-                 nonce='7d8f3e4a',
-                 signature='hfVFpKvoKp5S6YaNIJ6ljuNYR6s%3D'
+                <figure>
+                  <artwork><![CDATA[
+  digest = HMAC-SHA256 (key, text)
+]]>
+                  </artwork>
+                </figure>
+              </t>
+              <t>
+                The HMAC-SHA256 function variables are used in following way:
 
-  c2&a3=2+q
-]]>
-            </artwork>
-          </figure>
-          <t>
-            If the request fails verification, the protected resource SHOULD respond with the
-            appropriate HTTP response status code. The protected resource MAY include further
-            details about why the request was rejected in the response body or headers.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Authorization Required
-  WWW-Authenticate: OAuth realm='Exmaple'
-]]>
-            </artwork>
-          </figure>
+                <list style="hanging" hangIndent="6">
+                  <t hangText="text">
+                    <vspace />
+                    is set to the value of the normalize request string as described in
+                    <xref target="base_string" />.
+                  </t>
+                  <t hangText="key">
+                    <vspace />
+                    is set to the shared-secret associated with the token.
+                  </t>
+                  <t hangText="digest">
+                    <vspace />
+                    is used to set the value of the <spanx style="verb">auth</spanx>
+                    attribute, after the result octet string is base64-encoded per
+                    <xref target="RFC2045" /> section 6.8.
+                  </t>
+                </list>
+              </t>
+            </section>
+
+            <section title='Normalized String Construction' anchor='base_string'>
+              <t>
+                The normalized request string is a consistent, reproducible concatenation of several
+                of the HTTP request elements into a single string. The string is used as an input to
+                the selected cryptographic method and includes the HTTP request method (e.g.
+                <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.), the authority
+                as declared by the HTTP <spanx style='verb'>Host</spanx> request header, and the
+                request resource URI.
+              </t>
+              <t>
+                The normalized request string does not cover the entire HTTP request. Most notably, it
+                does not include the entity-body or most HTTP entity-headers. It is important to note
+                that the server cannot verify the authenticity of the excluded request elements without
+                using additional protections such as SSL/TLS.
+              </t>
+              <t>
+                The normalized request string is constructed by concatenating together, in order, the
+                following HTTP request elements:
+
+                <list style='numbers'>
+                  <t>
+                    The request timestamp as described in <xref target='nonce_ts' />.
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>
+                  <t>
+                    The request nonce as described in <xref target='nonce_ts' />.
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>
+                  <t>
+                    The cryptographic algorithm used.
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>              
+                  <t>
+                    The HTTP request method in uppercase. For example: <spanx style='verb'>HEAD</spanx>,
+                    <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>
+                  <t>
+                    The hostname, colon-separated (ASCII code 58) from the TCP port used to make the
+                    request as included in the HTTP request <spanx style='verb'>Host</spanx> header
+                    field. The port MUST be included even if it is not included in the
+                    <spanx style='verb'>Host</spanx> header field (i.e. the default port for the
+                    scheme).
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>
+                  <t>
+                  </t>
+                  <t>
+                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
+                  </t>
+                  <t>
+                    The request resource URI.
+                  </t>
+                </list>
+              </t>
+            </section>
+            
+          </section>
+          
         </section>
 
       </section>
 
     </section>
+    
+    <section title='Identifying a Protected Resource'>
+      <t>
+        Clients access protected resources after locating the appropriate authorization endpoint
+        and obtaining an access token. In many cases, interacting with a protected resource requires
+        prior knowledge of the protected resource properties and methods, as well as its
+        authentication requirements (i.e. establishing client identity, locating the authorization
+        endpoint).
+      </t>
+      <t>
+         However, there are cases in which clients are unfamiliar with the protected resource,
+         including whether the resource requires authentication. When clients attempt to access an
+         unfamiliar protected resource without an access token, the resource server denies the
+         request and informs the client of the required credentials using an HTTP authentication
+         challenge.
+      </t>
+      <t>
+        In addition, when receiving an invalid authenticated request, the resource server issues an
+        authentication challenge including the error type and message.
+      </t>        
 
-    <section title='The WWW-Authenticate Response Header' anchor='authn_header'>
-      <t>
-        A server receiving a request for a protected resource without a valid
-        <xref target='authz_header'>Authorization header field</xref> MUST respond with a 401
-        status code (Unauthorized), and includes at least one
-        <spanx style='verb'>WWW-Authenticate</spanx> header field including a token scheme
-        challenge.
-      </t>
-      <t>
-        The <spanx style='verb'>WWW-Authenticate</spanx> header field uses the framework defined by
-        <xref target='RFC2617' /> as follows:
-      </t>
-      <figure>
-        <artwork xml:space='preserve'><![CDATA[
- challenge       = "Token" RWS token-challenge
+      <section title='The WWW-Authenticate Response Header' anchor='authn_header'>
+        <t>
+          A resource server receiving a request for a protected resource without a valid access
+          token MUST respond with a 401 HTTP status code (Unauthorized), and includes at least one
+          <spanx style='verb'>Token</spanx> <spanx style='verb'>WWW-Authenticate</spanx> response
+          header field challenge.
+        </t>
+        <t>
+          The <spanx style='verb'>WWW-Authenticate</spanx> header field uses the framework defined by
+          <xref target='RFC2617' /> as follows:
+        </t>
+        <figure>
+          <artwork><![CDATA[
+  challenge       = "Token" RWS token-challenge
    
- token-challenge = realm
-                   [ CS authz-uri ]
-                   [ CS timestamp ]
+  token-challenge = realm
+                    [ CS authz-uri ]
+                    [ CS algorithms ]
+                    [ CS error ]
 
- authz-uri       = "authorization-uri" "=" URI-Reference
- timestamp       = "timestamp" "=" <"> 1*DIGIT <">
+  authz-uri       = "authorization-uri" "=" URI-Reference
+  algorithms      = "algorithms" "=" <"> 1#algorithm-name  <">
+  error           = "error" "=" <"> token <">
  
- CS              = OWF "," OWF
+  CS              = OWS "," OWS
 ]]>
-        </artwork>
-      </figure>
+          </artwork>
+        </figure>
 
-      <section title="The 'realm' Attribute">
-        <t>
-        </t>
-      </section>
+        <section title="The 'realm' Attribute">
+          <t>
+            The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
+            resources partition as defined by <xref target='RFC2617' />.
+          </t>
+        </section>
 
-      <section title="The 'authorization-uri' Attribute" anchor='authz_uri_attribute'>
-        <t>
-        </t>
-      </section>
+        <section title="The 'authorization-uri' Attribute" anchor='authz_uri_attribute'>
+          <t>
+          </t>
+        </section>
+        
+        <section title="The 'algorithms' Attribute">
+          <t>
+          </t>
+        </section>
 
-      <section title="The 'timestamp' Attribute">
-        <t>
-          Signature-based and hash-based authentication methods use timestamps in combination with
-          unique nonce values to protect against replay attacks when used over an insecure channel.
-        </t>
-        <t>
-          The timestamp attribute is used by the server to publish its current time, enabling
-          clients to synchronize their close with the server. The timestamp value is the current
-          time expressed in the number of seconds since January 1, 1970 00:00:00 GMT, and MUST be a
-          positive integer.
-        </t>
-        <t>
-          To avoid the need to retain an infinite number of nonce values for future checks, servers
-          MAY choose to restrict the time period after which a request with an old timestamp is
-          rejected. Servers applying such a restriction SHOULD provide their current time to the
-          client either in every challenge or when a request fails due to a timestamp outside the
-          allowed window.
-        </t>
-      </section>
+        <section title="The 'error' Attribute">
+          <t>
+          </t>
+        </section>
 
-    </section>
-
-    <section title='The Authorization Request Header' anchor='authz_header'>
-      <t>
-        A client making a request for a protected resource either directly, or in retrying a
-        request after receiving a 401 status code (Unauthorized) with a token challenge, MUST
-        include at least one <spanx style='verb'>Authorization</spanx> header field including
-        token scheme credentials.
-      </t>
-      <t>
-        The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
-        <xref target='RFC2617' /> as follows:
-      </t>
-      <figure>
-        <artwork xml:space='preserve'><![CDATA[
- credentials    = "Token" RWS token-response
-   
- token-response = token-id
-                  [ CS nonce ]
-                  [ CS timestamp ]
-                  [ CS auth ]
-
- token-id         = "token" "=" <"> token <">
- nonce            = "nonce" "=" <"> token <">
- auth             = "signature" "=" <"> token <">
-]]>
-        </artwork>
-      </figure>
-
-      <section title="The 'token' Attribute">
-        <t>
-          The value used to identify the set of token credentials used by the client to
-          authenticate. The token identifier can be an opaque string or use a well-defined internal
-          structure.
-        </t>
-      </section>
-
-      <section title="The 'nonce' Attribute">
-        <t>
-          A random string, uniquely generated by the client to allow the server to verify that a
-          request has never been made before and helps prevent replay attacks when requests are
-          made over a non-secure channel. The nonce value MUST be unique across all requests with
-          the same timestamp and token combinations.
-        </t>
-      </section>
-
-      <section title="The 'timestamp' Attribute">
-        <t>
-          The timestamp value is the current time expressed in the number of seconds since
-          January 1, 1970 00:00:00 GMT, and MUST be a positive integer.
-        </t>
-      </section>
-
-      <section title="The 'signature' Attribute">
-        <t>
-          The output of the authentication method function after applying it to the selected
-          coverage.
-        </t>
       </section>
 
     </section>
@@ -2813,6 +2746,7 @@
 
     <appendix title='Differences from OAuth 1.0a'>
       <t>
+        [[ Todo ]]
       </t>
     </appendix>
 
@@ -2848,6 +2782,16 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html40-19980424.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-09.xml'?>
+
+      <reference anchor="NIST FIPS-180-3">
+        <front>
+          <title>Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008</title>
+          <author>
+            <organization>National Institute of Standards and Technology</organization>
+          </author>
+        </front>
+        <format type="pdf" target="http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf" />
+      </reference>      
 
     </references>
 
