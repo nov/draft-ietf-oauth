@@ -241,37 +241,39 @@ Assertion Flow<br />
 Refreshing an Access Token<br />
 <a href="#access_resource">5.</a>&nbsp;
 Accessing a Protected Resource<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">5.1.</a>&nbsp;
-Bearer Token Requests<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_param">5.1.1.</a>&nbsp;
-URI Query Parameter<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body_param">5.1.2.</a>&nbsp;
-Form-Encoded Body Parameter<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_header">5.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_header">5.1.</a>&nbsp;
 The Authorization Request Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#crypto_tokens">5.2.1.</a>&nbsp;
-Cryptographic Tokens<br />
-<a href="#anchor35">6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">5.2.</a>&nbsp;
+Bearer Token Requests<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_param">5.2.1.</a>&nbsp;
+URI Query Parameter<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body_param">5.2.2.</a>&nbsp;
+Form-Encoded Body Parameter<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#crypto_tokens">5.3.</a>&nbsp;
+Cryptographic Tokens Requests<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#hmac-sha256">5.3.1.</a>&nbsp;
+The 'hmac-sha256' Algorithm<br />
+<a href="#anchor33">6.</a>&nbsp;
 Identifying a Protected Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn_header">6.1.</a>&nbsp;
 The WWW-Authenticate Response Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor36">6.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor34">6.1.1.</a>&nbsp;
 The 'realm' Attribute<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_uri_attribute">6.1.2.</a>&nbsp;
 The 'authorization-uri' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor37">6.1.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor35">6.1.3.</a>&nbsp;
 The 'algorithms' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor38">6.1.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor36">6.1.4.</a>&nbsp;
 The 'error' Attribute<br />
-<a href="#anchor39">7.</a>&nbsp;
+<a href="#anchor37">7.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor40">8.</a>&nbsp;
+<a href="#anchor38">8.</a>&nbsp;
 IANA Considerations<br />
-<a href="#anchor41">9.</a>&nbsp;
+<a href="#anchor39">9.</a>&nbsp;
 Acknowledgements<br />
-<a href="#anchor42">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor40">Appendix&nbsp;A.</a>&nbsp;
 Differences from OAuth 1.0a<br />
-<a href="#anchor43">Appendix&nbsp;B.</a>&nbsp;
+<a href="#anchor41">Appendix&nbsp;B.</a>&nbsp;
 Document History<br />
 <a href="#rfc.references1">10.</a>&nbsp;
 References<br />
@@ -437,17 +439,17 @@ Overview</h3>
 </p><br /><hr class="insert" />
 <a name="Figure 1"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  +---+                                  +---------------+
-  |   |--(A)------ Credentials ---------&gt;| Authorization |
-  | C |                                  |    Server     |
-  | l |&lt;-(B)------ Access Token ---------|               |
-  | i |      (w/ Optional Refresh Token) +---------------+
-  | e |
-  | n |            HTTP Request          +---------------+
-  | t |--(C)--- with Access Token ------&gt;|    Resource   |
-  |   |                                  |     Server    |
-  |   |&lt;-(D)------ HTTP Response --------|               |
-  +---+                                  +---------------+
+  +--------+                                  +---------------+
+  |        |--(A)------ Credentials ---------&gt;| Authorization |
+  |        |                                  |    Server     |
+  |        |&lt;-(B)------ Access Token ---------|               |
+  |        |      (w/ Optional Refresh Token) +---------------+
+  | Client |
+  |        |            HTTP Request          +---------------+
+  |        |--(C)--- with Access Token ------&gt;|    Resource   |
+  |        |                                  |     Server    |
+  |        |&lt;-(D)------ HTTP Response --------|               |
+  +--------+                                  +---------------+
 
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
@@ -470,17 +472,17 @@ Overview</h3>
 </p><br /><hr class="insert" />
 <a name="Figure 2"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  +---+                                  +---------------+
-  |   |--(A)------ Refresh Token -------&gt;| Authorization |
-  | C |                                  |    Server     |
-  | l |&lt;-(B)------ Access Token ---------|               |
-  | i |                                  +---------------+
-  | e |
-  | n |            HTTP Request          +---------------+
-  | t |--(C)--- with Access Token ------&gt;|    Resource   |
-  |   |                                  |     Server    |
-  |   |&lt;-(D)----- HTTP Response ---------|               |
-  +---+                                  +---------------+
+  +--------+                                  +---------------+
+  |        |--(A)------ Refresh Token -------&gt;| Authorization |
+  |        |                                  |    Server     |
+  |        |&lt;-(B)------ Access Token ---------|               |
+  |        |        (with Optional Secret)    +---------------+
+  | Client |
+  |        |            HTTP Request          +---------------+
+  |        |--(C)--- with Access Token ------&gt;|    Resource   |
+  |        |                                  |     Server    |
+  |        |&lt;-(D)----- HTTP Response ---------|               |
+  +--------+                                  +---------------+
 
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
@@ -2826,11 +2828,12 @@ Refreshing an Access Token</h3>
 <dd>
             
             OPTIONAL. This specification defines two values: <tt>none</tt> for 
-            an access token without a secret (bearer token) and <tt>hmac</tt> for
-            a token with a shared symmetric secret suitable for signing requests using an HMAC
-            cryptographic algorithm (as defined in <a class='info' href='#RFC2104'>[RFC2104]<span> (</span><span class='info'>Krawczyk, H., Bellare, M., and R. Canetti, &ldquo;HMAC: Keyed-Hashing for Message Authentication,&rdquo; February&nbsp;1997.</span><span>)</span></a>). The value defaults
-            to <tt>none</tt> if omitted. Using token secrets is described in
-            <a class='info' href='#crypto_tokens'>Section&nbsp;5.2.1<span> (</span><span class='info'>Cryptographic Tokens</span><span>)</span></a>.
+            an access token without a secret (bearer token) and
+            <tt>hmac-sha256</tt> for a token with a shared symmetric secret
+            suitable for signing requests using the HMAC-SHA256 cryptographic algorithm (as
+            described by <a class='info' href='#hmac-sha256'>Section&nbsp;5.3.1<span> (</span><span class='info'>The 'hmac-sha256' Algorithm</span><span>)</span></a>). The value defaults to
+            <tt>none</tt> if omitted. Using token secrets is described in
+            <a class='info' href='#crypto_tokens'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>.
           
 </dd>
 </dl></blockquote><p>
@@ -2847,7 +2850,7 @@ Refreshing an Access Token</h3>
   Content-Type: application/x-www-form-urlencoded
 
   type=refresh_token&amp;client_id=s6BhdRkqt3&amp;client_secret=8eSEIpnqmM
-  &amp;refresh_token=n4E9O119d&amp;secret_type=hmac
+  &amp;refresh_token=n4E9O119d&amp;secret_type=hmac-sha256
 
 </pre></div>
 <p>
@@ -2976,16 +2979,82 @@ Accessing a Protected Resource</h3>
         especially when using bearer tokens, regardless of the presence of a secure channel.
       
 </p>
-<a name="anchor32"></a><br /><hr />
+<a name="authz_header"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1"></a><h3>5.1.&nbsp;
+The Authorization Request Header</h3>
+
+<p>
+          The <tt>Authorization</tt> request header field is used by clients to
+          make both bearer token and cryptographic token requests. When making bearer token
+          requests, the client uses the <tt>token</tt> attribute to include the
+          access token in the request without any of the other attributes.
+        
+</p>
+<p>
+            For example:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT"
+
+</pre></div>
+<p>
+          When making a cryptographic token request (using an access token with a matching secret)
+          the client uses the <tt>token</tt> attribute to include the access
+          token in the request, and uses the <tt>nonce</tt>,
+          <tt>timestamp</tt>, <tt>algorithm</tt>, and
+          <tt>signature</tt> attributes to apply the matching secret.
+        
+</p>
+<p>
+            For example:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT",
+                       nonce="s8djwd",
+                       timestamp="137131200",
+                       algorithm="hmac-sha256",
+                       signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
+
+</pre></div>
+<p>
+          The <tt>Authorization</tt> header field uses the framework defined by
+          <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  credentials    = "Token" RWS token-response
+
+  token-response = token-id
+                   [ CS nonce ]
+                   [ CS timestamp ]
+                   [ CS algorithm ]
+                   [ CS signature ]
+
+  token-id         = "token" "=" &lt;"&gt; token &lt;"&gt;
+  timestamp        = "timestamp" "=" &lt;"&gt; 1*DIGIT &lt;"&gt;
+  nonce            = "nonce" "=" &lt;"&gt; token &lt;"&gt;
+
+  algorithm        = "algorithm" "=" algorithm-name
+  algorithm-name   = "hmac-sha256" /
+                     token
+
+ signature        = "signature" "=" &lt;"&gt; token &lt;"&gt;
+
+</pre></div>
+<a name="anchor32"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5.2"></a><h3>5.2.&nbsp;
 Bearer Token Requests</h3>
 
 <p>
           Clients make bearer token requests by including the access token using the HTTP
           <tt>Authorization</tt> request header with the
           <tt>Token</tt> authentication scheme as described in
-          <a class='info' href='#authz_header'>Section&nbsp;5.2<span> (</span><span class='info'>The Authorization Request Header</span><span>)</span></a>. The access token is included using the
+          <a class='info' href='#authz_header'>Section&nbsp;5.1<span> (</span><span class='info'>The Authorization Request Header</span><span>)</span></a>. The access token is included using the
           <tt>token</tt> parameter.
         
 </p>
@@ -3016,16 +3085,16 @@ Bearer Token Requests</h3>
 </pre></div>
 <p>
           Alternatively, the client MAY include the access token using the HTTP request URI in the
-          query component as described in <a class='info' href='#query_param'>Section&nbsp;5.1.1<span> (</span><span class='info'>URI Query Parameter</span><span>)</span></a>, or in the HTTP body when
+          query component as described in <a class='info' href='#query_param'>Section&nbsp;5.2.1<span> (</span><span class='info'>URI Query Parameter</span><span>)</span></a>, or in the HTTP body when
           using the <tt>application/x-www-form-urlencoded</tt> content type as
-          described in <a class='info' href='#body_param'>Section&nbsp;5.1.2<span> (</span><span class='info'>Form-Encoded Body Parameter</span><span>)</span></a>. Clients SHOULD only use the request URI or
+          described in <a class='info' href='#body_param'>Section&nbsp;5.2.2<span> (</span><span class='info'>Form-Encoded Body Parameter</span><span>)</span></a>. Clients SHOULD only use the request URI or
           body when the <tt>Authorization</tt> request header is not available,
           and MUST NOT use more than one method in each request.
         
 </p>
 <a name="query_param"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.1.1"></a><h3>5.1.1.&nbsp;
+<a name="rfc.section.5.2.1"></a><h3>5.2.1.&nbsp;
 URI Query Parameter</h3>
 
 <p>
@@ -3060,7 +3129,7 @@ URI Query Parameter</h3>
 </p>
 <a name="body_param"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.1.2"></a><h3>5.1.2.&nbsp;
+<a name="rfc.section.5.2.2"></a><h3>5.2.2.&nbsp;
 Form-Encoded Body Parameter</h3>
 
 <p>
@@ -3121,95 +3190,118 @@ Form-Encoded Body Parameter</h3>
             <a class='info' href='#authn_header'>Section&nbsp;6.1<span> (</span><span class='info'>The WWW-Authenticate Response Header</span><span>)</span></a>.
           
 </p>
-<a name="authz_header"></a><br /><hr />
+<a name="crypto_tokens"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2"></a><h3>5.2.&nbsp;
-The Authorization Request Header</h3>
+<a name="rfc.section.5.3"></a><h3>5.3.&nbsp;
+Cryptographic Tokens Requests</h3>
 
 <p>
-          The <tt>Authorization</tt> request header field is used by clients to
-          make both bearer token and cryptographic token requests. When making bearer token
-          requests, the client uses the <tt>token</tt> attribute to include the
-          access token in the request without any of the other attributes.
+          Clients make authenticated protected resource requests using an access token with a
+          matching secret by calculating a set of values and including them in the request using
+          the <tt>Authorization</tt> header field. The way clients calculate
+          these values depends on the access token secret type as issued by the authorization
+          server.
         
 </p>
 <p>
-            For example:
-          
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT"
-
-</pre></div>
-<p>
-          When making a cryptographic token request (using an access token with a matching secret)
-          the client uses the <tt>token</tt> attribute to include the access
-          token in the request, and uses the <tt>nonce</tt>,
-          <tt>timestamp</tt>, <tt>algorithm</tt>, and
-          <tt>signature</tt> attributes to apply the matching secret.
+          This specification defines the <tt>hmac-sha256</tt> algorithm, and
+          establishes a registry for providing additional algorithms.
         
 </p>
+<a name="hmac-sha256"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5.3.1"></a><h3>5.3.1.&nbsp;
+The 'hmac-sha256' Algorithm</h3>
+
 <p>
-            For example:
+            The <tt>hmac-sha256</tt> algorithm uses the HMAC method as defined
+            in <a class='info' href='#RFC2104'>[RFC2104]<span> (</span><span class='info'>Krawczyk, H., Bellare, M., and R. Canetti, &ldquo;HMAC: Keyed-Hashing for Message Authentication,&rdquo; February&nbsp;1997.</span><span>)</span></a> together with the SHA-256 hash function defined in
+            <a class='info' href='#NIST FIPS-180-3'>[NIST FIPS&#8209;180&#8209;3]<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008,&rdquo; .</span><span>)</span></a> to apply the access token secret to the request and
+            generate a signature value that is included in the request instead of transmitting
+            the secret in the clear.
           
+</p>
+<p>
+            To use the <tt>hmac-sha256</tt> algorithm, clients:
+              
+            </p>
+<ol class="text">
+<li>
+                Calculate the request timestamp and generate a request nonce as described in
+                <a class='info' href='#nonce_ts'>Section&nbsp;5.3.1.1<span> (</span><span class='info'>Nonce and Timestamp</span><span>)</span></a>.
+              
+</li>
+<li>
+                Construct the normalized request string as described in
+                <a class='info' href='#base_string'>Section&nbsp;5.3.1.2<span> (</span><span class='info'>Normalized String Construction</span><span>)</span></a>.
+              
+</li>
+<li>
+                Calculate the request signature as described in
+                <a class='info' href='#hmac_sha256_function'>Section&nbsp;5.3.1.3<span> (</span><span class='info'>Signature Calculation</span><span>)</span></a>.
+              
+</li>
+<li>
+                Include the timestamp, nonce, algorithm name, and calculated signature in the
+                request using the <tt>Authorization</tt> header field.
+              
+</li>
+</ol><p>
+          
+</p>
+<p>
+              For example:
+            
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
   GET /resource HTTP/1.1
   Host: server.example.com
   Authorization: Token token="vF9dft4qmT",
                        nonce="s8djwd",
                        timestamp="137131200",
-                       algorithm="hmac:sha-256",
+                       algorithm="hmac-sha256",
                        signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
 
 </pre></div>
 <p>
-          The <tt>Authorization</tt> header field uses the framework defined by
-          <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
-        
+            The resource server MUST validate the access token and ensure it has not expired and
+            that its scope covers the requested resource. The resource server MUST also recalculate
+            the request signature using the attributes provided by the client and compare it to the
+            signature provided. If the token expired or is invalid, or if the signature is
+            incorrect, the resource server MUST reply with an HTTP 401 status code (Unauthorized)
+            and include the HTTP <tt>WWW-Authenticate</tt> response header as
+            described in <a class='info' href='#authn_header'>Section&nbsp;6.1<span> (</span><span class='info'>The WWW-Authenticate Response Header</span><span>)</span></a>.
+          
+</p>
+<p>
+              For example:
+            
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  credentials    = "Token" RWS token-response
-
-  token-response = token-id
-                   [ CS nonce ]
-                   [ CS timestamp ]
-                   [ CS algorithm ]
-                   [ CS signature ]
-
-  token-id         = "token" "=" &lt;"&gt; token &lt;"&gt;
-  timestamp        = "timestamp" "=" &lt;"&gt; 1*DIGIT &lt;"&gt;
-  nonce            = "nonce" "=" &lt;"&gt; token &lt;"&gt;
-
-  algorithm        = "algorithm" "=" algorithm-name
-  algorithm-name   = secret-type ":" function-type
-  secret-type      = "hmac" /
-                     token
-  function-type    = "sha-256" /
-                     token
-
- signature        = "signature" "=" &lt;"&gt; token &lt;"&gt;
+  HTTP/1.1 401 Unauthorized
+  Date: Tue, 15 Nov 2010 08:12:31 GMT
+  WWW-Authenticate: Token realm='Service',
+                          algorithms='hmac-sha256',
+                          error='invalid_signature'
 
 </pre></div>
-<a name="crypto_tokens"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2.1"></a><h3>5.2.1.&nbsp;
-Cryptographic Tokens</h3>
-
+<p>
+            [[ Errors list ]]
+          
+</p>
 <a name="nonce_ts"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2.1.1"></a><h3>5.2.1.1.&nbsp;
-The 'nonce' and 'timestamp' Attributes</h3>
+<a name="rfc.section.5.3.1.1"></a><h3>5.3.1.1.&nbsp;
+Nonce and Timestamp</h3>
 
 <p>
-              Cryptographic token authentication uses timestamps in combination with unique nonce
-              values to protect against replay attacks when transmitted over an insecure channel.
+              A timestamp in combination with unique nonce values is used to protect against
+              replay attacks when transmitted over an insecure channel.
             
 </p>
 <p>
-              The nonce is a random string, uniquely generated by the client to allow the server to
-              verify that a request has never been made before and helps prevent replay attacks
-              when requests are made over a non-secure channel. The nonce value MUST be unique
-              across all requests with the same timestamp and token combinations.
+              The nonce is a random string, uniquely generated by the client to allow the server
+              to verify that a request has never been made before and helps prevent replay
+              attacks when requests are made over a non-secure channel. The nonce value MUST be
+              unique across all requests with the same timestamp and token combinations.
             
 </p>
 <p>
@@ -3226,150 +3318,120 @@ The 'nonce' and 'timestamp' Attributes</h3>
               <a class='info' href='#RFC2616'>[RFC2616]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a>.
             
 </p>
-<a name="anchor33"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2.1.2"></a><h3>5.2.1.2.&nbsp;
-The 'algorithm' and 'signature' Attributes</h3>
-
-<p>
-              The output of the authentication method function after applying it to the selected
-              coverage.
-            
-</p>
-<a name="anchor34"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2.1.2.1"></a><h3>5.2.1.2.1.&nbsp;
-The 'hmac-sha-256' Method</h3>
-
-<p>
-                The <tt>hmac-sha-256</tt> authentication method uses the HMAC
-                algorithm as defined in <a class='info' href='#RFC2104'>[RFC2104]<span> (</span><span class='info'>Krawczyk, H., Bellare, M., and R. Canetti, &ldquo;HMAC: Keyed-Hashing for Message Authentication,&rdquo; February&nbsp;1997.</span><span>)</span></a> together with the SHA-256 hash
-                function defined in <a class='info' href='#NIST FIPS-180-3'>[NIST FIPS&#8209;180&#8209;3]<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008,&rdquo; .</span><span>)</span></a>:
-
-                </p>
-<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  digest = HMAC-SHA256 (key, text)
-
-</pre></div><p>
-
-              
-</p>
-<p>
-                The HMAC-SHA256 function variables are used in following way:
-
-                </p>
-<blockquote class="text"><dl>
-<dt>text</dt>
-<dd>
-                    
-                    is set to the value of the normalize request string as described in
-                    <a class='info' href='#base_string'>Section&nbsp;5.2.1.2.2<span> (</span><span class='info'>Normalized String Construction</span><span>)</span></a>.
-                  
-</dd>
-<dt>key</dt>
-<dd>
-                    
-                    is set to the shared-secret associated with the token.
-                  
-</dd>
-<dt>digest</dt>
-<dd>
-                    
-                    is used to set the value of the <tt>auth</tt>
-                    attribute, after the result octet string is base64-encoded per
-                    <a class='info' href='#RFC2045'>[RFC2045]<span> (</span><span class='info'>Freed, N. and N. Borenstein, &ldquo;Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies,&rdquo; November&nbsp;1996.</span><span>)</span></a> section 6.8.
-                  
-</dd>
-</dl></blockquote><p>
-              
-</p>
 <a name="base_string"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5.2.1.2.2"></a><h3>5.2.1.2.2.&nbsp;
+<a name="rfc.section.5.3.1.2"></a><h3>5.3.1.2.&nbsp;
 Normalized String Construction</h3>
 
 <p>
-                The normalized request string is a consistent, reproducible concatenation of several
-                of the HTTP request elements into a single string. The string is used as an input to
-                the selected cryptographic method and includes the HTTP request method (e.g.
-                <tt>GET</tt>, <tt>POST</tt>, etc.), the authority
-                as declared by the HTTP <tt>Host</tt> request header, and the
-                request resource URI.
-              
+              The normalized request string is a consistent, reproducible concatenation of
+              several of the HTTP request elements into a single string. The string is used as an
+              input to the selected cryptographic method and includes the HTTP request method
+              (e.g. <tt>GET</tt>, <tt>POST</tt>, etc.), the
+              authority as declared by the HTTP <tt>Host</tt> request header,
+              and the request resource URI.
+            
 </p>
 <p>
-                The normalized request string does not cover the entire HTTP request. Most notably, it
-                does not include the entity-body or most HTTP entity-headers. It is important to note
-                that the server cannot verify the authenticity of the excluded request elements without
-                using additional protections such as SSL/TLS.
-              
+              The normalized request string does not cover the entire HTTP request. Most notably,
+              it does not include the entity-body or most HTTP entity-headers. It is important to
+              note that the server cannot verify the authenticity of the excluded request
+              elements without using additional protections such as SSL/TLS.
+            
 </p>
 <p>
-                The normalized request string is constructed by concatenating together, in order, the
-                following HTTP request elements:
+              The normalized request string is constructed by concatenating together, in order,
+              the following HTTP request elements, separated by the <tt>,</tt>
+              character (ASCII code 44):
 
-                </p>
+              </p>
 <ol class="text">
 <li>
-                    The request timestamp as described in <a class='info' href='#nonce_ts'>Section&nbsp;5.2.1.1<span> (</span><span class='info'>The 'nonce' and 'timestamp' Attributes</span><span>)</span></a>.
-                  
+                  The request timestamp as described in <a class='info' href='#nonce_ts'>Section&nbsp;5.3.1.1<span> (</span><span class='info'>Nonce and Timestamp</span><span>)</span></a>.
+                
 </li>
 <li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
+                  The request nonce as described in <a class='info' href='#nonce_ts'>Section&nbsp;5.3.1.1<span> (</span><span class='info'>Nonce and Timestamp</span><span>)</span></a>.
+                
 </li>
 <li>
-                    The request nonce as described in <a class='info' href='#nonce_ts'>Section&nbsp;5.2.1.1<span> (</span><span class='info'>The 'nonce' and 'timestamp' Attributes</span><span>)</span></a>.
-                  
+                  The cryptographic algorithm used.
+                
 </li>
 <li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
+                  The HTTP request method in uppercase. For example:
+                  <tt>HEAD</tt>, <tt>GET</tt>,
+                  <tt>POST</tt>, etc.
+                
 </li>
 <li>
-                    The cryptographic algorithm used.
-                  
+                  The hostname, colon-separated (ASCII code 58) from the TCP port used to make
+                  the request as included in the HTTP request <tt>Host</tt>
+                  header field. The port MUST be included even if it is not included in the
+                  <tt>Host</tt> header field (i.e. the default port for the
+                  scheme).
+                
 </li>
 <li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
-</li>
-<li>
-                    The HTTP request method in uppercase. For example: <tt>HEAD</tt>,
-                    <tt>GET</tt>, <tt>POST</tt>, etc.
-                  
-</li>
-<li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
-</li>
-<li>
-                    The hostname, colon-separated (ASCII code 58) from the TCP port used to make the
-                    request as included in the HTTP request <tt>Host</tt> header
-                    field. The port MUST be included even if it is not included in the
-                    <tt>Host</tt> header field (i.e. the default port for the
-                    scheme).
-                  
-</li>
-<li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
-</li>
-<li>
-                  
-</li>
-<li>
-                    A <tt>,</tt> character (ASCII code 44).
-                  
-</li>
-<li>
-                    The request resource URI.
-                  
+                  The request resource URI.
+                
 </li>
 </ol><p>
-              
+            
 </p>
-<a name="anchor35"></a><br /><hr />
+<p>
+                For example, the normalized request string for the
+                <tt>GET</tt> request URI
+                <tt>http://example.com/resource</tt>, request timestamp
+                <tt>137131200</tt>, request nonce
+                <tt>s8djwd</tt>, and <tt>hmac-sha256</tt>
+                algorithm (line breaks are for display purposes only):
+              
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  137131200,s8djwd,hmac-sha256,GET,example.com:80,
+  http://example.com/resource
+
+</pre></div>
+<a name="hmac_sha256_function"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5.3.1.3"></a><h3>5.3.1.3.&nbsp;
+Signature Calculation</h3>
+
+<p>
+              Clients calculate the request signature using the HMAC-SHA256 function:
+            
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  digest = HMAC-SHA256 (key, text)
+
+</pre></div>
+<p>
+              by setting the function variables are follows:
+
+              </p>
+<blockquote class="text"><dl>
+<dt>text</dt>
+<dd>
+                  
+                  is set to the value of the normalize request string as described in
+                  <a class='info' href='#base_string'>Section&nbsp;5.3.1.2<span> (</span><span class='info'>Normalized String Construction</span><span>)</span></a>.
+                
+</dd>
+<dt>key</dt>
+<dd>
+                  
+                  is set to the access token secret.
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+              The request signature is the calculated value of the
+              <tt>digest</tt> variable after the result octet string is
+              base64-encoded per <a class='info' href='#RFC2045'>[RFC2045]<span> (</span><span class='info'>Freed, N. and N. Borenstein, &ldquo;Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies,&rdquo; November&nbsp;1996.</span><span>)</span></a> section 6.8.
+            
+</p>
+<a name="anchor33"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 Identifying a Protected Resource</h3>
@@ -3426,7 +3488,7 @@ The WWW-Authenticate Response Header</h3>
   CS              = OWS "," OWS
 
 </pre></div>
-<a name="anchor36"></a><br /><hr />
+<a name="anchor34"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.1"></a><h3>6.1.1.&nbsp;
 The 'realm' Attribute</h3>
@@ -3444,7 +3506,7 @@ The 'authorization-uri' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor37"></a><br /><hr />
+<a name="anchor35"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.3"></a><h3>6.1.3.&nbsp;
 The 'algorithms' Attribute</h3>
@@ -3452,7 +3514,7 @@ The 'algorithms' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor38"></a><br /><hr />
+<a name="anchor36"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.4"></a><h3>6.1.4.&nbsp;
 The 'error' Attribute</h3>
@@ -3460,7 +3522,7 @@ The 'error' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor39"></a><br /><hr />
+<a name="anchor37"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7"></a><h3>7.&nbsp;
 Security Considerations</h3>
@@ -3469,7 +3531,7 @@ Security Considerations</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor40"></a><br /><hr />
+<a name="anchor38"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 IANA Considerations</h3>
@@ -3478,7 +3540,7 @@ IANA Considerations</h3>
         [[ Not Yet ]]
       
 </p>
-<a name="anchor41"></a><br /><hr />
+<a name="anchor39"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Acknowledgements</h3>
@@ -3487,7 +3549,7 @@ Acknowledgements</h3>
         [[ Add OAuth 1.0a authors + WG contributors ]]
       
 </p>
-<a name="anchor42"></a><br /><hr />
+<a name="anchor40"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Differences from OAuth 1.0a</h3>
@@ -3496,7 +3558,7 @@ Differences from OAuth 1.0a</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor43"></a><br /><hr />
+<a name="anchor41"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
 Document History</h3>

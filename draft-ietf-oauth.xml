@@ -165,17 +165,17 @@
 	      </t>
         <figure anchor='Figure 1'>
 	        <artwork><![CDATA[
-  +---+                                  +---------------+
-  |   |--(A)------ Credentials --------->| Authorization |
-  | C |                                  |    Server     |
-  | l |<-(B)------ Access Token ---------|               |
-  | i |      (w/ Optional Refresh Token) +---------------+
-  | e |
-  | n |            HTTP Request          +---------------+
-  | t |--(C)--- with Access Token ------>|    Resource   |
-  |   |                                  |     Server    |
-  |   |<-(D)------ HTTP Response --------|               |
-  +---+                                  +---------------+
+  +--------+                                  +---------------+
+  |        |--(A)------ Credentials --------->| Authorization |
+  |        |                                  |    Server     |
+  |        |<-(B)------ Access Token ---------|               |
+  |        |      (w/ Optional Refresh Token) +---------------+
+  | Client |
+  |        |            HTTP Request          +---------------+
+  |        |--(C)--- with Access Token ------>|    Resource   |
+  |        |                                  |     Server    |
+  |        |<-(D)------ HTTP Response --------|               |
+  +--------+                                  +---------------+
 ]]>
           </artwork>
         </figure>
@@ -196,17 +196,17 @@
 	      </t>
         <figure anchor='Figure 2'>
 		      <artwork><![CDATA[
-  +---+                                  +---------------+
-  |   |--(A)------ Refresh Token ------->| Authorization |
-  | C |                                  |    Server     |
-  | l |<-(B)------ Access Token ---------|               |
-  | i |                                  +---------------+
-  | e |
-  | n |            HTTP Request          +---------------+
-  | t |--(C)--- with Access Token ------>|    Resource   |
-  |   |                                  |     Server    |
-  |   |<-(D)----- HTTP Response ---------|               |
-  +---+                                  +---------------+
+  +--------+                                  +---------------+
+  |        |--(A)------ Refresh Token ------->| Authorization |
+  |        |                                  |    Server     |
+  |        |<-(B)------ Access Token ---------|               |
+  |        |        (with Optional Secret)    +---------------+
+  | Client |
+  |        |            HTTP Request          +---------------+
+  |        |--(C)--- with Access Token ------>|    Resource   |
+  |        |                                  |     Server    |
+  |        |<-(D)----- HTTP Response ---------|               |
+  +--------+                                  +---------------+
 ]]>
 		      </artwork>
 		    </figure>
@@ -2170,10 +2170,11 @@
           <t hangText='secret_type'>
             <vspace />
             OPTIONAL. This specification defines two values: <spanx style='verb'>none</spanx> for 
-            an access token without a secret (bearer token) and <spanx style='verb'>hmac</spanx> for
-            a token with a shared symmetric secret suitable for signing requests using an HMAC
-            cryptographic algorithm (as defined in <xref target='RFC2104' />). The value defaults
-            to <spanx style='verb'>none</spanx> if omitted. Using token secrets is described in
+            an access token without a secret (bearer token) and
+            <spanx style='verb'>hmac-sha256</spanx> for a token with a shared symmetric secret
+            suitable for signing requests using the HMAC-SHA256 cryptographic algorithm (as
+            described by <xref target='hmac-sha256' />). The value defaults to
+            <spanx style='verb'>none</spanx> if omitted. Using token secrets is described in
             <xref target='crypto_tokens' />.
           </t>
         </list>
@@ -2190,7 +2191,7 @@
   Content-Type: application/x-www-form-urlencoded
   
   type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
-  &refresh_token=n4E9O119d&secret_type=hmac
+  &refresh_token=n4E9O119d&secret_type=hmac-sha256
 ]]>
         </artwork>
       </figure>
@@ -2302,6 +2303,74 @@
          Clients SHOULD NOT make authenticated requests with an access token to unfamiliar servers,
         especially when using bearer tokens, regardless of the presence of a secure channel.
       </t>
+
+      <section title='The Authorization Request Header' anchor='authz_header'>
+        <t>
+          The <spanx style='verb'>Authorization</spanx> request header field is used by clients to
+          make both bearer token and cryptographic token requests. When making bearer token
+          requests, the client uses the <spanx style='verb'>token</spanx> attribute to include the
+          access token in the request without any of the other attributes.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork><![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT"
+]]>
+          </artwork>
+        </figure>
+        <t>
+          When making a cryptographic token request (using an access token with a matching secret)
+          the client uses the <spanx style='verb'>token</spanx> attribute to include the access
+          token in the request, and uses the <spanx style='verb'>nonce</spanx>,
+          <spanx style='verb'>timestamp</spanx>, <spanx style='verb'>algorithm</spanx>, and
+          <spanx style='verb'>signature</spanx> attributes to apply the matching secret.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork><![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT",
+                       nonce="s8djwd",
+                       timestamp="137131200",
+                       algorithm="hmac-sha256",
+                       signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
+          <xref target='RFC2617' /> as follows:
+        </t>
+        <figure>
+          <artwork xml:space='preserve'><![CDATA[
+  credentials    = "Token" RWS token-response
+   
+  token-response = token-id
+                   [ CS nonce ]
+                   [ CS timestamp ]
+                   [ CS algorithm ]
+                   [ CS signature ]
+
+  token-id         = "token" "=" <"> token <">
+  timestamp        = "timestamp" "=" <"> 1*DIGIT <">
+  nonce            = "nonce" "=" <"> token <">
+ 
+  algorithm        = "algorithm" "=" algorithm-name
+  algorithm-name   = "hmac-sha256" /
+                     token
+
+ signature        = "signature" "=" <"> token <">
+]]>
+          </artwork>
+        </figure>
+      </section>
 
       <section title='Bearer Token Requests'>
         <t>
@@ -2437,88 +2506,100 @@
 
       </section>
 
-      <section title='The Authorization Request Header' anchor='authz_header'>
+      <section title='Cryptographic Tokens Requests' anchor='crypto_tokens'>
         <t>
-          The <spanx style='verb'>Authorization</spanx> request header field is used by clients to
-          make both bearer token and cryptographic token requests. When making bearer token
-          requests, the client uses the <spanx style='verb'>token</spanx> attribute to include the
-          access token in the request without any of the other attributes.
+          Clients make authenticated protected resource requests using an access token with a
+          matching secret by calculating a set of values and including them in the request using
+          the <spanx style='verb'>Authorization</spanx> header field. The way clients calculate
+          these values depends on the access token secret type as issued by the authorization
+          server.
         </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork><![CDATA[
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT"
-]]>
-          </artwork>
-        </figure>
         <t>
-          When making a cryptographic token request (using an access token with a matching secret)
-          the client uses the <spanx style='verb'>token</spanx> attribute to include the access
-          token in the request, and uses the <spanx style='verb'>nonce</spanx>,
-          <spanx style='verb'>timestamp</spanx>, <spanx style='verb'>algorithm</spanx>, and
-          <spanx style='verb'>signature</spanx> attributes to apply the matching secret.
+          This specification defines the <spanx style='verb'>hmac-sha256</spanx> algorithm, and
+          establishes a registry for providing additional algorithms.
         </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork><![CDATA[
+            
+        <section title="The 'hmac-sha256' Algorithm" anchor='hmac-sha256'>
+          <t>
+            The <spanx style='verb'>hmac-sha256</spanx> algorithm uses the HMAC method as defined
+            in <xref target='RFC2104' /> together with the SHA-256 hash function defined in
+            <xref target='NIST FIPS-180-3' /> to apply the access token secret to the request and
+            generate a signature value that is included in the request instead of transmitting
+            the secret in the clear.
+          </t>
+          <t>
+            To use the <spanx style='verb'>hmac-sha256</spanx> algorithm, clients:
+              
+            <list style='numbers'>
+              <t>
+                Calculate the request timestamp and generate a request nonce as described in
+                <xref target='nonce_ts' />.
+              </t>
+              <t>
+                Construct the normalized request string as described in
+                <xref target='base_string' />.
+              </t>
+              <t>
+                Calculate the request signature as described in
+                <xref target='hmac_sha256_function' />.
+              </t>
+              <t>
+                Include the timestamp, nonce, algorithm name, and calculated signature in the
+                request using the <spanx style='verb'>Authorization</spanx> header field.
+              </t>
+            </list>
+          </t>
+          <figure>
+            <preamble>
+              For example:
+            </preamble>
+            <artwork><![CDATA[
   GET /resource HTTP/1.1
   Host: server.example.com
   Authorization: Token token="vF9dft4qmT",
                        nonce="s8djwd",
                        timestamp="137131200",
-                       algorithm="hmac:sha-256",
+                       algorithm="hmac-sha256",
                        signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
 ]]>
-          </artwork>
-        </figure>
-        <t>
-          The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
-          <xref target='RFC2617' /> as follows:
-        </t>
-        <figure>
-          <artwork xml:space='preserve'><![CDATA[
-  credentials    = "Token" RWS token-response
-   
-  token-response = token-id
-                   [ CS nonce ]
-                   [ CS timestamp ]
-                   [ CS algorithm ]
-                   [ CS signature ]
-
-  token-id         = "token" "=" <"> token <">
-  timestamp        = "timestamp" "=" <"> 1*DIGIT <">
-  nonce            = "nonce" "=" <"> token <">
- 
-  algorithm        = "algorithm" "=" algorithm-name
-  algorithm-name   = secret-type ":" function-type
-  secret-type      = "hmac" /
-                     token
-  function-type    = "sha-256" /
-                     token
-
- signature        = "signature" "=" <"> token <">
+            </artwork>
+          </figure>
+          <t>
+            The resource server MUST validate the access token and ensure it has not expired and
+            that its scope covers the requested resource. The resource server MUST also recalculate
+            the request signature using the attributes provided by the client and compare it to the
+            signature provided. If the token expired or is invalid, or if the signature is
+            incorrect, the resource server MUST reply with an HTTP 401 status code (Unauthorized)
+            and include the HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as
+            described in <xref target='authn_header' />.
+          </t>
+          <figure>
+            <preamble>
+              For example:
+            </preamble>
+            <artwork><![CDATA[
+  HTTP/1.1 401 Unauthorized
+  Date: Tue, 15 Nov 2010 08:12:31 GMT
+  WWW-Authenticate: Token realm='Service',
+                          algorithms='hmac-sha256',
+                          error='invalid_signature'
 ]]>
-          </artwork>
-        </figure>
+            </artwork>
+          </figure>
+          <t>
+            [[ Errors list ]]
+          </t>
 
-        <section title='Cryptographic Tokens' anchor='crypto_tokens'>
-          
-          <section title="The 'nonce' and 'timestamp' Attributes" anchor='nonce_ts'>
+          <section title='Nonce and Timestamp' anchor='nonce_ts'>
             <t>
-              Cryptographic token authentication uses timestamps in combination with unique nonce
-              values to protect against replay attacks when transmitted over an insecure channel.
+              A timestamp in combination with unique nonce values is used to protect against
+              replay attacks when transmitted over an insecure channel.
             </t>
             <t>
-              The nonce is a random string, uniquely generated by the client to allow the server to
-              verify that a request has never been made before and helps prevent replay attacks
-              when requests are made over a non-secure channel. The nonce value MUST be unique
-              across all requests with the same timestamp and token combinations.
+              The nonce is a random string, uniquely generated by the client to allow the server
+              to verify that a request has never been made before and helps prevent replay
+              attacks when requests are made over a non-secure channel. The nonce value MUST be
+              unique across all requests with the same timestamp and token combinations.
             </t>
             <t>
               The timestamp value is the current time expressed in the number of seconds since
@@ -2534,115 +2615,100 @@
             </t>
           </section>
 
-          <section title="The 'algorithm' and 'signature' Attributes">
+          <section title='Normalized String Construction' anchor='base_string'>
             <t>
-              The output of the authentication method function after applying it to the selected
-              coverage.
+              The normalized request string is a consistent, reproducible concatenation of
+              several of the HTTP request elements into a single string. The string is used as an
+              input to the selected cryptographic method and includes the HTTP request method
+              (e.g. <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.), the
+              authority as declared by the HTTP <spanx style='verb'>Host</spanx> request header,
+              and the request resource URI.
             </t>
-          
-            <section title="The 'hmac-sha-256' Method">
-              <t>
-                The <spanx style="verb">hmac-sha-256</spanx> authentication method uses the HMAC
-                algorithm as defined in <xref target="RFC2104" /> together with the SHA-256 hash
-                function defined in <xref target="NIST FIPS-180-3" />:
+            <t>
+              The normalized request string does not cover the entire HTTP request. Most notably,
+              it does not include the entity-body or most HTTP entity-headers. It is important to
+              note that the server cannot verify the authenticity of the excluded request
+              elements without using additional protections such as SSL/TLS.
+            </t>
+            <t>
+              The normalized request string is constructed by concatenating together, in order,
+              the following HTTP request elements, separated by the <spanx style='verb'>,</spanx>
+              character (ASCII code 44):
 
-                <figure>
-                  <artwork><![CDATA[
+              <list style='numbers'>
+                <t>
+                  The request timestamp as described in <xref target='nonce_ts' />.
+                </t>
+                <t>
+                  The request nonce as described in <xref target='nonce_ts' />.
+                </t>
+                <t>
+                  The cryptographic algorithm used.
+                </t>
+                <t>
+                  The HTTP request method in uppercase. For example:
+                  <spanx style='verb'>HEAD</spanx>, <spanx style='verb'>GET</spanx>,
+                  <spanx style='verb'>POST</spanx>, etc.
+                </t>
+                <t>
+                  The hostname, colon-separated (ASCII code 58) from the TCP port used to make
+                  the request as included in the HTTP request <spanx style='verb'>Host</spanx>
+                  header field. The port MUST be included even if it is not included in the
+                  <spanx style='verb'>Host</spanx> header field (i.e. the default port for the
+                  scheme).
+                </t>
+                <t>
+                  The request resource URI.
+                </t>
+              </list>
+            </t>
+            <figure>
+              <preamble>
+                For example, the normalized request string for the
+                <spanx style='verb'>GET</spanx> request URI
+                <spanx style='verb'>http://example.com/resource</spanx>, request timestamp
+                <spanx style='verb'>137131200</spanx>, request nonce
+                <spanx style='verb'>s8djwd</spanx>, and <spanx style='verb'>hmac-sha256</spanx>
+                algorithm (line breaks are for display purposes only):
+              </preamble>
+              <artwork><![CDATA[
+  137131200,s8djwd,hmac-sha256,GET,example.com:80,
+  http://example.com/resource
+]]>
+              </artwork>
+            </figure>
+          </section>
+
+          <section title='Signature Calculation' anchor='hmac_sha256_function'>
+            <t>
+              Clients calculate the request signature using the HMAC-SHA256 function:
+            </t>
+            <figure>
+              <artwork><![CDATA[
   digest = HMAC-SHA256 (key, text)
 ]]>
-                  </artwork>
-                </figure>
-              </t>
-              <t>
-                The HMAC-SHA256 function variables are used in following way:
+              </artwork>
+            </figure>
+            <t>
+              by setting the function variables are follows:
 
-                <list style="hanging" hangIndent="6">
-                  <t hangText="text">
-                    <vspace />
-                    is set to the value of the normalize request string as described in
-                    <xref target="base_string" />.
-                  </t>
-                  <t hangText="key">
-                    <vspace />
-                    is set to the shared-secret associated with the token.
-                  </t>
-                  <t hangText="digest">
-                    <vspace />
-                    is used to set the value of the <spanx style="verb">auth</spanx>
-                    attribute, after the result octet string is base64-encoded per
-                    <xref target="RFC2045" /> section 6.8.
-                  </t>
-                </list>
-              </t>
-            </section>
-
-            <section title='Normalized String Construction' anchor='base_string'>
-              <t>
-                The normalized request string is a consistent, reproducible concatenation of several
-                of the HTTP request elements into a single string. The string is used as an input to
-                the selected cryptographic method and includes the HTTP request method (e.g.
-                <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.), the authority
-                as declared by the HTTP <spanx style='verb'>Host</spanx> request header, and the
-                request resource URI.
-              </t>
-              <t>
-                The normalized request string does not cover the entire HTTP request. Most notably, it
-                does not include the entity-body or most HTTP entity-headers. It is important to note
-                that the server cannot verify the authenticity of the excluded request elements without
-                using additional protections such as SSL/TLS.
-              </t>
-              <t>
-                The normalized request string is constructed by concatenating together, in order, the
-                following HTTP request elements:
-
-                <list style='numbers'>
-                  <t>
-                    The request timestamp as described in <xref target='nonce_ts' />.
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>
-                  <t>
-                    The request nonce as described in <xref target='nonce_ts' />.
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>
-                  <t>
-                    The cryptographic algorithm used.
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>              
-                  <t>
-                    The HTTP request method in uppercase. For example: <spanx style='verb'>HEAD</spanx>,
-                    <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>
-                  <t>
-                    The hostname, colon-separated (ASCII code 58) from the TCP port used to make the
-                    request as included in the HTTP request <spanx style='verb'>Host</spanx> header
-                    field. The port MUST be included even if it is not included in the
-                    <spanx style='verb'>Host</spanx> header field (i.e. the default port for the
-                    scheme).
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>
-                  <t>
-                  </t>
-                  <t>
-                    A <spanx style='verb'>,</spanx> character (ASCII code 44).
-                  </t>
-                  <t>
-                    The request resource URI.
-                  </t>
-                </list>
-              </t>
-            </section>
-            
+              <list style='hanging' hangIndent='6'>
+                <t hangText='text'>
+                  <vspace />
+                  is set to the value of the normalize request string as described in
+                  <xref target='base_string' />.
+                </t>
+                <t hangText='key'>
+                  <vspace />
+                  is set to the access token secret.
+                </t>
+              </list>
+            </t>
+            <t>
+              The request signature is the calculated value of the
+              <spanx style='verb'>digest</spanx> variable after the result octet string is
+              base64-encoded per <xref target='RFC2045' /> section 6.8.
+            </t>
           </section>
           
         </section>

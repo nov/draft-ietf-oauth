@@ -138,27 +138,27 @@ Table of Contents
        3.6.2.  Assertion Flow . . . . . . . . . . . . . . . . . . . . 36
    4.  Refreshing an Access Token . . . . . . . . . . . . . . . . . . 38
    5.  Accessing a Protected Resource . . . . . . . . . . . . . . . . 41
-     5.1.  Bearer Token Requests  . . . . . . . . . . . . . . . . . . 42
-       5.1.1.  URI Query Parameter  . . . . . . . . . . . . . . . . . 42
-       5.1.2.  Form-Encoded Body Parameter  . . . . . . . . . . . . . 43
-     5.2.  The Authorization Request Header . . . . . . . . . . . . . 44
-       5.2.1.  Cryptographic Tokens . . . . . . . . . . . . . . . . . 45
-   6.  Identifying a Protected Resource . . . . . . . . . . . . . . . 47
-     6.1.  The WWW-Authenticate Response Header . . . . . . . . . . . 48
-       6.1.1.  The 'realm' Attribute  . . . . . . . . . . . . . . . . 48
-       6.1.2.  The 'authorization-uri' Attribute  . . . . . . . . . . 48
-       6.1.3.  The 'algorithms' Attribute . . . . . . . . . . . . . . 48
-       6.1.4.  The 'error' Attribute  . . . . . . . . . . . . . . . . 48
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 48
-   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 48
-   9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 49
-   Appendix A.  Differences from OAuth 1.0a . . . . . . . . . . . . . 49
-   Appendix B.  Document History  . . . . . . . . . . . . . . . . . . 49
-   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 49
-     10.1. Normative References . . . . . . . . . . . . . . . . . . . 49
-     10.2. Informative References . . . . . . . . . . . . . . . . . . 50
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 50
-
+     5.1.  The Authorization Request Header . . . . . . . . . . . . . 42
+     5.2.  Bearer Token Requests  . . . . . . . . . . . . . . . . . . 43
+       5.2.1.  URI Query Parameter  . . . . . . . . . . . . . . . . . 44
+       5.2.2.  Form-Encoded Body Parameter  . . . . . . . . . . . . . 44
+     5.3.  Cryptographic Tokens Requests  . . . . . . . . . . . . . . 45
+       5.3.1.  The 'hmac-sha256' Algorithm  . . . . . . . . . . . . . 45
+   6.  Identifying a Protected Resource . . . . . . . . . . . . . . . 48
+     6.1.  The WWW-Authenticate Response Header . . . . . . . . . . . 49
+       6.1.1.  The 'realm' Attribute  . . . . . . . . . . . . . . . . 49
+       6.1.2.  The 'authorization-uri' Attribute  . . . . . . . . . . 49
+       6.1.3.  The 'algorithms' Attribute . . . . . . . . . . . . . . 49
+       6.1.4.  The 'error' Attribute  . . . . . . . . . . . . . . . . 49
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 49
+   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 49
+   9.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 50
+   Appendix A.  Differences from OAuth 1.0a . . . . . . . . . . . . . 50
+   Appendix B.  Document History  . . . . . . . . . . . . . . . . . . 50
+   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+     10.1. Normative References . . . . . . . . . . . . . . . . . . . 50
+     10.2. Informative References . . . . . . . . . . . . . . . . . . 51
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 51
 
 
 
@@ -291,17 +291,17 @@ Internet-Draft                  OAuth 2.0                     April 2010
    between the client and resource server (C, D), when the client is
    acting autonomously (the client is also the resource owner).
 
-     +---+                                  +---------------+
-     |   |--(A)------ Credentials --------->| Authorization |
-     | C |                                  |    Server     |
-     | l |<-(B)------ Access Token ---------|               |
-     | i |      (w/ Optional Refresh Token) +---------------+
-     | e |
-     | n |            HTTP Request          +---------------+
-     | t |--(C)--- with Access Token ------>|    Resource   |
-     |   |                                  |     Server    |
-     |   |<-(D)------ HTTP Response --------|               |
-     +---+                                  +---------------+
+     +--------+                                  +---------------+
+     |        |--(A)------ Credentials --------->| Authorization |
+     |        |                                  |    Server     |
+     |        |<-(B)------ Access Token ---------|               |
+     |        |      (w/ Optional Refresh Token) +---------------+
+     | Client |
+     |        |            HTTP Request          +---------------+
+     |        |--(C)--- with Access Token ------>|    Resource   |
+     |        |                                  |     Server    |
+     |        |<-(D)------ HTTP Response --------|               |
+     +--------+                                  +---------------+
 
 
                                  Figure 1
@@ -337,17 +337,17 @@ Hammer-Lahav, et al.    Expires October 14, 2010                [Page 6]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-     +---+                                  +---------------+
-     |   |--(A)------ Refresh Token ------->| Authorization |
-     | C |                                  |    Server     |
-     | l |<-(B)------ Access Token ---------|               |
-     | i |                                  +---------------+
-     | e |
-     | n |            HTTP Request          +---------------+
-     | t |--(C)--- with Access Token ------>|    Resource   |
-     |   |                                  |     Server    |
-     |   |<-(D)----- HTTP Response ---------|               |
-     +---+                                  +---------------+
+     +--------+                                  +---------------+
+     |        |--(A)------ Refresh Token ------->| Authorization |
+     |        |                                  |    Server     |
+     |        |<-(B)------ Access Token ---------|               |
+     |        |        (with Optional Secret)    +---------------+
+     | Client |
+     |        |            HTTP Request          +---------------+
+     |        |--(C)--- with Access Token ------>|    Resource   |
+     |        |                                  |     Server    |
+     |        |<-(D)----- HTTP Response ---------|               |
+     +--------+                                  +---------------+
 
 
                                  Figure 2
@@ -2161,11 +2161,11 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    secret_type
          OPTIONAL.  This specification defines two values: "none" for an
-         access token without a secret (bearer token) and "hmac" for a
-         token with a shared symmetric secret suitable for signing
-         requests using an HMAC cryptographic algorithm (as defined in
-         [RFC2104]).  The value defaults to "none" if omitted.  Using
-         token secrets is described in Section 5.2.1.
+         access token without a secret (bearer token) and "hmac-sha256"
+         for a token with a shared symmetric secret suitable for signing
+         requests using the HMAC-SHA256 cryptographic algorithm (as
+         described by Section 5.3.1).  The value defaults to "none" if
+         omitted.  Using token secrets is described in Section 5.3.
 
    For example, the client makes the following HTTPS request (line break
    are for display purposes only):
@@ -2176,7 +2176,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
      Content-Type: application/x-www-form-urlencoded
 
      type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
-     &refresh_token=n4E9O119d&secret_type=hmac
+     &refresh_token=n4E9O119d&secret_type=hmac-sha256
 
 
 
@@ -2297,119 +2297,7 @@ Hammer-Lahav, et al.    Expires October 14, 2010               [Page 41]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-5.1.  Bearer Token Requests
-
-   Clients make bearer token requests by including the access token
-   using the HTTP "Authorization" request header with the "Token"
-   authentication scheme as described in Section 5.2.  The access token
-   is included using the "token" parameter.
-
-   For example, the client makes the following HTTPS request:
-
-     GET /resource HTTP/1.1
-     Host: server.example.com
-     Authorization: Token token="vF9dft4qmT"
-
-
-   The resource server MUST validate the access token and ensure it has
-   not expired and that its scope covers the requested resource.  If the
-   token expired or is invalid, the resource server MUST reply with an
-   HTTP 401 status code (Unauthorized) and include the HTTP
-   "WWW-Authenticate" response header as described in Section 6.1.
-
-   For example:
-
-     HTTP/1.1 401 Unauthorized
-     WWW-Authenticate: Token realm='Service', error='token_expired'
-
-
-   Alternatively, the client MAY include the access token using the HTTP
-   request URI in the query component as described in Section 5.1.1, or
-   in the HTTP body when using the "application/x-www-form-urlencoded"
-   content type as described in Section 5.1.2.  Clients SHOULD only use
-   the request URI or body when the "Authorization" request header is
-   not available, and MUST NOT use more than one method in each request.
-
-5.1.1.  URI Query Parameter
-
-   When including the access token in the HTTP request URI, the client
-   adds the access token to the request URI query component as defined
-   by [RFC3986] using the "oauth_token" parameter.
-
-   For example, the client makes the following HTTPS request:
-
-
-     GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
-     Host: server.example.com
-
-
-   The HTTP request URI query can include other request-specific
-   parameters, in which case, the "oauth_token" parameters SHOULD be
-
-
-
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 42]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-   appended following the request-specific parameters, properly
-   separated by an "&" character (ASCII code 38).
-
-   The resource server MUST validate the access token and ensure it has
-   not expired and its includes the requested resource.  If the resource
-   expired or is not valid, the resource server MUST reply with an HTTP
-   401 status code (Unauthorized) and include the HTTP
-   "WWW-Authenticate" response header as described in Section 6.1.
-
-5.1.2.  Form-Encoded Body Parameter
-
-   When including the access token in the HTTP request entity-body, the
-   client adds the access token to the request body using the
-   "oauth_token" parameter.  The client can use this method only if the
-   following REQUIRED conditions are met:
-
-   o  The entity-body is single-part.
-
-   o  The entity-body follows the encoding requirements of the
-      "application/x-www-form-urlencoded" content-type as defined by
-      [W3C.REC-html40-19980424].
-
-   o  The HTTP request entity-header includes the "Content-Type" header
-      field set to "application/x-www-form-urlencoded".
-
-   o  The HTTP request method is "POST", "PUT", or "DELETE".
-
-   The entity-body can include other request-specific parameters, in
-   which case, the "oauth_token" parameters SHOULD be appended following
-   the request-specific parameters, properly separated by an "&"
-   character (ASCII code 38).
-
-   For example, the client makes the following HTTPS request:
-
-
-     POST /resource HTTP/1.1
-     Host: server.example.com
-     Content-Type: application/x-www-form-urlencoded
-
-     oauth_token=vF9dft4qmT
-
-
-   The resource server MUST validate the access token and ensure it has
-   not expired and its includes the requested resource.  If the resource
-   expired or is not valid, the resource server MUST reply with an HTTP
-   401 status code (Unauthorized) and include the HTTP
-   "WWW-Authenticate" response header as described in Section 6.1.
-
-
-
-
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 43]
-
-Internet-Draft                  OAuth 2.0                     April 2010
-
-
-5.2.  The Authorization Request Header
+5.1.  The Authorization Request Header
 
    The "Authorization" request header field is used by clients to make
    both bearer token and cryptographic token requests.  When making
@@ -2436,7 +2324,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
      Authorization: Token token="vF9dft4qmT",
                           nonce="s8djwd",
                           timestamp="137131200",
-                          algorithm="hmac:sha-256",
+                          algorithm="hmac-sha256",
                           signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
 
 
@@ -2460,7 +2348,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 44]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 42]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2478,40 +2366,152 @@ Internet-Draft                  OAuth 2.0                     April 2010
      nonce            = "nonce" "=" <"> token <">
 
      algorithm        = "algorithm" "=" algorithm-name
-     algorithm-name   = secret-type ":" function-type
-     secret-type      = "hmac" /
-                        token
-     function-type    = "sha-256" /
+     algorithm-name   = "hmac-sha256" /
                         token
 
     signature        = "signature" "=" <"> token <">
 
 
-5.2.1.  Cryptographic Tokens
+5.2.  Bearer Token Requests
 
-5.2.1.1.  The 'nonce' and 'timestamp' Attributes
+   Clients make bearer token requests by including the access token
+   using the HTTP "Authorization" request header with the "Token"
+   authentication scheme as described in Section 5.1.  The access token
+   is included using the "token" parameter.
 
-   Cryptographic token authentication uses timestamps in combination
-   with unique nonce values to protect against replay attacks when
-   transmitted over an insecure channel.
+   For example, the client makes the following HTTPS request:
 
-   The nonce is a random string, uniquely generated by the client to
-   allow the server to verify that a request has never been made before
-   and helps prevent replay attacks when requests are made over a non-
-   secure channel.  The nonce value MUST be unique across all requests
-   with the same timestamp and token combinations.
+     GET /resource HTTP/1.1
+     Host: server.example.com
+     Authorization: Token token="vF9dft4qmT"
 
-   The timestamp value is the current time expressed in the number of
-   seconds since January 1, 1970 00:00:00 GMT, and MUST be a positive
-   integer.
 
-   To avoid the need to retain an infinite number of nonce values for
-   future checks, servers MAY choose to restrict the time period after
-   which a request with an old timestamp is rejected.  When servers
-   apply such a restriction, clients SHOULD synchronize their clocks by
-   using the server's time as indicated by the HTTP "Date" response
-   header field as defined in [RFC2616].
+   The resource server MUST validate the access token and ensure it has
+   not expired and that its scope covers the requested resource.  If the
+   token expired or is invalid, the resource server MUST reply with an
+   HTTP 401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
 
+   For example:
+
+     HTTP/1.1 401 Unauthorized
+     WWW-Authenticate: Token realm='Service', error='token_expired'
+
+
+   Alternatively, the client MAY include the access token using the HTTP
+   request URI in the query component as described in Section 5.2.1, or
+   in the HTTP body when using the "application/x-www-form-urlencoded"
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 43]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+   content type as described in Section 5.2.2.  Clients SHOULD only use
+   the request URI or body when the "Authorization" request header is
+   not available, and MUST NOT use more than one method in each request.
+
+5.2.1.  URI Query Parameter
+
+   When including the access token in the HTTP request URI, the client
+   adds the access token to the request URI query component as defined
+   by [RFC3986] using the "oauth_token" parameter.
+
+   For example, the client makes the following HTTPS request:
+
+
+     GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
+     Host: server.example.com
+
+
+   The HTTP request URI query can include other request-specific
+   parameters, in which case, the "oauth_token" parameters SHOULD be
+   appended following the request-specific parameters, properly
+   separated by an "&" character (ASCII code 38).
+
+   The resource server MUST validate the access token and ensure it has
+   not expired and its includes the requested resource.  If the resource
+   expired or is not valid, the resource server MUST reply with an HTTP
+   401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
+
+5.2.2.  Form-Encoded Body Parameter
+
+   When including the access token in the HTTP request entity-body, the
+   client adds the access token to the request body using the
+   "oauth_token" parameter.  The client can use this method only if the
+   following REQUIRED conditions are met:
+
+   o  The entity-body is single-part.
+
+   o  The entity-body follows the encoding requirements of the
+      "application/x-www-form-urlencoded" content-type as defined by
+      [W3C.REC-html40-19980424].
+
+   o  The HTTP request entity-header includes the "Content-Type" header
+      field set to "application/x-www-form-urlencoded".
+
+   o  The HTTP request method is "POST", "PUT", or "DELETE".
+
+   The entity-body can include other request-specific parameters, in
+   which case, the "oauth_token" parameters SHOULD be appended following
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 44]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+   the request-specific parameters, properly separated by an "&"
+   character (ASCII code 38).
+
+   For example, the client makes the following HTTPS request:
+
+
+     POST /resource HTTP/1.1
+     Host: server.example.com
+     Content-Type: application/x-www-form-urlencoded
+
+     oauth_token=vF9dft4qmT
+
+
+   The resource server MUST validate the access token and ensure it has
+   not expired and its includes the requested resource.  If the resource
+   expired or is not valid, the resource server MUST reply with an HTTP
+   401 status code (Unauthorized) and include the HTTP
+   "WWW-Authenticate" response header as described in Section 6.1.
+
+5.3.  Cryptographic Tokens Requests
+
+   Clients make authenticated protected resource requests using an
+   access token with a matching secret by calculating a set of values
+   and including them in the request using the "Authorization" header
+   field.  The way clients calculate these values depends on the access
+   token secret type as issued by the authorization server.
+
+   This specification defines the "hmac-sha256" algorithm, and
+   establishes a registry for providing additional algorithms.
+
+5.3.1.  The 'hmac-sha256' Algorithm
+
+   The "hmac-sha256" algorithm uses the HMAC method as defined in
+   [RFC2104] together with the SHA-256 hash function defined in [NIST
+   FIPS-180-3] to apply the access token secret to the request and
+   generate a signature value that is included in the request instead of
+   transmitting the secret in the clear.
+
+   To use the "hmac-sha256" algorithm, clients:
+
+   1.  Calculate the request timestamp and generate a request nonce as
+       described in Section 5.3.1.1.
+
+   2.  Construct the normalized request string as described in
+       Section 5.3.1.2.
+
+   3.  Calculate the request signature as described in Section 5.3.1.3.
 
 
 
@@ -2521,35 +2521,72 @@ Hammer-Lahav, et al.    Expires October 14, 2010               [Page 45]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-5.2.1.2.  The 'algorithm' and 'signature' Attributes
+   4.  Include the timestamp, nonce, algorithm name, and calculated
+       signature in the request using the "Authorization" header field.
 
-   The output of the authentication method function after applying it to
-   the selected coverage.
+   For example:
 
-5.2.1.2.1.  The 'hmac-sha-256' Method
+     GET /resource HTTP/1.1
+     Host: server.example.com
+     Authorization: Token token="vF9dft4qmT",
+                          nonce="s8djwd",
+                          timestamp="137131200",
+                          algorithm="hmac-sha256",
+                          signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
 
-   The "hmac-sha-256" authentication method uses the HMAC algorithm as
-   defined in [RFC2104] together with the SHA-256 hash function defined
-   in [NIST FIPS-180-3]:
 
-     digest = HMAC-SHA256 (key, text)
+   The resource server MUST validate the access token and ensure it has
+   not expired and that its scope covers the requested resource.  The
+   resource server MUST also recalculate the request signature using the
+   attributes provided by the client and compare it to the signature
+   provided.  If the token expired or is invalid, or if the signature is
+   incorrect, the resource server MUST reply with an HTTP 401 status
+   code (Unauthorized) and include the HTTP "WWW-Authenticate" response
+   header as described in Section 6.1.
+
+   For example:
+
+     HTTP/1.1 401 Unauthorized
+     Date: Tue, 15 Nov 2010 08:12:31 GMT
+     WWW-Authenticate: Token realm='Service',
+                             algorithms='hmac-sha256',
+                             error='invalid_signature'
 
 
-   The HMAC-SHA256 function variables are used in following way:
+   [[ Errors list ]]
 
-   text
-         is set to the value of the normalize request string as
-         described in Section 5.2.1.2.2.
+5.3.1.1.  Nonce and Timestamp
 
-   key
-         is set to the shared-secret associated with the token.
+   A timestamp in combination with unique nonce values is used to
+   protect against replay attacks when transmitted over an insecure
+   channel.
 
-   digest
-         is used to set the value of the "auth" attribute, after the
-         result octet string is base64-encoded per [RFC2045] section
-         6.8.
+   The nonce is a random string, uniquely generated by the client to
+   allow the server to verify that a request has never been made before
+   and helps prevent replay attacks when requests are made over a non-
+   secure channel.  The nonce value MUST be unique across all requests
+   with the same timestamp and token combinations.
 
-5.2.1.2.2.  Normalized String Construction
+   The timestamp value is the current time expressed in the number of
+   seconds since January 1, 1970 00:00:00 GMT, and MUST be a positive
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 46]
+
+Internet-Draft                  OAuth 2.0                     April 2010
+
+
+   integer.
+
+   To avoid the need to retain an infinite number of nonce values for
+   future checks, servers MAY choose to restrict the time period after
+   which a request with an old timestamp is rejected.  When servers
+   apply such a restriction, clients SHOULD synchronize their clocks by
+   using the server's time as indicated by the HTTP "Date" response
+   header field as defined in [RFC2616].
+
+5.3.1.2.  Normalized String Construction
 
    The normalized request string is a consistent, reproducible
    concatenation of several of the HTTP request elements into a single
@@ -2565,46 +2602,66 @@ Internet-Draft                  OAuth 2.0                     April 2010
    using additional protections such as SSL/TLS.
 
    The normalized request string is constructed by concatenating
-   together, in order, the following HTTP request elements:
+   together, in order, the following HTTP request elements, separated by
+   the "," character (ASCII code 44):
 
-   1.   The request timestamp as described in Section 5.2.1.1.
+   1.  The request timestamp as described in Section 5.3.1.1.
+
+   2.  The request nonce as described in Section 5.3.1.1.
+
+   3.  The cryptographic algorithm used.
+
+   4.  The HTTP request method in uppercase.  For example: "HEAD",
+       "GET", "POST", etc.
+
+   5.  The hostname, colon-separated (ASCII code 58) from the TCP port
+       used to make the request as included in the HTTP request "Host"
+       header field.  The port MUST be included even if it is not
+       included in the "Host" header field (i.e. the default port for
+       the scheme).
+
+   6.  The request resource URI.
 
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 46]
+
+
+
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 47]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-   2.   A "," character (ASCII code 44).
+   For example, the normalized request string for the "GET" request URI
+   "http://example.com/resource", request timestamp "137131200", request
+   nonce "s8djwd", and "hmac-sha256" algorithm (line breaks are for
+   display purposes only):
 
-   3.   The request nonce as described in Section 5.2.1.1.
+     137131200,s8djwd,hmac-sha256,GET,example.com:80,
+     http://example.com/resource
 
-   4.   A "," character (ASCII code 44).
 
-   5.   The cryptographic algorithm used.
+5.3.1.3.  Signature Calculation
 
-   6.   A "," character (ASCII code 44).
+   Clients calculate the request signature using the HMAC-SHA256
+   function:
 
-   7.   The HTTP request method in uppercase.  For example: "HEAD",
-        "GET", "POST", etc.
+     digest = HMAC-SHA256 (key, text)
 
-   8.   A "," character (ASCII code 44).
 
-   9.   The hostname, colon-separated (ASCII code 58) from the TCP port
-        used to make the request as included in the HTTP request "Host"
-        header field.  The port MUST be included even if it is not
-        included in the "Host" header field (i.e. the default port for
-        the scheme).
+   by setting the function variables are follows:
 
-   10.  A "," character (ASCII code 44).
+   text
+         is set to the value of the normalize request string as
+         described in Section 5.3.1.2.
 
-   11.
+   key
+         is set to the access token secret.
 
-   12.  A "," character (ASCII code 44).
-
-   13.  The request resource URI.
+   The request signature is the calculated value of the "digest"
+   variable after the result octet string is base64-encoded per
+   [RFC2045] section 6.8.
 
 
 6.  Identifying a Protected Resource
@@ -2624,15 +2681,15 @@ Internet-Draft                  OAuth 2.0                     April 2010
    using an HTTP authentication challenge.
 
    In addition, when receiving an invalid authenticated request, the
-   resource server issues an authentication challenge including the
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 47]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 48]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
+   resource server issues an authentication challenge including the
    error type and message.
 
 6.1.  The WWW-Authenticate Response Header
@@ -2683,8 +2740,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 48]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 49]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2740,7 +2796,7 @@ Appendix B.  Document History
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 49]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 50]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2796,7 +2852,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 50]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 51]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2852,6 +2908,6 @@ Authors' Addresses
 
 
 
-Hammer-Lahav, et al.    Expires October 14, 2010               [Page 51]
+Hammer-Lahav, et al.    Expires October 14, 2010               [Page 52]
 
 
