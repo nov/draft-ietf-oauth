@@ -93,7 +93,7 @@
       </t>
       <t>
         The use of OAuth with any other transport protocol than <xref target='RFC2616'>HTTP</xref>
-        is undefined.
+        (or HTTP over TLS 1.0 as defined by <xref target='RFC2818' /> is undefined.
       </t>
 
       <section title='Terminology'>
@@ -459,7 +459,7 @@
                 <t hangText='type'>
 	                <vspace />
                   REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>web_callback_access_request</spanx> (case sensitive).
+                  <spanx style='verb'>WC-A</spanx> (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -626,7 +626,7 @@
                 <t hangText='type'>
 	                <vspace />
                   The parameter value MUST be set to
-                  <spanx style='verb'>web_callback_token_request</spanx> (case sensitive).
+                  <spanx style='verb'>WC-T</spanx> (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -825,7 +825,7 @@
                 <t hangText='type'>
 	                <vspace />
                   REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>native_app_access_request</spanx> (case sensitive).
+                  <spanx style='verb'>NA-A</spanx> (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -968,7 +968,7 @@
                 <t hangText='type'>
 	                <vspace />
                   The parameter value MUST be set to
-                  <spanx style='verb'>native_app_token_request</spanx> (case sensitive).
+                  <spanx style='verb'>NA-T</spanx> (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1152,7 +1152,7 @@
                 <t hangText='type'>
                   <vspace />
                   REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>web_client_request</spanx> (case sensitive).
+                  <spanx style='verb'>UA-A</spanx> (case sensitive).
                 </t>
                 <t hangText='client_id'>
                   <vspace />
@@ -1409,8 +1409,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'device_access_request' (case
-                  sensitive).
+                  REQUIRED. The parameter value MUST be set to 'DV-A' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1516,7 +1515,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'device_token_request' (case sensitive).
+                  The parameter value MUST be set to 'DV-T' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1726,7 +1725,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'username_password_request' (case sensitive).
+                  The parameter value MUST be set to 'UP-T' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1884,7 +1883,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'client_cred_request' (case sensitive).
+                  The parameter value MUST be set to 'CC-T' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -2024,7 +2023,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'assertion_request' (case sensitive).
+                  The parameter value MUST be set to 'AS-T' (case sensitive).
                 </t>
                 <t hangText='format'>
 	                <vspace />
@@ -2045,7 +2044,7 @@
   POST /authorize HTTP/1.1
   Host: server.example.com
   
-  format=_______&assertion=_______
+  type=assertion_request&format=_______&assertion=_______
 ]]>
               </artwork>
             </figure>
@@ -2153,7 +2152,7 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='type'>
 	          <vspace />
-            REQUIRED. The parameter value MUST be set to 'refresh_token' (case sensitive).
+            REQUIRED. The parameter value MUST be set to 'R-T' (case sensitive).
           </t>
           <t hangText='client_id'>
 	          <vspace />
