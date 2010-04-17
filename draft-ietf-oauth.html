@@ -144,9 +144,9 @@
 <tr><td class="header">Network Working Group</td><td class="header">E. Hammer-Lahav, Ed.</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">D. Recordon</td></tr>
-<tr><td class="header">Expires: October 14, 2010</td><td class="header">Facebook</td></tr>
+<tr><td class="header">Expires: October 19, 2010</td><td class="header">Facebook</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">D. Hardt</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">April 12, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">April 17, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-00</h1>
 
@@ -176,7 +176,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on October 14, 2010.</p>
+This Internet-Draft will expire on October 19, 2010.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -214,28 +214,28 @@ Obtaining an Access Token<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">3.1.</a>&nbsp;
 Authorization Endpoint<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">3.2.</a>&nbsp;
+Token Endpoint<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.3.</a>&nbsp;
 Flow Parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#client_id">3.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#client_id">3.4.</a>&nbsp;
 Client Credentials<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">3.5.</a>&nbsp;
 User Delegation Flows<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#web_callback_flow">3.4.1.</a>&nbsp;
-Web Callback Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#native_app_flow">3.4.2.</a>&nbsp;
-Native Application Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#user_agent_flow">3.4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#user_agent_flow">3.5.1.</a>&nbsp;
 User-Agent Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#device_flow">3.4.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#web_server_flow">3.5.2.</a>&nbsp;
+Web Server Flow<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#device_flow">3.5.3.</a>&nbsp;
 Device Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor27">3.5.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor24">3.6.</a>&nbsp;
 End User Credentials Flows<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#username_password_flow">3.5.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#username_password_flow">3.6.1.</a>&nbsp;
 Username and Password Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor29">3.6.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor26">3.7.</a>&nbsp;
 Autonomous Client Flows<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#client_credentials_flow">3.6.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#client_credentials_flow">3.7.1.</a>&nbsp;
 Client Credentials Flow<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#assertion_flow">3.6.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#assertion_flow">3.7.2.</a>&nbsp;
 Assertion Flow<br />
 <a href="#token_refresh">4.</a>&nbsp;
 Refreshing an Access Token<br />
@@ -243,7 +243,7 @@ Refreshing an Access Token<br />
 Accessing a Protected Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_header">5.1.</a>&nbsp;
 The Authorization Request Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">5.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor29">5.2.</a>&nbsp;
 Bearer Token Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_param">5.2.1.</a>&nbsp;
 URI Query Parameter<br />
@@ -253,27 +253,27 @@ Form-Encoded Body Parameter<br />
 Cryptographic Tokens Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#hmac-sha256">5.3.1.</a>&nbsp;
 The 'hmac-sha256' Algorithm<br />
-<a href="#anchor33">6.</a>&nbsp;
+<a href="#anchor30">6.</a>&nbsp;
 Identifying a Protected Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn_header">6.1.</a>&nbsp;
 The WWW-Authenticate Response Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor34">6.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor31">6.1.1.</a>&nbsp;
 The 'realm' Attribute<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_uri_attribute">6.1.2.</a>&nbsp;
 The 'authorization-uri' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor35">6.1.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">6.1.3.</a>&nbsp;
 The 'algorithms' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor36">6.1.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor33">6.1.4.</a>&nbsp;
 The 'error' Attribute<br />
-<a href="#anchor37">7.</a>&nbsp;
+<a href="#anchor34">7.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor38">8.</a>&nbsp;
+<a href="#anchor35">8.</a>&nbsp;
 IANA Considerations<br />
-<a href="#anchor39">9.</a>&nbsp;
+<a href="#anchor36">9.</a>&nbsp;
 Acknowledgements<br />
-<a href="#anchor40">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor37">Appendix&nbsp;A.</a>&nbsp;
 Differences from OAuth 1.0a<br />
-<a href="#anchor41">Appendix&nbsp;B.</a>&nbsp;
+<a href="#anchor38">Appendix&nbsp;B.</a>&nbsp;
 Document History<br />
 <a href="#rfc.references1">10.</a>&nbsp;
 References<br />
@@ -338,7 +338,7 @@ Introduction</h3>
 </p>
 <p>
         The use of OAuth with any other transport protocol than <a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616]
-        is undefined.
+        (or HTTP over TLS 1.0 as defined by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a> is undefined.
       
 </p>
 <a name="anchor3"></a><br /><hr />
@@ -401,7 +401,14 @@ Terminology</h3>
 <dd>
               
               The authorization server's HTTP endpoint capable of authenticating the resource
-              owner, obtaining authorization, issuing tokens, and refreshing expired tokens.
+              owner and obtaining authorization, issuing tokens, and refreshing expired tokens.
+            
+</dd>
+<dt>token endpoint</dt>
+<dd>
+              
+              The authorization server's HTTP endpoint capable of issuing tokens and refreshing
+              expired tokens.
             
 </dd>
 <dt>client identifier</dt>
@@ -506,26 +513,20 @@ Overview</h3>
 		      </p>
 <ul class="text">
 <li>
-              Web Callback Flow - This flow is optimized for cases where the client is part of a
-              web server application. This flow is described in <a class='info' href='#web_callback_flow'>Section&nbsp;3.4.1<span> (</span><span class='info'>Web Callback Flow</span><span>)</span></a>.
+              User-Agent Flow - This flow is designed for clients running inside a user-agent
+              (typically a web browser), and therefore cannot receive incoming requests from the
+              authorization server. This flow is described in <a class='info' href='#user_agent_flow'>Section&nbsp;3.5.1<span> (</span><span class='info'>User-Agent Flow</span><span>)</span></a>.
 		        
 </li>
 <li>
-		          Native Application Flow - This flow is use by clients running as native code on the
-		          end user's computer or device outside a user-agent. This flow is described in
-		          <a class='info' href='#native_app_flow'>Section&nbsp;3.4.2<span> (</span><span class='info'>Native Application Flow</span><span>)</span></a>.
-	          
-</li>
-<li>
-              User-Agent Flow - This flow is designed for clients running inside a user-agent
-              (typically a web browser), and therefore cannot receive callbacks from the
-              authorization server. This flow is described in <a class='info' href='#user_agent_flow'>Section&nbsp;3.4.3<span> (</span><span class='info'>User-Agent Flow</span><span>)</span></a>.
+              Web Server Flow - This flow is optimized for cases where the client is part of a
+              web server application. This flow is described in <a class='info' href='#web_server_flow'>Section&nbsp;3.5.2<span> (</span><span class='info'>Web Server Flow</span><span>)</span></a>.
 		        
 </li>
 <li>
               Device Flow - This flow suitable for clients executing on limited devices, but where
               the end user has separate access to a user-agent on another computer or device. This
-              flow is described in <a class='info' href='#device_flow'>Section&nbsp;3.4.4<span> (</span><span class='info'>Device Flow</span><span>)</span></a>.
+              flow is described in <a class='info' href='#device_flow'>Section&nbsp;3.5.3<span> (</span><span class='info'>Device Flow</span><span>)</span></a>.
 		        
 </li>
 </ul><p>
@@ -540,7 +541,7 @@ Overview</h3>
               Username and Password Flow - This flow is used in cases where the end user trusts
               the client to handle its credentials but it is still undesirable for the client to
               store the end user's username and password. This flow is described in
-              <a class='info' href='#username_password_flow'>Section&nbsp;3.5.1<span> (</span><span class='info'>Username and Password Flow</span><span>)</span></a>.
+              <a class='info' href='#username_password_flow'>Section&nbsp;3.6.1<span> (</span><span class='info'>Username and Password Flow</span><span>)</span></a>.
 		        
 </li>
 </ul><p>
@@ -553,14 +554,14 @@ Overview</h3>
 <ul class="text">
 <li>
               Client Credentials Flow - The client uses its credentials to obtain an access token.
-              This flow is described in <a class='info' href='#client_credentials_flow'>Section&nbsp;3.6.1<span> (</span><span class='info'>Client Credentials Flow</span><span>)</span></a>.
+              This flow is described in <a class='info' href='#client_credentials_flow'>Section&nbsp;3.7.1<span> (</span><span class='info'>Client Credentials Flow</span><span>)</span></a>.
 			      
 </li>
 <li>
 		          Assertion Flow - The client presents an assertion such as a 
 		          <a class='info' href='#OASIS.saml-core-2.0-os'>SAML<span> (</span><span class='info'>Cantor, S., Kemp, J., Philpott, R., and E. Maler, &ldquo;Assertions and Protocol for the OASIS Security Assertion Markup Language             (SAML) V2.0,&rdquo; March&nbsp;2005.</span><span>)</span></a> [OASIS.saml&#8209;core&#8209;2.0&#8209;os] assertion to the authorization
 		          server in exchange for an access token. This flow is described in
-		          <a class='info' href='#assertion_flow'>Section&nbsp;3.6.2<span> (</span><span class='info'>Assertion Flow</span><span>)</span></a>.
+		          <a class='info' href='#assertion_flow'>Section&nbsp;3.7.2<span> (</span><span class='info'>Assertion Flow</span><span>)</span></a>.
 			      
 </li>
 </ul><p>
@@ -614,8 +615,8 @@ Obtaining an Access Token</h3>
 
 <p>
         The client obtains an access token by using one of the authorization flows supported by the
-        authorization server. The authorization flows all use the same authorization endpoint, each
-        with a different set of request parameters and values.
+        authorization server. The authorization flows all use the same authorization and token
+        endpoints, each with a different set of request parameters and values.
       
 </p>
 <p>
@@ -640,20 +641,30 @@ Obtaining an Access Token</h3>
 Authorization Endpoint</h3>
 
 <p>
+          Clients direct the resource owner to the authorization endpoint to approve their access
+          request. Before granting access, the resource owner first authenticate with the
+          authorization server. The way in which the server authenticates the end user (e.g.
+          username and password login, OpenID, session cookies) and in which the server obtains the
+          end user's authorization, including whether it uses a secure channel such as TLS/SSL, is
+          beyond the scope of this specification. However, the server MUST first verify the
+          identity of the end user.
+        
+</p>
+<p>
           The client obtains the URI of the authorization endpoint from the server's documentation,
           or by making an unauthorized protected resource request (from the
           <tt>WWW-Authenticate</tt> response header
-          <a class='info' href='#authz_uri_attribute'>authorization-uri<span> (</span><span class='info'>The 'authorization-uri' Attribute</span><span>)</span></a> attribute).
+          <a class='info' href='#authz_uri_attribute'>auth-uri<span> (</span><span class='info'>The 'authorization-uri' Attribute</span><span>)</span></a> attribute).
         
 </p>
 <p>
-          The authorization endpoint advertised by the server MUST NOT include a query or fragment
-          components as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
+          The authorization endpoint advertised by the server MAY include a query components as
+          defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
         
 </p>
 <p>
-          Since requests to the authorization endpoint result in the transmission of plain text
-          credentials in the HTTP request and response, the authorization server MUST require the
+          Since requests to the authorization endpoint result in user authentication and the
+          transmission of sensitive values, the authorization server SHOULD require the
           use of a transport-layer mechanism such as TLS or SSL (or a secure channel with
           equivalent protections) when sending requests to the authorization endpoints.
         
@@ -661,6 +672,35 @@ Authorization Endpoint</h3>
 <a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
+Token Endpoint</h3>
+
+<p>
+          After obtaining authorization from the resource owner, clients request an access token
+          from the authorization server's token endpoint.
+        
+</p>
+<p>
+          The client obtains the URI of the token endpoint from the server's documentation,
+          or by making an unauthorized protected resource request (from the
+          <tt>WWW-Authenticate</tt> response header
+          <a class='info' href='#authz_uri_attribute'>token-uri<span> (</span><span class='info'>The 'authorization-uri' Attribute</span><span>)</span></a> attribute).
+        
+</p>
+<p>
+          The token endpoint advertised by the server MAY include a query components as
+          defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
+        
+</p>
+<p>
+          Since requests to the token endpoint result in the transmission of plain text
+          credentials in the HTTP request and response, the authorization server MUST require the
+          use of a transport-layer mechanism such as TLS or SSL (or a secure channel with
+          equivalent protections) when sending requests to the token endpoints.
+        
+</p>
+<a name="anchor10"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
 Flow Parameters</h3>
 
 <p>
@@ -671,7 +711,7 @@ Flow Parameters</h3>
 </p>
 <a name="client_id"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
+<a name="rfc.section.3.4"></a><h3>3.4.&nbsp;
 Client Credentials</h3>
 
 <p>
@@ -696,9 +736,9 @@ Client Credentials</h3>
 		      keeping their secrets confidential.
 		    
 </p>
-<a name="anchor10"></a><br /><hr />
+<a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4"></a><h3>3.4.&nbsp;
+<a name="rfc.section.3.5"></a><h3>3.5.&nbsp;
 User Delegation Flows</h3>
 
 <p>
@@ -708,824 +748,21 @@ User Delegation Flows</h3>
 		      server, and grants client access to its protected resources.
 		    
 </p>
-<a name="web_callback_flow"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.1"></a><h3>3.4.1.&nbsp;
-Web Callback Flow</h3>
-
-<p>
-            The web callback flow is a user delegation flow suitable for clients capable of
-            interacting with the end user's user-agent (typically a web browser) and capable of
-            receiving callback requests from the server (capable of acting as an HTTP server).
-          
-</p><br /><hr class="insert" />
-<a name="Figure 3"></a>
-<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  +----------+         Client Identifier       +---------------+
-  |         -+----(A)-- &amp; Callback URI -------&gt;|               |
-  | End User |                                 | Authorization |
-  |    at    |&lt;---(B)-- User authenticates ---&gt;|     Server    |
-  | Browser  |                                 |               |
-  |         -+----(C)-- Verification Code ----&lt;|               |
-  +-|----|---+                                 +---------------+
-    |    |                                         ^      v
-   (A)  (C)                                        |      |
-    |    |                                         |      |
-    ^    v                                         |      |
-  +---------+                                      |      |
-  |         |&gt;---(D)-- Client Credentials, --------'      |
-  |   Web   |           Verification Code,                |
-  |  Client |            &amp; Callback URI                   |
-  |         |                                             |
-  |         |&lt;---(E)------- Access Token -----------------'
-  +---------+        (w/ Optional Refresh Token)
-
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
-
-<p>
-	          The web callback flow illustrated in <a class='info' href='#Figure 3'>Figure&nbsp;3</a> includes the following
-	          steps:
-	
-	          </p>
-<blockquote class="text"><dl>
-<dt>(A)</dt>
-<dd>
-			          The web client initiates the flow by redirecting the end user's user-agent to the
-			          authorization endpoint with its client identifier and a callback URI to which the
-			          server will send the end user back once authorization is received (or denied).
-			        
-</dd>
-<dt>(B)</dt>
-<dd>
-				        The authorization server authenticates the end user (via the user-agent) and
-				        establishes whether the end user grants or denies the client's access request.
-			        
-</dd>
-<dt>(C)</dt>
-<dd>
-				        Assuming the end user granted access, the authorization server redirects the
-				        user-agent back to the client to the callback URI provided earlier. The
-				        authorization includes a verification code for the client to use to obtain an
-				        access token.
-			        
-</dd>
-<dt>(D)</dt>
-<dd>
-				        The client requests an access token from the authorization server by including its
-				        client credentials (identifier and secret), as well as the verification code
-				        received in the previous step.
-			        
-</dd>
-<dt>(E)</dt>
-<dd>
-				        The authorization server validates the client credentials and the verification
-				        code and responds back with the access token.
-			        
-</dd>
-</dl></blockquote><p>
-	        
-</p>
-<a name="anchor11"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.1.1"></a><h3>3.4.1.1.&nbsp;
-Client Requests Authorization</h3>
-
-<p>
-              In order for the end user to grant the client access, the client sends the end user
-              to the authorization server. The client constructs the request URI by adding the
-              following URI query parameters to the user authorization endpoint URI:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>type</dt>
-<dd>
-	                
-                  REQUIRED. The parameter value MUST be set to
-                  <tt>web_callback_access_request</tt> (case sensitive).
-                
-</dd>
-<dt>client_id</dt>
-<dd>
-	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
-                
-</dd>
-<dt>callback</dt>
-<dd>
-	                
-                  An absolute URI to which the authorization server will redirect the end user back
-                  when the end user authorization step is completed. The authorization server MAY
-                  require the client to pre-register their callback URI. The callback URI MUST NOT
-                  includes a query or a fragment components as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
-                  section 3. REQUIRED unless a callback URI has been established between the client
-                  and authorization server via other means.
-                
-</dd>
-<dt>state</dt>
-<dd>
-	                
-                  OPTIONAL. An opaque value used by the client to maintain state between the request
-                  and callback.
-                
-</dd>
-<dt>immediate</dt>
-<dd>
-                  
-                  OPTIONAL. The parameter value must be set to <tt>true</tt> or
-                  <tt>false</tt> (case sensitive). If set to
-                  <tt>true</tt>, the authorization server MUST NOT prompt the
-                  end user to authenticate or approve access. Instead, the authorization server
-                  attempts to establish the end user's identity via other means (e.g. browser
-                  cookies) and checks if the end user has previously approved an identical access
-                  request by the same client and if that access grant is still active. If the
-                  authorization server does not support an immediate check or if it is unable to
-                  establish the end user's identity or approval status, it MUST deny the request
-                  without prompting the end user. Defaults to <tt>false</tt> if
-                  omitted.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-              The client directs the end user to the constructed URI using an HTTP redirection
-              response, or by other means available to it via the end user's user-agent. The
-              request MUST use the HTTP <tt>GET</tt> method.
-            
-</p>
-<p>
-                For example, the client directs the end user's user-agent to make the
-                following HTTPS requests (line breaks are for display purposes only):
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /authorize?type=web_callback_access_request&amp;client_id=
-      s6BhdRkqt3&amp;callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-       HTTP/1.1
-  Host: server.example.com
-
-</pre></div>
-<p>
-              If the client has previously registered a callback URI with the authorization server,
-              the authorization server MUST verify that the callback URI received matches the
-              registered URI associated with the client identifier.
-            
-</p>
-<p>
-              The way in which the server authenticates the end user (e.g. username and password
-              login, OpenID, session cookies) and in which the server obtains the end user's
-              authorization, including whether it uses a secure channel such as TLS/SSL, is beyond
-              the scope of this specification. However, the server MUST first verify the
-              identity of the end user.
-            
-</p>
-<p>
-              After receiving (or establishing via other means) an authorization decision from the
-              end user, the authorization server sends the end user's user-agent to the
-              provided client callback URI using an HTTP redirection response, or by other means
-              available to it via the end user's user-agent.
-            
-</p>
-<a name="anchor12"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.1.1.1"></a><h3>3.4.1.1.1.&nbsp;
-End User Grants Authorization</h3>
-
-<p>
-                If the end user authorizes the access request, the authorization server generates a
-                verification code and associates it with the client identifier and callback URI. The
-                authorization server constructs the request URI by adding the following parameters to
-                the query component of callback URI provided by the client:
-
-                </p>
-<blockquote class="text"><dl>
-<dt>code</dt>
-<dd>
-	                  
-                    REQUIRED. The verification code generated by the authorization server.
-                  
-</dd>
-<dt>state</dt>
-<dd>
-	                  
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
-                  
-</dd>
-</dl></blockquote><p>
-              
-</p>
-<p>
-                The verification code SHOULD expire shortly after it is issued and allowed for a
-                single use.
-              
-</p>
-<p>
-                  For example, the server redirects the end user's user-agent by sending the
-                  following HTTP response:
-                
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?code=i1WsRn1uB1
-
-</pre></div>
-<p>
-                  In turn, the end user's user-agent makes the following HTTPS
-                  <tt>GET</tt> request:
-                
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /cb?code=i1WsRn1uB1 HTTP/1.1
-  Host: client.example.com
-
-</pre></div>
-<a name="anchor13"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.1.1.2"></a><h3>3.4.1.1.2.&nbsp;
-End User Denies Authorization</h3>
-
-<p>
-                If the end user denied the access request, the authorization server constructs the
-                request URI by adding the following parameters to the query component of callback URI
-                provided by the client:
-
-                </p>
-<blockquote class="text"><dl>
-<dt>error</dt>
-<dd>
-	              	  
-                    REQUIRED. The parameter value MUST be set to
-                    <tt>user_denied</tt> (case sensitive).
-                  
-</dd>
-<dt>state</dt>
-<dd>
-	              	  
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
-                  
-</dd>
-</dl></blockquote><p>
-              
-</p>
-<p>
-                  For example, the authorization server directs the client to make the following HTTP
-                  request:
-                
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /cb?error=user_denied HTTP/1.1
-  Host: client.example.com
-
-</pre></div>
-<p>
-                The authorization flow concludes unsuccessfully.
-              
-</p>
-<a name="anchor14"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.1.2"></a><h3>3.4.1.2.&nbsp;
-Client Requests Access Token</h3>
-
-<p>
-              The client obtains an access token from the authorization server by making an HTTP
-              <tt>POST</tt> request to the authorization endpoint. The client
-              constructs a request URI by adding the following REQUIRED parameters to the request:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>type</dt>
-<dd>
-	                
-                  The parameter value MUST be set to
-                  <tt>web_callback_token_request</tt> (case sensitive).
-                
-</dd>
-<dt>client_id</dt>
-<dd>
-	                
-                  The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
-                
-</dd>
-<dt>client_secret</dt>
-<dd>
-	                
-                  The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
-                
-</dd>
-<dt>code</dt>
-<dd>
-	                
-                  The verification code received from the authorization server.
-                
-</dd>
-<dt>callback</dt>
-<dd>
-	                
-                  The callback URI used in the initial request.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example, the client makes the following HTTPS request (line breaks are for display
-                purposes only):
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  POST /authorize HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  type=web_callback_token_request&amp;client_id=s6BhdRkqt3&amp;
-  client_secret=gX1fBat3bV&amp;code=i1WsRn1uB1&amp;
-  callback=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-
-</pre></div>
-<p>
-              The authorization server MUST verify that the verification code, client identity,
-              client secret, and callback URI are all valid and match its stored association. If
-              the request is valid, the authorization server issues an access token and delivers it
-              to the client in the HTTP response body using the
-              <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
-            
-</p>
-<p>
-              The response contains the following parameters:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>access_token</dt>
-<dd>
-	                
-                  REQUIRED. The access token issued by the authorization server.
-                
-</dd>
-<dt>expires_in</dt>
-<dd>
-	                
-                  OPTIONAL. The duration in seconds of the access token lifetime.
-                
-</dd>
-<dt>refresh_token</dt>
-<dd>
-	                
-                  OPTIONAL. The refresh token used to obtain new access tokens using the same
-                  end user access grant as described in <a class='info' href='#token_refresh'>Section&nbsp;4<span> (</span><span class='info'>Refreshing an Access Token</span><span>)</span></a>.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example:
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  HTTP/1.1 200 OK
-  Content-Type: application/x-www-form-urlencoded
-
-  access_token=SlAV32hkKG&amp;expires_in=3600&amp;refresh_token=8xLOxBtZp8
-
-</pre></div>
-<p>
-              If the request is invalid, the authorization server returns an error message in the
-              HTTP response body using the
-              <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
-            
-</p>
-<p>
-               The response contains the following parameter:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>error</dt>
-<dd>
-	                
-                  OPTIONAL. The parameter value MUST be set to either
-                  <tt>callback_mismatch</tt> or
-                  <tt>expired_verification_code</tt> (case sensitive).
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example:
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/x-www-form-urlencoded
-
-  error=expired_verification_code
-
-</pre></div>
-<a name="native_app_flow"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.2"></a><h3>3.4.2.&nbsp;
-Native Application Flow</h3>
-
-<p>
-            The native application flow is a user delegation flow suitable for client applications
-            running as native code on the end user's computer or device (i.e. executing outside a
-            browser). The client is capable of interacting with the end user's user-agent but is
-            incapable of receiving callback requests from the server (incapable of acting as an
-            HTTP server).
-          
-</p>
-<p>
-            The native application flow is similar to the
-            <a class='info' href='#web_callback_flow'>web callback flow<span> (</span><span class='info'>Web Callback Flow</span><span>)</span></a> but instead of using a
-            callback to deliver the verification code to the client, the authorization server
-            displays the verification code to the end user via its user-agent. If the client is
-            able to interact with the user-agent, it retrieves the verification code automatically.
-            Otherwise, the end user manually enters the verification code into a client dialog.
-          
-</p>
-<p>
-            This flow does not utilize the client secret since the client code resides on the end
-            user's computer or device which makes the client secret accessible and exploitable.
-            Because the client is incapable of receiving callbacks, the access token is encoded
-            into the HTML response which exposes it to the end user and other applications residing
-            on the computer or device.
-          
-</p><br /><hr class="insert" />
-<a name="Figure 4"></a>
-<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  +----------+                                 +---------------+
-  |         -+----(A)-- Client Identifier ----&gt;|               |
-  | End User |                                 | Authorization |
-  |    at    |&lt;---(B)-- User authenticates ---&gt;|     Server    |
-  | Browser  |                                 |               |
-  |          |&lt;---(C)-- Verification Code ----&lt;|               |
-  +-|--------+                                 +---------------+
-    |    v                                         ^      v
-    |    :                                         |      |
-   (A)  (D)                                        |      |
-    |    :                                         |      |
-    ^    v                                         |      |
-  +---------+                                      |      |
-  |  Native |&gt;---(E)-- Verification Code ----------'      |
-  |   App   |                                             |
-  |  Client |&lt;---(F)--------- Access Token ---------------'
-  +---------+          (w/ Optional Refresh Token)
-
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;4&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
-
-<p>
-	          The native application flow illustrated in <a class='info' href='#Figure 4'>Figure&nbsp;4</a> includes the
-	          following steps:
-	
-	          </p>
-<blockquote class="text"><dl>
-<dt>(A)</dt>
-<dd>
-			          The native application client initiates the flow by opening a user-agent on the end
-			          user's computer or device to the authorization endpoint with its client identifier.
-			        
-</dd>
-<dt>(B)</dt>
-<dd>
-				        The authorization server authenticates the end user (via the user-agent) and
-				        establishes whether the end user grants or denies the client's access request.
-			        
-</dd>
-<dt>(C)</dt>
-<dd>
-				        Assuming the end user granted access, the authorization server display the
-				        verification code by returning an HTML document to the user-agent with the
-				        verification code included in the documents's title and body.
-			        
-</dd>
-<dt>(D)</dt>
-<dd>
-				        The client interacts with the user-agent and obtains the verification code from the
-				        title of the web page displayed by the user-agent. If the client is unable to
-				        interact with the user-agent, the end user manually copies the verification code from
-				        the user-agent into an interface provided by the client.
-			        
-</dd>
-<dt>(E)</dt>
-<dd>
-				        The client requests an access token from the authorization server by sending the
-				        verification code received in the previous step.
-			        
-</dd>
-<dt>(F)</dt>
-<dd>
-				        The authorization server validates the verification code and responds back with the
-				        access token.
-			        
-</dd>
-</dl></blockquote><p>
-          
-</p>
-<a name="anchor15"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.2.1"></a><h3>3.4.2.1.&nbsp;
-Client Requests Authorization</h3>
-
-<p>
-              In order for the end user to grant the client access, the client sends the end user
-              to the authorization server. The client constructs the request URI by adding the
-              following URI query parameters to the user authorization endpoint URI:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>type</dt>
-<dd>
-	                
-                  REQUIRED. The parameter value MUST be set to
-                  <tt>native_app_access_request</tt> (case sensitive).
-                
-</dd>
-<dt>client_id</dt>
-<dd>
-	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
-                
-</dd>
-<dt>state</dt>
-<dd>
-	                
-                  OPTIONAL. An opaque value used by the client to maintain state between the request
-                  and callback.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-              The client launches a user-agent on the end user's computer or device, and directs it
-              to the constructed URI. The request MUST use the HTTP
-              <tt>GET</tt> method.
-            
-</p>
-<p>
-                For example, the client directs the end user's user-agent to make the
-                following HTTPS requests (line breaks are for display purposes only):
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /authorize?type=native_app_access_request&amp;client_id=
-      s6BhdRkqt3 HTTP/1.1
-  Host: server.example.com
-
-</pre></div>
-<p>
-              The way in which the server authenticates the end user (e.g. username and password
-              login, OpenID, session cookies) and in which the server obtains the end user's
-              authorization, including whether it uses a secure channel such as TLS/SSL, is beyond
-              the scope of this specification. However, the server MUST first verify the
-              identity of the end user.
-            
-</p>
-<p>
-              After receiving (or establishing via other means) an authorization decision from the
-              end user, the authorization server responds with an HTML document containing
-              machine-readable parameters and human-readable instructions.
-            
-</p>
-<a name="anchor16"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.2.1.1"></a><h3>3.4.2.1.1.&nbsp;
-End User Grants Authorization</h3>
-
-<p>
-                If the end user authorizes the access request, the authorization server generates a
-                verification code and associates it with the client identifier. The authorization
-                server generates an <a class='info' href='#W3C.REC-html40-19980424'>HTML<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> [W3C.REC&#8209;html40&#8209;19980424] document
-                response with the following parameters encoded into the document's title:
-
-                </p>
-<blockquote class="text"><dl>
-<dt>code</dt>
-<dd>
-	                  
-                    REQUIRED. The verification code generated by the authorization server.
-                  
-</dd>
-<dt>state</dt>
-<dd>
-	                  
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
-                  
-</dd>
-</dl></blockquote><p>
-              
-</p>
-<p>
-                The parameters are encoded into the document's title by serializing them using the
-                <tt>application/x-www-form-urlencoded</tt> content type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, and appending the string to
-                the content of the HTML <tt>&lt;title&gt;</tt> element enclosed
-                in parenthesis <tt>()</tt>. The document is returned in the HTTP
-                response body with a 200 status code (OK).
-              
-</p>
-<p>
-                  For example:
-                
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  &lt;title&gt;Authorization Granted (code=i1WsRn1uB1)&lt;/title&gt;
-
-</pre></div>
-<p>
-                The verification code SHOULD expire shortly after it is issued and allowed for a
-                single use.
-              
-</p>
-<p>
-                The document's content MUST include the parameters in a human-readable form and
-                SHOULD include instructions to assist the end user in manually entering the values
-                into the client applications (in case it is unable to automatically retrieve them).
-              
-</p>
-<a name="anchor17"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.2.1.2"></a><h3>3.4.2.1.2.&nbsp;
-End User Denies Authorization</h3>
-
-<p>
-                If the end user denied the access request, the authorization server generates an
-                <a class='info' href='#W3C.REC-html40-19980424'>HTML<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> [W3C.REC&#8209;html40&#8209;19980424] document response with the
-                following parameters encoded into the document's title:
-
-                </p>
-<blockquote class="text"><dl>
-<dt>error</dt>
-<dd>
-	              	  
-                    REQUIRED. The parameter value MUST be set to
-                    <tt>user_denied</tt> (case sensitive).
-                  
-</dd>
-<dt>state</dt>
-<dd>
-	              	  
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
-                  
-</dd>
-</dl></blockquote><p>
-              
-</p>
-<p>
-                The parameters are encoded into the document's title by serializing them using the
-                <tt>application/x-www-form-urlencoded</tt> content type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, and appending the string to
-                the content of the HTML <tt>&lt;title&gt;</tt> element enclosed
-                in parenthesis <tt>()</tt>. The document is returned in the HTTP
-                response body with a 401 status code (Unauthorized).
-              
-</p>
-<p>
-                  For example:
-                
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  &lt;title&gt;Authorization Denied (error=user_denied)&lt;/title&gt;
-
-</pre></div>
-<p>
-                The authorization flow concludes unsuccessfully.
-              
-</p>
-<a name="anchor18"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.2.2"></a><h3>3.4.2.2.&nbsp;
-Client Requests Access Token</h3>
-
-<p>
-              The client obtains an access token from the authorization server by making an HTTP
-              <tt>POST</tt> request to the authorization endpoint. The client
-              constructs a request URI by adding the following REQUIRED parameters to the request:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>type</dt>
-<dd>
-	                
-                  The parameter value MUST be set to
-                  <tt>native_app_token_request</tt> (case sensitive).
-                
-</dd>
-<dt>client_id</dt>
-<dd>
-	                
-                  The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
-                
-</dd>
-<dt>code</dt>
-<dd>
-	                
-                  The verification code received from the authorization server.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example, the client makes the following HTTPS request:
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  POST /authorize HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  type=native_app_token_request&amp;client_id=s6BhdRkqt3&amp;code=i1WsRn1uB1
-
-</pre></div>
-<p>
-              The authorization server MUST verify that the verification code, client identity,
-              client secret, and callback URI are all valid and match its stored association. If
-              the request is valid, the authorization server issues an access token and delivers it
-              to the client in the HTTP response body using the
-              <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
-            
-</p>
-<p>
-              The response contains the following parameters:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>access_token</dt>
-<dd>
-	                
-                  REQUIRED. The access token issued by the authorization server.
-                
-</dd>
-<dt>expires_in</dt>
-<dd>
-	                
-                  OPTIONAL. The duration in seconds of the access token lifetime.
-                
-</dd>
-<dt>refresh_token</dt>
-<dd>
-	                
-                  OPTIONAL. The refresh token used to obtain new access tokens using the same
-                  end user access grant as described in <a class='info' href='#token_refresh'>Section&nbsp;4<span> (</span><span class='info'>Refreshing an Access Token</span><span>)</span></a>.
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example:
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  HTTP/1.1 200 OK
-  Content-Type: application/x-www-form-urlencoded
-
-  access_token=SlAV32hkKG&amp;expires_in=3600&amp;refresh_token=8xLOxBtZp8
-
-</pre></div>
-<p>
-              If the request is invalid, the authorization server returns an error message in the
-              HTTP response body using the
-              <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
-            
-</p>
-<p>
-               The response contains the following parameter:
-
-              </p>
-<blockquote class="text"><dl>
-<dt>error</dt>
-<dd>
-	                
-                  OPTIONAL. The parameter value MUST be set to
-                  <tt>expired_verification_code</tt> (case sensitive).
-                
-</dd>
-</dl></blockquote><p>
-            
-</p>
-<p>
-                For example:
-              
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  HTTP/1.1 400 Bad Request
-  Content-Type: application/x-www-form-urlencoded
-
-  error=expired_verification_code
-
-</pre></div>
 <a name="user_agent_flow"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.3"></a><h3>3.4.3.&nbsp;
+<a name="rfc.section.3.5.1"></a><h3>3.5.1.&nbsp;
 User-Agent Flow</h3>
 
 <p>
             The user-agent flow is a user delegation flow suitable for client applications residing
             in a user-agent, typically implemented in a browser using a scripting language such as
             JavaScript. The client is capable of interacting with the end user's user-agent but is
-            incapable of receiving callback requests from the server (incapable of acting as an
+            incapable of receiving incoming requests from the server (incapable of acting as an
             HTTP server).
           
 </p>
 <p>
-            Instead of receiving callbacks, the client requests the authorization server to
+            Instead of receiving incoming requests, the client requests the authorization server to
             redirect the user-agent to another web server or local resource accessible to the
             browser which is capable of extracting the access token from the response and passing
             it to the client.
@@ -1534,7 +771,7 @@ User-Agent Flow</h3>
 <p>
             This user-agent flow does not utilize the client secret since the client code
             resides on the end user's computer or device which makes the client secret accessible
-            and exploitable. Because the client is incapable of receiving callbacks, the access
+            and exploitable. Because the client is incapable of receiving incoming requests, the access
             token is encoded into the redirection URI which exposes it to the end user and other
             applications residing on the computer or device.
           
@@ -1546,23 +783,23 @@ User-Agent Flow</h3>
          |          |                                |                |
   End &lt;--+  -  -  - +----(B)-- User authenticates --&gt;|  Authorization |
   User   |          |                                |     Server     |
-         |          |&lt;---(C)-- Redirection URI -----&lt;|                |
-         |  Client  |         with Access Token      |                |
-         |    in    |    (w/ Optional Refresh Token) +----------------+
+         |          |&lt;---(C)-- Redirect URI --------&lt;|                |
+         |  Client  |       with Access Token        |                |
+         |    in    |   (w/ Optional Refresh Token)  +----------------+
          |  Browser |            in Fragment
          |          |                                +----------------+
-         |          |&gt;---(D)-- Redirection URI -----&gt;|                |
-         |          |          without Fragment      |   Web Server   |
+         |          |&gt;---(D)-- Redirect URI --------&gt;|                |
+         |          |        without Fragment        |   Web Server   |
          |          |                                |   with Client  |
          |    (F)   |&lt;---(E)-- Web Page with -------&lt;|    Resource    |
          |  Access  |             Script             |                |
          |   Token  |                                +----------------+
          +----------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;5&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-	          The user-agent flow illustrated in <a class='info' href='#Figure 5'>Figure&nbsp;5</a> includes the following
+	          The user-agent flow illustrated in <a class='info' href='#Figure 5'>Figure&nbsp;3</a> includes the following
 	          steps:
 
 	          </p>
@@ -1608,9 +845,9 @@ User-Agent Flow</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor19"></a><br /><hr />
+<a name="anchor12"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.3.1"></a><h3>3.4.3.1.&nbsp;
+<a name="rfc.section.3.5.1.1"></a><h3>3.5.1.1.&nbsp;
 Client Requests Authorization</h3>
 
 <p>
@@ -1624,31 +861,24 @@ Client Requests Authorization</h3>
 <dd>
                   
                   REQUIRED. The parameter value MUST be set to
-                  <tt>web_client_request</tt> (case sensitive).
+                  <tt>user_agent</tt> (case sensitive).
                 
 </dd>
 <dt>client_id</dt>
 <dd>
                   
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
                 
 </dd>
-<dt>redirection</dt>
+<dt>redirect_uri</dt>
 <dd>
                   
                   An absolute URI to which the authorization server will redirect the user-agent to
                   when the end user authorization step is completed. The authorization server SOULD
                   require the client to pre-register their redirection URI. The redirection URI
-                  MUST NOT includes a query or a fragment components as defined by
-                  <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3. REQUIRED unless a redirection URI has been
-                  established between the client and authorization server via other means.
-                
-</dd>
-<dt>state</dt>
-<dd>
-                  
-                  OPTIONAL. An opaque value used by the client to maintain state between the request
-                  and callback.
+                  MAY includes a query component as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
+                  REQUIRED unless a redirection URI has been established between the client and
+                  authorization server via other means.
                 
 </dd>
 </dl></blockquote><p>
@@ -1665,8 +895,8 @@ Client Requests Authorization</h3>
                 HTTPS request (line breaks are for display purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /authorize?type=flow_web_client&amp;client_id=s6BhdRkqt3&amp;
-      redirection=https%3A%2F%2FEexample%2Ecom%2Frd HTTP/1.1
+  GET /authorize?type=user_agent&amp;client_id=s6BhdRkqt3&amp;
+      redirect_uri=https%3A%2F%2FEexample%2Ecom%2Frd HTTP/1.1
   Host: server.example.com
 
 </pre></div>
@@ -1677,29 +907,21 @@ Client Requests Authorization</h3>
             
 </p>
 <p>
-              The way in which the server authenticates the end user (e.g. username and password
-              login, OpenID, session cookies) and in which the server obtains the end user's
-              authorization, including whether it uses a secure channel such as TLS/SSL, is beyond
-              the scope of this specification. However, the server MUST first verify the
-              identity of the end user.
-            
-</p>
-<p>
               After receiving (or establishing via other means) an authorization decision from the
               end user, the authorization server sends the end user's user-agent to the
               provided client redirection URI using an HTTP redirection response.
             
 </p>
-<a name="anchor20"></a><br /><hr />
+<a name="anchor13"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.3.1.1"></a><h3>3.4.3.1.1.&nbsp;
+<a name="rfc.section.3.5.1.1.1"></a><h3>3.5.1.1.1.&nbsp;
 End User Grants Authorization</h3>
 
 <p>
                 If the end user authorizes the access request, the authorization server issues an
                 access token and delivers it to the client by adding the following parameters, using
                 the <tt>application/x-www-form-urlencoded</tt> format as defined
-                by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
+                by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
 
                 </p>
 <blockquote class="text"><dl>
@@ -1721,13 +943,6 @@ End User Grants Authorization</h3>
                     OPTIONAL. The refresh token.
                   
 </dd>
-<dt>state</dt>
-<dd>
-                    
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
-                  
-</dd>
 </dl></blockquote><p>
               
 </p>
@@ -1740,16 +955,16 @@ End User Grants Authorization</h3>
   Location: http://example.com/rd#access_token=FJQbwq9&amp;expires_in=3600
 
 </pre></div>
-<a name="anchor21"></a><br /><hr />
+<a name="anchor14"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.3.1.2"></a><h3>3.4.3.1.2.&nbsp;
+<a name="rfc.section.3.5.1.1.2"></a><h3>3.5.1.1.2.&nbsp;
 End User Denies Authorization</h3>
 
 <p>
                 If the end user denied the access request, the authorization server responds to the
                 client by adding the following parameters, using the
                 <tt>application/x-www-form-urlencoded</tt> format as defined by
-                <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
+                <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
 
                 </p>
 <blockquote class="text"><dl>
@@ -1758,13 +973,6 @@ End User Denies Authorization</h3>
 	            	    
                     REQUIRED. The parameter value MUST be set to
                     <tt>user_denied</tt> (case sensitive).
-                  
-</dd>
-<dt>state</dt>
-<dd>
-	            	    
-                    REQUIRED if the <tt>state</tt> parameter was present in the
-                    client authorization request. Set the the exact value received from the client.
                   
 </dd>
 </dl></blockquote><p>
@@ -1780,12 +988,12 @@ End User Denies Authorization</h3>
 </pre></div>
 <p>
                 The authorization flow concludes unsuccessfully. To extract the error message, the
-                client follows the steps described in <a class='info' href='#user_agent_extract'>Section&nbsp;3.4.3.2<span> (</span><span class='info'>Client Extracts Access Token</span><span>)</span></a>.
+                client follows the steps described in <a class='info' href='#user_agent_extract'>Section&nbsp;3.5.1.2<span> (</span><span class='info'>Client Extracts Access Token</span><span>)</span></a>.
               
 </p>
 <a name="user_agent_extract"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.3.2"></a><h3>3.4.3.2.&nbsp;
+<a name="rfc.section.3.5.1.2"></a><h3>3.5.1.2.&nbsp;
 Client Extracts Access Token</h3>
 
 <p>
@@ -1812,9 +1020,398 @@ Client Extracts Access Token</h3>
               parameters) contained in the fragment.
             
 </p>
+<a name="web_server_flow"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.5.2"></a><h3>3.5.2.&nbsp;
+Web Server Flow</h3>
+
+<p>
+            The web server flow is a user delegation flow suitable for clients capable of
+            interacting with the end user's user-agent (typically a web browser) and capable of
+            receiving incoming requests from the server (capable of acting as an HTTP server).
+          
+</p><br /><hr class="insert" />
+<a name="Figure 3"></a>
+<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  +----------+         Client Identifier       +---------------+
+  |         -+----(A)-- &amp; Redirect URI -------&gt;|               |
+  | End User |                                 | Authorization |
+  |    at    |&lt;---(B)-- User authenticates ---&gt;|     Server    |
+  | Browser  |                                 |               |
+  |         -+----(C)-- Verification Code ----&lt;|               |
+  +-|----|---+                                 +---------------+
+    |    |                                         ^      v
+   (A)  (C)                                        |      |
+    |    |                                         |      |
+    ^    v                                         |      |
+  +---------+                                      |      |
+  |         |&gt;---(D)-- Client Credentials, --------'      |
+  |   Web   |           Verification Code,                |
+  |  Client |            &amp; Redirect URI                   |
+  |         |                                             |
+  |         |&lt;---(E)------- Access Token -----------------'
+  +---------+        (w/ Optional Refresh Token)
+
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;4&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+
+<p>
+	          The web server flow illustrated in <a class='info' href='#Figure 3'>Figure&nbsp;4</a> includes the following
+	          steps:
+	
+	          </p>
+<blockquote class="text"><dl>
+<dt>(A)</dt>
+<dd>
+			          The web client initiates the flow by redirecting the end user's user-agent to the
+			          authorization endpoint with its client identifier and a redirect URI to which the
+			          server will send the end user back once authorization is received (or denied).
+			        
+</dd>
+<dt>(B)</dt>
+<dd>
+				        The authorization server authenticates the end user (via the user-agent) and
+				        establishes whether the end user grants or denies the client's access request.
+			        
+</dd>
+<dt>(C)</dt>
+<dd>
+				        Assuming the end user granted access, the authorization server redirects the
+				        user-agent back to the client to the redirection URI provided earlier. The
+				        authorization includes a verification code for the client to use to obtain an
+				        access token.
+			        
+</dd>
+<dt>(D)</dt>
+<dd>
+				        The client requests an access token from the authorization server by including its
+				        client credentials (identifier and secret), as well as the verification code
+				        received in the previous step.
+			        
+</dd>
+<dt>(E)</dt>
+<dd>
+				        The authorization server validates the client credentials and the verification
+				        code and responds back with the access token.
+			        
+</dd>
+</dl></blockquote><p>
+	        
+</p>
+<a name="anchor15"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.5.2.1"></a><h3>3.5.2.1.&nbsp;
+Client Requests Authorization</h3>
+
+<p>
+              In order for the end user to grant the client access, the client sends the end user
+              to the authorization server. The client constructs the request URI by adding the
+              following URI query parameters to the user authorization endpoint URI:
+
+              </p>
+<blockquote class="text"><dl>
+<dt>type</dt>
+<dd>
+	                
+                  REQUIRED. The parameter value MUST be set to
+                  <tt>web_server</tt> (case sensitive).
+                
+</dd>
+<dt>client_id</dt>
+<dd>
+	                
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                
+</dd>
+<dt>redirect_uri</dt>
+<dd>
+	                
+                  An absolute URI to which the authorization server will redirect the end user back
+                  when the end user authorization step is completed. The authorization server MAY
+                  require the client to pre-register their redirection URI. The redirection URI MAY
+                  includes a query components as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
+                  REQUIRED unless a redirection URI has been established between the client
+                  and authorization server via other means.
+                
+</dd>
+<dt>immediate</dt>
+<dd>
+                  
+                  OPTIONAL. The parameter value must be set to <tt>true</tt> or
+                  <tt>false</tt> (case sensitive). If set to
+                  <tt>true</tt>, the authorization server MUST NOT prompt the
+                  end user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end user's identity via other means (e.g. browser
+                  cookies) and checks if the end user has previously approved an identical access
+                  request by the same client and if that access grant is still active. If the
+                  authorization server does not support an immediate check or if it is unable to
+                  establish the end user's identity or approval status, it MUST deny the request
+                  without prompting the end user. Defaults to <tt>false</tt> if
+                  omitted.
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+              The client directs the end user to the constructed URI using an HTTP redirection
+              response, or by other means available to it via the end user's user-agent. The
+              request MUST use the HTTP <tt>GET</tt> method.
+            
+</p>
+<p>
+                For example, the client directs the end user's user-agent to make the
+                following HTTPS requests (line breaks are for display purposes only):
+              
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  GET /authorize?type=web_server&amp;client_id=s6BhdRkqt3&amp;redirect_uri=
+      https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+  Host: server.example.com
+
+</pre></div>
+<p>
+              If the client has previously registered a redirection URI with the authorization server,
+              the authorization server MUST verify that the redirection URI received matches the
+              registered URI associated with the client identifier.
+            
+</p>
+<p>
+              The way in which the server authenticates the end user (e.g. username and password
+              login, OpenID, session cookies) and in which the server obtains the end user's
+              authorization, including whether it uses a secure channel such as TLS/SSL, is beyond
+              the scope of this specification. However, the server MUST first verify the
+              identity of the end user.
+            
+</p>
+<p>
+              After receiving (or establishing via other means) an authorization decision from the
+              end user, the authorization server sends the end user's user-agent to the
+              provided client redirection URI using an HTTP redirection response, or by other means
+              available to it via the end user's user-agent.
+            
+</p>
+<a name="anchor16"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.5.2.1.1"></a><h3>3.5.2.1.1.&nbsp;
+End User Grants Authorization</h3>
+
+<p>
+                If the end user authorizes the access request, the authorization server generates a
+                verification code and associates it with the client identifier and redirection URI. The
+                authorization server constructs the request URI by adding the following parameters to
+                the query component of redirection URI provided by the client:
+
+                </p>
+<blockquote class="text"><dl>
+<dt>code</dt>
+<dd>
+	                  
+                    REQUIRED. The verification code generated by the authorization server.
+                  
+</dd>
+</dl></blockquote><p>
+              
+</p>
+<p>
+                The verification code SHOULD expire shortly after it is issued and allowed for a
+                single use.
+              
+</p>
+<p>
+                  For example, the server redirects the end user's user-agent by sending the
+                  following HTTP response:
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  HTTP/1.1 302 Found
+  Location: https://client.example.com/cb?code=i1WsRn1uB1
+
+</pre></div>
+<p>
+                  In turn, the end user's user-agent makes the following HTTPS
+                  <tt>GET</tt> request:
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  GET /cb?code=i1WsRn1uB1 HTTP/1.1
+  Host: client.example.com
+
+</pre></div>
+<a name="anchor17"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.5.2.1.2"></a><h3>3.5.2.1.2.&nbsp;
+End User Denies Authorization</h3>
+
+<p>
+                If the end user denied the access request, the authorization server constructs the
+                request URI by adding the following parameters to the query component of the
+                redirection URI provided by the client:
+
+                </p>
+<blockquote class="text"><dl>
+<dt>error</dt>
+<dd>
+	              	  
+                    REQUIRED. The parameter value MUST be set to
+                    <tt>user_denied</tt> (case sensitive).
+                  
+</dd>
+</dl></blockquote><p>
+              
+</p>
+<p>
+                  For example, the authorization server directs the client to make the following HTTP
+                  request:
+                
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  GET /cb?error=user_denied HTTP/1.1
+  Host: client.example.com
+
+</pre></div>
+<p>
+                The authorization flow concludes unsuccessfully.
+              
+</p>
+<a name="anchor18"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.5.2.2"></a><h3>3.5.2.2.&nbsp;
+Client Requests Access Token</h3>
+
+<p>
+              The client obtains an access token from the authorization server by making an HTTP
+              <tt>POST</tt> request to the token endpoint. The client
+              constructs a request URI by adding the following parameters to the request:
+
+              </p>
+<blockquote class="text"><dl>
+<dt>type</dt>
+<dd>
+	                
+                  REQUIRED. The parameter value MUST be set to
+                  <tt>web_server</tt> (case sensitive).
+                
+</dd>
+<dt>client_id</dt>
+<dd>
+	                
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                
+</dd>
+<dt>client_secret</dt>
+<dd>
+	                
+                  The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. REQUIRED if the
+                  client identifier has a matching secret.
+                
+</dd>
+<dt>code</dt>
+<dd>
+	                
+                  REQUIRED. The verification code received from the authorization server.
+                
+</dd>
+<dt>redirect_uri</dt>
+<dd>
+	                
+                  REQUIRED. The redirection URI used in the initial request.
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+                For example, the client makes the following HTTPS request (line breaks are for display
+                purposes only):
+              
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  type=web_server&amp;client_id=s6BhdRkqt3&amp;
+  client_secret=gX1fBat3bV&amp;code=i1WsRn1uB1&amp;
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+
+</pre></div>
+<p>
+              The authorization server MUST verify that the verification code, client identity,
+              client secret, and redirection URI are all valid and match its stored association. If
+              the request is valid, the authorization server issues an access token and delivers it
+              to the client in the HTTP response body using the
+              <tt>application/x-www-form-urlencoded</tt> content type as defined
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+            
+</p>
+<p>
+              The response contains the following parameters:
+
+              </p>
+<blockquote class="text"><dl>
+<dt>access_token</dt>
+<dd>
+	                
+                  REQUIRED. The access token issued by the authorization server.
+                
+</dd>
+<dt>expires_in</dt>
+<dd>
+	                
+                  OPTIONAL. The duration in seconds of the access token lifetime.
+                
+</dd>
+<dt>refresh_token</dt>
+<dd>
+	                
+                  OPTIONAL. The refresh token used to obtain new access tokens using the same
+                  end user access grant as described in <a class='info' href='#token_refresh'>Section&nbsp;4<span> (</span><span class='info'>Refreshing an Access Token</span><span>)</span></a>.
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+                For example:
+              
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/x-www-form-urlencoded
+
+  access_token=SlAV32hkKG&amp;expires_in=3600&amp;refresh_token=8xLOxBtZp8
+
+</pre></div>
+<p>
+              If the request is invalid, the authorization server returns an error message in the
+              HTTP response body using the
+              <tt>application/x-www-form-urlencoded</tt> content type as defined
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+            
+</p>
+<p>
+               The response contains the following parameter:
+
+              </p>
+<blockquote class="text"><dl>
+<dt>error</dt>
+<dd>
+	                
+                  OPTIONAL. The parameter value MUST be set to either
+                  <tt>redirect_uri_mismatch</tt> or
+                  <tt>expired_verification_code</tt> (case sensitive).
+                
+</dd>
+</dl></blockquote><p>
+            
+</p>
+<p>
+                For example:
+              
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+  HTTP/1.1 400 Bad Request
+  Content-Type: application/x-www-form-urlencoded
+
+  error=expired_verification_code
+
+</pre></div>
 <a name="device_flow"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4"></a><h3>3.4.4.&nbsp;
+<a name="rfc.section.3.5.3"></a><h3>3.5.3.&nbsp;
 Device Flow</h3>
 
 <p>
@@ -1822,13 +1419,13 @@ Device Flow</h3>
             which do not have an easy data-entry method (e.g. game consoles or media server), but
             where the end user has separate access to a user-agent on another computer or device
             (e.g. home computer, a laptop, or a smartphone). The client is incapable of receiving
-            callback requests from the server (incapable of acting as an HTTP server).
+            incoming requests from the server (incapable of acting as an HTTP server).
           
 </p>
 <p>
             Instead of interacting with the end user's user-agent, the client instructs the end
             user to use another computer or device and connect to the authorization server to
-            approve the access request. Since the client cannot receive callbacks, it polls the
+            approve the access request. Since the client cannot receive incoming requests, it polls the
             authorization server repeatedly until the end user completes the approval process.
           
 </p>
@@ -1864,10 +1461,10 @@ Device Flow</h3>
   |  Browser |                                |                |
   +----------+                                +----------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;6&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;5&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-	          The device flow illustrated in <a class='info' href='#Figure 6'>Figure&nbsp;6</a> includes the following
+	          The device flow illustrated in <a class='info' href='#Figure 6'>Figure&nbsp;5</a> includes the following
 	          steps:
 
 	          </p>
@@ -1915,9 +1512,9 @@ Device Flow</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor22"></a><br /><hr />
+<a name="anchor19"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4.1"></a><h3>3.4.4.1.&nbsp;
+<a name="rfc.section.3.5.3.1"></a><h3>3.5.3.1.&nbsp;
 Client Requests Authorization</h3>
 
 <p>
@@ -1931,14 +1528,13 @@ Client Requests Authorization</h3>
 <dt>type</dt>
 <dd>
 	                
-                  REQUIRED. The parameter value MUST be set to 'device_access_request' (case
-                  sensitive).
+                  REQUIRED. The parameter value MUST be set to 'device' (case sensitive).
                 
 </dd>
 <dt>client_id</dt>
 <dd>
 	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
                 
 </dd>
 </dl></blockquote><p>
@@ -1949,7 +1545,7 @@ Client Requests Authorization</h3>
                 display purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /authorize?type=device_access_request&amp;client_id=s6BhdRkqt3
+  GET /authorize?type=device&amp;client_id=s6BhdRkqt3
         HTTP/1.1
   Host: server.example.com
 
@@ -1958,7 +1554,7 @@ Client Requests Authorization</h3>
               In response, the authorization server generates a device verification code and a user
               verification code and includes them in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> format as defined by
-              <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK). The
+              <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK). The
               response contains the following parameters:
 
               </p>
@@ -1991,7 +1587,7 @@ Client Requests Authorization</h3>
 <dd>
 	                
                   OPTIONAL. The minimum amount of time in seconds that the client SHOULD wait
-                  between polling requests to the authorization endpoint.
+                  between polling requests to the token endpoint.
                 
 </dd>
 </dl></blockquote><p>
@@ -2030,13 +1626,13 @@ Client Requests Authorization</h3>
               return to the device for further instructions.
             
 </p>
-<a name="anchor23"></a><br /><hr />
+<a name="anchor20"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4.2"></a><h3>3.4.4.2.&nbsp;
+<a name="rfc.section.3.5.3.2"></a><h3>3.5.3.2.&nbsp;
 Client Requests Access Token</h3>
 
 <p>
-              Since the client is unable to receive callbacks from the authorization server, it
+              Since the client is unable to receive incoming requests from the authorization server, it
               polls the server repeatedly until the end user grants or denies the request, or the
               client verification code expires.
             
@@ -2051,7 +1647,7 @@ Client Requests Access Token</h3>
 </p>
 <p>
               The client requests an access token by making an HTTP <tt>GET</tt>
-              request to the authorization endpoint. The client constructs a request URI by adding
+              request to the token endpoint. The client constructs a request URI by adding
               the following parameters to the request:
 
               </p>
@@ -2059,13 +1655,13 @@ Client Requests Access Token</h3>
 <dt>type</dt>
 <dd>
 	                
-                  The parameter value MUST be set to 'device_token_request' (case sensitive).
+                  The parameter value MUST be set to 'device' (case sensitive).
                 
 </dd>
 <dt>client_id</dt>
 <dd>
 	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
                 
 </dd>
 <dt>code</dt>
@@ -2082,21 +1678,21 @@ Client Requests Access Token</h3>
                 purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  GET /authorize?type=device_token_request&amp;client_id=s6BhdRkqt3
+  GET /token?type=device&amp;client_id=s6BhdRkqt3
        &amp;code=J2vC42OifV HTTP/1.1
   Host: server.example.com
 
 </pre></div>
-<a name="anchor24"></a><br /><hr />
+<a name="anchor21"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4.2.1"></a><h3>3.4.4.2.1.&nbsp;
+<a name="rfc.section.3.5.3.2.1"></a><h3>3.5.3.2.1.&nbsp;
 End User Grants Authorization</h3>
 
 <p>
                 If the end user authorized the request, the authorization server issues and access
                 token and delivers is to the client by including it in the HTTP response
                 body using the <tt>application/x-www-form-urlencoded</tt>
-                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200
+                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200
                 status code (OK). The response contains the following parameters:
 
                 </p>
@@ -2132,16 +1728,16 @@ End User Grants Authorization</h3>
   access_token=FJQbwq9OD8&amp;expires_in=3600
 
 </pre></div>
-<a name="anchor25"></a><br /><hr />
+<a name="anchor22"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4.2.2"></a><h3>3.4.4.2.2.&nbsp;
+<a name="rfc.section.3.5.3.2.2"></a><h3>3.5.3.2.2.&nbsp;
 End User Denies Authorization</h3>
 
 <p>
                 If the end user denied the request, the authorization server provides the client
                 with the error message in the HTTP response body using the
                 <tt>application/x-www-form-urlencoded</tt> content type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401 status code
+                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401 status code
                 (Unauthorized). The response contains the following parameters:
 
                 </p>
@@ -2166,9 +1762,9 @@ End User Denies Authorization</h3>
   error=authorization_declined
 
 </pre></div>
-<a name="anchor26"></a><br /><hr />
+<a name="anchor23"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.4.4.2.3"></a><h3>3.4.4.2.3.&nbsp;
+<a name="rfc.section.3.5.3.2.3"></a><h3>3.5.3.2.3.&nbsp;
 End User Authorization Pending or Expired</h3>
 
 <p>
@@ -2176,7 +1772,7 @@ End User Authorization Pending or Expired</h3>
                 from the end user, or the client is exceeding the allowed polling interval, the 
                 authorization server provides the client with the error message in the HTTP
                 response body using the <tt>application/x-www-form-urlencoded</tt> 
-                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401
+                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401
                 status code (Unauthorized). The response contains the following parameters:
 
                 </p>
@@ -2203,9 +1799,9 @@ End User Authorization Pending or Expired</h3>
   error=authorization_pending
 
 </pre></div>
-<a name="anchor27"></a><br /><hr />
+<a name="anchor24"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.5"></a><h3>3.5.&nbsp;
+<a name="rfc.section.3.6"></a><h3>3.6.&nbsp;
 End User Credentials Flows</h3>
 
 <p>
@@ -2231,7 +1827,7 @@ End User Credentials Flows</h3>
 </p>
 <a name="username_password_flow"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.5.1"></a><h3>3.5.1.&nbsp;
+<a name="rfc.section.3.6.1"></a><h3>3.6.1.&nbsp;
 Username and Password Flow</h3>
 
 <p>
@@ -2264,10 +1860,10 @@ Username and Password Flow</h3>
   |        |     (w/ Optional Refresh Token)  |               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;7&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;6&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-	          The username and password flow illustrated in <a class='info' href='#Figure 7'>Figure&nbsp;7</a> includes the
+	          The username and password flow illustrated in <a class='info' href='#Figure 7'>Figure&nbsp;6</a> includes the
 	          following steps:
 
 	          </p>
@@ -2292,14 +1888,14 @@ Username and Password Flow</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor28"></a><br /><hr />
+<a name="anchor25"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.5.1.1"></a><h3>3.5.1.1.&nbsp;
+<a name="rfc.section.3.6.1.1"></a><h3>3.6.1.1.&nbsp;
 Client Requests Access Token</h3>
 
 <p>
               The client requests an access token by making an HTTP <tt>POST</tt>
-              request to the authorization endpoint. The client constructs a request URI by adding
+              request to the token endpoint. The client constructs a request URI by adding
               the following parameters to the request:
 
               </p>
@@ -2307,19 +1903,19 @@ Client Requests Access Token</h3>
 <dt>type</dt>
 <dd>
 	                
-                  The parameter value MUST be set to 'username_password_request' (case sensitive).
+                  The parameter value MUST be set to 'username' (case sensitive).
                 
 </dd>
 <dt>client_id</dt>
 <dd>
 	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
                 
 </dd>
 <dt>client_secret</dt>
 <dd>
                   
-                  REQUIRED. The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. OPTIONAL
+                  REQUIRED. The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. OPTIONAL
                   if no client secret was issued.
                 
 </dd>
@@ -2343,10 +1939,10 @@ Client Requests Access Token</h3>
                 display purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  POST /authorize HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
 
-  type=username_password_request&amp;client_id=s6BhdRkqt3&amp;client_secret=
+  type=username&amp;client_id=s6BhdRkqt3&amp;client_secret=
   47HDu8s&amp;username=johndoe&amp;password=A3ddj3w
 
 </pre></div>
@@ -2354,7 +1950,7 @@ Client Requests Access Token</h3>
               The authorization server MUST validate the client credentials and end user credentials
               and if valid issue an access token and deliver to the client in the HTTP response body
               using the <tt>application/x-www-form-urlencoded</tt> content type as
-              defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -2397,7 +1993,7 @@ Client Requests Access Token</h3>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2426,9 +2022,9 @@ Client Requests Access Token</h3>
   error=incorrect_credentials
 
 </pre></div>
-<a name="anchor29"></a><br /><hr />
+<a name="anchor26"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.6"></a><h3>3.6.&nbsp;
+<a name="rfc.section.3.7"></a><h3>3.7.&nbsp;
 Autonomous Client Flows</h3>
 
 <p>
@@ -2440,7 +2036,7 @@ Autonomous Client Flows</h3>
 </p>
 <a name="client_credentials_flow"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.6.1"></a><h3>3.6.1.&nbsp;
+<a name="rfc.section.3.7.1"></a><h3>3.7.1.&nbsp;
 Client Credentials Flow</h3>
 
 <p>
@@ -2459,10 +2055,10 @@ Client Credentials Flow</h3>
   |        |                                  |               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;8&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;7&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-	          The client credential flow illustrated in <a class='info' href='#Figure 8'>Figure&nbsp;8</a> includes the
+	          The client credential flow illustrated in <a class='info' href='#Figure 8'>Figure&nbsp;7</a> includes the
 	          following steps:
 
 	          </p>
@@ -2482,14 +2078,14 @@ Client Credentials Flow</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor30"></a><br /><hr />
+<a name="anchor27"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.6.1.1"></a><h3>3.6.1.1.&nbsp;
+<a name="rfc.section.3.7.1.1"></a><h3>3.7.1.1.&nbsp;
 Client Requests Access Token</h3>
 
 <p>
               The client requests an access token by making an HTTP <tt>POST</tt>
-              request to the authorization endpoint. The client constructs a request URI by adding
+              request to the token endpoint. The client constructs a request URI by adding
               the following parameters to the request:
 
               </p>
@@ -2497,19 +2093,19 @@ Client Requests Access Token</h3>
 <dt>type</dt>
 <dd>
 	                
-                  The parameter value MUST be set to 'client_cred_request' (case sensitive).
+                  The parameter value MUST be set to 'client_cred' (case sensitive).
                 
 </dd>
 <dt>client_id</dt>
 <dd>
 	                
-                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+                  REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
                 
 </dd>
 <dt>client_secret</dt>
 <dd>
                   
-                  REQUIRED. The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. OPTIONAL
+                  REQUIRED. The client secret as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. OPTIONAL
                   if no client secret was issued.
                 
 </dd>
@@ -2521,17 +2117,17 @@ Client Requests Access Token</h3>
                 display purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  POST /authorize HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
 
-  type=client_cred_request&amp;client_id=s6BhdRkqt3&amp;client_secret=47HDu8s
+  type=client_cred&amp;client_id=s6BhdRkqt3&amp;client_secret=47HDu8s
 
 </pre></div>
 <p>
               The authorization server MUST validate the client credentials and if valid issue an
               access token and deliver to the client in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -2551,6 +2147,12 @@ Client Requests Access Token</h3>
                   OPTIONAL. The duration in seconds of the access token lifetime.
                 
 </dd>
+<dt>refresh_token</dt>
+<dd>
+	                
+                  OPTIONAL. The refresh token.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -2568,7 +2170,7 @@ Client Requests Access Token</h3>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2599,7 +2201,7 @@ Client Requests Access Token</h3>
 </pre></div>
 <a name="assertion_flow"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.6.2"></a><h3>3.6.2.&nbsp;
+<a name="rfc.section.3.7.2"></a><h3>3.7.2.&nbsp;
 Assertion Flow</h3>
 
 <p>
@@ -2625,10 +2227,10 @@ Assertion Flow</h3>
   |        |                                  |               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;9&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;8&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-	          The client credential flow illustrated in <a class='info' href='#Figure 9'>Figure&nbsp;9</a> includes the
+	          The client credential flow illustrated in <a class='info' href='#Figure 9'>Figure&nbsp;8</a> includes the
 	          following steps:
 
 	          </p>
@@ -2647,14 +2249,14 @@ Assertion Flow</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor31"></a><br /><hr />
+<a name="anchor28"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.6.2.1"></a><h3>3.6.2.1.&nbsp;
+<a name="rfc.section.3.7.2.1"></a><h3>3.7.2.1.&nbsp;
 Client Requests Access Token</h3>
 
 <p>
               The client requests an access token by making an HTTP <tt>POST</tt>
-              request to the authorization endpoint. The client constructs a request URI by adding
+              request to the token endpoint. The client constructs a request URI by adding
               the following parameters to the request:
 
               </p>
@@ -2662,7 +2264,7 @@ Client Requests Access Token</h3>
 <dt>type</dt>
 <dd>
 	                
-                  The parameter value MUST be set to 'assertion_request' (case sensitive).
+                  The parameter value MUST be set to 'assertion' (case sensitive).
                 
 </dd>
 <dt>format</dt>
@@ -2685,17 +2287,17 @@ Client Requests Access Token</h3>
                 display purposes only):
               
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-  POST /authorize HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
 
-  format=_______&amp;assertion=_______
+  type=assertion&amp;format=_______&amp;assertion=_______
 
 </pre></div>
 <p>
               The authorization server MUST validate the assertion and if valid issue an access
               token and deliver to the client in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -2715,6 +2317,12 @@ Client Requests Access Token</h3>
                   OPTIONAL. The duration in seconds of the access token lifetime.
                 
 </dd>
+<dt>refresh_token</dt>
+<dd>
+	                
+                  OPTIONAL. The refresh token.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -2732,7 +2340,7 @@ Client Requests Access Token</h3>
               If the assertion is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2790,26 +2398,26 @@ Refreshing an Access Token</h3>
   |        |          &amp; Optional Secret       |               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;10&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;9&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
         To refresh a token, the client constructs an HTTP <tt>POST</tt> request
-        to the authorization endpoint and includes the following parameters in the HTTP request
+        to the token endpoint and includes the following parameters in the HTTP request
         body using the <tt>application/x-www-form-urlencoded</tt> content type
-        as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>:
+        as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>:
 
         </p>
 <blockquote class="text"><dl>
 <dt>type</dt>
 <dd>
 	          
-            REQUIRED. The parameter value MUST be set to 'refresh_token' (case sensitive).
+            REQUIRED. The parameter value MUST be set to 'refresh' (case sensitive).
           
 </dd>
 <dt>client_id</dt>
 <dd>
 	          
-            REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.3<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+            REQUIRED. The client identifier as described in <a class='info' href='#client_id'>Section&nbsp;3.4<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
           
 </dd>
 <dt>client_secret</dt>
@@ -2859,7 +2467,7 @@ Refreshing an Access Token</h3>
         the authorization server issues a new access token and includes the following parameters in
         the HTTP response body using the
         <tt>application/x-www-form-urlencoded</tt> content type as defined by
-        <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK):
+        <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK):
 
         </p>
 <blockquote class="text"><dl>
@@ -2904,7 +2512,7 @@ Refreshing an Access Token</h3>
         If the request fails verification, the authorization server returns an error message in the
         HTTP response body using the
         <tt>application/x-www-form-urlencoded</tt> content type as defined
-        by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+        by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
       
 </p>
 <p>
@@ -3045,7 +2653,7 @@ The Authorization Request Header</h3>
  signature        = "signature" "=" &lt;"&gt; token &lt;"&gt;
 
 </pre></div>
-<a name="anchor32"></a><br /><hr />
+<a name="anchor29"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.2"></a><h3>5.2.&nbsp;
 Bearer Token Requests</h3>
@@ -3147,7 +2755,7 @@ Form-Encoded Body Parameter</h3>
 <li>
                 The entity-body follows the encoding requirements of the
                 <tt>application/x-www-form-urlencoded</tt> content-type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Jacobs, I., Hors, A., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>.
+                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>.
               
 </li>
 <li>
@@ -3431,17 +3039,17 @@ Signature Calculation</h3>
               base64-encoded per <a class='info' href='#RFC2045'>[RFC2045]<span> (</span><span class='info'>Freed, N. and N. Borenstein, &ldquo;Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies,&rdquo; November&nbsp;1996.</span><span>)</span></a> section 6.8.
             
 </p>
-<a name="anchor33"></a><br /><hr />
+<a name="anchor30"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 Identifying a Protected Resource</h3>
 
 <p>
-        Clients access protected resources after locating the appropriate authorization endpoint
+        Clients access protected resources after locating the appropriate authorization and token endpoints
         and obtaining an access token. In many cases, interacting with a protected resource requires
         prior knowledge of the protected resource properties and methods, as well as its
         authentication requirements (i.e. establishing client identity, locating the authorization
-        endpoint).
+        and token endpoints).
       
 </p>
 <p>
@@ -3478,17 +3086,19 @@ The WWW-Authenticate Response Header</h3>
 
   token-challenge = realm
                     [ CS authz-uri ]
+                    [ CS token-uri ]
                     [ CS algorithms ]
                     [ CS error ]
 
-  authz-uri       = "authorization-uri" "=" URI-Reference
+  authz-uri       = "auth-uri" "=" URI-Reference
+  token-uri       = "token-uri" "=" URI-Reference
   algorithms      = "algorithms" "=" &lt;"&gt; 1#algorithm-name  &lt;"&gt;
   error           = "error" "=" &lt;"&gt; token &lt;"&gt;
 
   CS              = OWS "," OWS
 
 </pre></div>
-<a name="anchor34"></a><br /><hr />
+<a name="anchor31"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.1"></a><h3>6.1.1.&nbsp;
 The 'realm' Attribute</h3>
@@ -3506,7 +3116,7 @@ The 'authorization-uri' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor35"></a><br /><hr />
+<a name="anchor32"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.3"></a><h3>6.1.3.&nbsp;
 The 'algorithms' Attribute</h3>
@@ -3514,7 +3124,7 @@ The 'algorithms' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor36"></a><br /><hr />
+<a name="anchor33"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.4"></a><h3>6.1.4.&nbsp;
 The 'error' Attribute</h3>
@@ -3522,7 +3132,7 @@ The 'error' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor37"></a><br /><hr />
+<a name="anchor34"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7"></a><h3>7.&nbsp;
 Security Considerations</h3>
@@ -3531,7 +3141,7 @@ Security Considerations</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor38"></a><br /><hr />
+<a name="anchor35"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 IANA Considerations</h3>
@@ -3540,7 +3150,7 @@ IANA Considerations</h3>
         [[ Not Yet ]]
       
 </p>
-<a name="anchor39"></a><br /><hr />
+<a name="anchor36"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Acknowledgements</h3>
@@ -3549,7 +3159,7 @@ Acknowledgements</h3>
         [[ Add OAuth 1.0a authors + WG contributors ]]
       
 </p>
-<a name="anchor40"></a><br /><hr />
+<a name="anchor37"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Differences from OAuth 1.0a</h3>
@@ -3558,7 +3168,7 @@ Differences from OAuth 1.0a</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor41"></a><br /><hr />
+<a name="anchor38"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
 Document History</h3>
@@ -3611,7 +3221,7 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC3986">[RFC3986]</a></td>
 <td class="author-text"><a href="mailto:timbl@w3.org">Berners-Lee, T.</a>, <a href="mailto:fielding@gbiv.com">Fielding, R.</a>, and <a href="mailto:LMM@acm.org">L. Masinter</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>,&rdquo; STD&nbsp;66, RFC&nbsp;3986, January&nbsp;2005 (<a href="http://www.rfc-editor.org/rfc/rfc3986.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc3986.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc3986.xml">XML</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html40-19980424">[W3C.REC-html40-19980424]</a></td>
-<td class="author-text">Jacobs, I., Hors, A., and D. Raggett, &ldquo;<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML 4.0 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html40-19980424, April&nbsp;1998 (<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML</a>).</td></tr>
+<td class="author-text">Hors, A., Raggett, D., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML 4.0 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html40-19980424, April&nbsp;1998 (<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />
