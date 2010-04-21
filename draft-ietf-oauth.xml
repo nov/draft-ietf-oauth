@@ -380,6 +380,11 @@
           use of a transport-layer mechanism such as TLS or SSL (or a secure channel with
           equivalent protections) when sending requests to the token endpoints.
         </t>
+        <t>
+          The authorization server MUST include the HTTP <spanx style='verb'>Cache-Control</spanx>
+          response header field with a value of <spanx style='verb'>no-store</spanx> in any
+          response containing tokens, secrets, or other sensitive information.
+        </t>
       </section>
 
       <section title='Flow Parameters'>

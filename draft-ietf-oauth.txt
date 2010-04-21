@@ -4,9 +4,9 @@
 Network Working Group                               E. Hammer-Lahav, Ed.
 Internet-Draft                                                    Yahoo!
 Intended status: Standards Track                             D. Recordon
-Expires: October 19, 2010                                       Facebook
+Expires: October 23, 2010                                       Facebook
                                                                 D. Hardt
-                                                          April 17, 2010
+                                                          April 21, 2010
 
 
                          The OAuth 2.0 Protocol
@@ -37,7 +37,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 19, 2010.
+   This Internet-Draft will expire on October 23, 2010.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 1]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 1]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -108,7 +108,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 2]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 2]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -164,7 +164,7 @@ Table of Contents
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 3]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 3]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -220,7 +220,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 4]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 4]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -276,7 +276,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 5]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 5]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -332,7 +332,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 6]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 6]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -388,7 +388,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 7]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 7]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -444,7 +444,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 8]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 8]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -500,7 +500,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010                [Page 9]
+Hammer-Lahav, et al.    Expires October 23, 2010                [Page 9]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -513,6 +513,10 @@ Internet-Draft                  OAuth 2.0                     April 2010
    authorization server MUST require the use of a transport-layer
    mechanism such as TLS or SSL (or a secure channel with equivalent
    protections) when sending requests to the token endpoints.
+
+   The authorization server MUST include the HTTP "Cache-Control"
+   response header field with a value of "no-store" in any response
+   containing tokens, secrets, or other sensitive information.
 
 3.3.  Flow Parameters
 
@@ -549,17 +553,16 @@ Internet-Draft                  OAuth 2.0                     April 2010
    User delegation flows are used to grant client access to protected
    resources by the end user without sharing the end user credentials
    (typically a username and password) with the client.  Instead, the
-   end user authenticates directly with the authorization server, and
-   grants client access to its protected resources.
 
 
 
-
-
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 10]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 10]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
+
+   end user authenticates directly with the authorization server, and
+   grants client access to its protected resources.
 
 3.5.1.  User-Agent Flow
 
@@ -609,10 +612,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-
-
-
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 11]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 11]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -668,7 +668,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 12]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 12]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -724,7 +724,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 13]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 13]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -780,7 +780,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 14]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 14]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -836,7 +836,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 15]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 15]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -892,7 +892,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 16]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 16]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -948,7 +948,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 17]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 17]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1004,7 +1004,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 18]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 18]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1060,7 +1060,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 19]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 19]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1116,7 +1116,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 20]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 20]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1172,7 +1172,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 21]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 21]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1228,7 +1228,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 22]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 22]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1284,7 +1284,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 23]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 23]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1340,7 +1340,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 24]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 24]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1396,7 +1396,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 25]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 25]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1452,7 +1452,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 26]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 26]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1508,7 +1508,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 27]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 27]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1564,7 +1564,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 28]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 28]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1620,7 +1620,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 29]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 29]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1676,7 +1676,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 30]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 30]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1732,7 +1732,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 31]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 31]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1788,7 +1788,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 32]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 32]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1844,7 +1844,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 33]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 33]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1900,7 +1900,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 34]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 34]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -1956,7 +1956,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 35]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 35]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2012,7 +2012,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 36]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 36]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2068,7 +2068,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 37]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 37]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2124,7 +2124,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 38]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 38]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2180,7 +2180,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 39]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 39]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2236,7 +2236,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 40]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 40]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2292,7 +2292,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 41]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 41]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2348,7 +2348,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 42]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 42]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2404,7 +2404,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 43]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 43]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2460,7 +2460,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 44]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 44]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2516,7 +2516,7 @@ Appendix B.  Document History
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 45]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 45]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2546,7 +2546,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
               RFC 3986, January 2005.
 
    [W3C.REC-html40-19980424]
-              Hors, A., Raggett, D., and I. Jacobs, "HTML 4.0
+              Hors, A., Jacobs, I., and D. Raggett, "HTML 4.0
               Specification", World Wide Web Consortium
               Recommendation REC-html40-19980424, April 1998,
               <http://www.w3.org/TR/1998/REC-html40-19980424>.
@@ -2572,7 +2572,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 46]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 46]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
@@ -2628,6 +2628,6 @@ Authors' Addresses
 
 
 
-Hammer-Lahav, et al.    Expires October 19, 2010               [Page 47]
+Hammer-Lahav, et al.    Expires October 23, 2010               [Page 47]
 
 

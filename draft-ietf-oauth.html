@@ -144,9 +144,9 @@
 <tr><td class="header">Network Working Group</td><td class="header">E. Hammer-Lahav, Ed.</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">D. Recordon</td></tr>
-<tr><td class="header">Expires: October 19, 2010</td><td class="header">Facebook</td></tr>
+<tr><td class="header">Expires: October 23, 2010</td><td class="header">Facebook</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">D. Hardt</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">April 17, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">April 21, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-00</h1>
 
@@ -176,7 +176,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on October 19, 2010.</p>
+This Internet-Draft will expire on October 23, 2010.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -698,6 +698,12 @@ Token Endpoint</h3>
           equivalent protections) when sending requests to the token endpoints.
         
 </p>
+<p>
+          The authorization server MUST include the HTTP <tt>Cache-Control</tt>
+          response header field with a value of <tt>no-store</tt> in any
+          response containing tokens, secrets, or other sensitive information.
+        
+</p>
 <a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
@@ -921,7 +927,7 @@ End User Grants Authorization</h3>
                 If the end user authorizes the access request, the authorization server issues an
                 access token and delivers it to the client by adding the following parameters, using
                 the <tt>application/x-www-form-urlencoded</tt> format as defined
-                by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
+                by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
 
                 </p>
 <blockquote class="text"><dl>
@@ -964,7 +970,7 @@ End User Denies Authorization</h3>
                 If the end user denied the access request, the authorization server responds to the
                 client by adding the following parameters, using the
                 <tt>application/x-www-form-urlencoded</tt> format as defined by
-                <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
+                <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>, to the redirection URI fragment:
 
                 </p>
 <blockquote class="text"><dl>
@@ -1336,7 +1342,7 @@ Client Requests Access Token</h3>
               the request is valid, the authorization server issues an access token and delivers it
               to the client in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -1380,7 +1386,7 @@ Client Requests Access Token</h3>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -1554,7 +1560,7 @@ Client Requests Authorization</h3>
               In response, the authorization server generates a device verification code and a user
               verification code and includes them in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> format as defined by
-              <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK). The
+              <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK). The
               response contains the following parameters:
 
               </p>
@@ -1692,7 +1698,7 @@ End User Grants Authorization</h3>
                 If the end user authorized the request, the authorization server issues and access
                 token and delivers is to the client by including it in the HTTP response
                 body using the <tt>application/x-www-form-urlencoded</tt>
-                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200
+                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200
                 status code (OK). The response contains the following parameters:
 
                 </p>
@@ -1737,7 +1743,7 @@ End User Denies Authorization</h3>
                 If the end user denied the request, the authorization server provides the client
                 with the error message in the HTTP response body using the
                 <tt>application/x-www-form-urlencoded</tt> content type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401 status code
+                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401 status code
                 (Unauthorized). The response contains the following parameters:
 
                 </p>
@@ -1772,7 +1778,7 @@ End User Authorization Pending or Expired</h3>
                 from the end user, or the client is exceeding the allowed polling interval, the 
                 authorization server provides the client with the error message in the HTTP
                 response body using the <tt>application/x-www-form-urlencoded</tt> 
-                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401
+                content type as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 401
                 status code (Unauthorized). The response contains the following parameters:
 
                 </p>
@@ -1950,7 +1956,7 @@ Client Requests Access Token</h3>
               The authorization server MUST validate the client credentials and end user credentials
               and if valid issue an access token and deliver to the client in the HTTP response body
               using the <tt>application/x-www-form-urlencoded</tt> content type as
-              defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -1993,7 +1999,7 @@ Client Requests Access Token</h3>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2127,7 +2133,7 @@ Client Requests Access Token</h3>
               The authorization server MUST validate the client credentials and if valid issue an
               access token and deliver to the client in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -2170,7 +2176,7 @@ Client Requests Access Token</h3>
               If the request is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2297,7 +2303,7 @@ Client Requests Access Token</h3>
               The authorization server MUST validate the assertion and if valid issue an access
               token and deliver to the client in the HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK).
             
 </p>
 <p>
@@ -2340,7 +2346,7 @@ Client Requests Access Token</h3>
               If the assertion is invalid, the authorization server returns an error message in the
               HTTP response body using the
               <tt>application/x-www-form-urlencoded</tt> content type as defined
-              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+              by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
             
 </p>
 <p>
@@ -2404,7 +2410,7 @@ Refreshing an Access Token</h3>
         To refresh a token, the client constructs an HTTP <tt>POST</tt> request
         to the token endpoint and includes the following parameters in the HTTP request
         body using the <tt>application/x-www-form-urlencoded</tt> content type
-        as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>:
+        as defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>:
 
         </p>
 <blockquote class="text"><dl>
@@ -2467,7 +2473,7 @@ Refreshing an Access Token</h3>
         the authorization server issues a new access token and includes the following parameters in
         the HTTP response body using the
         <tt>application/x-www-form-urlencoded</tt> content type as defined by
-        <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK):
+        <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 200 status code (OK):
 
         </p>
 <blockquote class="text"><dl>
@@ -2512,7 +2518,7 @@ Refreshing an Access Token</h3>
         If the request fails verification, the authorization server returns an error message in the
         HTTP response body using the
         <tt>application/x-www-form-urlencoded</tt> content type as defined
-        by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
+        by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a> with a 400 status code (Bad Request).
       
 </p>
 <p>
@@ -2755,7 +2761,7 @@ Form-Encoded Body Parameter</h3>
 <li>
                 The entity-body follows the encoding requirements of the
                 <tt>application/x-www-form-urlencoded</tt> content-type as
-                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>.
+                defined by <a class='info' href='#W3C.REC-html40-19980424'>[W3C.REC&#8209;html40&#8209;19980424]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.0 Specification,&rdquo; April&nbsp;1998.</span><span>)</span></a>.
               
 </li>
 <li>
@@ -3221,7 +3227,7 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC3986">[RFC3986]</a></td>
 <td class="author-text"><a href="mailto:timbl@w3.org">Berners-Lee, T.</a>, <a href="mailto:fielding@gbiv.com">Fielding, R.</a>, and <a href="mailto:LMM@acm.org">L. Masinter</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>,&rdquo; STD&nbsp;66, RFC&nbsp;3986, January&nbsp;2005 (<a href="http://www.rfc-editor.org/rfc/rfc3986.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc3986.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc3986.xml">XML</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html40-19980424">[W3C.REC-html40-19980424]</a></td>
-<td class="author-text">Hors, A., Raggett, D., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML 4.0 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html40-19980424, April&nbsp;1998 (<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML</a>).</td></tr>
+<td class="author-text">Hors, A., Jacobs, I., and D. Raggett, &ldquo;<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML 4.0 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html40-19980424, April&nbsp;1998 (<a href="http://www.w3.org/TR/1998/REC-html40-19980424">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />
