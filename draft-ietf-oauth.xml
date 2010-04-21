@@ -527,6 +527,20 @@
                   REQUIRED unless a redirection URI has been established between the client and
                   authorization server via other means.
                 </t>
+                <t hangText='immediate'>
+                  <vspace />
+                  OPTIONAL. The parameter value must be set to <spanx style='verb'>true</spanx> or
+                  <spanx style='verb'>false</spanx> (case sensitive). If set to
+                  <spanx style='verb'>true</spanx>, the authorization server MUST NOT prompt the
+                  end user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end user's identity via other means (e.g. browser
+                  cookies) and checks if the end user has previously approved an identical access
+                  request by the same client and if that access grant is still active. If the
+                  authorization server does not support an immediate check or if it is unable to
+                  establish the end user's identity or approval status, it MUST deny the request
+                  without prompting the end user. Defaults to <spanx style='verb'>false</spanx> if
+                  omitted.
+                </t>
               </list>
             </t>
             <t>
@@ -1846,13 +1860,9 @@
           </t>
           <t hangText='secret_type'>
             <vspace />
-            OPTIONAL. This specification defines two values: <spanx style='verb'>none</spanx> for 
-            an access token without a secret (bearer token) and
-            <spanx style='verb'>hmac-sha256</spanx> for a token with a shared symmetric secret
-            suitable for signing requests using the HMAC-SHA256 cryptographic algorithm (as
-            described by <xref target='hmac-sha256' />). The value defaults to
-            <spanx style='verb'>none</spanx> if omitted. Using token secrets is described in
-            <xref target='crypto_tokens' />.
+            OPTIONAL. The access token secret type as described by <xref target='crypto_token' />.
+            If omitted, the authorization server will issue a bearer token (an access token without
+            a matching secret) as described by <xref target='bearer_token' />.
           </t>
         </list>
       </t>
@@ -2049,7 +2059,7 @@
         </figure>
       </section>
 
-      <section title='Bearer Token Requests'>
+      <section title='Bearer Token Requests' anchor='bearer_token'>
         <t>
           Clients make bearer token requests by including the access token using the HTTP
           <spanx style='verb'>Authorization</spanx> request header with the
@@ -2183,7 +2193,7 @@
 
       </section>
 
-      <section title='Cryptographic Tokens Requests' anchor='crypto_tokens'>
+      <section title='Cryptographic Tokens Requests' anchor='crypto_token'>
         <t>
           Clients make authenticated protected resource requests using an access token with a
           matching secret by calculating a set of values and including them in the request using
@@ -2193,7 +2203,9 @@
         </t>
         <t>
           This specification defines the <spanx style='verb'>hmac-sha256</spanx> algorithm, and
-          establishes a registry for providing additional algorithms.
+          establishes a registry for providing additional algorithms. Clients obtain an access
+          token with a matchin <spanx style='verb'>hmac-sha256</spanx> secret by using the
+          <spanx style='verb'>token_type</spanx> parameter when requesting an access token.
         </t>
             
         <section title="The 'hmac-sha256' Algorithm" anchor='hmac-sha256'>

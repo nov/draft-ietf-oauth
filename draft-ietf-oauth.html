@@ -243,37 +243,37 @@ Refreshing an Access Token<br />
 Accessing a Protected Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_header">5.1.</a>&nbsp;
 The Authorization Request Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor29">5.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bearer_token">5.2.</a>&nbsp;
 Bearer Token Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_param">5.2.1.</a>&nbsp;
 URI Query Parameter<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body_param">5.2.2.</a>&nbsp;
 Form-Encoded Body Parameter<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#crypto_tokens">5.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#crypto_token">5.3.</a>&nbsp;
 Cryptographic Tokens Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#hmac-sha256">5.3.1.</a>&nbsp;
 The 'hmac-sha256' Algorithm<br />
-<a href="#anchor30">6.</a>&nbsp;
+<a href="#anchor29">6.</a>&nbsp;
 Identifying a Protected Resource<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn_header">6.1.</a>&nbsp;
 The WWW-Authenticate Response Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor31">6.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor30">6.1.1.</a>&nbsp;
 The 'realm' Attribute<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_uri_attribute">6.1.2.</a>&nbsp;
 The 'authorization-uri' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">6.1.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor31">6.1.3.</a>&nbsp;
 The 'algorithms' Attribute<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor33">6.1.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor32">6.1.4.</a>&nbsp;
 The 'error' Attribute<br />
-<a href="#anchor34">7.</a>&nbsp;
+<a href="#anchor33">7.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor35">8.</a>&nbsp;
+<a href="#anchor34">8.</a>&nbsp;
 IANA Considerations<br />
-<a href="#anchor36">9.</a>&nbsp;
+<a href="#anchor35">9.</a>&nbsp;
 Acknowledgements<br />
-<a href="#anchor37">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor36">Appendix&nbsp;A.</a>&nbsp;
 Differences from OAuth 1.0a<br />
-<a href="#anchor38">Appendix&nbsp;B.</a>&nbsp;
+<a href="#anchor37">Appendix&nbsp;B.</a>&nbsp;
 Document History<br />
 <a href="#rfc.references1">10.</a>&nbsp;
 References<br />
@@ -885,6 +885,22 @@ Client Requests Authorization</h3>
                   MAY includes a query component as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
                   REQUIRED unless a redirection URI has been established between the client and
                   authorization server via other means.
+                
+</dd>
+<dt>immediate</dt>
+<dd>
+                  
+                  OPTIONAL. The parameter value must be set to <tt>true</tt> or
+                  <tt>false</tt> (case sensitive). If set to
+                  <tt>true</tt>, the authorization server MUST NOT prompt the
+                  end user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end user's identity via other means (e.g. browser
+                  cookies) and checks if the end user has previously approved an identical access
+                  request by the same client and if that access grant is still active. If the
+                  authorization server does not support an immediate check or if it is unable to
+                  establish the end user's identity or approval status, it MUST deny the request
+                  without prompting the end user. Defaults to <tt>false</tt> if
+                  omitted.
                 
 </dd>
 </dl></blockquote><p>
@@ -2441,13 +2457,9 @@ Refreshing an Access Token</h3>
 <dt>secret_type</dt>
 <dd>
             
-            OPTIONAL. This specification defines two values: <tt>none</tt> for 
-            an access token without a secret (bearer token) and
-            <tt>hmac-sha256</tt> for a token with a shared symmetric secret
-            suitable for signing requests using the HMAC-SHA256 cryptographic algorithm (as
-            described by <a class='info' href='#hmac-sha256'>Section&nbsp;5.3.1<span> (</span><span class='info'>The 'hmac-sha256' Algorithm</span><span>)</span></a>). The value defaults to
-            <tt>none</tt> if omitted. Using token secrets is described in
-            <a class='info' href='#crypto_tokens'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>.
+            OPTIONAL. The access token secret type as described by <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>.
+            If omitted, the authorization server will issue a bearer token (an access token without
+            a matching secret) as described by <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
           
 </dd>
 </dl></blockquote><p>
@@ -2659,7 +2671,7 @@ The Authorization Request Header</h3>
  signature        = "signature" "=" &lt;"&gt; token &lt;"&gt;
 
 </pre></div>
-<a name="anchor29"></a><br /><hr />
+<a name="bearer_token"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.2"></a><h3>5.2.&nbsp;
 Bearer Token Requests</h3>
@@ -2804,7 +2816,7 @@ Form-Encoded Body Parameter</h3>
             <a class='info' href='#authn_header'>Section&nbsp;6.1<span> (</span><span class='info'>The WWW-Authenticate Response Header</span><span>)</span></a>.
           
 </p>
-<a name="crypto_tokens"></a><br /><hr />
+<a name="crypto_token"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.3"></a><h3>5.3.&nbsp;
 Cryptographic Tokens Requests</h3>
@@ -2819,7 +2831,9 @@ Cryptographic Tokens Requests</h3>
 </p>
 <p>
           This specification defines the <tt>hmac-sha256</tt> algorithm, and
-          establishes a registry for providing additional algorithms.
+          establishes a registry for providing additional algorithms. Clients obtain an access
+          token with a matchin <tt>hmac-sha256</tt> secret by using the
+          <tt>token_type</tt> parameter when requesting an access token.
         
 </p>
 <a name="hmac-sha256"></a><br /><hr />
@@ -3045,7 +3059,7 @@ Signature Calculation</h3>
               base64-encoded per <a class='info' href='#RFC2045'>[RFC2045]<span> (</span><span class='info'>Freed, N. and N. Borenstein, &ldquo;Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies,&rdquo; November&nbsp;1996.</span><span>)</span></a> section 6.8.
             
 </p>
-<a name="anchor30"></a><br /><hr />
+<a name="anchor29"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
 Identifying a Protected Resource</h3>
@@ -3104,7 +3118,7 @@ The WWW-Authenticate Response Header</h3>
   CS              = OWS "," OWS
 
 </pre></div>
-<a name="anchor31"></a><br /><hr />
+<a name="anchor30"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.1"></a><h3>6.1.1.&nbsp;
 The 'realm' Attribute</h3>
@@ -3122,7 +3136,7 @@ The 'authorization-uri' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor32"></a><br /><hr />
+<a name="anchor31"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.3"></a><h3>6.1.3.&nbsp;
 The 'algorithms' Attribute</h3>
@@ -3130,7 +3144,7 @@ The 'algorithms' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor33"></a><br /><hr />
+<a name="anchor32"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1.4"></a><h3>6.1.4.&nbsp;
 The 'error' Attribute</h3>
@@ -3138,7 +3152,7 @@ The 'error' Attribute</h3>
 <p>
           
 </p>
-<a name="anchor34"></a><br /><hr />
+<a name="anchor33"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7"></a><h3>7.&nbsp;
 Security Considerations</h3>
@@ -3147,7 +3161,7 @@ Security Considerations</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor35"></a><br /><hr />
+<a name="anchor34"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 IANA Considerations</h3>
@@ -3156,7 +3170,7 @@ IANA Considerations</h3>
         [[ Not Yet ]]
       
 </p>
-<a name="anchor36"></a><br /><hr />
+<a name="anchor35"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Acknowledgements</h3>
@@ -3165,7 +3179,7 @@ Acknowledgements</h3>
         [[ Add OAuth 1.0a authors + WG contributors ]]
       
 </p>
-<a name="anchor37"></a><br /><hr />
+<a name="anchor36"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Differences from OAuth 1.0a</h3>
@@ -3174,7 +3188,7 @@ Differences from OAuth 1.0a</h3>
         [[ Todo ]]
       
 </p>
-<a name="anchor38"></a><br /><hr />
+<a name="anchor37"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
 Document History</h3>
