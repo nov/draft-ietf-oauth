@@ -943,8 +943,8 @@
                 </t>
                 <t hangText='client_secret'>
 	                <vspace />
-                  The client secret as described in <xref target='client_id' />. REQUIRED if the
-                  client identifier has a matching secret.
+                  REQUIRED if the client identifier has a matching secret. The client secret as
+                  described in <xref target='client_id' />.
                 </t>
                 <t hangText='code'>
 	                <vspace />
@@ -1249,7 +1249,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'device' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to 'device' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1328,8 +1328,8 @@
                 If the end user denied the request, the authorization server provides the client
                 with the error message in the HTTP response body using the
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
-                defined by <xref target='W3C.REC-html40-19980424' /> with a 401 status code
-                (Unauthorized). The response contains the following parameters:
+                defined by <xref target='W3C.REC-html40-19980424' /> with a 400 status code
+                (Bad Request). The response contains the following parameters:
 
                 <list style='hanging' hangIndent='6'>
                   <t hangText='error'>
@@ -1344,7 +1344,7 @@
                   For example:
                 </preamble>
                 <artwork><![CDATA[
-  HTTP/1.1 401 Unauthorized
+  HTTP/1.1 400 Bad Request
   Content-Type: application/x-www-form-urlencoded
 
   error=authorization_declined
@@ -1359,8 +1359,8 @@
                 from the end user, or the client is exceeding the allowed polling interval, the 
                 authorization server provides the client with the error message in the HTTP
                 response body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> 
-                content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 401
-                status code (Unauthorized). The response contains the following parameters:
+                content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 400
+                status code (Bad Request). The response contains the following parameters:
 
                 <list style='hanging' hangIndent='6'>
                   <t hangText='error'>
@@ -1377,7 +1377,7 @@
                   For example:
                 </preamble>
                 <artwork><![CDATA[
-  HTTP/1.1 401 Unauthorized
+  HTTP/1.1 400 Bad Request
   Content-Type: application/x-www-form-urlencoded
 
   error=authorization_pending
@@ -1471,7 +1471,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'username' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to 'username' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1642,7 +1642,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'client_cred' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to 'client_cred' (case sensitive).
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1650,8 +1650,7 @@
                 </t>
                 <t hangText='client_secret'>
                   <vspace />
-                  REQUIRED. The client secret as described in <xref target='client_id' />. OPTIONAL
-                  if no client secret was issued.
+                  REQUIRED. The client secret as described in <xref target='client_id' />.
                 </t>
                 <t hangText='secret_type'>
                   <vspace />
@@ -1799,15 +1798,15 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  The parameter value MUST be set to 'assertion' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to 'assertion' (case sensitive).
                 </t>
                 <t hangText='format'>
 	                <vspace />
-	                The format of the assertion as defined by the authorization server.
+	                REQUIRED. The format of the assertion as defined by the authorization server.
 	              </t>
                 <t hangText='assertion'>
 	                <vspace />
-	                The assertion.
+	                REQUIRED. The assertion.
 	              </t>
                 <t hangText='secret_type'>
                   <vspace />
@@ -1885,8 +1884,8 @@
                 <t hangText='error'>
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to either
-                  <spanx style='verb'>incorrect_credentials</spanx> or
-                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                  <spanx style='verb'>invalid_assertion</spanx> or
+                  <spanx style='verb'>unknown_format</spanx> (case sensitive).
                 </t>
               </list>
             </t>
@@ -2080,7 +2079,8 @@
       </t>
       <t>
         When an access token includes a matching secret, the secret is not included directly in the
-        request but 
+        request but is used instead to generate a cryptographic signature of the request. The
+        signature can only be generated and verified by entities with access to the secret.
       </t>
       <t>
          Clients SHOULD NOT make authenticated requests with an access token to unfamiliar resource

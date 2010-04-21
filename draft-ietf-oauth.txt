@@ -1066,8 +1066,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
    client_secret
-         The client secret as described in Section 3.4.  REQUIRED if the
-         client identifier has a matching secret.
+         REQUIRED if the client identifier has a matching secret.  The
+         client secret as described in Section 3.4.
 
    code
          REQUIRED.  The verification code received from the
@@ -1350,7 +1350,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
    the following parameters to the request:
 
    type
-         The parameter value MUST be set to 'device' (case sensitive).
+         REQUIRED.  The parameter value MUST be set to 'device' (case
+         sensitive).
 
    client_id
          REQUIRED.  The client identifier as described in Section 3.4.
@@ -1395,7 +1396,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
 
 
-
 Hammer-Lahav, et al.    Expires October 23, 2010               [Page 25]
 
 Internet-Draft                  OAuth 2.0                     April 2010
@@ -1418,7 +1418,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
    If the end user denied the request, the authorization server provides
    the client with the error message in the HTTP response body using the
    "application/x-www-form-urlencoded" content type as defined by
-   [W3C.REC-html40-19980424] with a 401 status code (Unauthorized).  The
+   [W3C.REC-html40-19980424] with a 400 status code (Bad Request).  The
    response contains the following parameters:
 
    error
@@ -1426,7 +1426,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    For example:
 
-     HTTP/1.1 401 Unauthorized
+     HTTP/1.1 400 Bad Request
      Content-Type: application/x-www-form-urlencoded
 
      error=authorization_declined
@@ -1439,7 +1439,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
    allowed polling interval, the authorization server provides the
    client with the error message in the HTTP response body using the
    "application/x-www-form-urlencoded" content type as defined by
-   [W3C.REC-html40-19980424] with a 401 status code (Unauthorized).  The
+   [W3C.REC-html40-19980424] with a 400 status code (Bad Request).  The
    response contains the following parameters:
 
    error
@@ -1459,7 +1459,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    For example:
 
-     HTTP/1.1 401 Unauthorized
+     HTTP/1.1 400 Bad Request
      Content-Type: application/x-www-form-urlencoded
 
      error=authorization_pending
@@ -1549,7 +1549,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
    the following parameters to the request:
 
    type
-         The parameter value MUST be set to 'username' (case sensitive).
+         REQUIRED.  The parameter value MUST be set to 'username' (case
+         sensitive).
 
    client_id
          REQUIRED.  The client identifier as described in Section 3.4.
@@ -1557,7 +1558,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
    client_secret
          REQUIRED.  The client secret as described in Section 3.4.
          OPTIONAL if no client secret was issued.
-
 
 
 
@@ -1708,21 +1708,21 @@ Internet-Draft                  OAuth 2.0                     April 2010
    the following parameters to the request:
 
    type
-         The parameter value MUST be set to 'client_cred' (case
-         sensitive).
+         REQUIRED.  The parameter value MUST be set to 'client_cred'
+         (case sensitive).
 
    client_id
          REQUIRED.  The client identifier as described in Section 3.4.
 
    client_secret
          REQUIRED.  The client secret as described in Section 3.4.
-         OPTIONAL if no client secret was issued.
 
    secret_type
          OPTIONAL.  The access token secret type as described by
          Section 5.3.  If omitted, the authorization server will issue a
          bearer token (an access token without a matching secret) as
          described by Section 5.2.
+
 
 
 
@@ -1856,15 +1856,15 @@ Internet-Draft                  OAuth 2.0                     April 2010
    the following parameters to the request:
 
    type
-         The parameter value MUST be set to 'assertion' (case
+         REQUIRED.  The parameter value MUST be set to 'assertion' (case
          sensitive).
 
    format
-         The format of the assertion as defined by the authorization
-         server.
+         REQUIRED.  The format of the assertion as defined by the
+         authorization server.
 
    assertion
-         The assertion.
+         REQUIRED.  The assertion.
 
    secret_type
          OPTIONAL.  The access token secret type as described by
@@ -1929,8 +1929,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    error
          OPTIONAL.  The parameter value MUST be set to either
-         "incorrect_credentials" or "unauthorized_client" (case
-         sensitive).
+         "invalid_assertion" or "unknown_format" (case sensitive).
 
    For example:
 
@@ -1953,6 +1952,7 @@ Internet-Draft                  OAuth 2.0                     April 2010
    obtain a new access token without having to go through the
    authorization flow again or involve the resource owner.  It is also
    used to obtain a new token with different security properties (e.g.
+   bearer token, token with shared symmetric secret).
 
 
 
@@ -1960,8 +1960,6 @@ Hammer-Lahav, et al.    Expires October 23, 2010               [Page 35]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
-
-   bearer token, token with shared symmetric secret).
 
      +--------+          Client Credentials,     +---------------+
      |        |            Refresh Token,        |               |
@@ -2009,6 +2007,8 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
      type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
      &refresh_token=n4E9O119d&secret_type=hmac-sha256
+
+
 
 
 
@@ -2102,7 +2102,9 @@ Internet-Draft                  OAuth 2.0                     April 2010
    SSL/TLS).
 
    When an access token includes a matching secret, the secret is not
-   included directly in the request but
+   included directly in the request but is used instead to generate a
+   cryptographic signature of the request.  The signature can only be
+   generated and verified by entities with access to the secret.
 
    Clients SHOULD NOT make authenticated requests with an access token
    to unfamiliar resource servers, especially when using bearer tokens,
@@ -2116,8 +2118,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
    include the access token in the request without any of the other
    attributes.  Additional methods for making bearer token requests are
    described in Section 5.2.
-
-
 
 
 
