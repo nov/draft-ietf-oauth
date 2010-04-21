@@ -550,6 +550,13 @@
                   without prompting the end user. Defaults to <spanx style='verb'>false</spanx> if
                   omitted.
                 </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <t>
@@ -605,6 +612,11 @@
                     <vspace />
                     REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
                     client authorization request. Set to the exact value received from the client.
+                  </t>
+                  <t hangText='access_token_secret'>
+                    <vspace />
+                    REQUIRED if requested by the client. The corresponding access token secret as
+                    requested by the client.
                   </t>
                 </list>
               </t>
@@ -942,6 +954,13 @@
 	                <vspace />
                   REQUIRED. The redirection URI used in the initial request.
                 </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <figure>
@@ -984,6 +1003,11 @@
 	                <vspace />
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
                   end user access grant as described in <xref target='token_refresh' />.
+                </t>
+                <t hangText='access_token_secret'>
+                  <vspace />
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 </t>
               </list>
             </t>
@@ -1235,6 +1259,13 @@
 	                <vspace />
                   The verification code received from the authorization server.
                 </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <figure>
@@ -1270,6 +1301,11 @@
                   <t hangText='refresh_token'>
 	                  <vspace />
                     OPTIONAL. The refresh token.
+                  </t>
+                  <t hangText='access_token_secret'>
+                    <vspace />
+                    REQUIRED if requested by the client. The corresponding access token secret as
+                    requested by the client.
                   </t>
                 </list>
               </t>
@@ -1454,6 +1490,13 @@
 	                <vspace />
                   REQUIRED. The end user's password.
                 </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <figure>
@@ -1491,6 +1534,11 @@
                 <t hangText='refresh_token'>
 	                <vspace />
                   OPTIONAL. The refresh token.
+                </t>
+                <t hangText='access_token_secret'>
+                  <vspace />
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 </t>
               </list>
             </t>
@@ -1605,6 +1653,13 @@
                   REQUIRED. The client secret as described in <xref target='client_id' />. OPTIONAL
                   if no client secret was issued.
                 </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <figure>
@@ -1642,7 +1697,12 @@
 	                <vspace />
                   OPTIONAL. The refresh token.
                 </t>
-             </list>
+                <t hangText='access_token_secret'>
+                  <vspace />
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
+                </t>
+              </list>
             </t>
             <figure>
               <preamble>
@@ -1749,6 +1809,13 @@
 	                <vspace />
 	                The assertion.
 	              </t>
+                <t hangText='secret_type'>
+                  <vspace />
+                  OPTIONAL. The access token secret type as described by
+                  <xref target='crypto_token' />. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <xref target='bearer_token' />.
+                </t>
               </list>
             </t>
             <figure>
@@ -1786,7 +1853,12 @@
 	                <vspace />
                   OPTIONAL. The refresh token.
                 </t>
-             </list>
+                <t hangText='access_token_secret'>
+                  <vspace />
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
+                </t>
+              </list>
             </t>
             <figure>
               <preamble>
@@ -1989,10 +2061,9 @@
       </t>
       <t>
         The method in which a client uses an access token depends on the security properties of the
-        access tokens. By default, access tokens are issued without a matching secret. The
-        <xref target='token_refresh'>token refresh method</xref> enables clients to request an
-        access token with different security properties by replacing it with a new access token
-        with a matching secret.
+        access tokens. By default, access tokens are issued without a matching secret. Clients MAY
+        request an access token with a matchin secret by specifying the desired secret type using
+        the <spanx style='verb'>secret_type</spanx> token request parameter.
       </t>
       <t>
         When an access token does not include a matching secret, the access token acts as a bearer

@@ -914,6 +914,15 @@ Client Requests Authorization</h3>
                   omitted.
                 
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -982,6 +991,13 @@ End User Grants Authorization</h3>
                     
                     REQUIRED if the <tt>state</tt> parameter was present in the
                     client authorization request. Set to the exact value received from the client.
+                  
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                    
+                    REQUIRED if requested by the client. The corresponding access token secret as
+                    requested by the client.
                   
 </dd>
 </dl></blockquote><p>
@@ -1379,6 +1395,15 @@ Client Requests Access Token</h3>
                   REQUIRED. The redirection URI used in the initial request.
                 
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -1427,6 +1452,13 @@ Client Requests Access Token</h3>
 	                
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
                   end user access grant as described in <a class='info' href='#token_refresh'>Section&nbsp;4<span> (</span><span class='info'>Refreshing an Access Token</span><span>)</span></a>.
+                
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                  
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -1728,6 +1760,15 @@ Client Requests Access Token</h3>
                   The verification code received from the authorization server.
                 
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -1771,6 +1812,13 @@ End User Grants Authorization</h3>
 <dd>
 	                  
                     OPTIONAL. The refresh token.
+                  
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                    
+                    REQUIRED if requested by the client. The corresponding access token secret as
+                    requested by the client.
                   
 </dd>
 </dl></blockquote><p>
@@ -1989,6 +2037,15 @@ Client Requests Access Token</h3>
                   REQUIRED. The end user's password.
                 
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -2032,6 +2089,13 @@ Client Requests Access Token</h3>
 <dd>
 	                
                   OPTIONAL. The refresh token.
+                
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                  
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -2168,6 +2232,15 @@ Client Requests Access Token</h3>
                   if no client secret was issued.
                 
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -2210,6 +2283,13 @@ Client Requests Access Token</h3>
 <dd>
 	                
                   OPTIONAL. The refresh token.
+                
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                  
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -2339,6 +2419,15 @@ Client Requests Access Token</h3>
 	                The assertion.
 	              
 </dd>
+<dt>secret_type</dt>
+<dd>
+                  
+                  OPTIONAL. The access token secret type as described by
+                  <a class='info' href='#crypto_token'>Section&nbsp;5.3<span> (</span><span class='info'>Cryptographic Tokens Requests</span><span>)</span></a>. If omitted, the authorization server will issue a
+                  bearer token (an access token without a matching secret) as described by
+                  <a class='info' href='#bearer_token'>Section&nbsp;5.2<span> (</span><span class='info'>Bearer Token Requests</span><span>)</span></a>.
+                
+</dd>
 </dl></blockquote><p>
             
 </p>
@@ -2381,6 +2470,13 @@ Client Requests Access Token</h3>
 <dd>
 	                
                   OPTIONAL. The refresh token.
+                
+</dd>
+<dt>access_token_secret</dt>
+<dd>
+                  
+                  REQUIRED if requested by the client. The corresponding access token secret as
+                  requested by the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -2608,10 +2704,9 @@ Accessing a Protected Resource</h3>
 </p>
 <p>
         The method in which a client uses an access token depends on the security properties of the
-        access tokens. By default, access tokens are issued without a matching secret. The
-        <a class='info' href='#token_refresh'>token refresh method<span> (</span><span class='info'>Refreshing an Access Token</span><span>)</span></a> enables clients to request an
-        access token with different security properties by replacing it with a new access token
-        with a matching secret.
+        access tokens. By default, access tokens are issued without a matching secret. Clients MAY
+        request an access token with a matchin secret by specifying the desired secret type using
+        the <tt>secret_type</tt> token request parameter.
       
 </p>
 <p>
