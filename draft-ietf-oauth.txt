@@ -661,10 +661,10 @@ Internet-Draft                  OAuth 2.0                     April 2010
          REQUIRED.  The client identifier as described in Section 3.4.
 
    redirect_uri
-         An absolute URI to which the authorization server will redirect
+         REQUIRED unless a redirection URI has been established between
+         the client and authorization server via other means.  An
+         absolute URI to which the authorization server will redirect
          the user-agent to when the end user authorization step is
-         completed.  The authorization server SOULD require the client
-         to pre-register their redirection URI.  The redirection URI MAY
 
 
 
@@ -673,9 +673,10 @@ Hammer-Lahav, et al.    Expires October 23, 2010               [Page 12]
 Internet-Draft                  OAuth 2.0                     April 2010
 
 
-         includes a query component as defined by [RFC3986] section 3.
-         REQUIRED unless a redirection URI has been established between
-         the client and authorization server via other means.
+         completed.  The authorization server SOULD require the client
+         to pre-register their redirection URI.  The redirection URI
+         MUST NOT includes a query component as defined by [RFC3986]
+         section 3 if the "state" parameter is present.
 
    state
          OPTIONAL.  An opaque value used by the client to maintain state
@@ -718,7 +719,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
    approval via other means).  The authorization server sends the end
    user's user-agent to the provided client redirection URI using an
    HTTP redirection response.
-
 
 
 
@@ -915,13 +915,14 @@ Internet-Draft                  OAuth 2.0                     April 2010
          REQUIRED.  The client identifier as described in Section 3.4.
 
    redirect_uri
-         An absolute URI to which the authorization server will redirect
-         the end user back when the end user authorization step is
-         completed.  The authorization server MAY require the client to
-         pre-register their redirection URI.  The redirection URI MAY
-         includes a query components as defined by [RFC3986] section 3.
          REQUIRED unless a redirection URI has been established between
-         the client and authorization server via other means.
+         the client and authorization server via other means.  An
+         absolute URI to which the authorization server will redirect
+         the user-agent to when the end user authorization step is
+         completed.  The authorization server MAY require the client to
+         pre-register their redirection URI.  The redirection URI MUST
+         NOT includes a query component as defined by [RFC3986] section
+         3 if the "state" parameter is present.
 
    state
          OPTIONAL.  An opaque value used by the client to maintain state
@@ -944,7 +945,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
    The client directs the end user to the constructed URI using an HTTP
    redirection response, or by other means available to it via the end
-   user's user-agent.  The request MUST use the HTTP "GET" method.
 
 
 
@@ -952,6 +952,8 @@ Hammer-Lahav, et al.    Expires October 23, 2010               [Page 17]
 
 Internet-Draft                  OAuth 2.0                     April 2010
 
+
+   user's user-agent.  The request MUST use the HTTP "GET" method.
 
    For example, the client directs the end user's user-agent to make the
    following HTTPS requests (line breaks are for display purposes only):
@@ -998,8 +1000,6 @@ Internet-Draft                  OAuth 2.0                     April 2010
 
      HTTP/1.1 302 Found
      Location: https://client.example.com/cb?code=i1WsRn1uB1
-
-
 
 
 

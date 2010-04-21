@@ -881,12 +881,13 @@ Client Requests Authorization</h3>
 <dt>redirect_uri</dt>
 <dd>
                   
-                  An absolute URI to which the authorization server will redirect the user-agent to
-                  when the end user authorization step is completed. The authorization server SOULD
-                  require the client to pre-register their redirection URI. The redirection URI
-                  MAY includes a query component as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
                   REQUIRED unless a redirection URI has been established between the client and
-                  authorization server via other means.
+                  authorization server via other means. An absolute URI to which the authorization
+                  server will redirect the user-agent to when the end user authorization step is
+                  completed. The authorization server SOULD require the client to pre-register
+                  their redirection URI. The redirection URI MUST NOT includes a query component
+                  as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3 if the
+                  <tt>state</tt> parameter is present.
                 
 </dd>
 <dt>state</dt>
@@ -1173,13 +1174,14 @@ Client Requests Authorization</h3>
 </dd>
 <dt>redirect_uri</dt>
 <dd>
-	                
-                  An absolute URI to which the authorization server will redirect the end user back
-                  when the end user authorization step is completed. The authorization server MAY
-                  require the client to pre-register their redirection URI. The redirection URI MAY
-                  includes a query components as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3.
-                  REQUIRED unless a redirection URI has been established between the client
-                  and authorization server via other means.
+                  
+                  REQUIRED unless a redirection URI has been established between the client and
+                  authorization server via other means. An absolute URI to which the authorization
+                  server will redirect the user-agent to when the end user authorization step is
+                  completed. The authorization server MAY require the client to pre-register
+                  their redirection URI. The redirection URI MUST NOT includes a query component
+                  as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 3 if the
+                  <tt>state</tt> parameter is present.
                 
 </dd>
 <dt>state</dt>
