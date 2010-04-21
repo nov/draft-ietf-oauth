@@ -318,9 +318,10 @@
         endpoints, each with a different set of request parameters and values.
       </t>
       <t>
-        When issuing an access token, the authorization server MUST retain the scope, duration, and
-        other access attributes granted by the resource owner, and enforce these restrictions when
-        receiving a protected resource request made with the access token issued.
+        When issuing an access token, the scope, duration, and other access attributes granted by
+        the resource owner must be retained and enforced by the resource server when receiving a
+        protected resource request and by the authorization server when receiving a token refresh
+        request made with the access token issued.
       </t>
       <t>
         In many cases it is desirable to issue access tokens with a shorter lifetime than the

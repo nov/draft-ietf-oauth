@@ -621,9 +621,10 @@ Obtaining an Access Token</h3>
       
 </p>
 <p>
-        When issuing an access token, the authorization server MUST retain the scope, duration, and
-        other access attributes granted by the resource owner, and enforce these restrictions when
-        receiving a protected resource request made with the access token issued.
+        When issuing an access token, the scope, duration, and other access attributes granted by
+        the resource owner must be retained and enforced by the resource server when receiving a
+        protected resource request and by the authorization server when receiving a token refresh
+        request made with the access token issued.
       
 </p>
 <p>
