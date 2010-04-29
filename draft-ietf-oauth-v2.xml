@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-00'>
+<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-01'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -73,7 +73,7 @@
         Resource owners should not be required to share their credentials when granting third-party
         applications access to their protected resources. They should also have the ability to
         restrict access to a limited subset of the resources they control, to limit access
-        duration, or to limit access to the methods supported by these resources.
+        duration, or to limit access to the HTTP methods supported by these resources.
       </t>
       <t>
         OAuth provides a method for making authenticated HTTP requests using a token - an
@@ -92,8 +92,9 @@
         delegation-specific credentials (token).
       </t>
       <t>
-        The use of OAuth with any other transport protocol than <xref target='RFC2616'>HTTP</xref>
-        (or HTTP over TLS 1.0 as defined by <xref target='RFC2818' /> is undefined.
+        This specification defines the use of OAuth over <xref target='RFC2616'>HTTP</xref>
+        (or HTTP over TLS 1.0 as defined by <xref target='RFC2818' />. Other specifications may
+        extend it for use with other tranport protocols.
       </t>
 
       <section title='Terminology'>
@@ -118,7 +119,7 @@
               <vspace />
 	            An entity capable of granting access to a protected resource.
             </t>
-            <t hangText='end user'>
+            <t hangText='end-user'>
 	            <vspace />
 	            A human resource owner.
 	          </t>
@@ -126,6 +127,10 @@
               <vspace />
               A unique identifier used by the client to make authenticated requests on behalf of
               the resource owner. Access tokens may have a matching secret.
+            </t>
+            <t hangText='bearer token'>
+              An access token without a matching secret, used to obtain access to a protected
+              resource by simply presenting the access token as-is to the resource server.
             </t>
             <t hangText='authorization server'>
               <vspace />
@@ -218,52 +223,55 @@
 		    <t>
 	        This specification defines a number of authorization flows to support different client
 	        types and scenarios. These authorization flows can be separated into three groups:
-	        user delegation flows where the client is acting on behalf of an end user, end user
-	        credentials flows where the client uses the end user's credentials directly to obtain
-	        authorization, and autonomous flows where the client is acting for itself (the client is
-	        also the resource owner).
+	        user delegation flows, end-user credentials flows, and autonomous flows.
 	      </t>
 	      <t>
 	        Additional authorization flows may be defined by other specifications to cover different
 	        scenarios and client types.
         </t>
 	      <t>
-		      The user delegation authorization flows defined by this specifications are:
+          User delegation authorization enable clients to act on behalf of an end-user after
+          obtaining authorization from the end-user. The user delegation flows defined by this
+          specifications are:
 
-		      <list style='symbols'>
+          <list style='symbols'>
 			      <t>
               User-Agent Flow - This flow is designed for clients running inside a user-agent
-              (typically a web browser), and therefore cannot receive incoming requests from the
-              authorization server. This flow is described in <xref target='user_agent_flow' />.
+              (typically a web browser). This flow is described in
+              <xref target='user_agent_flow' />.
 		        </t>
 			      <t>
-              Web Server Flow - This flow is optimized for cases where the client is capable of
-              receiving incoming HTTP requests (act as an HTTP server). This flow is described in
+              Web Server Flow - This flow is optimized for clients that are part of a web server
+              application, accessible via HTTP requests. This flow is described in
               <xref target='web_server_flow' />.
 		        </t>
 			      <t>
-              Device Flow - This flow suitable for clients executing on limited devices, but where
-              the end user has separate access to a user-agent on another computer or device. This
-              flow is described in <xref target='device_flow' />.
+              Device Flow - This flow is suitable for clients executing on limited devices, but
+              where the end-user has separate access to a user-agent on another computer or device.
+              This flow is described in <xref target='device_flow' />.
 		        </t>
 		      </list>
 		    </t>
 		    <t>
-	        The end user credentials flow defined by this specification is:
-	
-	        <list style='symbols'>
+          End-user credentials flow enable clients with direct access to the end-user's credentials
+          to exchange them for an access token without seeking additional authorization. These
+          flows are only suitable when there is a high degree of trust between the end-user and the
+          client. The end-user credentials flow defined by this specification is:
+
+          <list style='symbols'>
 			      <t>
-              Username and Password Flow - This flow is used in cases where the end user trusts
+              Username and Password Flow - This flow is used in cases where the end-user trusts
               the client to handle its credentials but it is still undesirable for the client to
-              store the end user's username and password. This flow is described in
+              store the end-user's username and password. This flow is described in
               <xref target='username_password_flow' />.
 		        </t>
 	        </list>
 	      </t>
         <t>
-	        The autonomous authorization flows defined by this specifications are:
-	
-	        <list style='symbols'>
+          Autonomous flows enable clients to act for their own behalf (the client is also the
+          resource owner). The autonomous authorization flows defined by this specifications are:
+
+          <list style='symbols'>
 		        <t>
               Client Credentials Flow - The client uses its credentials to obtain an access token.
               This flow is described in <xref target='client_credentials_flow' />.
@@ -318,10 +326,9 @@
         endpoints, each with a different set of request parameters and values.
       </t>
       <t>
-        When issuing an access token, the scope, duration, and other access attributes granted by
-        the resource owner must be retained and enforced by the resource server when receiving a
-        protected resource request and by the authorization server when receiving a token refresh
-        request made with the access token issued.
+        Access tokens have a scope, duration, and other access attributes granted by the resource
+        owner. These attributes MUST be enforced by the resource server when receiving a protected
+        resource request, and by the authorization server when receiving a token refresh request.
       </t>
       <t>
         In many cases it is desirable to issue access tokens with a shorter lifetime than the
@@ -336,12 +343,12 @@
       <section title='Authorization Endpoint'>
         <t>
           Clients direct the resource owner to the authorization endpoint to approve their access
-          request. Before granting access, the resource owner first authenticate with the
-          authorization server. The way in which the authorization server authenticates the end
-          user (e.g. username and password login, OpenID, session cookies) and in which the
-          authorization server obtains the end user's authorization, including whether it uses a
+          request. Before granting access, the resource owner first authenticates with the
+          authorization server. The way in which the authorization server authenticates the
+          end-user (e.g. username and password login, OpenID, session cookies) and in which the
+          authorization server obtains the end-user's authorization, including whether it uses a
           secure channel such as TLS/SSL, is beyond the scope of this specification. However, the
-          authorization server MUST first verify the identity of the end user.
+          authorization server MUST first verify the identity of the end-user.
         </t>
         <t>
           The URI of the authorization endpoint can be found in the service documentation, or can
@@ -351,12 +358,12 @@
         </t>
         <t>
           The authorization endpoint advertised by the resource server MAY include a query
-          components as defined by <xref target='RFC3986' /> section 3.
+          component as defined by <xref target='RFC3986' /> section 3.
         </t>
         <t>
           Since requests to the authorization endpoint result in user authentication and the
           transmission of sensitive values, the authorization server SHOULD require the
-          use of a transport-layer mechanism such as TLS or SSL (or a secure channel with
+          use of a transport-layer mechanism such as TLS/SSL (or a secure channel with
           equivalent protections) when sending requests to the authorization endpoints.
         </t>
       </section>
@@ -373,13 +380,13 @@
           <xref target='authz_uri_attribute'>token-uri</xref> attribute).
         </t>
         <t>
-          The token endpoint advertised by the resource server MAY include a query components as
+          The token endpoint advertised by the resource server MAY include a query component as
           defined by <xref target='RFC3986' /> section 3.
         </t>
         <t>
           Since requests to the token endpoint result in the transmission of plain text
           credentials in the HTTP request and response, the authorization server MUST require the
-          use of a transport-layer mechanism such as TLS or SSL (or a secure channel with
+          use of a transport-layer mechanism such as TLS/SSL (or a secure channel with
           equivalent protections) when sending requests to the token endpoints.
         </t>
         <t>
@@ -391,9 +398,12 @@
 
       <section title='Flow Parameters'>
         <t>
-          Clients should avoid making assumptions about the size of tokens and other values
-          received from the authorization server, which are left undefined by this specification.
-          Servers should document the expected size of any value they issue.
+          The sizes of tokens and other values received from the authorization server, are left
+          undefined by this specification. Clients should avoid making assumptions about value
+          sizes. Servers should document the expected size of any value they issue.
+        </t>
+        <t>
+          Unless otherwise noted, all the protocol parameter names and values are case sensitive.
         </t>
       </section>
 
@@ -414,16 +424,16 @@
 	      <t>
 		      Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
 		      about the confidentiality of client credentials without establishing trust with the
-		      client operator. Authorization servers SHOULD NOT issue client secrets to the client
-          incapable or keeping their secrets confidential.
+		      client operator. Authorization servers SHOULD NOT issue client secrets to clients
+          incapable of keeping their secrets confidential.
 		    </t>
 	    </section>
 
       <section title='User Delegation Flows'>
 	      <t>
-		      User delegation flows are used to grant client access to protected resources by the end
-          user without sharing the end user credentials (e.g. a username and password) with the
-          client. Instead, the end user authenticates directly with the authorization server, and
+		      User delegation flows are used to grant client access to protected resources by the
+          end-user without sharing the end-user credentials (e.g. a username and password) with the
+          client. Instead, the end-user authenticates directly with the authorization server, and
           grants client access to its protected resources.
 		    </t>
 
@@ -431,22 +441,22 @@
           <t>
             The user-agent flow is a user delegation flow suitable for client applications residing
             in a user-agent, typically implemented in a browser using a scripting language such as
-            JavaScript. The client is capable of interacting with the end user's user-agent but is
-            incapable of receiving incoming requests from the authorization server (incapable of
-            acting as an HTTP server).
+            JavaScript. These clients cannot keep client secrets confidential and the authentication
+            of the client is based on the user-agent's same-origin policy.
           </t>
           <t>
-            Instead of receiving incoming requests, the client requests the authorization server to
-            redirect the user-agent to another web server or local resource accessible to the
-            browser which is capable of extracting the access token from the response and passing
-            it to the client.
+            Unlike other flows in which the client makes separate authorization and access token
+            requests, the client received the access token as a result of the authorization
+            request in the form of an HTTP redirection. The client requests the authorization
+            server to redirect the user-agent to another web server or local resource accessible to
+            the browser which is capable of extracting the access token from the response and
+            passing it to the client.
           </t>
           <t>
             This user-agent flow does not utilize the client secret since the client executables
-            reside on the end user's computer or device which makes the client secret accessible
-            and exploitable. Because the client is incapable of receiving incoming requests, the
-            access token is encoded into the redirection URI which exposes it to the end user and
-            other applications residing on the computer or device.
+            reside on the end-user's computer or device which makes the client secret accessible
+            and exploitable. Because the access token is encoded into the redirection URI, it may
+            be exposed to the end-user and other applications residing on the computer or device.
           </t>          
           <figure anchor='Figure 5'>
           	<artwork><![CDATA[
@@ -480,11 +490,11 @@
 		            identifier and redirection URI in the request.
 	            </t>
 	            <t>
-				        The authorization server authenticates the end user (via the user-agent) and
-				        establishes whether the end user grants or denies the client's access request.
+				        The authorization server authenticates the end-user (via the user-agent) and
+				        establishes whether the end-user grants or denies the client's access request.
 			        </t>
 			        <t>
-				        Assuming the end user granted access, the authorization server redirects the
+				        Assuming the end-user granted access, the authorization server redirects the
 				        user-agent to the redirection URI provided earlier. The redirection URI includes
 				        the access token in the URI fragment.
               </t>
@@ -506,15 +516,14 @@
           
 	        <section title='Client Requests Authorization'>
             <t>
-              In order for the end user to grant the client access, the client sends the end user
+              In order for the end-user to grant the client access, the client sends the end-user
               to the authorization server. The client constructs the request URI by adding the
               following URI query parameters to the user authorization endpoint URI:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
                   <vspace />
-                  REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>user_agent</spanx> (case sensitive).
+                  REQUIRED. The parameter value MUST be set to <spanx style='verb'>user_agent</spanx>.
                 </t>
                 <t hangText='client_id'>
                   <vspace />
@@ -524,9 +533,9 @@
                   <vspace />
                   REQUIRED unless a redirection URI has been established between the client and
                   authorization server via other means. An absolute URI to which the authorization
-                  server will redirect the user-agent to when the end user authorization step is
-                  completed. The authorization server SOULD require the client to pre-register
-                  their redirection URI. The redirection URI MUST NOT includes a query component
+                  server will redirect the user-agent to when the end-user authorization step is
+                  completed. The authorization server SHOULD require the client to pre-register
+                  their redirection URI. The redirection URI MUST NOT include a query component
                   as defined by <xref target='RFC3986' /> section 3 if the
                   <spanx style='verb'>state</spanx> parameter is present.
                 </t>
@@ -539,15 +548,15 @@
                 <t hangText='immediate'>
                   <vspace />
                   OPTIONAL. The parameter value must be set to <spanx style='verb'>true</spanx> or
-                  <spanx style='verb'>false</spanx> (case sensitive). If set to
+                  <spanx style='verb'>false</spanx>. If set to
                   <spanx style='verb'>true</spanx>, the authorization server MUST NOT prompt the
-                  end user to authenticate or approve access. Instead, the authorization server
-                  attempts to establish the end user's identity via other means (e.g. browser
-                  cookies) and checks if the end user has previously approved an identical access
+                  end-user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end-user's identity via other means (e.g. browser
+                  cookies) and checks if the end-user has previously approved an identical access
                   request by the same client and if that access grant is still active. If the
                   authorization server does not support an immediate check or if it is unable to
-                  establish the end user's identity or approval status, it MUST deny the request
-                  without prompting the end user. Defaults to <spanx style='verb'>false</spanx> if
+                  establish the end-user's identity or approval status, it MUST deny the request
+                  without prompting the end-user. Defaults to <spanx style='verb'>false</spanx> if
                   omitted.
                 </t>
                 <t hangText='secret_type'>
@@ -560,13 +569,13 @@
               </list>
             </t>
             <t>
-              The client directs the end user to the constructed URI using an HTTP redirection
-              response, or by other means available to it via the end user's user-agent. The
+              The client directs the end-user to the constructed URI using an HTTP redirection
+              response, or by other means available to it via the end-user's user-agent. The
               request MUST use the HTTP <spanx style='verb'>GET</spanx> method.
             </t>
             <figure>
               <preamble>
-                For example, the client directs the end user's user-agent to make the following
+                For example, the client directs the end-user's user-agent to make the following
                 HTTPS request (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
@@ -582,15 +591,15 @@
               registered URI associated with the client identifier.
             </t>
             <t>
-              The authorization server authenticates the end user and obtains an authorization
-              decision (by asking the end user or establishing approval via other means). The
-              authorization server sends the end user's user-agent to the provided client
+              The authorization server authenticates the end-user and obtains an authorization
+              decision (by asking the end-user or establishing approval via other means). The
+              authorization server sends the end-user's user-agent to the provided client
               redirection URI using an HTTP redirection response.
             </t>
           
-            <section title='End User Grants Authorization'>
+            <section title='End-user Grants Authorization'>
               <t>
-                If the end user authorizes the access request, the authorization server issues an
+                If the end-user authorizes the access request, the authorization server issues an
                 access token and delivers it to the client by adding the following parameters, using
                 the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined
                 by <xref target='W3C.REC-html40-19980424' />, to the redirection URI fragment:
@@ -622,7 +631,7 @@
               </t>
               <figure>
                 <preamble>
-                  For example, the authorization server redirects the end user's user-agent by
+                  For example, the authorization server redirects the end-user's user-agent by
                   sending the following HTTP response:
                 </preamble>
                 <artwork><![CDATA[
@@ -633,9 +642,9 @@
               </figure>
             </section>
             
-            <section title='End User Denies Authorization'>
+            <section title='End-user Denies Authorization'>
               <t>
-                If the end user denied the access request, the authorization server responds to the
+                If the end-user denied the access request, the authorization server responds to the
                 client by adding the following parameters, using the
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
                 <xref target='W3C.REC-html40-19980424' />, to the redirection URI fragment:
@@ -644,7 +653,7 @@
                   <t hangText='error'>
 	            	    <vspace />
                     REQUIRED. The parameter value MUST be set to
-                    <spanx style='verb'>user_denied</spanx> (case sensitive).
+                    <spanx style='verb'>user_denied</spanx>.
                   </t>
                   <t hangText='state'>
                     <vspace />
@@ -703,7 +712,7 @@
         <section title='Web Server Flow' anchor='web_server_flow'>
           <t>
             The web server flow is a user delegation flow suitable for clients capable of
-            interacting with the end user's user-agent (typically a web browser) and capable of
+            interacting with the end-user's user-agent (typically a web browser) and capable of
             receiving incoming requests from the authorization server (capable of acting as an HTTP
             server).
           </t>
@@ -711,7 +720,7 @@
 		        <artwork><![CDATA[
   +----------+         Client Identifier       +---------------+
   |         -+----(A)-- & Redirect URI ------->|               |
-  | End User |                                 | Authorization |
+  | End-user |                                 | Authorization |
   |    at    |<---(B)-- User authenticates --->|     Server    |
   | Browser  |                                 |               |
   |         -+----(C)-- Verification Code ----<|               |
@@ -736,17 +745,17 @@
 	
 	          <list style='format (%C)'>
 		          <t>
-			          The web client initiates the flow by redirecting the end user's user-agent to the
+			          The web client initiates the flow by redirecting the end-user's user-agent to the
 			          authorization endpoint with its client identifier and a redirect URI to which the
-			          authorization server will send the end user back once authorization is received (or
+			          authorization server will send the end-user back once authorization is received (or
                 denied).
 			        </t>
 			        <t>
-				        The authorization server authenticates the end user (via the user-agent) and
-				        establishes whether the end user grants or denies the client's access request.
+				        The authorization server authenticates the end-user (via the user-agent) and
+				        establishes whether the end-user grants or denies the client's access request.
 			        </t>
 			        <t>
-				        Assuming the end user granted access, the authorization server redirects the
+				        Assuming the end-user granted access, the authorization server redirects the
 				        user-agent back to the client to the redirection URI provided earlier. The
 				        authorization includes a verification code for the client to use to obtain an
 				        access token.
@@ -765,15 +774,14 @@
 	
 	        <section title='Client Requests Authorization'>
             <t>
-              In order for the end user to grant the client access, the client sends the end user
+              In order for the end-user to grant the client access, the client sends the end-user
               to the authorization server. The client constructs the request URI by adding the
               following URI query parameters to the user authorization endpoint URI:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>web_server</spanx> (case sensitive).
+                  REQUIRED. The parameter value MUST be set to <spanx style='verb'>web_server</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -783,9 +791,9 @@
                   <vspace />
                   REQUIRED unless a redirection URI has been established between the client and
                   authorization server via other means. An absolute URI to which the authorization
-                  server will redirect the user-agent to when the end user authorization step is
+                  server will redirect the user-agent to when the end-user authorization step is
                   completed. The authorization server MAY require the client to pre-register
-                  their redirection URI. The redirection URI MUST NOT includes a query component
+                  their redirection URI. The redirection URI MUST NOT include a query component
                   as defined by <xref target='RFC3986' /> section 3 if the
                   <spanx style='verb'>state</spanx> parameter is present.
                 </t>
@@ -798,27 +806,27 @@
                 <t hangText='immediate'>
                   <vspace />
                   OPTIONAL. The parameter value must be set to <spanx style='verb'>true</spanx> or
-                  <spanx style='verb'>false</spanx> (case sensitive). If set to
+                  <spanx style='verb'>false</spanx>. If set to
                   <spanx style='verb'>true</spanx>, the authorization server MUST NOT prompt the
-                  end user to authenticate or approve access. Instead, the authorization server
-                  attempts to establish the end user's identity via other means (e.g. browser
-                  cookies) and checks if the end user has previously approved an identical access
+                  end-user to authenticate or approve access. Instead, the authorization server
+                  attempts to establish the end-user's identity via other means (e.g. browser
+                  cookies) and checks if the end-user has previously approved an identical access
                   request by the same client and if that access grant is still active. If the
                   authorization server does not support an immediate check or if it is unable to
-                  establish the end user's identity or approval status, it MUST deny the request
-                  without prompting the end user. Defaults to <spanx style='verb'>false</spanx> if
+                  establish the end-user's identity or approval status, it MUST deny the request
+                  without prompting the end-user. Defaults to <spanx style='verb'>false</spanx> if
                   omitted.
                 </t>
               </list>
             </t>
             <t>
-              The client directs the end user to the constructed URI using an HTTP redirection
-              response, or by other means available to it via the end user's user-agent. The
+              The client directs the end-user to the constructed URI using an HTTP redirection
+              response, or by other means available to it via the end-user's user-agent. The
               request MUST use the HTTP <spanx style='verb'>GET</spanx> method.
             </t>
             <figure>
               <preamble>
-                For example, the client directs the end user's user-agent to make the
+                For example, the client directs the end-user's user-agent to make the
                 following HTTPS requests (line breaks are for display purposes only):
               </preamble>
               <artwork><![CDATA[
@@ -834,16 +842,16 @@
               registered URI associated with the client identifier.
             </t>
             <t>
-              The authorization server authenticates the end user and obtains an authorization
-              decision (by asking the end user or establishing approval via other means). The
-              authorization server sends the end user's user-agent to the provided client
+              The authorization server authenticates the end-user and obtains an authorization
+              decision (by asking the end-user or establishing approval via other means). The
+              authorization server sends the end-user's user-agent to the provided client
               redirection URI using an HTTP redirection response, or by other means available to it
-              via the end user's user-agent.
+              via the end-user's user-agent.
             </t>
             
-            <section title='End User Grants Authorization'>
+            <section title='End-user Grants Authorization'>
               <t>
-                If the end user authorizes the access request, the authorization server generates a
+                If the end-user authorizes the access request, the authorization server generates a
                 verification code and associates it with the client identifier and redirection URI. The
                 authorization server constructs the request URI by adding the following parameters to
                 the query component of redirection URI provided by the client:
@@ -861,12 +869,12 @@
                 </list>
               </t>
               <t>
-                The verification code SHOULD expire shortly after it is issued and allowed for a
+                The verification code should expire shortly after it is issued and allowed for a
                 single use.
               </t>
               <figure>
                 <preamble>
-                  For example, the authorization server redirects the end user's user-agent by
+                  For example, the authorization server redirects the end-user's user-agent by
                   sending the following HTTP response:
                 </preamble>
                 <artwork><![CDATA[
@@ -877,7 +885,7 @@
               </figure>
               <figure>
                 <preamble>
-                  In turn, the end user's user-agent makes the following HTTPS
+                  In turn, the end-user's user-agent makes the following HTTPS
                   <spanx style='verb'>GET</spanx> request:
                 </preamble>
                 <artwork><![CDATA[
@@ -888,9 +896,9 @@
               </figure>
             </section>
             
-            <section title='End User Denies Authorization'>
+            <section title='End-user Denies Authorization'>
               <t>
-                If the end user denied the access request, the authorization server constructs the
+                If the end-user denied the access request, the authorization server constructs the
                 request URI by adding the following parameters to the query component of the
                 redirection URI provided by the client:
 
@@ -898,7 +906,7 @@
                   <t hangText='error'>
 	              	  <vspace />
                     REQUIRED. The parameter value MUST be set to
-                    <spanx style='verb'>user_denied</spanx> (case sensitive).
+                    <spanx style='verb'>user_denied</spanx>.
                   </t>
                   <t hangText='state'>
                     <vspace />
@@ -934,8 +942,7 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to
-                  <spanx style='verb'>web_server</spanx> (case sensitive).
+                  REQUIRED. The parameter value MUST be set to <spanx style='verb'>web_server</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1002,7 +1009,7 @@
                 <t hangText='refresh_token'>
 	                <vspace />
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
-                  end user access grant as described in <xref target='token_refresh' />.
+                  end-user access grant as described in <xref target='token_refresh' />.
                 </t>
                 <t hangText='access_token_secret'>
                   <vspace />
@@ -1036,8 +1043,9 @@
                 <t hangText='error'>
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to either
-                  <spanx style='verb'>redirect_uri_mismatch</spanx> or
-                  <spanx style='verb'>expired_verification_code</spanx> (case sensitive).
+                  <spanx style='verb'>redirect_uri_mismatch</spanx>,
+                  <spanx style='verb'>bad_verification_code</spanx>,
+                  <spanx style='verb'>incorrect_client_credentials</spanx>.
                 </t>
               </list>
             </t>
@@ -1049,7 +1057,7 @@
   HTTP/1.1 400 Bad Request
   Content-Type: application/x-www-form-urlencoded
 
-  error=expired_verification_code
+  error=bad_verification_code
 ]]>
               </artwork>
             </figure>
@@ -1061,16 +1069,16 @@
           <t>
             The device flow is a user delegation flow suitable for clients executing on devices
             which do not have an easy data-entry method (e.g. game consoles or media hub), but
-            where the end user has separate access to a user-agent on another computer or device
+            where the end-user has separate access to a user-agent on another computer or device
             (e.g. home computer, a laptop, or a smartphone). The client is incapable of receiving
             incoming requests from the authorization server (incapable of acting as an HTTP
             server).
           </t>
           <t>
-            Instead of interacting with the end user's user-agent, the client instructs the end
-            user to use another computer or device and connect to the authorization server to
-            approve the access request. Since the client cannot receive incoming requests, it polls the
-            authorization server repeatedly until the end user completes the approval process.
+            Instead of interacting with the end-user's user-agent, the client instructs the end-user
+            to use another computer or device and connect to the authorization server to approve the
+            access request. Since the client cannot receive incoming requests, it polls the
+            authorization server repeatedly until the end-user completes the approval process.
           </t>
           <t>
             This device flow does not utilize the client secret since the client executables
@@ -1098,7 +1106,7 @@
         :                                     |                |
         v                                     |                |
   +----------+                                |                |
-  | End User |                                |                |
+  | End-user |                                |                |
   |    at    |<---(D)-- User authenticates -->|                |
   |  Browser |                                |                |
   +----------+                                +----------------+
@@ -1116,26 +1124,26 @@
 	            </t>
 	            <t>
 	              The authorization server issues a verification code, a user code, and provides the
-                end user authorization URI.
+                end-user authorization URI.
               </t>
               <t>
-                The client instructs the end user to use its user-agent (elsewhere) and visit the
+                The client instructs the end-user to use its user-agent (elsewhere) and visit the
                 provided authorization URI. The client provides the user with the user code to
                 enter in order to grant access.
               </t>
 	            <t>
-				        The authorization server authenticates the end user (via the user-agent) and
-				        prompts the end user to grant the client's access request by entering the user
+				        The authorization server authenticates the end-user (via the user-agent) and
+				        prompts the end-user to grant the client's access request by entering the user
 				        code provided by the client.
 			        </t>
 			        <t>
-			          While the end user authorizes (or denies) the client's request (D), the client
-			          repeatedly polls the authorization server to find out if the end user completed the
+			          While the end-user authorizes (or denies) the client's request (D), the client
+			          repeatedly polls the authorization server to find out if the end-user completed the
 			          user authorization step. The client includes the verification code and its client
                 identifier.
 		          </t>
 			        <t>
-				        Assuming the end user granted access, the authorization server validates the
+				        Assuming the end-user granted access, the authorization server validates the
 				        verification code provided by the client and responds back with the access token.
 			        </t>
             </list>
@@ -1145,13 +1153,14 @@
             <t>
               The client initiates the flow by requesting a set of verification codes from the
               authorization server by making an HTTP <spanx style='verb'>GET</spanx> request to the
-              authorization endpoint. The client constructs a request URI by adding the following
+              token endpoint. The client constructs a request URI by adding the following
               parameters to the request:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'device' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>device_code</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1165,7 +1174,7 @@
                 display purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /authorize?type=device&client_id=s6BhdRkqt3
+  GET /token?type=device_code&client_id=s6BhdRkqt3
         HTTP/1.1
   Host: server.example.com
 ]]>
@@ -1210,20 +1219,20 @@
   HTTP/1.1 200 OK
   Content-Type: application/x-www-form-urlencoded
 
-  device_code=74tq5miHKB&user_code=94248&user_uri=http%3A%2F%2
+  code=74tq5miHKB&user_code=94248&user_uri=http%3A%2F%2
   Fwww%2Eexample%2Ecom%2Fdevice&interval=5
 ]]>
               </artwork>
             </figure>
             <t>
               The client displays the user code and the user authorization URI to the end-user, and
-              instructs the end user to visit the URI using a user-agent and enter the user code.
+              instructs the end-user to visit the URI using a user-agent and enter the user code.
             </t>
             <t>
-              The end user manually types the provided URI and authenticates with the authorization
-              server. The authorization server prompts the end user to authorize the client's
-              request by entering the user code provided by the client. Once the end user approves
-              or denies the request, the authorization server informs the end user to return to the
+              The end-user manually types the provided URI and authenticates with the authorization
+              server. The authorization server prompts the end-user to authorize the client's
+              request by entering the user code provided by the client. Once the end-user approves
+              or denies the request, the authorization server informs the end-user to return to the
               device for further instructions.
             </t>
           </section>
@@ -1231,14 +1240,14 @@
 	        <section title='Client Requests Access Token'>
             <t>
               Since the client is unable to receive incoming requests from the authorization
-              server, it polls the authorization server repeatedly until the end user grants or
+              server, it polls the authorization server repeatedly until the end-user grants or
               denies the request, or the verification code expires.
             </t>
             <t>
               The client makes the following request at an arbitrary but reasonable interval which
               MUST NOT exceed the minimum interval rate provided by the authorization server (if
               present via the <spanx style='verb'>interval</spanx> parameter). Alternatively, the
-              client MAY provide a user interface for the end user to manually inform it when
+              client MAY provide a user interface for the end-user to manually inform it when
               authorization was granted.
             </t>
             <t>
@@ -1249,7 +1258,8 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'device' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>device_token</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1274,16 +1284,16 @@
                 purposes only):
               </preamble>
               <artwork><![CDATA[
-  GET /token?type=device&client_id=s6BhdRkqt3
+  GET /token?type=device_token&client_id=s6BhdRkqt3
        &code=J2vC42OifV HTTP/1.1
   Host: server.example.com
 ]]>
               </artwork>
             </figure>
             
-            <section title='End User Grants Authorization'>
+            <section title='End-user Grants Authorization'>
               <t>
-                If the end user authorized the request, the authorization server issues an access
+                If the end-user authorized the request, the authorization server issues an access
                 token and delivers it to the client by including it in the HTTP response
                 body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx>
                 content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 200
@@ -1323,9 +1333,9 @@
               </figure>
             </section>
             
-            <section title='End User Denies Authorization'>
+            <section title='End-user Denies Authorization'>
               <t>
-                If the end user denied the request, the authorization server provides the client
+                If the end-user denied the request, the authorization server provides the client
                 with the error message in the HTTP response body using the
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
                 defined by <xref target='W3C.REC-html40-19980424' /> with a 400 status code
@@ -1353,10 +1363,10 @@
               </figure>
             </section>
             
-            <section title='End User Authorization Pending or Expired'>
+            <section title='End-user Authorization Pending or Expired'>
               <t>
-                If the end user authorization is pending or expired without receiving any response
-                from the end user, or the client is exceeding the allowed polling interval, the 
+                If the end-user authorization is pending or expired without receiving any response
+                from the end-user, or the client is exceeding the allowed polling interval, the 
                 authorization server provides the client with the error message in the HTTP
                 response body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> 
                 content type as defined by <xref target='W3C.REC-html40-19980424' /> with a 400
@@ -1368,7 +1378,7 @@
                     REQUIRED. Value MUST be set to
                     <spanx style='verb'>authorization_pending</spanx>,
                     <spanx style='verb'>slow_down</spanx>, or
-                    <spanx style='verb'>code_expired</spanx> (case sensitive).
+                    <spanx style='verb'>code_expired</spanx>.
                   </t>
                 </list>
               </t>
@@ -1392,32 +1402,32 @@
 
       </section>
 
-      <section title='End User Credentials Flows'>
+      <section title='End-user Credentials Flows'>
 	      <t>
-		      End user credential flows are used to grant client access to protected resources by the
-		      end user directly sharing the end user credentials (typically a username and password)
-		      with the client. Unlike user delegation flows, end user credentials flows require a much
-		      higher degree of trust between the client and end user.
+		      End-user credential flows are used to grant client access to protected resources by the
+		      end-user directly sharing the end-user's username and password with the client. Unlike user
+          delegation flows, end-user credentials flows require a much higher degree of trust between
+          the client and end-user.
 	      </t>
 	      <t>
-		      These flows are suitable in cases where the end user already has a trust relationship
+		      These flows are suitable in cases where the end-user already has a trust relationship
 		      with the client, such as its computer operating system or highly privileged applications.
 		      Authorization servers SHOULD take special care when enabling user credentials flows, and
           SHOULD only do so when other delegation flows are not viable.
 		    </t>
 	      <t>
 		      However, unlike the HTTP Basic authentication scheme defined in
-		      <xref target='RFC2617' />, the end user's credentials are used in a single request and
+		      <xref target='RFC2617' />, the end-user's credentials are used in a single request and
 		      are exchanged for an access token and refresh token which eliminates the client need to
 		      store them for future use.
 	      </t>
 
         <section title='Username and Password Flow' anchor='username_password_flow'>
           <t>
-            The username and password flow is an end user credentials flow suitable for clients
+            The username and password flow is an end-user credentials flow suitable for clients
             capable of asking end users for their usernames and passwords. It is also used to
             migrate existing clients using direct authentication schemes such as HTTP Basic or
-            Digest authentication to OAuth by converting the end user credentials stored with
+            Digest authentication to OAuth by converting the end-user credentials stored with
             tokens.
           </t>
           <t>
@@ -1427,7 +1437,7 @@
           </t>
           <figure anchor='Figure 7'>
           	<artwork><![CDATA[
-   End User
+   End-user
       v      	  
       :
      (A)
@@ -1449,14 +1459,14 @@
 
 	          <list style='format (%C)'>
 		          <t>
-		            The end user provides the client with its username and password.
+		            The end-user provides the client with its username and password.
 	            </t>
 	            <t>
 	              The client sends an access token request to the authorization server and includes
-	              its client identifier and client secret, and the end user's username and password.
+	              its client identifier and client secret, and the end-user's username and password.
               </t>
 	            <t>
-				        The authorization server validates the end user credentials and the client
+				        The authorization server validates the end-user credentials and the client
 				        credentials and issues an access token.
 			        </t>
             </list>
@@ -1471,7 +1481,8 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'username' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>username</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1484,11 +1495,11 @@
                 </t>
                 <t hangText='username'>
  	                <vspace />
-                  REQUIRED. The end user's username.
+                  REQUIRED. The end-user's username.
                 </t>
                 <t hangText='password'>
 	                <vspace />
-                  REQUIRED. The end user's password.
+                  REQUIRED. The end-user's password.
                 </t>
                 <t hangText='secret_type'>
                   <vspace />
@@ -1514,7 +1525,7 @@
               </artwork>
             </figure>
             <t>
-              The authorization server MUST validate the client credentials and end user credentials
+              The authorization server MUST validate the client credentials and end-user credentials
               and if valid issue an access token and deliver to the client in the HTTP response body
               using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
               defined by <xref target='W3C.REC-html40-19980424' /> with a 200 status code (OK).
@@ -1567,8 +1578,9 @@
                 <t hangText='error'>
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to either
-                  <spanx style='verb'>incorrect_credentials</spanx> or
-                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                  <spanx style='verb'>incorrect_client_credentials</spanx> or
+                  <spanx style='verb'>unauthorized_client</spanx> (the client is not permitted to
+                  use this flow).
                 </t>
               </list>
             </t>
@@ -1580,7 +1592,7 @@
   HTTP/1.1 400 Bad Request
   Content-Type: application/x-www-form-urlencoded
 
-  error=incorrect_credentials
+  error=incorrect_client_credentials
 ]]>
               </artwork>
             </figure>
@@ -1594,7 +1606,7 @@
 	      <t>
 		      Autonomous client flows are used to grant client access to protected resources controlled
 		      by the client (i.e. the client is the resource owner). For example, these flows are
-		      useful when a service provides both client-specific resources in addition to end user
+		      useful when a service provides both client-specific resources in addition to end-user
 		      resources.
 		    </t>
 
@@ -1602,7 +1614,7 @@
           <t>
             The client credentials flow is used when the client acts autonomously without acting on
             behalf of a separate resource owner. The client secret is assumed to be high-entropy
-            since it is not designed to be memorize by an end user.
+            since it is not designed to be memorized by an end-user.
           </t>
           <figure anchor='Figure 8'>
           	<artwork>
@@ -1642,7 +1654,8 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'client_cred' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>client_credentials</spanx>.
                 </t>
                 <t hangText='client_id'>
 	                <vspace />
@@ -1670,7 +1683,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   
-  type=client_cred&client_id=s6BhdRkqt3&client_secret=47HDu8s
+  type=client_credentials&client_id=s6BhdRkqt3&client_secret=47HDu8s
 ]]>
               </artwork>
             </figure>
@@ -1727,9 +1740,8 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='error'>
 	                <vspace />
-                  OPTIONAL. The parameter value MUST be set to either
-                  <spanx style='verb'>incorrect_credentials</spanx> or
-                  <spanx style='verb'>unauthorized_client</spanx> (case sensitive).
+                  OPTIONAL. The parameter value MUST be set to
+                  <spanx style='verb'>incorrect_client_credentials</spanx>.
                 </t>
               </list>
             </t>
@@ -1741,7 +1753,7 @@
   HTTP/1.1 400 Bad Request
   Content-Type: application/x-www-form-urlencoded
 
-  error=incorrect_credentials
+  error=incorrect_client_credentials
 ]]>
               </artwork>
             </figure>
@@ -1751,11 +1763,17 @@
 
         <section title='Assertion Flow' anchor='assertion_flow'>
           <t>
-	          The assertion flow requires the client to obtain a assertion such as a
-	          <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion from an assertion issuer
-	          prior to initiating the flow. The process in which the assertion is obtained is defined
-	          by the assertion issuer and the authorization server, and is beyond the scope of this
-	          specification.
+            The assertion flow is used when a client wishes to exchange an existing security token
+            or assertion for an access token. This flow is suitable when the client is acting
+            autonomously or on behalf of the end-user (based on the content of the assertion used).
+          </t>
+          <t>
+	          The assertion flow requires the client to obtain a assertion (such as a
+	          <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion) from an assertion issuer
+	          or to self-issue an assertion prior to initiating the flow. The assertion format, the
+            process by which the assertion is obtained, and the method of validating the assertion
+            are defined by the assertion issuer and the authorization server, and are beyond the
+            scope of this specification.
 	        </t>
           <t>
             The client credentials flow is used when the client acts autonomously without acting on
@@ -1769,7 +1787,7 @@
   |        |>--(A)------ Assertion ---------->| Authorization |
   | Client |                                  |     Server    |
   |        |<--(B)---- Access Token ---------<|               |
-  |        |     (w/ Optional Refresh Token)  |               |
+  |        |                                  |               |
   +--------+                                  +---------------+
 ]]>
             </artwork>
@@ -1798,12 +1816,14 @@
               <list style='hanging' hangIndent='6'>
                 <t hangText='type'>
 	                <vspace />
-                  REQUIRED. The parameter value MUST be set to 'assertion' (case sensitive).
+                  REQUIRED. The parameter value MUST be set to
+                  <spanx style='verb'>assertion</spanx>.
                 </t>
                 <t hangText='format'>
 	                <vspace />
-	                REQUIRED. The format of the assertion as defined by the authorization server.
-	              </t>
+                  REQUIRED. The format of the assertion as defined by the authorization server. The
+                  value MUST be an absolute URI.
+                </t>
                 <t hangText='assertion'>
 	                <vspace />
 	                REQUIRED. The assertion.
@@ -1848,10 +1868,6 @@
 	                <vspace />
                   OPTIONAL. The duration in seconds of the access token lifetime.
                 </t>
-                <t hangText='refresh_token'>
-	                <vspace />
-                  OPTIONAL. The refresh token.
-                </t>
                 <t hangText='access_token_secret'>
                   <vspace />
                   REQUIRED if requested by the client. The corresponding access token secret as
@@ -1885,7 +1901,7 @@
 	                <vspace />
                   OPTIONAL. The parameter value MUST be set to either
                   <spanx style='verb'>invalid_assertion</spanx> or
-                  <spanx style='verb'>unknown_format</spanx> (case sensitive).
+                  <spanx style='verb'>unknown_format</spanx>.
                 </t>
               </list>
             </t>
@@ -1943,7 +1959,7 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='type'>
 	          <vspace />
-            REQUIRED. The parameter value MUST be set to 'refresh' (case sensitive).
+            REQUIRED. The parameter value MUST be set to <spanx style='verb'>refresh</spanx>.
           </t>
           <t hangText='client_id'>
 	          <vspace />
@@ -1972,7 +1988,7 @@
         </preamble>
         <artwork>
           <![CDATA[
-  POST /authorize HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
   
@@ -2033,7 +2049,7 @@
             OPTIONAL. The parameter value MUST be set to either
             <spanx style='verb'>incorrect_credentials</spanx>,
             <spanx style='verb'>authorization_expired</spanx>, or
-            <spanx style='verb'>unsupported_secret_type</spanx> (case sensitive).
+            <spanx style='verb'>unsupported_secret_type</spanx>.
           </t>
         </list>
       </t>
@@ -2061,7 +2077,7 @@
       <t>
         The method in which a client uses an access token depends on the security properties of the
         access tokens. By default, access tokens are issued without a matching secret. Clients MAY
-        request an access token with a matchin secret by specifying the desired secret type using
+        request an access token with a matching secret by specifying the desired secret type using
         the <spanx style='verb'>secret_type</spanx> token request parameter.
       </t>
       <t>
@@ -2072,10 +2088,10 @@
       </t>
       <t>
         However, when it is necessary to transmit bearer tokens in the clear without a secure
-        channel, authorization servers must issue access tokens with limited scope and lifetime to
-        reduce the potential risk from a compromised access token. Clients SHOULD request and
+        channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
+        to reduce the potential risk from a compromised access token. Clients SHOULD request and
         utilize an access token with a matching secret when making protected resource requests over
-        an insecure channel (e.g. an HTTP request without using SSL/TLS).
+        an insecure channel (e.g. an HTTP request without using TLS/SSL).
       </t>
       <t>
         When an access token includes a matching secret, the secret is not included directly in the
@@ -2227,7 +2243,7 @@
           </t>
           <t>
             The resource server MUST validate the access token and ensure it has not expired and
-            its includes the requested resource. If the resource expired or is not valid, the 
+            its scope includes the requested resource. If the resource expired or is not valid, the 
             resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
             HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
             <xref target='authn_header' />.
@@ -2282,7 +2298,7 @@
           </figure>
           <t>
             The resource server MUST validate the access token and ensure it has not expired and
-            its includes the requested resource. If the resource expired or is not valid, the 
+            its scope includes the requested resource. If the resource expired or is not valid, the 
             resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
             HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
             <xref target='authn_header' />.
@@ -2302,7 +2318,7 @@
         <t>
           This specification defines the <spanx style='verb'>hmac-sha256</spanx> algorithm, and
           establishes a registry for providing additional algorithms. Clients obtain an access
-          token with a matchin <spanx style='verb'>hmac-sha256</spanx> secret by using the
+          token with a matching <spanx style='verb'>hmac-sha256</spanx> secret by using the
           <spanx style='verb'>token_type</spanx> parameter when requesting an access token.
         </t>
             
@@ -2415,7 +2431,7 @@
               The normalized request string does not cover the entire HTTP request. Most notably,
               it does not include the entity-body or most HTTP entity-headers. It is important to
               note that the resource server cannot verify the authenticity of the excluded request
-              elements without using additional protections such as SSL/TLS.
+              elements without using additional protections such as TLS/SSL.
             </t>
             <t>
               The normalized request string is constructed by concatenating together, in order,
@@ -2608,6 +2624,19 @@
     <appendix title='Document History'>
       <t>
         [[ to be removed by RFC editor before publication as an RFC ]]
+      </t>
+      <t>
+        -01
+        
+        <list style='symbols'>
+          <t>
+            Editorial changes based on feedback from Brian Eaton, Bill Keenan, and Chuck Mortimore.
+          </t>
+          <t>
+            Changed devide flow <spanx style='verb'>type</spanx> parameter values and switch to use
+            only the token endpoint.
+          </t>
+        </list>
       </t>
       <t>
         -00
