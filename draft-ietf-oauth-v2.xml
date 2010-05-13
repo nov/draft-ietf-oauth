@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-04'>
+<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-05'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -139,10 +139,10 @@
               resource owner and obtaining authorization. The authorization server may be the same
               server as the resource server, or a separate entity.
             </t>
-            <t hangText='authorization endpoint'>
+            <t hangText='end-user endpoint'>
               <vspace />
-              The authorization server's HTTP endpoint capable of authenticating the resource
-              owner and obtaining authorization.
+              The authorization server's HTTP endpoint capable of authenticating the end-user and
+              obtaining authorization.
             </t>
             <t hangText='token endpoint'>
               <vspace />
@@ -347,31 +347,59 @@
         <xref target='token_refresh' />.
       </t>
 
-      <section title='Authorization Endpoint'>
+      <section title='Client Credentials' anchor='client_id'>
         <t>
-          Clients direct the resource owner to the authorization endpoint to approve their access
-          request. Before granting access, the resource owner first authenticates with the
-          authorization server. The way in which the authorization server authenticates the
-          end-user (e.g. username and password login, OpenID, session cookies) and in which the
-          authorization server obtains the end-user's authorization, including whether it uses a
-          secure channel such as TLS/SSL, is beyond the scope of this specification. However, the
-          authorization server MUST first verify the identity of the end-user.
+          When requesting access from the authorization server, the client identifies itself using
+          a set of client credentials. The client credentials include a client identifier and an
+          OPTIONAL symmetric shared secret. The means through which the client obtains these
+          credentials are beyond the scope of this specification, but usually involve registration
+          with the authorization server.
         </t>
         <t>
-          The URI of the authorization endpoint can be found in the service documentation, or can
+          The client identifier is used by the authorization server to establish the identity of
+          the client for the purpose of presenting information to the resource owner prior to
+          granting access, as well as for providing different service levels to different clients.
+          They can also be used to block unauthorized clients from requesting access.
+        </t>
+        <t>
+          Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
+          about the confidentiality of client credentials without establishing trust with the
+          client operator. Authorization servers SHOULD NOT issue client secrets to clients
+          incapable of keeping their secrets confidential.
+        </t>
+      </section>
+      
+      <section title='End-User Endpoint'>
+        <t>
+          In flows that involved an end-user, clients direct the end-user to the end-user endpoint
+          to approve their access request. When accessing the end-user endpoint, the end-user first
+          authenticates with the authorization server, and then approves or denies the access
+          request.
+        </t>
+        <t>
+          The way in which the authorization server authenticates the end-user (e.g. username and
+          password login, OpenID, session cookies) and in which the authorization server obtains
+          the end-user's authorization, including whether it uses a secure channel such as TLS/SSL,
+          is beyond the scope of this specification. However, the authorization server MUST first
+          verify the identity of the end-user.
+        </t>
+        <t>
+          The URI of the end-user endpoint can be found in the service documentation, or can
           be obtained by the client by making an unauthorized protected resource request (from the
           <spanx style='verb'>WWW-Authenticate</spanx> response header
-          <xref target='authz_uri_attribute'>auth-uri</xref> attribute).
+          <spanx style='verb'>user-uri</spanx> attribute as described by
+          <xref target='authz_header' />).
         </t>
         <t>
-          The authorization endpoint advertised by the resource server MAY include a query
-          component as defined by <xref target='RFC3986' /> section 3.
+          The end-user endpoint advertised by the resource server MAY include a query
+          component as defined by <xref target='RFC3986' /> section 3, which must be retained when
+          adding additional query parameters.
         </t>
         <t>
-          Since requests to the authorization endpoint result in user authentication and the
+          Since requests to the end-user endpoint result in user authentication and the
           transmission of sensitive values, the authorization server SHOULD require the
           use of a transport-layer mechanism such as TLS/SSL (or a secure channel with
-          equivalent protections) when sending requests to the authorization endpoints.
+          equivalent protections) when sending requests to the end-user endpoint.
         </t>
       </section>
 
@@ -384,7 +412,8 @@
           The URI of the token endpoint can be found in the service documentation, or can be
           obtained by the client by making an unauthorized protected resource request (from the
           <spanx style='verb'>WWW-Authenticate</spanx> response header
-          <xref target='authz_uri_attribute'>token-uri</xref> attribute).
+          <spanx style='verb'>token-uri</spanx> attribute as described by
+          <xref target='authz_header' />).
         </t>
         <t>
           The token endpoint advertised by the resource server MAY include a query component as
@@ -397,17 +426,132 @@
           equivalent protections) when sending requests to the token endpoints.
         </t>
 
+        <section title='Client Authentication'>
+          <t>
+            The token endpoint requires the client to authenticate itself to the authorization
+            server. This is done by including the client identifier (and optional secret) in the
+            request. The client identifier and secret are included in the request using two request
+            parameters: <spanx style='verb'>client_id</spanx> and
+            <spanx style='verb'>client_secret</spanx>.
+          </t>
+          <figure>
+            <preamble>
+              For example (line breaks are for display purposes only):
+            </preamble>
+            <artwork>
+              <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  type=web_server&client_id=s6BhdRkqt3&
+  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+            </artwork>
+          </figure>
+          <t>
+            The client MAY include the client credentials using an HTTP authentication scheme
+            instead of using the <spanx style='verb'>client_id</spanx> and
+            <spanx style='verb'>client_secret</spanx> request parameters. Including the client
+            credentials using an HTTP authentication scheme fullfills the requirements of including
+            the parameters as defined by the various flows. The client MUST NOT include the client
+            credentials using more than one mechanism.
+          </t>
+          <t>
+            The authorization server MUST accept the client credentials using both the request
+            parameters, and the HTTP Basic authentication scheme as defined in
+            <xref target='RFC2617' />. The authorization server MAY support additional HTTP
+            authentication schemes.
+          </t>
+          <figure>
+            <preamble>
+              For example (line breaks are for display purposes only):
+            </preamble>
+            <artwork>
+              <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+  Content-Type: application/x-www-form-urlencoded
+
+  type=web_server&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+            </artwork>
+          </figure>
+        </section>
+
         <section title='Response Format' anchor='server_response'>
           <t>
             Authorization servers respond to client requests by including a set of response
-            parameters in the entity body of the HTTP response. The response uses the
-            <spanx style='verb'>application/json</spanx> media type as defined by
-            <xref target='RFC4627' />.
+            parameters in the entity body of the HTTP response. The response uses one of three
+            formats based on the format requested by the client (using the
+            <spanx style='verb'>format</spanx> request parameter):
+            
+            <list style='symbols'>
+              <t>
+                The <spanx style='verb'>application/json</spanx> media type as defined by
+                <xref target='RFC4627' />. The parameters are serialized into a JSON structure by
+                adding each parameter at the highest structure level. Parameter names and string
+                values are included as JSON strings. Numerical values are included as JSON numbers.
+                
+                <figure>
+                  <preamble>
+                    For example:
+                  </preamble>
+                  <artwork>
+                    <![CDATA[
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
+]]>
+                  </artwork>
+                </figure>
+              </t>
+              <t>
+                The <spanx style='verb'>application/xml</spanx> media type as defined by
+                <xref target='RFC3023' />. The parameters are serialized into an XML structure by
+                adding each parameter as a child element of the root
+                <spanx style='verb'>&lt;OAuth&gt;</spanx> element. [[ Add namespace ]]
+
+                <figure>
+                  <preamble>
+                    For example:
+                  </preamble>
+                  <artwork>
+                    <![CDATA[
+  <?xml version='1.0' encoding="utf-8"?>
+  <OAuth>
+    <access_token>SlAV32hkKG</access_token>
+    <expires_in>3600</expires_in>
+    <refresh_token>8xLOxBtZp8</refresh_token>
+  </OAuth>
+]]>
+                  </artwork>
+                </figure>
+              </t>
+              <t>
+                The <spanx style="verb">application/x-www-form-urlencoded</spanx> media type as
+                defined by <xref target="W3C.REC-html40-19980424" />.
+
+                <figure>
+                  <preamble>
+                    For example (line breaks are for display purposes only):
+                  </preamble>
+                  <artwork>
+                    <![CDATA[
+  access_token=SlAV32hkKG&expires_in=3600&
+  refresh_token=8xLOxBtZp8
+]]>
+                  </artwork>
+                </figure>
+              </t>
+            </list>
           </t>
           <t>
-            The parameters are serialized into a JSON structure by adding each parameter at the
-            highest structure level. Parameter names and string values are included as JSON
-            strings. Numerical number are included as JSON numbers.
           </t>
           <t>
             The authorization server MUST include the HTTP <spanx style='verb'>Cache-Control</spanx>
@@ -419,9 +563,10 @@
             <t>
               After receiving and verifying a valid and authorized access token request from the
               client (as described in each of the flows below), the authorization server constructs
-              a JSON-formatted response which includes the common parameters set as well as
-              additional flow-specific parameters. The formatted parameters are sent to the client
-              in the entity body of the HTTP response with a 200 status code (OK).
+              the response using the format requested by the client, which includes the common
+              parameters set as well as additional flow-specific parameters. The formatted
+              parameters are sent to the client in the entity body of the HTTP response with a 200
+              status code (OK).
             </t>
             <t>
               The token response contains the following common parameters:
@@ -457,7 +602,7 @@
             </t>
             <figure>
               <preamble>
-                For example (line breaks are for display purposes only):
+                For example:
               </preamble>
               <artwork>
                 <![CDATA[
@@ -465,8 +610,11 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600,
-  "refresh_token":"8xLOxBtZp8"}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
 ]]>
               </artwork>
             </figure>
@@ -500,7 +648,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"incorrect_client_credentials"}
+  {
+    "error":"incorrect_client_credentials"
+  }
 ]]>
               </artwork>
             </figure>
@@ -518,28 +668,6 @@
         </t>
         <t>
           Unless otherwise noted, all the protocol parameter names and values are case sensitive.
-        </t>
-      </section>
-
-      <section title='Client Credentials' anchor='client_id'>
-        <t>
-          When requesting access from the authorization server, the client identifies itself using
-          a set of client credentials. The client credentials include a client identifier and an
-          OPTIONAL symmetric shared secret. The means through which the client obtains these
-          credentials are beyond the scope of this specification, but usually involve registration
-          with the authorization server.
-        </t>
-        <t>
-          The client identifier is used by the authorization server to establish the identity of
-          the client for the purpose of presenting information to the resource owner prior to
-          granting access, as well as for providing different service levels to different clients.
-          They can also be used to block unauthorized clients from requesting access.
-        </t>
-        <t>
-          Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-          about the confidentiality of client credentials without establishing trust with the
-          client operator. Authorization servers SHOULD NOT issue client secrets to clients
-          incapable of keeping their secrets confidential.
         </t>
       </section>
 
@@ -625,7 +753,7 @@
           <t>
             In order for the end-user to grant the client access, the client sends the end-user
             to the authorization server. The client constructs the request URI by adding the
-            following URI query parameters to the user authorization endpoint URI:
+            following URI query parameters to the end-user endpoint URI:
 
             <list style='hanging' hangIndent='6'>
               <t hangText='type'>
@@ -865,7 +993,7 @@
           <list style='format (%C)'>
             <t>
               The web client initiates the flow by redirecting the end-user's user-agent to the
-              authorization endpoint with its client identifier and a redirect URI to which the
+              end-user endpoint with its client identifier and a redirect URI to which the
               authorization server will send the end-user back once authorization is received (or
               denied).
             </t>
@@ -895,7 +1023,7 @@
           <t>
             In order for the end-user to grant the client access, the client sends the end-user
             to the authorization server. The client constructs the request URI by adding the
-            following URI query parameters to the user authorization endpoint URI:
+            following URI query parameters to the end-user endpoint URI:
 
             <list style='hanging' hangIndent='6'>
               <t hangText='type'>
@@ -1098,6 +1226,13 @@
                 bearer token (an access token without a matching secret) as described by
                 <xref target='bearer_token' />.
               </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
+              </t>
             </list>
           </t>
           <figure>
@@ -1125,7 +1260,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1133,8 +1268,11 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600,
-  "refresh_token":"8xLOxBtZp8"}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1164,7 +1302,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"incorrect_client_credentials"}
+  {
+    "error":"incorrect_client_credentials"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1231,24 +1371,25 @@
               identifier in the request.
             </t>
             <t>
-              The authorization server issues a verification code, a user code, and provides the
-              end-user authorization URI.
+              The authorization server issues a verification code, an end-user code, and provides the
+              end-user verification URI.
             </t>
             <t>
               The client instructs the end-user to use its user-agent (elsewhere) and visit the
-              provided authorization URI. The client provides the user with the user code to
-              enter in order to grant access.
+              provided end-user verification URI. The client provides the end-user with the
+              end-user code to enter in order to grant access.
             </t>
             <t>
               The authorization server authenticates the end-user (via the user-agent) and
               prompts the end-user to grant the client's access request. If the end-user agrees to
-              the client's access request, the end-user enters the user code provided by the
-              client.
+              the client's access request, the end-user enters the end-user code provided by the
+              client. The authorization server validates the end-user code provided by the
+              end-user.
             </t>
             <t>
               While the end-user authorizes (or denies) the client's request (D), the client
               repeatedly polls the authorization server to find out if the end-user completed the
-              user authorization step. The client includes the verification code and its client
+              end-user authorization step. The client includes the verification code and its client
               identifier.
             </t>
             <t>
@@ -1283,6 +1424,13 @@
                 strings, their order does not matter, and each string adds an additional access
                 range to the requested scope.
               </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
+              </t>
             </list>
           </t>
           <figure>
@@ -1299,8 +1447,8 @@
             </artwork>
           </figure>
           <t>
-            In response, the authorization server generates a verification code and a user code
-            and includes them in the HTTP response body using the
+            In response, the authorization server generates a verification code and an end-user
+            code and includes them in the HTTP response body using the
             <spanx style='verb'>application/json</spanx> format as described by
             <xref target='server_response' /> with a 200 status code (OK). The response contains
             the following parameters:
@@ -1312,11 +1460,11 @@
               </t>
               <t hangText='user_code'>
                 <vspace />
-                REQUIRED. The user code.
+                REQUIRED. The end-user code.
               </t>
-              <t hangText='user_uri'>
+              <t hangText='verification_uri'>
                 <vspace />
-                REQUIRED. The user authorization URI on the authorization server. The URI should be
+                REQUIRED. The end-user verification URI on the authorization server. The URI should be
                 short and easy to remember as end-users will be asked to manually type it into
                 their user-agent.
               </t>
@@ -1333,7 +1481,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1341,21 +1489,25 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"code":"74tq5miHKB","user_code":"94248","user_uri":
-  "http://www.example.com/device","interval"=5}
+  {
+    "code":"74tq5miHKB",
+    "user_code":"94248",
+    "verification_uri":"http://www.example.com/device",
+    "interval"=5
+  }
 ]]>
             </artwork>
           </figure>
           <t>
-            The client displays the user code and the user authorization URI to the end-user, and
-            instructs the end-user to visit the URI using a user-agent and enter the user code.
+            The client displays the end-user code and the end-user verification URI to the end-user, and
+            instructs the end-user to visit the URI using a user-agent and enter the end-user code.
           </t>
           <t>
-            The end-user manually types the provided URI and authenticates with the authorization
-            server. The authorization server prompts the end-user to authorize the client's
-            request by entering the user code provided by the client. Once the end-user approves
-            or denies the request, the authorization server informs the end-user to return to the
-            device for further instructions.
+            The end-user manually types the provided verification URI and authenticates with the
+            authorization server. The authorization server prompts the end-user to authorize the
+            client's request by entering the end-user code provided by the client. Once the
+            end-user approves or denies the request, the authorization server informs the end-user
+            to return to the device for further instructions.
           </t>
         </section>
 
@@ -1398,6 +1550,13 @@
                 bearer token (an access token without a matching secret) as described by
                 <xref target='bearer_token' />.
               </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
+              </t>
             </list>
           </t>
           <figure>
@@ -1408,7 +1567,7 @@
             <artwork>
               <![CDATA[
   POST /token?type=device_token&client_id=s6BhdRkqt3
-       &code=J2vC42OifV HTTP/1.1
+       &code=74tq5miHKB HTTP/1.1
   Host: server.example.com
 ]]>
             </artwork>
@@ -1419,7 +1578,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1427,8 +1586,11 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600,
-  "refresh_token":"8xLOxBtZp8"}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1455,7 +1617,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"authorization_declined"}
+  {
+    "error":"authorization_declined"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1487,7 +1651,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"authorization_pending"}
+  {
+    "error":"authorization_pending"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1601,6 +1767,13 @@
                 bearer token (an access token without a matching secret) as described by
                 <xref target='bearer_token' />.
               </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
+              </t>
             </list>
           </t>
           <figure>
@@ -1625,7 +1798,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1633,8 +1806,11 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600,
-  "refresh_token":"8xLOxBtZp8"}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1662,7 +1838,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"incorrect_client_credentials"}
+  {
+    "error":"incorrect_client_credentials"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1741,12 +1919,18 @@
                 bearer token (an access token without a matching secret) as described by
                 <xref target='bearer_token' />.
               </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
+              </t>
             </list>
           </t>
           <figure>
             <preamble>
-              For example, the client makes the following HTTPS request (line breaks are for
-              display purposes only):
+              For example, the client makes the following HTTPS request:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1763,7 +1947,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1771,8 +1955,11 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600,
-  "refresh_token":"8xLOxBtZp8"}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1796,7 +1983,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"incorrect_client_credentials"}
+  {
+    "error":"incorrect_client_credentials"
+  }
 ]]>
             </artwork>
           </figure>
@@ -1868,6 +2057,17 @@
                 <vspace />
                 REQUIRED. The assertion.
               </t>
+              <t hangText='client_id'>
+                <vspace />
+                OPTIONAL. The client identifier as described in <xref target='client_id' />. The
+                authorization server MAY require including the client credentials with the request
+                based on the assertion properties.
+              </t>
+              <t hangText='client_secret'>
+                <vspace />
+                OPTIONAL. The client secret as described in <xref target='client_id' />. MUST NOT
+                be included if the <spanx style='verb'>client_id</spanx> parameter is omitted.
+              </t>
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited
@@ -1882,6 +2082,13 @@
                 <xref target='crypto_token' />. If omitted, the authorization server will issue a
                 bearer token (an access token without a matching secret) as described by
                 <xref target='bearer_token' />.
+              </t>
+              <t hangText='format'>
+                <vspace />
+                OPTIONAL. The response format requested by the client. Value MUST be one of
+                <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+                <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+                no omitted.
               </t>
             </list>
           </t>
@@ -1906,7 +2113,7 @@
           </t>
           <figure>
             <preamble>
-              For example (line breaks are for display purposes only):
+              For example:
             </preamble>
             <artwork>
               <![CDATA[
@@ -1914,7 +2121,10 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600
+  }
 ]]>
             </artwork>
           </figure>
@@ -1941,7 +2151,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"invalid_assertion"}
+  {
+    "error":"invalid_assertion"
+  }
 ]]>
             </artwork>
           </figure>
@@ -2006,6 +2218,13 @@
             If omitted, the authorization server will issue a bearer token (an access token without
             a matching secret) as described by <xref target='bearer_token' />.
           </t>
+          <t hangText='format'>
+            <vspace />
+            OPTIONAL. The response format requested by the client. Value MUST be one of
+            <spanx style='verb'>json</spanx>, <spanx style='verb'>xml</spanx>, or
+            <spanx style='verb'>form</spanx>. Defaults to <spanx style='verb'>json</spanx> if
+            no omitted.
+          </t>
         </list>
       </t>
       <figure>
@@ -2033,7 +2252,7 @@
       </t>
       <figure>
         <preamble>
-          For example (line breaks are for display purposes only):
+          For example:
         </preamble>
         <artwork>
           <![CDATA[
@@ -2041,7 +2260,10 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"access_token":"SlAV32hkKG","expires_in":3600}
+  {
+    "access_token":"SlAV32hkKG",
+    "expires_in":3600
+  }
 ]]>
         </artwork>
       </figure>
@@ -2071,7 +2293,9 @@
   Content-Type: application/json
   Cache-Control: no-store
 
-  {"error":"incorrect_client_credentials"}
+  {
+    "error":"incorrect_client_credentials"
+  }
 ]]>
         </artwork>
       </figure>
@@ -2540,11 +2764,11 @@
 
     <section title='Identifying a Protected Resource'>
       <t>
-        Clients access protected resources after locating the appropriate authorization and token endpoints
-        and obtaining an access token. In many cases, interacting with a protected resource requires
-        prior knowledge of the protected resource properties and methods, as well as its
-        authentication requirements (i.e. establishing client identity, locating the authorization
-        and token endpoints).
+        Clients access protected resources after locating the appropriate end-user and token
+        endpoints and obtaining an access token. In many cases, interacting with a protected
+        resource requires prior knowledge of the protected resource properties and methods, as well
+        as its authentication requirements (i.e. establishing client identity, locating the
+        end-user and token endpoints).
       </t>
       <t>
         However, there are cases in which clients are unfamiliar with the protected resource,
@@ -2561,9 +2785,9 @@
       <section title='The WWW-Authenticate Response Header' anchor='authn_header'>
         <t>
           A resource server receiving a request for a protected resource without a valid access
-          token MUST respond with a 401 HTTP status code (Unauthorized), and includes at least one
-          <spanx style='verb'>Token</spanx> <spanx style='verb'>WWW-Authenticate</spanx> response
-          header field challenge.
+          token MUST respond with a 401 (Unauthorized) or 403 (Forbidden) HTTP status code, and
+          include at least one <spanx style='verb'>Token</spanx>
+          <spanx style='verb'>WWW-Authenticate</spanx> response header field challenge.
         </t>
         <t>
           The <spanx style='verb'>WWW-Authenticate</spanx> header field uses the framework defined by
@@ -2575,14 +2799,16 @@
   challenge       = "Token" RWS token-challenge
 
   token-challenge = realm
-                    [ CS authz-uri ]
+                    [ CS user-uri ]
                     [ CS token-uri ]
                     [ CS algorithms ]
+                    [ CS scope ]
                     [ CS error ]
 
-  authz-uri       = "auth-uri" "=" URI-Reference
+  user-uri       = "user-uri" "=" URI-Reference
   token-uri       = "token-uri" "=" URI-Reference
   algorithms      = "algorithms" "=" <"> 1#algorithm-name  <">
+  scope           = "scope" "=" <"> 1#URI-Reference  <">
   error           = "error" "=" <"> token <">
  
   CS              = OWS "," OWS
@@ -2590,28 +2816,32 @@
           </artwork>
         </figure>
 
-        <section title="The 'realm' Attribute">
-          <t>
-            The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
-            resources partition as defined by <xref target='RFC2617' />.
-          </t>
-        </section>
-
-        <section title="The 'authorization-uri' Attribute" anchor='authz_uri_attribute'>
-          <t>
-          </t>
-        </section>
-
-        <section title="The 'algorithms' Attribute">
-          <t>
-          </t>
-        </section>
-
-        <section title="The 'error' Attribute">
-          <t>
-          </t>
-        </section>
-
+        <t>
+          The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
+          resources partition as defined by <xref target='RFC2617' />.
+        </t>
+        <t>
+          The <spanx style='verb'>user-uri</spanx> and <spanx style='verb'>token-uri</spanx>
+          attributes provide a way for the resource server to advertise the URIs of the end-user
+          and token endpoints capable of issuing an access token suitable for accessing the
+          requested resource.
+        </t>
+        <t>
+          The <spanx style='verb'>algorithms</spanx> attribute is a space-delimited list of the
+          cryptographic algorithms supported by the resource server. The client MAY request an
+          access token with a suitable matching secret by using the
+          <spanx style='verb'>secret_type</spanx> request parameter as described in
+          <xref target='crypto_token' />.
+        </t>
+        <t>
+          The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of URIs
+          (relative or absolute) indicating the required scope of the access token for accessing
+          the requested resource.
+        </t>
+        <t>
+          The <spanx style='verb'>error</spanx> attribute is used to inform the client the reason
+          why an access request was declined. [[ Add list of error codes ]]
+        </t>
       </section>
 
     </section>
@@ -2650,6 +2880,28 @@
         <list style='symbols'>
           <t>
             Corrected device example.
+          </t>
+          <t>
+            Added client credentials parameters to the assertion flow as OPTIONAL.
+          </t>
+          <t>
+            Added the ability to send client credentials using an HTTP authentication scheme.
+          </t>
+          <t>
+            Initial text for the <spanx style='verb'>WWW-Authenticate</spanx> header (also added
+            scope support).
+          </t>
+          <t>
+            Change authorization endpoint to end-user endpoint.
+          </t>
+          <t>
+            In the device flow, change the <spanx style='verb'>user_uri</spanx> parameter to
+            <spanx style='verb'>verification_uri</spanx> to avoid confusion with the end-user
+            endpoint.
+          </t>
+          <t>
+            Add <spanx style='verb'>format</spanx> request parameter and support for XML and
+            form-encoded responses.
           </t>
         </list>
       </t>
@@ -2747,6 +2999,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3023.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
