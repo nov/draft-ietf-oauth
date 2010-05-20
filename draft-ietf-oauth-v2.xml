@@ -30,7 +30,7 @@
       </address>
     </author>
     <author fullname='Dick Hardt' surname='Hardt' initials='D'>
-      <organization/>
+      <organization>Microsoft</organization>
       <address>
         <email>dick.hardt@gmail.com</email>
         <uri>http://dickhardt.org/</uri>
@@ -1440,9 +1440,11 @@
             </preamble>
             <artwork>
               <![CDATA[
-  POST /token?type=device_code&client_id=s6BhdRkqt3
-        HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  
+  type=device_code&client_id=s6BhdRkqt3
 ]]>
             </artwork>
           </figure>
@@ -1541,7 +1543,7 @@
               </t>
               <t hangText='code'>
                 <vspace />
-                The verification code received from the authorization server.
+                REQUIRED. The verification code received from the authorization server.
               </t>
               <t hangText='secret_type'>
                 <vspace />
@@ -1566,9 +1568,12 @@
             </preamble>
             <artwork>
               <![CDATA[
-  POST /token?type=device_token&client_id=s6BhdRkqt3
-       &code=74tq5miHKB HTTP/1.1
+  POST /token HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  
+  type=device_token&client_id=s6BhdRkqt3
+  &code=74tq5miHKB
 ]]>
             </artwork>
           </figure>
@@ -1785,6 +1790,7 @@
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
   
   type=username&client_id=s6BhdRkqt3&client_secret=
   47HDu8s&username=johndoe&password=A3ddj3w
@@ -1936,6 +1942,7 @@
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
   
   type=client_credentials&client_id=s6BhdRkqt3&client_secret=47HDu8s
 ]]>
@@ -2101,6 +2108,7 @@
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
   
   type=assertion&format=_______&assertion=_______
 ]]>
