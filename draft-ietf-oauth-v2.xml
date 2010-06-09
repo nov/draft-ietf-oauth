@@ -74,8 +74,8 @@
         attributes. Tokens are issued to third-party clients by an authorization server with the
         approval of the resource owner. Instead of sharing their credentials with the client,
         resource owners grant access by authenticating directly with the authorization server which
-        in turn issues a token to the client. The client uses the token (and optional secret) to
-        authenticate with the resource server and gain access.
+        in turn issues a token to the client. The client uses the token to authenticate with the
+        resource server and gain access.
       </t>
       <t>
         For example, a web user (resource owner) can grant a printing service (client) access to
@@ -126,17 +126,7 @@
             <t hangText='access token'>
               <vspace />
               A token used by the client to make authenticated requests on behalf of the resource
-              owner. Access tokens may have a matching secret.
-            </t>
-            <t hangText='bearer token'>
-              <vspace />
-              An access token without a matching secret, used to obtain access to a protected
-              resource by simply presenting the access token as-is to the resource server.
-            </t>
-            <t hangText='cryptographic token'>
-              <vspace />
-              An access token issued with a matching secret which requires the application of a
-              cryptographic method (i.e. signatures) when used.
+              owner.
             </t>
             <t hangText='refresh token'>
               <vspace />
@@ -218,7 +208,7 @@
   |        |--(A)------ Refresh Token ------->| Authorization |
   |        |                                  |    Server     |
   |        |<-(B)------ Access Token ---------|               |
-  |        |        (with Optional Secret)    +---------------+
+  |        |                                  +---------------+
   | Client |
   |        |            HTTP Request          +---------------+
   |        |--(C)--- with Access Token ------>|    Resource   |
@@ -362,7 +352,7 @@
           incapable of keeping their secrets confidential.
         </t>
       </section>
-      
+
       <section title='End-User Endpoint'>
         <t>
           In flows that involved an end-user, clients direct the end-user to the end-user endpoint
@@ -379,10 +369,7 @@
         </t>
         <t>
           The URI of the end-user endpoint can be found in the service documentation, or can
-          be obtained by the client by making an unauthorized protected resource request (from the
-          <spanx style='verb'>WWW-Authenticate</spanx> response header
-          <spanx style='verb'>user-uri</spanx> attribute as described by
-          <xref target='authz_header' />).
+          be obtained by using [[ OAuth Discovery ]].
         </t>
         <t>
           The end-user endpoint advertised by the resource server MAY include a query
@@ -404,10 +391,7 @@
         </t>
         <t>
           The URI of the token endpoint can be found in the service documentation, or can be
-          obtained by the client by making an unauthorized protected resource request (from the
-          <spanx style='verb'>WWW-Authenticate</spanx> response header
-          <spanx style='verb'>token-uri</spanx> attribute as described by
-          <xref target='authz_header' />).
+          obtained by using [[ OAuth Discovery ]].
         </t>
         <t>
           The token endpoint advertised by the resource server MAY include a query component as
@@ -490,14 +474,14 @@
             formats based on the format requested by the client (using the
             <spanx style='verb'>format</spanx> request parameter or the HTTP
             <spanx style='verb'>Accept</spanx> header field):
-            
+
             <list style='symbols'>
               <t>
                 The <spanx style='verb'>application/json</spanx> media type as defined by
                 <xref target='RFC4627' />. The parameters are serialized into a JSON structure by
                 adding each parameter at the highest structure level. Parameter names and string
                 values are included as JSON strings. Numerical values are included as JSON numbers.
-                
+
                 <figure>
                   <preamble>
                     For example:
@@ -537,7 +521,7 @@
               </t>
               <t>
                 The <spanx style="verb">application/x-www-form-urlencoded</spanx> media type as
-                defined by <xref target="W3C.REC-html40-19980424" />.
+                defined by <xref target="W3C.REC-html401-19991224" />.
 
                 <figure>
                   <preamble>
@@ -586,11 +570,6 @@
                   <vspace />
                   OPTIONAL. The refresh token used to obtain new access tokens using the same
                   end-user access grant as described in <xref target='token_refresh' />.
-                </t>
-                <t hangText='access_token_secret'>
-                  <vspace />
-                  REQUIRED if requested by the client. The corresponding access token secret as
-                  requested by the client.
                 </t>
                 <t hangText='scope'>
                   <vspace />
@@ -938,13 +917,6 @@
                 <vspace />
                 REQUIRED. The redirection URI used in the initial request.
               </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
-              </t>
               <t hangText='format'>
                 <vspace />
                 OPTIONAL. The response format requested by the client. Value MUST be one of
@@ -1163,13 +1135,6 @@
                 without prompting the end-user. Defaults to <spanx style='verb'>false</spanx> if
                 omitted.
               </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
-              </t>
             </list>
           </t>
           <t>
@@ -1207,7 +1172,7 @@
               If the end-user authorizes the access request, the authorization server issues an
               access token and delivers it to the client by adding the following parameters, using
               the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined
-              by <xref target='W3C.REC-html40-19980424' />, to the redirection URI fragment:
+              by <xref target='W3C.REC-html401-19991224' />, to the redirection URI fragment:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='access_token'>
@@ -1226,11 +1191,6 @@
                   <vspace />
                   REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
                   client authorization request. Set to the exact value received from the client.
-                </t>
-                <t hangText='access_token_secret'>
-                  <vspace />
-                  REQUIRED if requested by the client. The corresponding access token secret as
-                  requested by the client.
                 </t>
               </list>
             </t>
@@ -1253,7 +1213,7 @@
               If the end-user denied the access request, the authorization server responds to the
               client by adding the following parameters, using the
               <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
-              <xref target='W3C.REC-html40-19980424' />, to the redirection URI fragment:
+              <xref target='W3C.REC-html401-19991224' />, to the redirection URI fragment:
 
               <list style='hanging' hangIndent='6'>
                 <t hangText='error'>
@@ -1316,7 +1276,7 @@
         </section>
 
       </section>
-      
+
       <section title='Device Flow' anchor='device_flow'>
         <t>
           The device flow is a user delegation flow suitable for clients executing on devices
@@ -1552,13 +1512,6 @@
                 <vspace />
                 REQUIRED. The verification code received from the authorization server.
               </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
-              </t>
               <t hangText='format'>
                 <vspace />
                 OPTIONAL. The response format requested by the client. Value MUST be one of
@@ -1774,13 +1727,6 @@
                 strings, their order does not matter, and each string adds an additional access
                 range to the requested scope.
               </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
-              </t>
               <t hangText='format'>
                 <vspace />
                 OPTIONAL. The response format requested by the client. Value MUST be one of
@@ -1928,13 +1874,6 @@
                 by the authorization server. If the value contains multiple space-delimited
                 strings, their order does not matter, and each string adds an additional access
                 range to the requested scope.
-              </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
               </t>
               <t hangText='format'>
                 <vspace />
@@ -2096,13 +2035,6 @@
                 strings, their order does not matter, and each string adds an additional access
                 range to the requested scope.
               </t>
-              <t hangText='secret_type'>
-                <vspace />
-                OPTIONAL. The access token secret type as described by
-                <xref target='crypto_token' />. If omitted, the authorization server will issue a
-                bearer token (an access token without a matching secret) as described by
-                <xref target='bearer_token' />.
-              </t>
               <t hangText='format'>
                 <vspace />
                 OPTIONAL. The response format requested by the client. Value MUST be one of
@@ -2229,8 +2161,8 @@
         <t>
           When choosing between launching an external browser and an embedded user-agent,
           developers should consider the following:
-          
-          <list sytle='symbols'>
+
+          <list style='symbols'>
             <t>
               External user-agents may improve completion rate as the end-user may already be
               logged-in and not have to re-authenticate.
@@ -2240,32 +2172,30 @@
               switch context and open new windows.
             </t>
             <t>
-              Embedded user-agnets are less secure because users are authenticating in unidentified
+              Embedded user-agents are less secure because users are authenticating in unidentified
               window without access to the protections offered by many user-agents.
             </t>
           </list>
         </t>
       </section>
-      
+
     </section>
 
     <section title='Refreshing an Access Token' anchor='token_refresh'>
       <t>
         Token refresh is used when the lifetime of an access token is shorter than the lifetime of
         the authorization grant. It allows clients to obtain a new access token without having to
-        go through the authorization flow again or involve the resource owner. It is also used to
-        obtain a new token with different security properties (e.g. bearer token, token with
-        shared symmetric secret).
+        go through the authorization flow again or involve the resource owner.
       </t>
-      <figure title='Refresing an Access Token' anchor='Figure 9'>
+      <figure title='Refreshing an Access Token' anchor='Figure 9'>
         <artwork>
           <![CDATA[
-  +--------+          Client Credentials,     +---------------+
-  |        |            Refresh Token,        |               |
-  |        |>--(A)----- & Secret Type ------->| Authorization |
+  +--------+                                  +---------------+
+  |        |         Client Credentials,      |               |
+  |        |>--(A)----- Refresh Token ------->| Authorization |
   | Client |                                  |     Server    |
   |        |<--(B)----- Access Token --------<|               |
-  |        |          & Optional Secret       |               |
+  |        |                                  |               |
   +--------+                                  +---------------+
 ]]>
         </artwork>
@@ -2274,7 +2204,7 @@
         To refresh a token, the client constructs an HTTP <spanx style='verb'>POST</spanx> request
         to the token endpoint and includes the following parameters in the HTTP request
         body using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type
-        as defined by <xref target='W3C.REC-html40-19980424' />:
+        as defined by <xref target='W3C.REC-html401-19991224' />:
 
         <list style='hanging' hangIndent='6'>
           <t hangText='type'>
@@ -2292,12 +2222,6 @@
           <t hangText='refresh_token'>
             <vspace />
             REQUIRED. The refresh token associated with the access token to be refreshed.
-          </t>
-          <t hangText='secret_type'>
-            <vspace />
-            OPTIONAL. The access token secret type as described by <xref target='crypto_token' />.
-            If omitted, the authorization server will issue a bearer token (an access token without
-            a matching secret) as described by <xref target='bearer_token' />.
           </t>
           <t hangText='format'>
             <vspace />
@@ -2322,7 +2246,7 @@
   Content-Type: application/x-www-form-urlencoded
   
   type=refresh_token&client_id=s6BhdRkqt3&client_secret=8eSEIpnqmM
-  &refresh_token=n4E9O119d&secret_type=hmac-sha256
+  &refresh_token=n4E9O119d
 ]]>
         </artwork>
       </figure>
@@ -2361,9 +2285,6 @@
           <t>
             <spanx style='verb'>authorization_expired</spanx>
           </t>
-          <t>
-            <spanx style='verb'>unsupported_secret_type</spanx>
-          </t>
         </list>
       </t>
       <figure>
@@ -2387,118 +2308,97 @@
     <section title='Accessing a Protected Resource' anchor='access_resource'>
       <t>
         Clients access protected resources by presenting an access token to the resource server.
-        The methods used by the resource server to validate the access token are beyond the scope
-        of this specification, but generally involve an interaction or coordination between the
-        resource server and authorization server.
       </t>
+      <figure>
+        <preamble>
+          For example:
+        </preamble>
+        <artwork>
+          <![CDATA[
+  GET /resource HTTP/1.1
+  Host: server.example.com
+  Authorization: Token token="vF9dft4qmT"
+]]>
+        </artwork>
+      </figure>
       <t>
-        The method in which a client uses an access token depends on the security properties of the
-        access tokens. By default, access tokens are issued without a matching secret. Clients MAY
-        request an access token with a matching secret by specifying the desired secret type using
-        the <spanx style='verb'>secret_type</spanx> token request parameter.
-      </t>
-      <t>
-        When an access token does not include a matching secret, the access token acts as a bearer
-        token, where the token string is a shared symmetric secret. This requires treating the
-        access token with the same care as other secrets (e.g. user passwords). Access tokens
-        SHOULD NOT be sent in the clear over an insecure channel.
+        Access tokens act as bearer tokens, where the token string acts as a shared symmetric
+        secret. This requires treating the access token with the same care as other secrets (e.g.
+        end-user passwords). Access tokens SHOULD NOT be sent in the clear over an insecure
+        channel.
       </t>
       <t>
         However, when it is necessary to transmit bearer tokens in the clear without a secure
         channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
-        to reduce the potential risk from a compromised access token. Clients SHOULD request and
-        utilize an access token with a matching secret when making protected resource requests over
-        an insecure channel (e.g. an HTTP request without using TLS).
-      </t>
-      <t>
-        When an access token includes a matching secret, the secret is not included directly in the
-        request but is used instead to generate a cryptographic signature of the request. The
-        signature can only be generated and verified by entities with access to the secret.
+        to reduce the potential risk from a compromised access token.
       </t>
       <t>
         Clients SHOULD NOT make authenticated requests with an access token to unfamiliar resource
         servers, especially when using bearer tokens, regardless of the presence of a secure
         channel.
       </t>
+      <t>
+        The methods used by the resource server to validate the access token are beyond the scope
+        of this specification, but generally involve an interaction or coordination between the
+        resource server and authorization server.
+      </t>
+      <t>
+        The resource server MUST validate the access token and ensure it has not expired and
+        that its scope covers the requested resource. If the token expired or is invalid, the
+        resource server MUST reply with an HTTP 401 status code (Unauthorized) and include
+        the HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+        <xref target='authn_header' />.
+      </t>
+      <figure>
+        <preamble>
+          For example:
+        </preamble>
+        <artwork>
+          <![CDATA[
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: Token realm='Service', error='token_expired'
+]]>
+        </artwork>
+      </figure>
+      <t>
+        Clients make authenticated token requests using the <spanx style='verb'>Authorization</spanx>
+        request header field as described in <xref target='authz_header' />. Alternatively, clients
+        MAY include the access token using the HTTP request URI in the query component as described
+        in <xref target='query_param' />, or in the HTTP body when using the
+        <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
+        described in <xref target='body_param' />.
+      </t>
+      <t>
+        Clients SHOULD only use the request URI or body when the
+        <spanx style='verb'>Authorization</spanx> request header field is not available, and MUST
+        NOT use more than one method in each request. [[ specify error ]]
+      </t>
 
       <section title='The Authorization Request Header' anchor='authz_header'>
         <t>
           The <spanx style='verb'>Authorization</spanx> request header field is used by clients to
-          make both bearer token and cryptographic token requests. When making bearer token
-          requests, the client uses the <spanx style='verb'>token</spanx> attribute to include the
-          access token in the request without any of the other attributes. Additional methods for
-          making bearer token requests are described in <xref target='bearer_token' />.
+          make authenticated token requests. The client uses the <spanx style='verb'>token</spanx>
+          attribute to include the access token in the request.
         </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT"
-]]>
-          </artwork>
-        </figure>
-        <t>
-          When making a cryptographic token request (using an access token with a matching secret)
-          the client uses the <spanx style='verb'>token</spanx> attribute to include the access
-          token in the request, and uses the <spanx style='verb'>nonce</spanx>,
-          <spanx style='verb'>timestamp</spanx>, <spanx style='verb'>algorithm</spanx>, and
-          <spanx style='verb'>signature</spanx> attributes to apply the matching secret.
-        </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT",
-                       nonce="s8djwd",
-                       timestamp="137131200",
-                       algorithm="hmac-sha256",
-                       signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
-]]>
-          </artwork>
-        </figure>
         <t>
           The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
           <xref target='RFC2617' /> as follows:
         </t>
         <figure>
           <artwork xml:space='preserve'><![CDATA[
-  credentials    = "Token" RWS token-response
-   
-  token-response = token-id
-                   [ CS nonce ]
-                   [ CS timestamp ]
-                   [ CS algorithm ]
-                   [ CS signature ]
-
-  token-id         = "token" "=" <"> token <">
-  timestamp        = "timestamp" "=" <"> 1*DIGIT <">
-  nonce            = "nonce" "=" <"> token <">
- 
-  algorithm        = "algorithm" "=" algorithm-name
-  algorithm-name   = "hmac-sha256" /
-                     token
-
- signature        = "signature" "=" <"> token <">
+  credentials    = "Token" RWS access-token [ CS 1#auth-param ]
+  access-token   = "token" "=" <"> token <">
+  CS             = OWS "," OWS
 ]]>
           </artwork>
         </figure>
       </section>
 
-      <section title='Bearer Token Requests' anchor='bearer_token'>
+      <section title='URI Query Parameter' anchor='query_param'>
         <t>
-          Clients make bearer token requests by including the access token using the HTTP
-          <spanx style='verb'>Authorization</spanx> request header with the
-          <spanx style='verb'>Token</spanx> authentication scheme as described in
-          <xref target='authz_header' />. The access token is included using the
-          <spanx style='verb'>token</spanx> parameter.
+          When including the access token in the HTTP request URI, the client adds the access
+          token to the request URI query component as defined by <xref target='RFC3986' /> using
+          the <spanx style='verb'>oauth_token</spanx> parameter.
         </t>
         <figure>
           <preamble>
@@ -2506,341 +2406,79 @@
           </preamble>
           <artwork>
             <![CDATA[
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT"
-]]>
-          </artwork>
-        </figure>
-        <t>
-          The resource server MUST validate the access token and ensure it has not expired and
-          that its scope covers the requested resource. If the token expired or is  invalid, the
-          resource server MUST reply with an HTTP 401 status code (Unauthorized) and include
-          the HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
-          <xref target='authn_header' />.
-        </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: Token realm='Service', error='token_expired'
-]]>
-          </artwork>
-        </figure>
-        <t>
-          Alternatively, the client MAY include the access token using the HTTP request URI in the
-          query component as described in <xref target='query_param' />, or in the HTTP body when
-          using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content type as
-          described in <xref target='body_param' />. Clients SHOULD only use the request URI or
-          body when the <spanx style='verb'>Authorization</spanx> request header is not available,
-          and MUST NOT use more than one method in each request.
-        </t>
-
-        <section title='URI Query Parameter' anchor='query_param'>
-          <t>
-            When including the access token in the HTTP request URI, the client adds the access
-            token to the request URI query component as defined by <xref target='RFC3986' /> using
-            the <spanx style='verb'>oauth_token</spanx> parameter.
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTPS request:
-            </preamble>
-            <artwork>
-              <![CDATA[
   GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
   Host: server.example.com
 ]]>
-            </artwork>
-          </figure>
-          <t>
-            The HTTP request URI query can include other request-specific parameters, in which
-            case, the <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended
-            following the request-specific parameters, properly separated by an
-            <spanx style="verb">&amp;</spanx> character (ASCII code 38).
-          </t>
-          <t>
-            The resource server MUST validate the access token and ensure it has not expired and
-            its scope includes the requested resource. If the resource expired or is not valid, the
-            resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
-            HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
-            <xref target='authn_header' />.
-          </t>
-        </section>
+          </artwork>
+        </figure>
+        <t>
+          The HTTP request URI query can include other request-specific parameters, in which
+          case, the <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended
+          following the request-specific parameters, properly separated by an
+          <spanx style="verb">&amp;</spanx> character (ASCII code 38).
+        </t>
+        <t>
+          The resource server MUST validate the access token and ensure it has not expired and
+          its scope includes the requested resource. If the resource expired or is not valid, the
+          resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
+          HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+          <xref target='authn_header' />.
+        </t>
+      </section>
 
-        <section title='Form-Encoded Body Parameter' anchor='body_param'>
-          <t>
-            When including the access token in the HTTP request entity-body, the client adds the
-            access token to the request body using the <spanx style='verb'>oauth_token</spanx>
-            parameter. The client can use this method only if the following REQUIRED conditions are
-            met:
+      <section title='Form-Encoded Body Parameter' anchor='body_param'>
+        <t>
+          When including the access token in the HTTP request entity-body, the client adds the
+          access token to the request body using the <spanx style='verb'>oauth_token</spanx>
+          parameter. The client can use this method only if the following REQUIRED conditions are
+          met:
 
-            <list style="symbols">
-              <t>
-                The entity-body is single-part.
-              </t>
-              <t>
-                The entity-body follows the encoding requirements of the
-                <spanx style="verb">application/x-www-form-urlencoded</spanx> content-type as
-                defined by <xref target="W3C.REC-html40-19980424" />.
-              </t>
-              <t>
-                The HTTP request entity-header includes the <spanx style="verb">Content-Type</spanx>
-                header field set to <spanx style="verb">application/x-www-form-urlencoded</spanx>.
-              </t>
-              <t>
-                The HTTP request method is <spanx style='verb'>POST</spanx>,
-                <spanx style='verb'>PUT</spanx>, or <spanx style='verb'>DELETE</spanx>.
-              </t>
-            </list>
-          </t>
-          <t>
-            The entity-body can include other request-specific parameters, in which case, the
-            <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended following the
-            request-specific parameters, properly separated by an <spanx style="verb">&amp;</spanx>
-            character (ASCII code 38).
-          </t>
-          <figure>
-            <preamble>
-              For example, the client makes the following HTTPS request:
-            </preamble>
-            <artwork>
-              <![CDATA[
+          <list style="symbols">
+            <t>
+              The entity-body is single-part.
+            </t>
+            <t>
+              The entity-body follows the encoding requirements of the
+              <spanx style="verb">application/x-www-form-urlencoded</spanx> content-type as
+              defined by <xref target="W3C.REC-html401-19991224" />.
+            </t>
+            <t>
+              The HTTP request entity-header includes the <spanx style="verb">Content-Type</spanx>
+              header field set to <spanx style="verb">application/x-www-form-urlencoded</spanx>.
+            </t>
+            <t>
+              The HTTP request method is <spanx style='verb'>POST</spanx>,
+              <spanx style='verb'>PUT</spanx>, or <spanx style='verb'>DELETE</spanx>.
+            </t>
+          </list>
+        </t>
+        <t>
+          The entity-body can include other request-specific parameters, in which case, the
+          <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended following the
+          request-specific parameters, properly separated by an <spanx style="verb">&amp;</spanx>
+          character (ASCII code 38).
+        </t>
+        <figure>
+          <preamble>
+            For example, the client makes the following HTTPS request:
+          </preamble>
+          <artwork>
+            <![CDATA[
   POST /resource HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
 
   oauth_token=vF9dft4qmT
 ]]>
-            </artwork>
-          </figure>
-          <t>
-            The resource server MUST validate the access token and ensure it has not expired and
-            its scope includes the requested resource. If the resource expired or is not valid, the
-            resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
-            HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
-            <xref target='authn_header' />.
-          </t>
-        </section>
-
-      </section>
-
-      <section title='Cryptographic Tokens Requests' anchor='crypto_token'>
+          </artwork>
+        </figure>
         <t>
-          Clients make authenticated protected resource requests using an access token with a
-          matching secret by calculating a set of values and including them in the request using
-          the <spanx style='verb'>Authorization</spanx> header field. The way clients calculate
-          these values depends on the access token secret type as issued by the authorization
-          server.
+          The resource server MUST validate the access token and ensure it has not expired and
+          its scope includes the requested resource. If the resource expired or is not valid, the
+          resource server MUST reply with an HTTP 401 status code (Unauthorized) and include the
+          HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as described in
+          <xref target='authn_header' />.
         </t>
-        <t>
-          This specification defines the <spanx style='verb'>hmac-sha256</spanx> algorithm, and
-          establishes a registry for providing additional algorithms. Clients obtain an access
-          token with a matching <spanx style='verb'>hmac-sha256</spanx> secret by using the
-          <spanx style='verb'>secret_type</spanx> parameter when requesting an access token.
-        </t>
-
-        <section title="The 'hmac-sha256' Algorithm" anchor='hmac-sha256'>
-          <t>
-            The <spanx style='verb'>hmac-sha256</spanx> algorithm uses the HMAC method as defined
-            in <xref target='RFC2104' /> together with the SHA-256 hash function defined in
-            <xref target='NIST FIPS-180-3' /> to apply the access token secret to the request and
-            generate a signature value that is included in the request instead of transmitting
-            the secret in the clear.
-          </t>
-          <t>
-            To use the <spanx style='verb'>hmac-sha256</spanx> algorithm, clients:
-
-            <list style='numbers'>
-              <t>
-                Calculate the request timestamp and generate a request nonce as described in
-                <xref target='nonce_ts' />.
-              </t>
-              <t>
-                Construct the normalized request string as described in
-                <xref target='base_string' />.
-              </t>
-              <t>
-                Calculate the request signature as described in
-                <xref target='hmac_sha256_function' />.
-              </t>
-              <t>
-                Include the timestamp, nonce, algorithm name, and calculated signature in the
-                request using the <spanx style='verb'>Authorization</spanx> header field.
-              </t>
-            </list>
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: Token token="vF9dft4qmT",
-                       nonce="s8djwd",
-                       timestamp="137131200",
-                       algorithm="hmac-sha256",
-                       signature="wOJIO9A2W5mFwDgiDvZbTSMK/PY="
-]]>
-            </artwork>
-          </figure>
-          <t>
-            The resource server MUST validate the access token and ensure it has not expired and
-            that its scope covers the requested resource. The resource server MUST also recalculate
-            the request signature using the attributes provided by the client and compare it to the
-            signature provided. If the token expired or is invalid, or if the signature is
-            incorrect, the resource server MUST reply with an HTTP 401 status code (Unauthorized)
-            and include the HTTP <spanx style='verb'>WWW-Authenticate</spanx> response header as
-            described in <xref target='authn_header' />.
-          </t>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
-  HTTP/1.1 401 Unauthorized
-  Date: Tue, 15 Nov 2010 08:12:31 GMT
-  WWW-Authenticate: Token realm='Service',
-                          algorithms='hmac-sha256',
-                          error='invalid_signature'
-]]>
-            </artwork>
-          </figure>
-          <t>
-            [[ Errors list ]]
-          </t>
-
-          <section title='Nonce and Timestamp' anchor='nonce_ts'>
-            <t>
-              A timestamp in combination with unique nonce values is used to protect against
-              replay attacks when transmitted over an insecure channel.
-            </t>
-            <t>
-              The nonce is a random string, uniquely generated by the client to allow the resource
-              server to verify that a request has never been made before and helps prevent replay
-              attacks when requests are made over a non-secure channel. The nonce value MUST be
-              unique across all requests with the same timestamp and token combinations.
-            </t>
-            <t>
-              The timestamp value is the current time expressed in the number of seconds since
-              January 1, 1970 00:00:00 GMT, and MUST be a positive integer.
-            </t>
-            <t>
-              To avoid the need to retain an infinite number of nonce values for future checks,
-              resource servers MAY choose to restrict the time period after which a request with an
-              old timestamp is rejected. When resource servers apply such a restriction, clients
-              SHOULD synchronize their clocks by using the resource server's time as indicated by
-              the HTTP <spanx style='verb'>Date</spanx> response header field as defined in
-              <xref target='RFC2616' />.
-            </t>
-          </section>
-
-          <section title='Normalized String Construction' anchor='base_string'>
-            <t>
-              The normalized request string is a consistent, reproducible concatenation of
-              several of the HTTP request elements into a single string. The string is used as an
-              input to the selected cryptographic method and includes the HTTP request method
-              (e.g. <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.), the
-              authority as declared by the HTTP <spanx style='verb'>Host</spanx> request header,
-              and the request resource URI.
-            </t>
-            <t>
-              The normalized request string does not cover the entire HTTP request. Most notably,
-              it does not include the entity-body or most HTTP entity-headers. It is important to
-              note that the resource server cannot verify the authenticity of the excluded request
-              elements without using additional protections such as TLS.
-            </t>
-            <t>
-              The normalized request string is constructed by concatenating together, in order,
-              the following HTTP request elements, separated by the <spanx style='verb'>,</spanx>
-              character (ASCII code 44):
-
-              <list style='numbers'>
-                <t>
-                  The request timestamp as described in <xref target='nonce_ts' />.
-                </t>
-                <t>
-                  The request nonce as described in <xref target='nonce_ts' />.
-                </t>
-                <t>
-                  The cryptographic algorithm used.
-                </t>
-                <t>
-                  The HTTP request method in uppercase. For example:
-                  <spanx style='verb'>HEAD</spanx>, <spanx style='verb'>GET</spanx>,
-                  <spanx style='verb'>POST</spanx>, etc.
-                </t>
-                <t>
-                  The hostname, colon-separated (ASCII code 58) from the TCP port used to make
-                  the request as included in the HTTP request <spanx style='verb'>Host</spanx>
-                  header field. The port MUST be included even if it is not included in the
-                  <spanx style='verb'>Host</spanx> header field (i.e. the default port for the
-                  scheme).
-                </t>
-                <t>
-                  The request resource URI.
-                </t>
-              </list>
-            </t>
-            <figure>
-              <preamble>
-                For example, the normalized request string for the
-                <spanx style='verb'>GET</spanx> request URI
-                <spanx style='verb'>http://example.com/resource</spanx>, request timestamp
-                <spanx style='verb'>137131200</spanx>, request nonce
-                <spanx style='verb'>s8djwd</spanx>, and <spanx style='verb'>hmac-sha256</spanx>
-                algorithm (line breaks are for display purposes only):
-              </preamble>
-              <artwork>
-                <![CDATA[
-  137131200,s8djwd,hmac-sha256,GET,example.com:80,
-  http://example.com/resource
-]]>
-              </artwork>
-            </figure>
-          </section>
-
-          <section title='Signature Calculation' anchor='hmac_sha256_function'>
-            <t>
-              Clients calculate the request signature using the HMAC-SHA256 function:
-            </t>
-            <figure>
-              <artwork>
-                <![CDATA[
-  digest = HMAC-SHA256 (key, text)
-]]>
-              </artwork>
-            </figure>
-            <t>
-              by setting the function variables are follows:
-
-              <list style='hanging' hangIndent='6'>
-                <t hangText='text'>
-                  <vspace />
-                  is set to the value of the normalize request string as described in
-                  <xref target='base_string' />.
-                </t>
-                <t hangText='key'>
-                  <vspace />
-                  is set to the access token secret.
-                </t>
-              </list>
-            </t>
-            <t>
-              The request signature is the calculated value of the
-              <spanx style='verb'>digest</spanx> variable after the result octet string is
-              base64-encoded per <xref target='RFC2045' /> section 6.8.
-            </t>
-          </section>
-
-        </section>
-
       </section>
 
     </section>
@@ -2882,19 +2520,10 @@
   challenge       = "Token" RWS token-challenge
 
   token-challenge = realm
-                    [ CS user-uri ]
-                    [ CS token-uri ]
-                    [ CS algorithms ]
-                    [ CS scope ]
                     [ CS error ]
-
-  user-uri       = "user-uri" "=" URI-Reference
-  token-uri       = "token-uri" "=" URI-Reference
-  algorithms      = "algorithms" "=" <"> 1#algorithm-name  <">
-  scope           = "scope" "=" <"> 1#URI-Reference  <">
+                    [ CS 1#auth-param ]
+                    
   error           = "error" "=" <"> token <">
- 
-  CS              = OWS "," OWS
 ]]>
           </artwork>
         </figure>
@@ -2902,24 +2531,6 @@
         <t>
           The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
           resources partition as defined by <xref target='RFC2617' />.
-        </t>
-        <t>
-          The <spanx style='verb'>user-uri</spanx> and <spanx style='verb'>token-uri</spanx>
-          attributes provide a way for the resource server to advertise the URIs of the end-user
-          and token endpoints capable of issuing an access token suitable for accessing the
-          requested resource.
-        </t>
-        <t>
-          The <spanx style='verb'>algorithms</spanx> attribute is a space-delimited list of the
-          cryptographic algorithms supported by the resource server. The client MAY request an
-          access token with a suitable matching secret by using the
-          <spanx style='verb'>secret_type</spanx> request parameter as described in
-          <xref target='crypto_token' />.
-        </t>
-        <t>
-          The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of URIs
-          (relative or absolute) indicating the required scope of the access token for accessing
-          the requested resource.
         </t>
         <t>
           The <spanx style='verb'>error</spanx> attribute is used to inform the client the reason
@@ -2980,10 +2591,10 @@
       </t>
       <t>
         -06
-        
+
         <list style='symbols'>
           <t>
-            Editorial changes, correnction, clarifications, etc.
+            Editorial changes, corrections, clarifications, etc.
           </t>
           <t>
             Removed conformance section.
@@ -3019,11 +2630,20 @@
             Clarified support for TLS alternatives, and added requirement for TLS 1.2 support for
             token endpoint.
           </t>
+          <t>
+            Removed all signature and cryptography.
+          </t>
+          <t>
+            Removed all discovery.
+          </t>
+          <t>
+            Updated HTML4 reference.
+          </t>
         </list>
       </t>
       <t>
         -05
-        
+
         <list style='symbols'>
           <t>
             Corrected device example.
