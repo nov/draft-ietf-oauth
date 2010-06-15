@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-08'>
+<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-09'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -299,8 +299,8 @@
       <section title='Client Profiles'>
         <t>
           OAuth supports a wide range of client types by providing a rich and extensible framework
-          for establishing authorization and exchaning it for an access token. The methods detailed
-          in this specification were designed to accomodate four client types: web servers,
+          for establishing authorization and exchanging it for an access token. The methods detailed
+          in this specification were designed to accommodate four client types: web servers,
           user-agents, native applications, and autonomous clients. Additional authorization flows
           and client profiles may be defined by other specifications to cover additional scenarios
           and client types.
@@ -478,7 +478,7 @@
                 (registered with the operating system to invoke the client application), or by
                 providing a redirection URI pointing to a server-hosted resource under the client's
                 control which puts the response in the user-agent window title (from which the client
-                can obtain the response by polling the user-agnet window, looking for a window title
+                can obtain the response by polling the user-agent window, looking for a window title
                 change).
               </t>
               <t>
@@ -1167,7 +1167,7 @@
 
         <section title='Error Codes' anchor='error_codes'>
           <t>
-            [[ expalain each error code: ]]
+            [[ explain each error code: ]]
 
             <list style='symbols'>
               <t>
@@ -1486,6 +1486,15 @@
     <appendix title='Document History'>
       <t>
         [[ to be removed by RFC editor before publication as an RFC ]]
+      </t>
+      <t>
+        -09
+        
+        <list style='symbols'>
+          <t>
+            Fixed typos.
+          </t>
+        </list>
       </t>
       <t>
         -08

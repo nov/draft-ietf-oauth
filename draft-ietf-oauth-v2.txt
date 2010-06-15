@@ -11,7 +11,7 @@ Expires: December 17, 2010                                      Facebook
 
 
                          The OAuth 2.0 Protocol
-                         draft-ietf-oauth-v2-08
+                         draft-ietf-oauth-v2-09
 
 Abstract
 
@@ -396,9 +396,9 @@ Internet-Draft                  OAuth 2.0                      June 2010
 1.4.  Client Profiles
 
    OAuth supports a wide range of client types by providing a rich and
-   extensible framework for establishing authorization and exchaning it
+   extensible framework for establishing authorization and exchanging it
    for an access token.  The methods detailed in this specification were
-   designed to accomodate four client types: web servers, user-agents,
+   designed to accommodate four client types: web servers, user-agents,
    native applications, and autonomous clients.  Additional
    authorization flows and client profiles may be defined by other
    specifications to cover additional scenarios and client types.
@@ -589,7 +589,7 @@ Internet-Draft                  OAuth 2.0                      June 2010
       client application), or by providing a redirection URI pointing to
       a server-hosted resource under the client's control which puts the
       response in the user-agent window title (from which the client can
-      obtain the response by polling the user-agnet window, looking for
+      obtain the response by polling the user-agent window, looking for
       a window title change).
 
    o  Utilize the end-user authorization endpoint as described in
@@ -1235,7 +1235,7 @@ Internet-Draft                  OAuth 2.0                      June 2010
 
 4.3.1.  Error Codes
 
-   [[ expalain each error code: ]]
+   [[ explain each error code: ]]
 
    o  "redirect_uri_mismatch"
 
