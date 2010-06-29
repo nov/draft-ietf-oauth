@@ -717,7 +717,8 @@
             parameter value MUST be set to <spanx style='verb'>token</spanx> for requesting an
             access token, <spanx style='verb'>code</spanx> for requesting an authorization code, or
             <spanx style='verb'>code-and-token</spanx> to request both. The authorization server
-            MAY decline to provide one or more of these response types.
+            MAY decline to provide one or more of these response types. [[ The 'code-and-token'
+            type is pending use cases and may be removed for the specification ]]
           </t>
           <t hangText='client_id'>
             <vspace />
@@ -917,7 +918,7 @@
             </t>
             <t hangText='error_description'>
               OPTIONAL. A human-readable text providing additional information, used to assist in
-              the understanding and resolution of the error occured.
+              the understanding and resolution of the error occurred.
             </t>
             <t hangText='error_uri'>
               OPTIONAL. A URI identifying a human-readable web page with information about the
@@ -980,6 +981,9 @@
               </t>
             </list>
           </t>
+          <t>
+            [[ Add mechanism for extending error codes ]]
+          </t>
         </section>
 
       </section>
@@ -1040,18 +1044,24 @@
       </t>
       <t>
         In addition, the client MUST include the appropriate parameters listed for the selected
-        access grant type as described in <xref target='access-grant-parameters' />. When
-        requesting an access token using the <spanx style='verb'>none</spanx> access grant type
-        (no access grant is included), the client is requesting access to the protected resources
-        under its control, or those of another resource owner which has been previously arranged
-        with the authorization server (the method of which is beyond the scope of this
-        specification).
+        access grant type as described in <xref target='access-grant-types' />. 
       </t>
       <t>
         Parameters sent without a value MUST be treated as if they were omitted from the request.
       </t>
 
-      <section title='Access Grant Parameters' anchor='access-grant-parameters'>
+      <section title='Access Grant Types' anchor='access-grant-types'>
+        <t>
+          The client requests an access token using one of the four types of access grants:
+          authorization code, basic credentials, assertion, or refresh token.
+        </t>
+        <t>
+          When requesting an access token using the <spanx style='verb'>none</spanx> access grant
+          type (no access grant is included), the client is requesting access to the protected
+          resources under its control, or those of another resource owner which has been previously
+          arranged with the authorization server (the method of which is beyond the scope of this
+          specification).
+        </t>
 
         <section title='Authorization Code'>
           <t>
@@ -1307,7 +1317,7 @@
             </t>
             <t hangText='error_description'>
               OPTIONAL. A human-readable text providing additional information, used to assist in
-              the understanding and resolution of the error occured.
+              the understanding and resolution of the error occurred.
             </t>
             <t hangText='error_uri'>
               OPTIONAL. A URI identifying a human-readable web page with information about the
@@ -1376,6 +1386,9 @@
                 granted scope.
               </t>
             </list>
+          </t>
+          <t>
+            [[ Add mechanism for extending error codes ]]
           </t>
         </section>
 
@@ -1446,13 +1459,15 @@
             <xref target='RFC2617' /> as follows:
           </t>
           <figure>
-            <artwork xml:space='preserve'><![CDATA[
+            <artwork>
+              <![CDATA[
   credentials    = "Token" RWS access-token [ CS 1#auth-param ]
   access-token   = "token" "=" <"> token <">
   CS             = OWS "," OWS
 ]]>
-          </artwork>
+            </artwork>
           </figure>
+
         </section>
 
         <section title='URI Query Parameter' anchor='query-param'>
@@ -1542,67 +1557,74 @@
 
       </section>
 
-      <section title='Error Response' anchor='resource-error'>
+      <section title='The WWW-Authenticate Response Header Field' anchor='authn-header'>
         <t>
           If the protected resource request contains an invalid access token or is malformed, the
           resource server MUST include the HTTP <spanx style='verb'>WWW-Authenticate</spanx>
-          response header field as described in <xref target='authn-header' />.
+          response header field. The <spanx style='verb'>WWW-Authenticate</spanx> header field
+          uses the framework defined by <xref target='RFC2617' /> as follows:
         </t>
-
-        <section title='The WWW-Authenticate Response Header Field' anchor='authn-header'>
-          <t>
-            The <spanx style='verb'>WWW-Authenticate</spanx> header field uses the framework
-            defined by <xref target='RFC2617' /> as follows:
-          </t>
-          <figure>
-            <artwork>
-              <![CDATA[
+        <figure>
+          <artwork>
+            <![CDATA[
   challenge       = "Token" RWS token-challenge
 
   token-challenge = realm
                     [ CS error ]
                     [ CS error-desc ]
                     [ CS error-uri ]
+                    [ CS scope ]
                     [ CS 1#auth-param ]
                     
   error           = "error" "=" <"> token <">
   error-desc      = "error-description" "=" quoted-string
   error-uri       = "error-uri" = <"> URI-Reference <">
+  scope           = ptoken / <"> ptoken *( 1*SP ptoken ) <">
+
+  ptoken          = 1*ptokenchar
+  ptokenchar      =   "!" / "#" / "$" / "%" / "&" / "'" / "("
+                    / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
+                    / ":" / "<" / "=" / ">" / "?" / "@" / ALPHA
+                    / "[" / "]" / "^" / "_" / "`" / "{" / "|"
+                    / "}" / "~"
 ]]>
-            </artwork>
-          </figure>
-          <figure>
-            <preamble>
-              For example:
-            </preamble>
-            <artwork>
-              <![CDATA[
+          </artwork>
+        </figure>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork>
+            <![CDATA[
   HTTP/1.1 401 Unauthorized
   WWW-Authenticate: Token realm='Example Service', error='expired-token'
 ]]>
-            </artwork>
-          </figure>
-          <t>
-            The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
-            resources partition as defined by <xref target='RFC2617' />.
-          </t>
-          <t>
-            The <spanx style='verb'>error</spanx> attribute is used to provide the client with the
-            reason why the access request was declined. The parameter values are described in
-            <xref target='resource-error-codes' />.
-          </t>
-          <t>
-            The <spanx style='verb'>error-description</spanx> attribute provides a human-readable
-            text containing additional information, used to assist in the understanding and
-            resolution of the error occured.
-          </t>
-          <t>
-            The <spanx style='verb'>error-uri</spanx> attribute provides a URI identifying a
-            human-readable web page with information about the error, used to offer the end-user
-            with additional information about the error. If the value is not an absolute URI, it is
-            relative to the URI of the requested protected resource.
-          </t>
-        </section>
+          </artwork>
+        </figure>
+        <t>
+          The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
+          resources partition as defined by <xref target='RFC2617' />. [[ add explanation ]]
+        </t>
+        <t>
+          The <spanx style='verb'>error</spanx> attribute is used to provide the client with the
+          reason why the access request was declined. The parameter values are described in
+          <xref target='resource-error-codes' />.
+        </t>
+        <t>
+          The <spanx style='verb'>error-description</spanx> attribute provides a human-readable
+          text containing additional information, used to assist in the understanding and
+          resolution of the error occurred.
+        </t>
+        <t>
+          The <spanx style='verb'>error-uri</spanx> attribute provides a URI identifying a
+          human-readable web page with information about the error, used to offer the end-user
+          with additional information about the error. If the value is not an absolute URI, it is
+          relative to the URI of the requested protected resource.
+        </t>
+        <t>
+          The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of scope values
+          indicating the required scope of the access token for accessing the requested resource.
+        </t>
 
         <section title='Error Codes' anchor='resource-error-codes'>
           <t>
@@ -1634,9 +1656,14 @@
               <t hangText='insufficient-scope'>
                 <vspace />
                 The request requires higher privileges than provided by the access token. The
-                resource server SHOULD respond with the HTTP 403 (Forbidden) status code.
+                resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
+                include the <spanx style='verb'>scope</spanx> attribute with the scope necessary to
+                access the protected resource.
               </t>
             </list>
+          </t>
+          <t>
+            [[ Add mechanism for extending error codes ]]
           </t>
           <t>
             If the request lacks any authentication information (i.e. the client was unaware
@@ -1660,21 +1687,178 @@
 
     </section>
 
+    <section title='Extensibility'>
+
+      <section title='Defining New Client Credentials Types'>
+        <t>
+          [[ TBD ]]
+        </t>
+      </section>
+
+      <section title='Defining New Endpoint Parameters'>
+        <t>
+          Applications that wish to define new request or response parameters for use with the
+          end-user authorization endpoint or the token endpoint SHALL do so in one of two ways:
+          register them in the parameters registry (following the procedures in 
+          <xref target='parameters-registry' />), or use the <spanx style='verb'>x_</spanx>
+          parameter name prefix.
+        </t>
+        <t>
+          Parameters utilizing the <spanx style='verb'>x_</spanx> parameter name prefix MUST be
+          limited to vendor-specific extensions that are not commonly applicable, and are specific
+          to the implementation details of the authorization server where they are used. All other
+          new parameters MUST be registered, and MUST NOT use the <spanx style='verb'>x_</spanx>
+          parameter name prefix.
+        </t>
+        <t>
+          Parameter names MUST conform to the param-name ABNF, and parameter values syntax MUST be
+          well-defined (e.g., using ABNF, or a reference to the syntax of an existing parameter).
+        </t>
+        <figure>
+          <artwork>
+            <![CDATA[
+  param-name  = 1*fchar
+  fchar       = "-" / "." / "_" / DIGIT / ALPHA
+]]>
+          </artwork>
+        </figure>
+      </section>
+
+      <section title='Defining New Header Field Parameters'>
+        <t>
+          Applications that wish to define new parameters for use in the OAuth
+          <spanx style='verb'>Authorization</spanx> or <spanx style='verb'>WWW-Authenticate</spanx>
+          header fields MUST register them in the parameters registry, following the procedures in
+          <xref target='parameters-registry' />.
+        </t>
+        <t>
+          Parameter names MUST conform to the param-name ABNF and MUST NOT begin with
+          <spanx style='verb'>x_</spanx>. Parameter values MUST conform to the param-value ABNF and
+          their syntax MUST be well-defined (e.g., using ABNF, or a reference to the syntax of an
+          existing parameter).
+        </t>
+        <figure>
+          <artwork>
+            <![CDATA[
+  param-value  = ptoken | quoted-string
+]]>
+          </artwork>
+        </figure>
+      </section>
+
+      <section title='Defining New Access Grant Types'>
+        <t>
+          The assertion access grant type was designed to allow the authorization server to
+          accept additional access grants not specified. Applications that wish to define
+          additional access grant types can do so by utilizing a new or existing assertion type
+          and format.
+        </t>
+      </section>
+
+    </section>
+
     <section title='Security Considerations'>
       <t>
-        [[ todo ]]
+        [[ TBD ]]
       </t>
     </section>
 
     <section title='IANA Considerations'>
-      <t>
-        [[ Not Yet ]]
-      </t>
+
+      <section title='The OAuth Parameters Registry' anchor='parameters-registry'>
+        <t>
+          This document establishes the OAuth parameters registry.
+        </t>
+        <t>
+          Additional parameters to be use in the end-user authorization endpoint request, the
+          end-user authorization endpoint response, the token endpoint request, the token endpoint
+          response, the <spanx style='verb'>Authorization</spanx> header field, or the
+          <spanx style='verb'>WWW-Authenticate</spanx> header field, are registered on the advice
+          of one or more Designated Experts (appointed by the IESG or their delegate), with a
+          Specification Required (using terminology from <xref target='RFC5226' />). However, to
+          allow for the allocation of values prior to publication, the Designated Expert(s) may
+          approve registration once they are satisfied that such a specification will be published.
+        </t>
+        <t>
+          Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
+          comment, with an appropriate subject (e.g., "Request for parameter: example").
+          [[ Note to RFC-EDITOR: The name of the mailing list should be determined in consultation
+          with the IESG and IANA. Suggested name: oauth-ext-review. ]]
+        </t>
+        <t>
+          Before a period of 14 days has passed, the Designated Expert(s) will either approve or
+          deny the registration request, communicating this decision both to the review list and to
+          IANA. Denials should include an explanation and, if applicable, suggestions as to how to
+          make the request successful. Registration requests that are undetermined for a period
+          longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org
+          mailing list) for resolution.
+        </t>
+
+        <section title='Registration Template'>
+          <t>
+            <list style='hanging'>
+              <t hangText='Parameter name:'>
+                The name requested (e.g., "example").
+              </t>
+              <t hangText='Parameter usage location:'>
+                The location(s) where parameter can be used. The possible locations are: the
+                end-user authorization endpoint request, the end-user authorization endpoint
+                response, the token endpoint request, the token endpoint response, the
+                <spanx style='verb'>Authorization</spanx> header field, or the
+                <spanx style='verb'>WWW-Authenticate</spanx> header field.
+              </t>
+              <t hangText='Change controller:'>
+                For standards-track RFCs, state "IETF". For others, give the name of the
+                responsible party. Other details (e.g., postal address, e-mail address, home page
+                URI) may also be included.
+              </t>
+              <t hangText='Specification document(s):'>
+                Reference to document that specifies the parameter, preferably including a URI that
+                can be used to retrieve a copy of the document. An indication of the relevant
+                sections may also be included, but is not required.
+              </t>
+              <t hangText='Related information:'>
+                Optionally, citations to additional documents containing further relevant
+                information.
+              </t>
+            </list>
+          </t>
+        </section>
+
+        <section title='Example'>
+          <t>
+            The following is the parameter registration request for the
+            <spanx style='verb'>scope</spanx> parameter as defined in this specification:
+            
+            <list style='hanging'>
+              <t hangText='Parameter name:'>
+                scope
+              </t>
+              <t hangText='Parameter usage location:'>
+                The end-user authorization endpoint request, the end-user authorization endpoint
+                response, the token endpoint request, the token endpoint response, and the
+                <spanx style='verb'>WWW-Authenticate</spanx> header field.
+              </t>
+              <t hangText='Change controller:'>
+                IETF
+              </t>
+              <t hangText='Specification document(s):'>
+                [[ this document ]]
+              </t>
+              <t hangText='Related information:'>
+                None
+              </t>
+            </list>
+          </t>
+        </section>
+
+      </section>
+
     </section>
 
     <appendix title='Examples'>
       <t>
-        [[ todo ]]
+        [[ TBD ]]
       </t>
     </appendix>
 
@@ -1735,6 +1919,9 @@
           </t>
           <t>
             Complete cleanup of error codes. Added support for error description and URI.
+          </t>
+          <t>
+            Add initial extensibility support.
           </t>
         </list>
       </t>
@@ -1976,6 +2163,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html401-19991224.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-09.xml'?>
