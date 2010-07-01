@@ -752,7 +752,9 @@
       <t>
         The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
-        request MUST use the HTTP <spanx style='verb'>GET</spanx> method.
+        authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
+        method for the end-user authorization endpoint, and MAY support the use of the
+        <spanx style='verb'>POST</spanx> method as well.
       </t>
       <figure>
         <preamble>
@@ -952,7 +954,7 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid-request'>
                 <vspace />
-                The request is missing a required parameter, includes an unknown parameter or
+                The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, or is otherwise malformed.
               </t>
               <t hangText='invalid-client-id'>
@@ -975,7 +977,7 @@
                 <vspace />
                 The requested response type is not supported by the authorization server.
               </t>
-              <t hangText='invalid_scope'>
+              <t hangText='invalid-scope'>
                 <vspace />
                 The requested scope is invalid, unknown, or malformed.
               </t>
@@ -1015,9 +1017,9 @@
       </t>
       <t>
         The client requests an access token by constructing a token request and making an HTTP
-        <spanx style='verb'>POST</spanx> request. The client constructs the request URI by adding
-        its client credentials to the request as described in
-        <xref target='client-authentication' />, and includes the following parameters using the
+        <spanx style='verb'>POST</spanx> request. The client constructs the request by adding its
+        client credentials to the request as described in <xref target='client-authentication' />,
+        and includes the following parameters using the
         <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the HTTP request
         entity-body:
 
@@ -1356,7 +1358,7 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid-request'>
                 <vspace />
-                The request is missing a required parameter, includes an unknown parameter or
+                The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, repeats a parameter, includes multiple credentials, utilizes
                 more than one mechanism for authenticating the client, or is otherwise malformed.
               </t>
@@ -1634,7 +1636,7 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid-request'>
                 <vspace />
-                The request is missing a required parameter, includes an unknown parameter or
+                The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, repeats the same parameter, uses more than one method for
                 including an access token, or is otherwise malformed. The resource server MUST
                 respond with the HTTP 400 (Bad Request) status code.
@@ -1900,6 +1902,9 @@
         <list style='symbols'>
           <t>
             Fixed typos, editorial changes.
+          </t>
+          <t>
+            Allowed POST for end-user authorization endpoint.
           </t>
         </list>
       </t>
