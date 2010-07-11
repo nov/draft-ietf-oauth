@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' docName='draft-ietf-oauth-v2-10'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-10'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -57,17 +57,38 @@
       </t>
       <t>
         In the traditional client-server authentication model, the client accesses a protected
-        resource on the server by presenting the resource owner's credentials in order to
-        authenticate and gain access. OAuth introduces a third role to the traditional model: the
-        resource owner. In OAuth, the client (which is usually not the resource owner, but is
-        acting on its behalf) requests access to resources controlled by the resource owner and
-        hosted by the resource server.
+        resource on the server by authenticating with the server using the resource owner's
+        credentials. In order to provide third-party applications access to protected resources,
+        the resource owner shares its credentials with the third-party. This creates several
+        problems and limitations:
+        
+        <list style='symbols'>
+          <t>
+            Third-party applications are required to store the resource-owner's credentials
+            for future use, typically a password in clear-text.
+          </t>
+          <t>
+            Servers are required to support password (symmetric) authentication, despite the
+            security weaknesses created by passwords.
+          </t>
+          <t>
+            Third-party applications gain overly broad access to the resource-owner's protected
+            resources, leaving resource owners without any ability to restrict access to a limited
+            subset of resources, to limit access duration, or to limit access to the methods
+            supported by these resources.
+          </t>
+          <t>
+            Resource owners cannot revoke access to an individual third-party without revoking
+            access to all third-parties, and must do so by changing their password.
+          </t>
+        </list>
       </t>
       <t>
-        In addition to removing the need for resource owners to share their credentials, resource
-        owners require the ability to restrict access to a limited subset of the resources they
-        control, to limit access duration, or to limit access to the methods supported by these
-        resources.
+        OAuth address these issues by separating the role of the client from that of the
+        resource owner. In OAuth, the client (which is usually not the resource owner, but is
+        acting on the resource owner's behalf) requests access to resources controlled by the
+        resource owner and hosted by the resource server, and is issued a different set of
+        credentials than those of the resource owner.
       </t>
       <t>
         Instead of using the resource owner's credentials to access protected resources, clients
@@ -85,8 +106,8 @@
         For example, a web user (resource owner) can grant a printing service (client) access to
         her protected photos stored at a photo sharing service (resource server), without sharing
         her username and password with the printing service. Instead, she authenticates directly
-        with the photo sharing service (authorization server) which issues the printing service
-        delegation-specific credentials (token).
+        with an authentication service trusted by the photo sharing service (authorization server)
+        which issues the printing service delegation-specific credentials (token).
       </t>
       <t>
         This specification defines the use of OAuth over <xref target='RFC2616'>HTTP</xref>
@@ -131,39 +152,35 @@
             <t hangText='resource owner'>
               <vspace />
               An entity capable of granting access to a protected resource.
-
-              <list style='hanging' hangIndent='6'>
-                <t hangText='end-user'>
-                  <vspace />
-                  A human resource owner.
-                </t>
-              </list>
+            </t>
+            <t hangText='end-user'>
+              <vspace />
+              A human resource owner.
             </t>
             <t hangText='token'>
               <vspace />
               A string representing an access authorization issued to the client. The string is
-              usually opaque to the client and can self-contain the authorization information in a
-              verifiable manner (i.e. signed), or denotes an identifier used to retrieve the
-              information. Tokens represent a specific scope, duration, and other authorization
-              attributes granted by the resource owner and enforced by the resource server and
-              authorization servers.
-
-              <list style='hanging' hangIndent='6'>
-                <t hangText='access token'>
-                  <vspace />
-                  A token used by the client to make authenticated requests on behalf of the resource
-                  owner.
-                </t>
-                <t hangText='refresh token'>
-                  <vspace />
-                  A token used by the client to obtain a new access token without having to involve
-                  the resource owner.
-                </t>
-                <t hangText='authorization code'>
-                  A short-lived token representing the access grant provided by the end-user. The
-                  authorization code is used to obtain an access token and a refresh token.
-                </t>
-              </list>
+              usually opaque to the client. Tokens represent specific scopes and durations of
+              access, granted by the resource owner, and enforced by the resource server and
+              authorization servers. The token may denote an identifier used to retrieve the
+              authorization information, or self-contain the authorization information in a
+              verifiable manner (i.e. a token string consisting of some data and a signature).
+              Tokens may be pure capabilities. Specific additional authentication credentials may
+              be required in order for a client to use a token.
+            </t>
+            <t hangText='access token'>
+              <vspace />
+              A token used by the client to make authenticated requests on behalf of the resource
+              owner.
+            </t>
+            <t hangText='refresh token'>
+              <vspace />
+              A token used by the client to obtain a new access token without having to involve
+              the resource owner.
+            </t>
+            <t hangText='authorization code'>
+              A short-lived token representing the access grant provided by the end-user. The
+              authorization code is used to obtain an access token and a refresh token.
             </t>
             <t hangText='authorization server'>
               <vspace />
@@ -230,13 +247,12 @@
           <list style='format (%C)'>
             <t>
               The client requests authorization from the resource owner. The client should not
-              interact directly with the resource owner (since that would expose the resource
-              owner's credentials to the client), but instead request authorization via an
-              authorization server or other entities. For example, the client directs the resource
-              owner to the authorization server which in turn issues it an access grant. When
-              unavoidable, the client interacts directly with the end-user, asking for the
-              end-user's username and password. If the client is acting autonomously, the
-              authorization request is beyond the scope of this specification.
+              request the resource owner's credentials directly. Instead, it should request
+              authorization via an authorization server or other entities. For example, the client
+              directs the resource owner to the authorization server which in turn issues it an
+              access grant. When unavoidable, the client interacts directly with the end-user,
+              asking for the end-user's username and password. If the client is acting
+              autonomously, the authorization request is beyond the scope of this specification.
             </t>
             <t>
               The client is issued an access grant which represents the authorization provided by
@@ -244,9 +260,9 @@
 
               <list style='symbols'>
                 <t>
-                  Authorization code - an access grant obtained via an authorization server. The
-                  process used to obtain an authorization code utilized the end-user's user-agent
-                  and is described in <xref target='user-authorization' />.
+                  Authorization code - an access grant obtained via an authorization server.
+                  <xref target='user-authorization' /> describes how to obtain an authorization
+                  code when the end-user is present and using a user-agent.
                 </t>
                 <t>
                   Assertion - an access grant obtained using a different trust framework.
@@ -256,14 +272,15 @@
                   content, and how it was issued, which are beyond the scope of this specification.
                 </t>
                 <t>
-                  Resource owner basic credentials - obtained when interacting directly with a
-                  resource-owner. Resource owner basic credentials (i.e. a username and password)
-                  should only be used when there is a high degree of trust between the resource
-                  owner and the client (e.g. its computer operating system or a highly privileged
-                  application). However, unlike the HTTP Basic authentication scheme defined in
-                  <xref target='RFC2617' />, the resource owner's credentials are used for a single
-                  request and are exchanged for an access token and refresh token. This eliminates
-                  the need for the client to store the resource-owner's credentials for future use.
+                  Resource owner password credentials - obtained when interacting directly with a
+                  resource-owner. Resource owner password credentials (i.e. a username and
+                  password) should only be used when there is a high degree of trust between the
+                  resource owner and the client (e.g. its computer operating system or a highly
+                  privileged application). However, unlike the HTTP Basic authentication scheme
+                  defined in <xref target='RFC2617' />, the resource owner's credentials are used
+                  for a single request and are exchanged for an access token and refresh token.
+                  This eliminates the need for the client to store the resource-owner's credentials
+                  for future use.
                 </t>
               </list>
             </t>
@@ -302,7 +319,7 @@
   |        |--(C)--- Client Credentials ----->| Authorization |
   |        |                                  |     Server    |
   |        |<-(D)------ Access Token ---------|               |
-  |        |      (w/ Optional Refresh Token) +---------------+
+  |        |                                  +---------------+
   | Client |
   |        |                                  +---------------+
   |        |--(E)------ Access Token -------->|    Resource   |
@@ -384,7 +401,7 @@
             <list style='format (%C)'>
               <t>
                 The web client initiates the flow by redirecting the end-user's user-agent to the
-                end-user authorization endpoint as described in <xref target='user-authorization' />
+                end-user authorization endpoint as described in <xref target='user-authorization' />.
                 The client includes its client identifier, requested scope, local state, and a
                 redirect URI to which the authorization server will send the end-user back once
                 access is granted (or denied).
@@ -420,8 +437,8 @@
             based on the user-agent's same-origin policy.
           </t>
           <t>
-            Unlike other profiles in which the client makes a separate end-user authorization request
-            and an access token requests, the client receives the access token as a result of the
+            Unlike other profiles in which the client makes separate requests for end-user
+            authorization and access token, the client receives the access token as a result of the
             end-user authorization request in the form of an HTTP redirection. The client requests
             the authorization server to redirect the user-agent to another web server or local
             resource accessible to the user-agent which is capable of extracting the access token
@@ -524,9 +541,10 @@
                 obtains the response by directly communicating with the embedded user-agent.
               </t>
               <t>
-                Prompt end-users for their basic credentials (username and password) and use them
-                directly to obtain an access token. This is generally discouraged as it hands the
-                end-user's password directly to the 3rd party and is limited to basic credentials.
+                Prompt end-users for their password and use them directly to obtain an access
+                token. This is generally discouraged, as it hands the end-user's password directly
+                to the third-party client which in turn has to store it in clear-text. It also
+                requires the server to support password-based authentication.
               </t>
             </list>
           </t>
@@ -584,38 +602,33 @@
 
     <section title='Client Credentials' anchor='client-authentication'>
       <t>
-        When interacting with the authorization server, the client identifies itself using a set of
-        client credentials. The client credentials include a client identifier and MAY include a
-        secret or other means for the authorization server to authenticate the client.
+        When interacting with the authorization server, the client identifies itself using a client
+        identifier and authenticates using a set of client credentials. This specification provides
+        one mechanism for authenticating the client using password credentials.
       </t>
       <t>
         The means through which the client obtains its credentials are beyond the scope of this
         specification, but usually involve registration with the authorization server.
-        [[ OAuth Discovery provides one way of obtaining basic client credentials ]]
+        [[ OAuth Discovery provides one way of obtaining a client password ]]
       </t>
       <t>
         Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-        about the confidentiality of client credentials without establishing trust with the
+        about the confidentiality of client secrets without establishing trust with the
         client operator. Authorization servers SHOULD NOT issue client secrets to clients
         incapable of keeping their secrets confidential.
       </t>
       <t>
-        This specification provides one mechanism for authenticating the client using a set of basic
-        client credentials. The authorization server MAY authenticate the client using any desired
-        authentication scheme.
-      </t>
-      <t>
-        The client MUST NOT include more than one set of client credentials with each request, and
-        MUST NOT utilize more than one mechanism to authenticate each request (regardless whether
-        the credentials are identical).
+        The authorization server MAY authenticate the client using any appropriate set of
+        credentials and authentication scheme. The client MUST NOT utilize more than one set of
+        credentials or authentication mechanism with each request.
       </t>
 
-      <section title='Basic Client Credentials'>
+      <section title='Client Password Credentials'>
         <t>
-          The basic client credentials include a client identifier and an OPTIONAL matching shared
-          symmetric secret. The client identifier and secret are included in the request using the
+          The client password credentials use a shared symmetric secret to authenticate the client.
+          The client identifier and password are included in the request using the
           HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> by including the
-          client identifier as the username and secret as the password.
+          client identifier as the username and client password as the password.
         </t>
         <figure>
           <preamble>
@@ -628,22 +641,18 @@
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded
 
-  grant_type=authorization_code&code=i1WsRn1uB1&
+  grant_type=authorization_code&client_id=s6BhdRkqt3&code=i1WsRn1uB1&
   redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
           </artwork>
         </figure>
         <t>
-          Alternatively, the client MAY include the credentials using the following request
-          parameters:
+          Alternatively, the client MAY include the password in the request body using the
+          following parameter:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='client_id'>
-              <vspace />
-              REQUIRED. The client identifier.
-            </t>
             <t hangText='client_secret'>
-              REQUIRED if the client identifier has a matching secret.
+              REQUIRED. The client password.
             </t>
           </list>
         </t>
@@ -665,9 +674,8 @@
         </figure>
         <t>
           The authorization server MUST accept the client credentials using both the request
-          parameters, and the HTTP Basic authentication scheme. The authorization server MAY
-          support additional authentication schemes suitable for the transmission of a username
-          and password.
+          parameter, and the HTTP Basic authentication scheme. The authorization server MAY
+          support additional authentication schemes suitable for the transmission of a password.
         </t>
       </section>
 
@@ -777,6 +785,7 @@
       </t>
       <t>
         Parameters sent without a value MUST be treated as if they were omitted from the request.
+        The authorization server SHOULD ignore unrecognized request parameters.
       </t>
       <t>
         The authorization server validates the request to ensure all required parameters are
@@ -812,7 +821,8 @@
               <vspace />
               REQUIRED if the response type is <spanx style='verb'>token</spanx> or
               <spanx style='verb'>code_and_token</spanx>, otherwise MUST NOT be included. The
-              access token.
+              access token issued by the authorization server. The access token string MUST comply
+              with the access-token rule defined in <xref target='authz-header' />.
             </t>
             <t hangText='expires_in'>
               <vspace />
@@ -902,9 +912,10 @@
           </artwork>
         </figure>
         <t>
-          The sizes of tokens and other values received from the authorization server, are left
-          undefined by this specification. Clients should avoid making assumptions about value
-          sizes. Servers should document the expected size of any value they issue.
+          Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
+          values received from the authorization server, are left undefined by this specification.
+          Clients should avoid making assumptions about value sizes. Servers should document the
+          expected size of any value they issue.
         </t>
       </section>
 
@@ -959,7 +970,7 @@
                 The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, or is otherwise malformed.
               </t>
-              <t hangText='invalid_client_id'>
+              <t hangText='invalid_client'>
                 <vspace />
                 The client identifier provided is invalid.
               </t>
@@ -1030,9 +1041,14 @@
             <vspace />
             REQUIRED. The access grant type included in the request. Value MUST be one of
             <spanx style='verb'>authorization_code</spanx>,
-            <spanx style='verb'>basic_credentials</spanx>,
+            <spanx style='verb'>password</spanx>,
             <spanx style='verb'>assertion</spanx>,
             <spanx style='verb'>refresh_token</spanx>, or <spanx style='verb'>none</spanx>.
+          </t>
+          <t hangText='client_id'>
+            <vspace />
+            REQUIRED, unless the client identity can be establish via other means (e.g. assertion).
+            The client identifier as described in <xref target='client-authentication' />.
           </t>
           <t hangText='scope'>
             <vspace />
@@ -1052,12 +1068,13 @@
       </t>
       <t>
         Parameters sent without a value MUST be treated as if they were omitted from the request.
+        The authorization server SHOULD ignore unrecognized request parameters.
       </t>
 
       <section title='Access Grant Types' anchor='access-grant-types'>
         <t>
           The client requests an access token using one of the four types of access grants:
-          authorization code, basic credentials, assertion, or refresh token.
+          authorization code, password credentials, assertion, or refresh token.
         </t>
         <t>
           When requesting an access token using the <spanx style='verb'>none</spanx> access grant
@@ -1087,8 +1104,7 @@
           <figure>
             <preamble>
               For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters described in
+              credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
             </preamble>
@@ -1124,28 +1140,27 @@
           </t>
         </section>
 
-        <section title='Resource Owner Basic Credentials'>
+        <section title='Resource Owner Password Credentials'>
           <t>
             The client includes the resource owner credentials using the
-            <spanx style='verb'>basic_credentials</spanx> access grant type and the following
+            <spanx style='verb'>password</spanx> access grant type and the following
             parameters: [[ add internationalization consideration for username and password ]]
 
             <list style='hanging' hangIndent='6'>
               <t hangText='username'>
                 <vspace />
-                REQUIRED. The end-user's username.
+                REQUIRED. The resource owner's username.
               </t>
               <t hangText='password'>
                 <vspace />
-                REQUIRED. The end-user's password.
+                REQUIRED. The resource owner's password.
               </t>
             </list>
           </t>
           <figure>
             <preamble>
               For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters described in
+              credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
             </preamble>
@@ -1155,14 +1170,14 @@
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
   
-  grant_type=basic_credentials&client_id=s6BhdRkqt3&
+  grant_type=password&client_id=s6BhdRkqt3&
   client_secret=47HDu8s&username=johndoe&password=A3ddj3w
 ]]>
             </artwork>
           </figure>
           <t>
             The authorization server MUST validate the client credentials (if present) and end-user
-            credentials and if valid issues an access token response as described in
+            credentials and if valid issue an access token response as described in
             <xref target='access-token-response' />.
           </t>
         </section>
@@ -1231,8 +1246,7 @@
           <figure>
             <preamble>
               For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters described in
+              credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
             </preamble>
@@ -1271,7 +1285,9 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='access_token'>
               <vspace />
-              REQUIRED. The access token issued by the authorization server.
+              REQUIRED. The access token issued by the authorization server. The access token
+              string MUST comply with the access-token rule defined in
+              <xref target='authz-header' />.
             </t>
             <t hangText='expires_in'>
               <vspace />
@@ -1282,7 +1298,9 @@
             <t hangText='refresh_token'>
               <vspace />
               OPTIONAL. The refresh token used to obtain new access tokens using the same
-              end-user access grant as described in <xref target='token-refresh' />.
+              end-user access grant as described in <xref target='token-refresh' />. The
+              authorization server SHOULD NOT issue a refresh token when the access grant type is
+              set to <spanx style='verb'>none</spanx>.
             </t>
             <t hangText='scope'>
               <vspace />
@@ -1326,9 +1344,10 @@
           </artwork>
         </figure>
         <t>
-          The sizes of tokens and other values received from the authorization server, are left
-          undefined by this specification. Clients should avoid making assumptions about value
-          sizes. Servers should document the expected size of any value they issue.
+          Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
+          values received from the authorization server, are left undefined by this specification.
+          Clients should avoid making assumptions about value sizes. Servers should document the
+          expected size of any value they issue.
         </t>
       </section>
 
@@ -1388,7 +1407,7 @@
                 parameter value, repeats a parameter, includes multiple credentials, utilizes
                 more than one mechanism for authenticating the client, or is otherwise malformed.
               </t>
-              <t hangText='invalid_client_credentials'>
+              <t hangText='invalid_client'>
                 <vspace />
                 The client identifier provided is invalid, the client failed to authenticate, the
                 client did not include its credentials, provided multiple client credentials, or
@@ -1401,7 +1420,7 @@
               <t hangText='invalid_grant'>
                 <vspace />
                 The provided access grant is invalid, expired, or revoked (e.g. invalid assertion,
-                expired authorization token, bad end-user basic credentials, or mismatching
+                expired authorization token, bad end-user password credentials, or mismatching
                 authorization code and redirection URI).
               </t>
               <t hangText='unsupported_grant_type'>
@@ -1454,7 +1473,7 @@
         <t>
           Clients make authenticated token requests using the
           <spanx style='verb'>Authorization</spanx> request header field. Resource servers MUST
-          accept authenticated requests using the <spanx style='verb'>Token</spanx> HTTP
+          accept authenticated requests using the <spanx style='verb'>OAuth</spanx> HTTP
           authentication scheme as described in <xref target='authz-header' />, and MAY support
           additional methods.
         </t>
@@ -1473,9 +1492,10 @@
 
         <section title='The Authorization Request Header Field' anchor='authz-header'>
           <t>
-            The <spanx style='verb'>Authorization</spanx> request header field is used by clients to
-            make authenticated token requests. The client uses the <spanx style='verb'>token</spanx>
-            attribute to include the access token in the request.
+            The <spanx style='verb'>Authorization</spanx> request header field is used by clients
+            to make authenticated token requests. The client uses the
+            <spanx style='verb'>OAuth</spanx> authentication scheme to include the access token in
+            the request.
           </t>
           <figure>
             <preamble>
@@ -1485,7 +1505,7 @@
               <![CDATA[
   GET /resource HTTP/1.1
   Host: server.example.com
-  Authorization: Token token="vF9dft4qmT"
+  Authorization: OAuth vF9dft4qmT
 ]]>
             </artwork>
           </figure>
@@ -1496,12 +1516,30 @@
           <figure>
             <artwork>
               <![CDATA[
-  credentials    = "Token" RWS access-token [ CS 1#auth-param ]
-  access-token   = "token" "=" <"> token <">
+  credentials    = "OAuth" RWS access-token [ CS 1#auth-param ]
+  access-token   = 1*( quoted-char / <"> )
+  
   CS             = OWS "," OWS
+
+  quoted-char    =   "!" / "#" / "$" / "%" / "&" / "'" / "("
+                   / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
+                   / ":" / "<" / "=" / ">" / "?" / "@" / ALPHA
+                   / "[" / "]" / "^" / "_" / "`" / "{" / "|"
+                   / "}" / "~" / "\" / "," / ";"
 ]]>
             </artwork>
           </figure>
+          <t>
+            <list>
+              <t>
+                NOTE: <xref target='RFC5849' /> defines a different format for the
+                <spanx style='verb'>OAuth</spanx> authentication scheme. Resource servers can
+                differentiate between the two protocol versions based on the presence of the
+                <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
+                previous version and is not supported by this specification.
+              </t>
+            </list>
+          </t>
 
         </section>
 
@@ -1539,6 +1577,17 @@
 ]]>
             </artwork>
           </figure>
+          <t>
+            <list>
+              <t>
+                NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
+                version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
+                servers can differentiate between the two protocol versions based on the presence
+                of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
+                previous version and is not supported by this specification.
+              </t>
+            </list>
+          </t>
         </section>
 
         <section title='Form-Encoded Body Parameter' anchor='body-param'>
@@ -1588,6 +1637,17 @@
 ]]>
             </artwork>
           </figure>
+          <t>
+            <list>
+              <t>
+                NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
+                version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
+                servers can differentiate between the two protocol versions based on the presence
+                of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
+                previous version and is not supported by this specification.
+              </t>
+            </list>
+          </t>
         </section>
 
       </section>
@@ -1602,7 +1662,7 @@
         <figure>
           <artwork>
             <![CDATA[
-  challenge       = "Token" RWS token-challenge
+  challenge       = "OAuth" RWS token-challenge
 
   token-challenge = realm
                     [ CS error ]
@@ -1614,14 +1674,9 @@
   error           = "error" "=" <"> token <">
   error-desc      = "error_description" "=" quoted-string
   error-uri       = "error_uri" = <"> URI-Reference <">
-  scope           = ptoken / <"> ptoken *( 1*SP ptoken ) <">
-
-  ptoken          = 1*ptokenchar
-  ptokenchar      =   "!" / "#" / "$" / "%" / "&" / "'" / "("
-                    / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
-                    / ":" / "<" / "=" / ">" / "?" / "@" / ALPHA
-                    / "[" / "]" / "^" / "_" / "`" / "{" / "|"
-                    / "}" / "~"
+  scope           = quoted-value /
+                    <"> quoted-value *( 1*SP quoted-value ) <">
+  quoted-value    = 1*quoted-char
 ]]>
           </artwork>
         </figure>
@@ -1632,7 +1687,7 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: Token realm='Example Service', error='expired-token'
+  WWW-Authenticate: OAuth realm='Example Service', error='expired-token'
 ]]>
           </artwork>
         </figure>
@@ -1712,7 +1767,7 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: Token realm='Example Service'
+  WWW-Authenticate: OAuth realm='Example Service'
 ]]>
             </artwork>
           </figure>
@@ -1752,8 +1807,8 @@
         <figure>
           <artwork>
             <![CDATA[
-  param-name  = 1*fchar
-  fchar       = "-" / "." / "_" / DIGIT / ALPHA
+  param-name  = 1*name-char
+  name-char   = "-" / "." / "_" / DIGIT / ALPHA
 ]]>
           </artwork>
         </figure>
@@ -1775,7 +1830,7 @@
         <figure>
           <artwork>
             <![CDATA[
-  param-value  = ptoken | quoted-string
+  param-value  = quoted-value | quoted-string
 ]]>
           </artwork>
         </figure>
@@ -1934,7 +1989,8 @@
         
         <list style='symbols'>
           <t>
-            Fixed typos, editorial changes.
+            Fixed typos. Many editorial changes. Rewrote introduction. removed terminology
+            grouping.
           </t>
           <t>
             Allowed POST for end-user authorization endpoint.
@@ -1947,6 +2003,28 @@
           </t>
           <t>
             Moved all parameter names and values to use underscores.
+          </t>
+          <t>
+            Changed 'basic_credentials' to 'password', 'invalid_client_credentials' and
+            'invalid_client_id' to 'invalid_client'.
+          </t>
+          <t>
+            Added note that access token requests without an access grant should not include
+            a refresh token.
+          </t>
+          <t>
+            Changed scheme name from 'Token' to 'OAuth', simplified request format to simple
+            string for token instead of key=value pair (still supported for extensions).
+          </t>
+          <t>
+            Defined permitted access token string characters (suitable for inclusion in an HTTP
+            header).
+          </t>
+          <t>
+            Added a note about conflicts with previous versions.
+          </t>
+          <t>
+            Moved 'client_id' definition from client authentication to access token endpoint.
           </t>
         </list>
       </t>
@@ -2221,6 +2299,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html401-19991224.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-09.xml'?>
 
