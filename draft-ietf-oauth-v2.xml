@@ -1516,7 +1516,7 @@
           <figure>
             <artwork>
               <![CDATA[
-  credentials    = "OAuth" RWS access-token RWS [ 1#auth-param ]
+  credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
   access-token   = 1*( quoted-char / <"> )
 
   quoted-char    =   "!" / "#" / "$" / "%" / "&" / "'" / "("

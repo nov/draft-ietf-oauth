@@ -1649,7 +1649,7 @@ Internet-Draft                  OAuth 2.0                      July 2010
    [RFC2617] as follows:
 
 
-     credentials    = "OAuth" RWS access-token RWS [ 1#auth-param ]
+     credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
      access-token   = 1*( quoted-char / <"> )
 
      quoted-char    =   "!" / "#" / "$" / "%" / "&" / "'" / "("

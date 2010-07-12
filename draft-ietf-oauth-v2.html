@@ -2059,7 +2059,7 @@ The Authorization Request Header Field</h3>
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-  credentials    = "OAuth" RWS access-token RWS [ 1#auth-param ]
+  credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
   access-token   = 1*( quoted-char / &lt;"&gt; )
 
   quoted-char    =   "!" / "#" / "$" / "%" / "&amp;" / "'" / "("
