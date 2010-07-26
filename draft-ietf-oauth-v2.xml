@@ -68,8 +68,8 @@
             for future use, typically a password in clear-text.
           </t>
           <t>
-            Servers are required to support password (symmetric) authentication, despite the
-            security weaknesses created by passwords.
+            Servers are required to support password authentication, despite the security
+            weaknesses created by passwords.
           </t>
           <t>
             Third-party applications gain overly broad access to the resource-owner's protected
@@ -954,7 +954,7 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?error=access-denied
+  Location: https://client.example.com/cb?error=access_denied
 ]]>
           </artwork>
         </figure>
@@ -1073,15 +1073,10 @@
 
       <section title='Access Grant Types' anchor='access-grant-types'>
         <t>
-          The client requests an access token using one of the four types of access grants:
-          authorization code, password credentials, assertion, or refresh token.
-        </t>
-        <t>
-          When requesting an access token using the <spanx style='verb'>none</spanx> access grant
-          type (no access grant is included), the client is requesting access to the protected
-          resources under its control, or those of another resource owner which has been previously
-          arranged with the authorization server (the method of which is beyond the scope of this
-          specification).
+          The client requests an access token using one of four types of access grants:
+          authorization code, password credentials, assertion, refresh token. In addition, clients
+          can request an access token without including an explicit access grant, using their
+          client credentials alone.
         </t>
 
         <section title='Authorization Code'>
@@ -1269,6 +1264,16 @@
             issue a new refresh token.
           </t>
         </section>
+        
+        <section title='Client Credentials'>
+        <t>
+          The client can request an access token using only its client credentials using the
+          <spanx style='verb'>none</spanx> access grant type. When omitting an explicit access
+          grant, the client is requesting access to the protected resources under its control, or
+          those of another resource owner which has been previously arranged with the authorization
+          server (the method of which is beyond the scope of this specification).
+        </t>
+        </section>
 
       </section>
 
@@ -1447,10 +1452,10 @@
     <section title='Accessing a Protected Resource' anchor='access-resource'>
       <t>
         Clients access protected resources by presenting an access token to the resource server.
-        Access tokens act as bearer tokens, where the token string acts as a shared symmetric
-        secret. This requires treating the access token with the same care as other secrets (e.g.
-        end-user passwords). Access tokens SHOULD NOT be sent in the clear over an insecure
-        channel.
+        Access tokens are bearer authentication tokens, such as passwords or capabilities (as
+        defined by <xref target='RFC2828' />). This requires treating the access token with the
+        same care as other passwords. Access tokens SHOULD NOT be sent in the clear over an
+        insecure channel.
       </t>
       <t>
         However, when it is necessary to transmit access tokens in the clear without a secure
@@ -1991,6 +1996,12 @@
           <t>
             Fixed header ABNF.
           </t>
+          <t>
+            Change access token description from shared symmetric secret to password.
+          </t>
+          <t>
+            Moved access grant 'none' to a separate section.
+          </t>
         </list>
       </t>
       <t>
@@ -2301,6 +2312,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2828.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3023.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml' ?>
