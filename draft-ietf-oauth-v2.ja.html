@@ -154,7 +154,8 @@
 <h3>Abstract</h3>
 
 <p>
-        This specification describes the OAuth 2.0 protocol.
+        これはOAuth 2.0プロトコルの仕様書である.
+        
       
 </p>
 <h3>Status of this Memo</h3>
@@ -298,80 +299,79 @@ Authors' Addresses<br />
 Introduction</h3>
 
 <p>
-        With the increasing use of distributed web services and cloud computing, third-party
-        applications require access to server-hosted resources. These resources are usually
-        protected and require authentication using the resource owner's credentials (typically a
-        username and password).
+        分散Webサービスやクラウドコンピューティングの利用が進み, 3rd-partyアプリケーションがサーバー上にあるリソースにアクセスする機会が増している.
+        これらのリソースは通常保護されており, リソースオーナーのクレデンシャル (典型例としてはユーザーネームとパスワード) による認証を必要とする.
+        
       
 </p>
 <p>
-        In the traditional client-server authentication model, the client accesses a protected
-        resource on the server by authenticating with the server using the resource owner's
-        credentials. In order to provide third-party applications access to protected resources,
-        the resource owner shares its credentials with the third-party. This creates several
-        problems and limitations:
+        従来のクライアントサーバー型の認証モデルでは, クライアントはリソースオーナーのクレデンシャルを使ってサーバーに対して認証を行いサーバー上の保護されたリソースにアクセスする.
+        つまり, 3rd-partyアプリケーションに保護されたリソースへのアクセス権を与えるには, リソースオーナーは自身のクレデンシャルを3rd-partyに共有する必要がある.
+        これはいくつかの問題と制限をもたらす.
+        
         
         </p>
 <ul class="text">
 <li>
-            Third-party applications are required to store the resource-owner's credentials
-            for future use, typically a password in clear-text.
+            3rd-partyアプリケーションは, 後の利用のためにリソースオーナーのクレデンシャルを保存しておかなければならない.
+            通常はパスワードが平文で保存されることになる.
+            
           
 </li>
 <li>
-            Servers are required to support password (symmetric) authentication, despite the
-            security weaknesses created by passwords.
+            サーバーはパスワードベースの (シンメトリックな) 認証方式をサポートしなければならない.
+            パスワードを利用することによりセキュリティが低下する.
+            
           
 </li>
 <li>
-            Third-party applications gain overly broad access to the resource-owner's protected
-            resources, leaving resource owners without any ability to restrict access to a limited
-            subset of resources, to limit access duration, or to limit access to the methods
-            supported by these resources.
+            3rd-partyアプリケーションは過度に多くのリソースオーナーの保護されたリソースに対してアクセス権を得ることになる.
+            リソースオーナーは, アクセスをリソースのサブセットに限定したり, アクセス可能な期間を限ったり, リソースに対して一部の操作のみを許可するといったことができない.
+            
           
 </li>
 <li>
-            Resource owners cannot revoke access to an individual third-party without revoking
-            access to all third-parties, and must do so by changing their password.
+            リソースオーナーは各3rd-partyごとにアクセス権を無効化することはできず, アクセス権を無効化する際には全ての3rd-partyが持つアクセス権を無効化しなければならない.
+            つまりそれはパスワード変更を意味する.
+            
           
 </li>
 </ul><p>
       
 </p>
 <p>
-        OAuth address these issues by separating the role of the client from that of the
-        resource owner. In OAuth, the client (which is usually not the resource owner, but is
-        acting on the resource owner's behalf) requests access to resources controlled by the
-        resource owner and hosted by the resource server, and is issued a different set of
-        credentials than those of the resource owner.
+        OAuthは, クライアントとリソースオーナーの役割を分けることで, これらの問題の解決に取り組む.
+        OAuthでは, クライアントはリソースオーナーのコントロール下にあり, リソースサーバーにホストされているリソースへのアクセス権を要求する.
+        (クライアントは通常はリソースオーナーではなく, リソースオーナーの代理として処理を行う)
+        そしてリソースオーナーのクレデンシャルそのものとは別のクレデンシャルを取得する.
+        
       
 </p>
 <p>
-        Instead of using the resource owner's credentials to access protected resources, clients
-        obtain an access token (a string which denotes a specific scope, duration, and other
-        attributes). The format and structure of access tokens is beyond the scope of this
-        specification.
+        保護されたリソースにアクセスする為にリソースオーナーのクレデンシャルを使う代わりに, クライアントはアクセストークンを取得する.
+        (アクセストークンとは, ある特定のスコープ, 期間およびその他の属性と紐付けられた文字列である)
+        アクセストークンのフォーマットは, 本仕様の定めるところではない.
+        
       
 </p>
 <p>
-        Tokens are issued to third-party clients by an authorization server with the approval of
-        the resource owner. The client uses the access token to access the protected resources
-        hosted by the resource server. The interaction between the authorization server and
-        resource server is beyond the scope of this specification.
+        トークンは, 認証サーバーがリソースオーナーの同意のもと3rd-partyに対して発行するものである.
+        クライアントはリソースサーバーにホストされている保護されたリソースにアクセスする為に, アクセストークンを利用する.
+        認証サーバーとリソースサーバーの連携方法は, 本仕様の定めるところではない.
+        
       
 </p>
 <p>
-        For example, a web user (resource owner) can grant a printing service (client) access to
-        her protected photos stored at a photo sharing service (resource server), without sharing
-        her username and password with the printing service. Instead, she authenticates directly
-        with an authentication service trusted by the photo sharing service (authorization server)
-        which issues the printing service delegation-specific credentials (token).
+        例えば, あるユーザー (リソースオーナー) が印刷サービス (クライアント) に対して, 写真共有サービス上 (リソースサーバー) に保管されている彼女の保護された写真へのアクセス権を与えることを考える.
+        OAuthでは, その際彼女のユーザーネームとパスワードを印刷サービスに与える必要はない.
+        そのかわり, 彼女は写真共有サービスの信任を得た認証サービス (認証サーバー) に対して認証を行い, 認証サービスが印刷サービスにデリゲーション専用のクレデンシャル (token) を発行する.
+        
       
 </p>
 <p>
-        This specification defines the use of OAuth over <a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616]
-        (or HTTP over TLS as defined by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>). Other specifications may
-        extend it for use with other transport protocols.
+        この仕様書ではOAuthを<a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616] (もしくは<a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>で定義されたHTTTP over TLS) の元で利用する方法を定める.
+        他の仕様書がその他の転送プロトコルの元での利用について本仕様を拡張する可能性もある.
+        
       
 </p>
 <a name="anchor2"></a><br /><hr />
