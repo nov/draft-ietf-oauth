@@ -146,7 +146,7 @@
 
       <section title='Notational Conventions'>
         <t>
-本文書で用いられる各キーワード「MUST(しなければならない)」、「MUST NOT(してはならない)」、「REQUIRED(必須である)」、「SHALL(するものとする)」、「SHALL NOT(しないものとする)」、「SHOULD(すべきである)」、「SHOULD NOT(すべきではない)」、「RECOMMENDED(推奨される)」、「MAY(してもよい)」、「OPTIONAL(任意である)」は<xref target='RFC2119' />で述べられている通りに解釈されるべきものである。
+          本文書で用いられる各キーワード「MUST(しなければならない)」, 「MUST NOT(してはならない)」, 「REQUIRED(必須である)」, 「SHALL(するものとする)」, 「SHALL NOT(しないものとする)」, 「SHOULD(すべきである)」, 「SHOULD NOT(すべきではない)」, 「RECOMMENDED(推奨される)」, 「MAY(してもよい)」, 「OPTIONAL(任意である)」は<xref target='RFC2119' />で述べられている通りに解釈されるべきものである.
           <!--
           The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
           NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as
