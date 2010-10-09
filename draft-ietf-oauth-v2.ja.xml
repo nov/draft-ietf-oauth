@@ -49,7 +49,7 @@
 
   <middle>
 
-    <section title='Introduction'>
+    <section title='はじめに<!--Introduction-->'>
       <t>
         分散Webサービスやクラウドコンピューティングの利用が進み, 3rd-partyアプリケーションがサーバー上にあるリソースにアクセスする機会が増している.
         これらのリソースは通常保護されており, リソースオーナーのクレデンシャル (典型例としてはユーザーネームとパスワード) による認証を必要とする.
@@ -144,7 +144,7 @@
         extend it for use with other transport protocols. -->
       </t>
 
-      <section title='Notational Conventions'>
+      <section title='表記規約<!--Notational Conventions-->'>
         <t>
           本文書で用いられる各キーワード「MUST(しなければならない)」, 「MUST NOT(してはならない)」, 「REQUIRED(必須である)」, 「SHALL(するものとする)」, 「SHALL NOT(しないものとする)」, 「SHOULD(すべきである)」, 「SHOULD NOT(すべきではない)」, 「RECOMMENDED(推奨される)」, 「MAY(してもよい)」, 「OPTIONAL(任意である)」は<xref target='RFC2119' />で述べられている通りに解釈されるべきものである.
           <!--
@@ -154,43 +154,74 @@
           -->
         </t>
         <t>
+          このドキュメントでは<xref target='I-D.ietf-httpbis-p1-messaging' />におけるAugmented Backus-Naur Form(ABNF)表記法を利用している. 
+          加えて, 次の規則(<xref target='RFC2617' />記載: realm, auth-param; <xref target='RFC3986' />記載: URI-Reference;
+          <xref target='I-D.ietf-httpbis-p1-messaging' />記載: OWS, RWS, and quoted-string)に従う.
+	  <!--
           This document uses the Augmented Backus-Naur Form (ABNF) notation of
           <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules are
           included from <xref target='RFC2617' />: realm, auth-param; from
           <xref target='RFC3986' />: URI-Reference; and from
           <xref target='I-D.ietf-httpbis-p1-messaging' />: OWS, RWS, and quoted-string.
+	  -->
         </t>
         <t>
+          特に記載が無い限り, 全てのプロトコルパラメータ名と値は, 大文字・小文字を区別する.
+          <!--
           Unless otherwise noted, all the protocol parameter names and values are case sensitive.
+          -->
         </t>
       </section>
 
-      <section title='Terminology'>
+      <section title='用語<!--Terminology-->'>
         <t>
           <list style='hanging' hangIndent='6'>
-            <t hangText='protected resource'>
+            <t hangText='保護リソース<!--protected resource-->'>
               <vspace />
+              アクセスが制限されたリソース.
+              OAuth認証済みリクエストを利用して取得が可能である.
+              <!--
               An access-restricted resource which can be obtained using an OAuth-authenticated
               request.
+              -->
             </t>
-            <t hangText='resource server'>
+            <t hangText='リソースサーバー<!--resource server-->'>
               <vspace />
+              保護リソースに対するリクエストを受付け, レスポンスを返すサーバー. 
+              <!--
               A server capable of accepting and responding to protected resource requests.
+              -->
             </t>
-            <t hangText='client'>
+            <t hangText='クライアント<!--client-->'>
               <vspace />
+              認可を取得して, 保護リソースに対するリクエストを行うアプリケーション. 
+              <!--
               An application obtaining authorization and making protected resource requests.
+              -->
             </t>
-            <t hangText='resource owner'>
+            <t hangText='リソースオーナー<!--resource owner-->'>
               <vspace />
+              保護リソースへのアクセスを許可するエンティティ.
+              <!--
               An entity capable of granting access to a protected resource.
+              -->
             </t>
-            <t hangText='end-user'>
+            <t hangText='エンドユーザー<!--end-user-->'>
               <vspace />
+              人間のリソースオーナー.
+              <!--
               A human resource owner.
+              -->
             </t>
-            <t hangText='token'>
+            <t hangText='トークン<!--token-->'>
               <vspace />
+              クライアントに対して発行されたアクセス認可を表す文字列である.
+              文字列は通常はクライアントにとって不透明な値である.
+              トークンは特定の範囲とアクセス期間を表し, それらはリソースオーナーによって許可され, リソースサーバーと認可サーバーによって強制される.
+              トークンは認可情報を取り出すための識別子を意味してもよい, またはそれ自身に検証可能な方法で認可情報を含んでいてもよい(データと署名を含むトークン文字列など).
+              トークンはpure capabilitiesでもよい.
+              クライアントがトークンを利用するために特別に追加の認証クレデンシャルを要求してもよい.
+              <!--
               A string representing an access authorization issued to the client. The string is
               usually opaque to the client. Tokens represent specific scopes and durations of
               access, granted by the resource owner, and enforced by the resource server and
@@ -199,43 +230,71 @@
               verifiable manner (i.e. a token string consisting of some data and a signature).
               Tokens may be pure capabilities. Specific additional authentication credentials may
               be required in order for a client to use a token.
+              -->
             </t>
-            <t hangText='access token'>
+            <t hangText='アクセストークン<!--access token-->'>
               <vspace />
+              クライアントがリソースオーナーに変わって認証済みリクエストを行うために使われるトークン.
+              <!--
               A token used by the client to make authenticated requests on behalf of the resource
               owner.
+              -->
             </t>
-            <t hangText='refresh token'>
+            <t hangText='リフレシュトークン<!--refresh token-->'>
               <vspace />
+              クライアントがリソースオーナーの関与無く新しいアクセストークンを得るために使われるトークン.
+              <!--
               A token used by the client to obtain a new access token without having to involve
               the resource owner.
+              -->
             </t>
-            <t hangText='authorization code'>
+            <t hangText='認可コード<!--authorization code-->'>
+              生存期間の短いトークンで, エンドユーザーによって提供されたアクセス許可を表す.
+              認可コードはアクセストークンとリフレッシュトークンを得るために使われる.
+              <!--
               A short-lived token representing the access grant provided by the end-user. The
               authorization code is used to obtain an access token and a refresh token.
+              -->
             </t>
-            <t hangText='authorization server'>
+            <t hangText='認可サーバー<!--authorization server-->'>
               <vspace />
+              リソースオーナーの認証とリソースオーナーからの認可取得が成功した後, トークンを発行するサーバー.
+              認可サーバーとリソースサーバーは同じサーバーでも、分かれていてもよい.
+              <!--
               A server capable of issuing tokens after successfully authenticating the resource
               owner and obtaining authorization. The authorization server may be the same server as
               the resource server, or a separate entity.
+              -->
             </t>
-            <t hangText='end-user authorization endpoint'>
+            <t hangText='エンドユーザー認可エンドポイント<!--end-user authorization endpoint-->'>
               <vspace />
+              認可サーバーのHTTPエンドポイントで, エンドユーザーの認証と認可の取得を行う.
+              エンドユーザー認可エンドポイントについては<xref target='user-authorization' />に記載する.
+              <!--
               The authorization server's HTTP endpoint capable of authenticating the end-user and
               obtaining authorization. The end-user authorization endpoint is described in
               <xref target='user-authorization' />.
+              -->
             </t>
-            <t hangText='token endpoint'>
+            <t hangText='トークンエンドポイント<!--token endpoint-->'>
               <vspace />
+              認可サーバーのHTTPエンドポイントで, トークンの発行と期限切れトークンのリフレッシュを行う.
+              トークンエンドポイントについては<xref target='obtaining-token' />に記載する.
+              <!--
               The authorization server's HTTP endpoint capable of issuing tokens and refreshing
               expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
+              -->
             </t>
-            <t hangText='client identifier'>
+            <t hangText='クライアント識別子<!--client identifier-->'>
               <vspace />
+              認可サーバーがクライアント自身を識別するために発行される一意な識別子.
+              クライアント識別子に対応するシークレットがあってもよい.
+              クライアント識別子については<xref target='client-authentication' />に記載する.
+              <!--
               A unique identifier issued to the client to identify itself to the authorization
               server. Client identifiers may have a matching secret. The client identifier is
               described in <xref target='client-authentication' />.
+              -->
             </t>
           </list>
         </t>
