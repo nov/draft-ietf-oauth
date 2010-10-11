@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 12, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 14, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 9, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 11, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 12, 2011.</p>
+This Internet-Draft will expire on April 14, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -199,7 +199,7 @@ described in the Simplified BSD License.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor3">1.2.</a>&nbsp;
 用語<!--Terminology--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">1.3.</a>&nbsp;
-Overview<br />
+概要<!--Overview--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">1.4.</a>&nbsp;
 Client Profiles<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">1.4.1.</a>&nbsp;
@@ -512,17 +512,16 @@ Authors' Addresses<br />
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.3"></a><h3>1.3.&nbsp;
-Overview</h3>
+概要<!--Overview--></h3>
 
 <p>
-          OAuth provides a method for clients to access a protected resource on behalf of a
-          resource owner. Before a client can access a protected resource, it must first obtain
-          authorization from the resource owner, then exchange the access grant for an access token
-          (representing the grant's scope, duration, and other attributes). The client accesses the
-          protected resource by presenting the access token to the resource server.
+          OAuthはリソースオーナーの代わりに保護リソースにアクセスする方法をクライアントに提供する.
+          クライアントが保護リソースにアクセスする前に, クライアントは始めにリソースオーナーの認可を取得し, アクセス許可とアクセストークン(権限の範囲, 期間と他の属性を示している)を交換しなけばならない.
+          クライアントはリソースサーバーにアクセストークンを渡すことにより、保護リソースにアクセスする.
+          
         
 </p><br /><hr class="insert" />
-<a name="Figure 1"></a>
+<a name="図1"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -543,56 +542,53 @@ Overview</h3>
   |        |&lt;-(F)---- Protected Resource -----|               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1: Abstract Protocol Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1: プロトコルフロー概要&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The abstract flow illustrated in <a class='info' href='#Figure 1'>Figure&nbsp;1<span> (</span><span class='info'>Abstract Protocol Flow</span><span>)</span></a> includes the following
-          steps:
+          <a class='info' href='#図1'>Figure&nbsp;1<span> (</span><span class='info'>プロトコルフロー概要</span><span>)</span></a>で示されたフロー概要は以下のステップを含む.
+          
 
           </p>
 <blockquote class="text"><dl>
 <dt>(A)</dt>
 <dd>
-              The client requests authorization from the resource owner. The client should not
-              request the resource owner's credentials directly. Instead, it should request
-              authorization via an authorization server or other entities. For example, the client
-              directs the resource owner to the authorization server which in turn issues it an
-              access grant. When unavoidable, the client interacts directly with the end-user,
-              asking for the end-user's username and password. If the client is acting
-              autonomously, the authorization request is beyond the scope of this specification.
+              クライアントはリソースオーナーに認可を要求する.
+              クライアントは直接リソースオーナーのクレデンシャルを要求すべきではない. 
+              その代わり、クライアントは認可サーバーもしくは他のものを経由して認可を要求すべきである.
+              例えば, クライアントはアクセス許可を発行する認可サーバーにリソースオーナーをリダイレクトさせる. 
+              やむを得ない場合, クライアントはエンドユーザーと直接やりとりを行い, エンドユーザーのユーザー名とパスワードを要求する.
+              もしクライアントが自律的に動作しているとき, 認可要求は本仕様の定めるところではない.
+              
             
 </dd>
 <dt>(B)</dt>
 <dd>
-              The client is issued an access grant which represents the authorization provided by
-              the resource owner. The access grant can be expressed as:
+              クライアントはリソースオーナーに提供された認可を表すアクセス許可を発行される.
+              アクセス許可は以下のように表される :
+              
 
               
 <ul class="text">
 <li>
-                  Authorization code - an access grant obtained via an authorization server.
-                  <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a> describes how to obtain an authorization
-                  code when the end-user is present and using a user-agent.
+                  認可コード - 認可サーバー経由で取得したアクセス許可.
+                  <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a> はエンドユーザが存在してユーザーエージェントを使うときの認可コード取得方法を記載する.
+                  
                 
 </li>
 <li>
-                  Assertion - an access grant obtained using a different trust framework.
-                  Assertions enable the client to utilize existing trust relationships to obtain an
-                  access token. They provide a bridge between OAuth and other trust frameworks. The
-                  access grant represented by an assertion depends on the assertion type, its
-                  content, and how it was issued, which are beyond the scope of this specification.
+                  アサーション - 異なるトラストフレームワークを利用して取得したアクセス許可.
+                  アサーションはクライアントがアクセストークンを取得するために既存のトラストリレーションシップを利用することを可能にする.
+                  それらはOAuthと他のトラストフレームワークのブリッジを提供する.
+                  アサーションにより示されるアクセス許可はアサーションの種類やコンテント, 発行方法に依存し, それは本仕様の定めるところではない.
+                  
                 
 </li>
 <li>
-                  Resource owner password credentials - obtained when interacting directly with a
-                  resource-owner. Resource owner password credentials (i.e. a username and
-                  password) should only be used when there is a high degree of trust between the
-                  resource owner and the client (e.g. its computer operating system or a highly
-                  privileged application). However, unlike the HTTP Basic authentication scheme
-                  defined in <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>, the resource owner's credentials are used
-                  for a single request and are exchanged for an access token and refresh token.
-                  This eliminates the need for the client to store the resource-owner's credentials
-                  for future use.
+                  リソースオーナー パスワードクレデンシャル - 直接リソースオーナーとやりとりするときに取得される.
+                  リソースオーナーパスワードクレデンシャル(すなわち, ユーザー名とパスワード)はリソースオーナーとクライアントの間に高度な信用がある(例えば, コンピューターOSもしくは特別に許可されたアプリケーション)のときのみ利用されるべきである.
+                  しかしながら, <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリクエストトークンと交換される.
+                  これはクライアントのリソースオーナーのクレデンシャルを将来の利用のために保存する必要性を取り除く.
+                  
                 
 </li>
 </ul>
@@ -600,43 +596,43 @@ Overview</h3>
 </dd>
 <dt>(C)</dt>
 <dd>
-              The client requests an access token by authenticating with the authorization server,
-              and presenting the access grant. The token request is described in
-              <a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>.
+              クライアントは認可サーバーにより認証されたアクセストークンを要求し, アクセス許可を渡す.
+              トークン要求については<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載する.
+              
             
 </dd>
 <dt>(D)</dt>
 <dd>
-              The authorization server validates the client credentials and the access grant, and
-              issues an access token with an optional refresh token. Access tokens usually have a
-              shorter lifetime than the access grant. Refresh tokens usually have a lifetime equal
-              to the duration of the access grant. When an access token expires, the refresh token
-              is used to obtain a new access token without having to request another access grant
-              from the resource owner.
+              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンをオプションなリクエストトークンとともに発行する.
+              アクセストークンは通常, アクセス許可よりも短い生存期間を持つ.
+              リフレッシュトークンは通常, アクセス許可の期間と等しい生存期間を持つ.
+              アクセストークンの有効期限が切れた時、リフレッシュトークンはリソースオーナーにもう一度アクセス許可を要求することなく新しいアクセストークンを取得するために利用されます.
+              
             
 </dd>
 <dt>(E)</dt>
 <dd>
-              The client makes a protected resource request to the resource server, and presents
-              the access token in order to gain access. Accessing a protected resource is described
-              in <a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>Accessing a Protected Resource</span><span>)</span></a>.
+              クライアントはリソースサーバーへの保護リソース要求を作成し, アクセスを得るためにアクセストークンを提供する.
+              保護リソースへのアクセスについては<a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>Accessing a Protected Resource</span><span>)</span></a>に記載する.
+              
             
 </dd>
 <dt>(F)</dt>
 <dd>
-              The resource server validates the access token, and if valid, serves the request.
+              リソースサーバーはアクセストークンの正当性を確認し, 有効な場合はリクエストを処理する.
+              
             
 </dd>
 </dl></blockquote><p>
         
 </p>
 <p>
-          When the client is acting on its own behalf (the client is also the resource owner),
-          the client does not obtain an access grant. The simplified protocol flow is illustrated
-          in <a class='info' href='#Figure 2'>Figure&nbsp;2<span> (</span><span class='info'>Protocol Flow for Client Acting On Its Own Behalf</span><span>)</span></a>:
+          クライアントがリソースオーナーの代わりに動作する(クライアントがリソースオーナーでもある)とき, クライアントはアクセス権を取得しない. 
+          簡略化されたプロトコルフローは<a class='info' href='#図2'>Figure&nbsp;2<span> (</span><span class='info'>リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー</span><span>)</span></a>に示される.
+          
         
 </p><br /><hr class="insert" />
-<a name="Figure 2"></a>
+<a name="図2"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -651,15 +647,14 @@ Overview</h3>
   |        |&lt;-(F)---- Protected Resource -----|               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: Protocol Flow for Client Acting On Its Own Behalf&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          When the client uses the user-agent profile (described in <a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>),
-          the authorization request results in an access token, as illustrated in
-          <a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>Indirect Access Grant Protocol Flow</span><span>)</span></a>:
+          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載される)を利用するとき、認可要求は<a class='info' href='#図3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
+          
         
 </p><br /><hr class="insert" />
-<a name="Figure 3"></a>
+<a name="図3"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                        +----------+   +---------------+
@@ -675,7 +670,7 @@ Overview</h3>
   |        |&lt;-(F)------ Protected Resource --------|               |
   +--------+                                       +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3: Indirect Access Grant Protocol Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3: 間接的なアクセス権プロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>

@@ -300,15 +300,21 @@
         </t>
       </section>
 
-      <section title='Overview'>
+      <section title='概要<!--Overview-->'>
         <t>
+          OAuthはリソースオーナーの代わりに保護リソースにアクセスする方法をクライアントに提供する.
+          クライアントが保護リソースにアクセスする前に, クライアントは始めにリソースオーナーの認可を取得し, アクセス許可とアクセストークン(権限の範囲, 期間と他の属性を示している)を交換しなけばならない.
+          クライアントはリソースサーバーにアクセストークンを渡すことにより、保護リソースにアクセスする.
+          <!--
           OAuth provides a method for clients to access a protected resource on behalf of a
           resource owner. Before a client can access a protected resource, it must first obtain
           authorization from the resource owner, then exchange the access grant for an access token
           (representing the grant's scope, duration, and other attributes). The client accesses the
           protected resource by presenting the access token to the resource server.
+          -->
         </t>
-        <figure title='Abstract Protocol Flow' anchor='Figure 1'>
+        <figure title='プロトコルフロー概要' anchor='図1'>
+        <!--<figure title='Abstract Protocol Flow' anchor='Figure 1'>-->
           <artwork>
             <![CDATA[
   +--------+                                  +---------------+
@@ -332,11 +338,21 @@
           </artwork>
         </figure>
         <t>
+          <xref target='図1' />で示されたフロー概要は以下のステップを含む.
+          <!--
           The abstract flow illustrated in <xref target='Figure 1' /> includes the following
           steps:
+          -->
 
           <list style='format (%C)'>
             <t>
+              クライアントはリソースオーナーに認可を要求する.
+              クライアントは直接リソースオーナーのクレデンシャルを要求すべきではない. 
+              その代わり、クライアントは認可サーバーもしくは他のものを経由して認可を要求すべきである.
+              例えば, クライアントはアクセス許可を発行する認可サーバーにリソースオーナーをリダイレクトさせる. 
+              やむを得ない場合, クライアントはエンドユーザーと直接やりとりを行い, エンドユーザーのユーザー名とパスワードを要求する.
+              もしクライアントが自律的に動作しているとき, 認可要求は本仕様の定めるところではない.
+              <!--
               The client requests authorization from the resource owner. The client should not
               request the resource owner's credentials directly. Instead, it should request
               authorization via an authorization server or other entities. For example, the client
@@ -344,25 +360,45 @@
               access grant. When unavoidable, the client interacts directly with the end-user,
               asking for the end-user's username and password. If the client is acting
               autonomously, the authorization request is beyond the scope of this specification.
+              -->
             </t>
             <t>
+              クライアントはリソースオーナーに提供された認可を表すアクセス許可を発行される.
+              アクセス許可は以下のように表される :
+              <!--
               The client is issued an access grant which represents the authorization provided by
               the resource owner. The access grant can be expressed as:
+              -->
 
               <list style='symbols'>
                 <t>
+                  認可コード - 認可サーバー経由で取得したアクセス許可.
+                  <xref target='user-authorization' /> はエンドユーザが存在してユーザーエージェントを使うときの認可コード取得方法を記載する.
+                  <!--
                   Authorization code - an access grant obtained via an authorization server.
                   <xref target='user-authorization' /> describes how to obtain an authorization
                   code when the end-user is present and using a user-agent.
+                  -->
                 </t>
                 <t>
+                  アサーション - 異なるトラストフレームワークを利用して取得したアクセス許可.
+                  アサーションはクライアントがアクセストークンを取得するために既存のトラストリレーションシップを利用することを可能にする.
+                  それらはOAuthと他のトラストフレームワークのブリッジを提供する.
+                  アサーションにより示されるアクセス許可はアサーションの種類やコンテント, 発行方法に依存し, それは本仕様の定めるところではない.
+                  <!--
                   Assertion - an access grant obtained using a different trust framework.
                   Assertions enable the client to utilize existing trust relationships to obtain an
                   access token. They provide a bridge between OAuth and other trust frameworks. The
                   access grant represented by an assertion depends on the assertion type, its
                   content, and how it was issued, which are beyond the scope of this specification.
+                  -->
                 </t>
                 <t>
+                  リソースオーナー パスワードクレデンシャル - 直接リソースオーナーとやりとりするときに取得される.
+                  リソースオーナーパスワードクレデンシャル(すなわち, ユーザー名とパスワード)はリソースオーナーとクライアントの間に高度な信用がある(例えば, コンピューターOSもしくは特別に許可されたアプリケーション)のときのみ利用されるべきである.
+                  しかしながら, <xref target='RFC2617' />で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリクエストトークンと交換される.
+                  これはクライアントのリソースオーナーのクレデンシャルを将来の利用のために保存する必要性を取り除く.
+                  <!--
                   Resource owner password credentials - obtained when interacting directly with a
                   resource-owner. Resource owner password credentials (i.e. a username and
                   password) should only be used when there is a high degree of trust between the
@@ -372,38 +408,61 @@
                   for a single request and are exchanged for an access token and refresh token.
                   This eliminates the need for the client to store the resource-owner's credentials
                   for future use.
+                  -->
                 </t>
               </list>
             </t>
             <t>
+              クライアントは認可サーバーにより認証されたアクセストークンを要求し, アクセス許可を渡す.
+              トークン要求については<xref target='obtaining-token' />に記載する.
+              <!--
               The client requests an access token by authenticating with the authorization server,
               and presenting the access grant. The token request is described in
               <xref target='obtaining-token' />.
+              -->
             </t>
             <t>
+              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンをオプションなリクエストトークンとともに発行する.
+              アクセストークンは通常, アクセス許可よりも短い生存期間を持つ.
+              リフレッシュトークンは通常, アクセス許可の期間と等しい生存期間を持つ.
+              アクセストークンの有効期限が切れた時、リフレッシュトークンはリソースオーナーにもう一度アクセス許可を要求することなく新しいアクセストークンを取得するために利用されます.
+              <!--
               The authorization server validates the client credentials and the access grant, and
               issues an access token with an optional refresh token. Access tokens usually have a
               shorter lifetime than the access grant. Refresh tokens usually have a lifetime equal
               to the duration of the access grant. When an access token expires, the refresh token
               is used to obtain a new access token without having to request another access grant
               from the resource owner.
+              -->
             </t>
             <t>
+              クライアントはリソースサーバーへの保護リソース要求を作成し, アクセスを得るためにアクセストークンを提供する.
+              保護リソースへのアクセスについては<xref target='access-resource' />に記載する.
+              <!--
               The client makes a protected resource request to the resource server, and presents
               the access token in order to gain access. Accessing a protected resource is described
               in <xref target='access-resource' />.
+              -->
             </t>
             <t>
+              リソースサーバーはアクセストークンの正当性を確認し, 有効な場合はリクエストを処理する.
+              <!--
               The resource server validates the access token, and if valid, serves the request.
+              -->
             </t>
           </list>
         </t>
         <t>
+          クライアントがリソースオーナーの代わりに動作する(クライアントがリソースオーナーでもある)とき, クライアントはアクセス権を取得しない. 
+          簡略化されたプロトコルフローは<xref target='図2' />に示される.
+          <!--
           When the client is acting on its own behalf (the client is also the resource owner),
           the client does not obtain an access grant. The simplified protocol flow is illustrated
           in <xref target='Figure 2' />:
+          -->
         </t>
-        <figure title='Protocol Flow for Client Acting On Its Own Behalf' anchor='Figure 2'>
+        <figure title='リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー' anchor='図2'>
+        <!--<figure title='Protocol Flow for Client Acting On Its Own Behalf' anchor='Figure 2'>-->
           <artwork>
             <![CDATA[
   +--------+                                  +---------------+
@@ -421,11 +480,15 @@
           </artwork>
         </figure>
         <t>
+          クライアントがユーザーエージェントプロファイル(<xref target='user-agent' />に記載される)を利用するとき、認可要求は<xref target='図3' />で表されるアクセストークンをもたらす.
+          <!--
           When the client uses the user-agent profile (described in <xref target='user-agent' />),
           the authorization request results in an access token, as illustrated in
           <xref target='Figure 3' />:
+          -->
         </t>
-        <figure title='Indirect Access Grant Protocol Flow' anchor='Figure 3'>
+        <figure title='間接的なアクセス権プロトコルフロー' anchor='図3'>
+        <!--<figure title='Indirect Access Grant Protocol Flow' anchor='Figure 3'>-->
           <artwork>
             <![CDATA[
   +--------+                        +----------+   +---------------+
