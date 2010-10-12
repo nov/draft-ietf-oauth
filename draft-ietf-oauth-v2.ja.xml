@@ -76,7 +76,7 @@
             for future use, typically a password in clear-text. -->
           </t>
           <t>
-            サーバーはパスワードベースの (シンメトリックな) 認証方式をサポートしなければならない.
+            サーバーはパスワードベースの認証方式をサポートしなければならない.
             パスワードを利用することによりセキュリティが低下する.
             <!-- Servers are required to support password (symmetric) authentication, despite the
             security weaknesses created by passwords. -->
