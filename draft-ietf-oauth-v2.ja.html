@@ -521,7 +521,7 @@ Authors' Addresses<br />
           
         
 </p><br /><hr class="insert" />
-<a name="図1"></a>
+<a name="Figure 1"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -545,7 +545,7 @@ Authors' Addresses<br />
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1: プロトコルフロー概要&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          <a class='info' href='#図1'>Figure&nbsp;1<span> (</span><span class='info'>プロトコルフロー概要</span><span>)</span></a>で示されたフロー概要は以下のステップを含む.
+          <a class='info' href='#Figure 1'>Figure&nbsp;1<span> (</span><span class='info'>プロトコルフロー概要</span><span>)</span></a>で示されたフロー概要は以下のステップを含む.
           
 
           </p>
@@ -586,8 +586,8 @@ Authors' Addresses<br />
 <li>
                   リソースオーナー パスワードクレデンシャル - 直接リソースオーナーとやりとりするときに取得される.
                   リソースオーナーパスワードクレデンシャル(すなわち, ユーザー名とパスワード)はリソースオーナーとクライアントの間に高度な信用がある(例えば, コンピューターOSもしくは特別に許可されたアプリケーション)のときのみ利用されるべきである.
-                  しかしながら, <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリクエストトークンと交換される.
-                  これはクライアントのリソースオーナーのクレデンシャルを将来の利用のために保存する必要性を取り除く.
+                  しかしながら, <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリフレッシュトークンと交換される.
+                  よってクライアントはリソースオーナーのクレデンシャルを将来の利用のため保存する必要はない.
                   
                 
 </li>
@@ -597,22 +597,23 @@ Authors' Addresses<br />
 <dt>(C)</dt>
 <dd>
               クライアントは認可サーバーにより認証されたアクセストークンを要求し, アクセス許可を渡す.
-              トークン要求については<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載する.
+              トークンリクエストについては<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載する.
               
             
 </dd>
 <dt>(D)</dt>
 <dd>
-              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンをオプションなリクエストトークンとともに発行する.
+              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンを発行する. 
+              オプションでアクセストークンに付随するリフレッシュトークンを発行する場合もある.
               アクセストークンは通常, アクセス許可よりも短い生存期間を持つ.
               リフレッシュトークンは通常, アクセス許可の期間と等しい生存期間を持つ.
-              アクセストークンの有効期限が切れた時、リフレッシュトークンはリソースオーナーにもう一度アクセス許可を要求することなく新しいアクセストークンを取得するために利用されます.
+              アクセストークンの有効期限が切れた場合でも, リフレッシュトークンを利用すると, リソースオーナーに再度アクセス許可を要求することなく新しいアクセストークンが取得できる.
               
             
 </dd>
 <dt>(E)</dt>
 <dd>
-              クライアントはリソースサーバーへの保護リソース要求を作成し, アクセスを得るためにアクセストークンを提供する.
+              クライアントは保護リソースへのリクエストを実行し, アクセスを得るためにアクセストークンを提供する.
               保護リソースへのアクセスについては<a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>Accessing a Protected Resource</span><span>)</span></a>に記載する.
               
             
@@ -627,12 +628,12 @@ Authors' Addresses<br />
         
 </p>
 <p>
-          クライアントがリソースオーナーの代わりに動作する(クライアントがリソースオーナーでもある)とき, クライアントはアクセス権を取得しない. 
-          簡略化されたプロトコルフローは<a class='info' href='#図2'>Figure&nbsp;2<span> (</span><span class='info'>リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー</span><span>)</span></a>に示される.
+          クライアントが自身の代理として振る舞う (クライアントがリソースオーナーでもある) とき, クライアントはアクセス権を取得しない. 
+          簡略化されたプロトコルフローは<a class='info' href='#Figure 2'>Figure&nbsp;2<span> (</span><span class='info'>自身の代理として振る舞うクライアントのためのプロトコルフロー</span><span>)</span></a>に示される.
           
         
 </p><br /><hr class="insert" />
-<a name="図2"></a>
+<a name="Figure 2"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -647,14 +648,14 @@ Authors' Addresses<br />
   |        |&lt;-(F)---- Protected Resource -----|               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: 自身の代理として振る舞うクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載される)を利用するとき、認可要求は<a class='info' href='#図3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
+          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載する)を利用するとき、認可リクエストは<a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
           
         
 </p><br /><hr class="insert" />
-<a name="図3"></a>
+<a name="Figure 3"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                        +----------+   +---------------+
