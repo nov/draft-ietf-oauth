@@ -201,9 +201,9 @@ described in the Simplified BSD License.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">1.3.</a>&nbsp;
 概要<!--Overview--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">1.4.</a>&nbsp;
-Client Profiles<br />
+クライアントプロファイル<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">1.4.1.</a>&nbsp;
-Web Server<br />
+ウェブサーバー<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#user-agent">1.4.2.</a>&nbsp;
 User-Agent<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">1.4.3.</a>&nbsp;
@@ -521,7 +521,7 @@ Authors' Addresses<br />
           
         
 </p><br /><hr class="insert" />
-<a name="図1"></a>
+<a name="Figure 1"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -545,7 +545,7 @@ Authors' Addresses<br />
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1: プロトコルフロー概要&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          <a class='info' href='#図1'>Figure&nbsp;1<span> (</span><span class='info'>プロトコルフロー概要</span><span>)</span></a>で示されたフロー概要は以下のステップを含む.
+          <a class='info' href='#Figure 1'>Figure&nbsp;1<span> (</span><span class='info'>プロトコルフロー概要</span><span>)</span></a>で示されたフロー概要は以下のステップを含む.
           
 
           </p>
@@ -586,8 +586,8 @@ Authors' Addresses<br />
 <li>
                   リソースオーナー パスワードクレデンシャル - 直接リソースオーナーとやりとりするときに取得される.
                   リソースオーナーパスワードクレデンシャル(すなわち, ユーザー名とパスワード)はリソースオーナーとクライアントの間に高度な信用がある(例えば, コンピューターOSもしくは特別に許可されたアプリケーション)のときのみ利用されるべきである.
-                  しかしながら, <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリクエストトークンと交換される.
-                  これはクライアントのリソースオーナーのクレデンシャルを将来の利用のために保存する必要性を取り除く.
+                  しかしながら, <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>で定義されるHTTP Basic認証とは異なり, リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンとリフレッシュトークンと交換される.
+                  よってクライアントはリソースオーナーのクレデンシャルを将来の利用のため保存する必要はない.
                   
                 
 </li>
@@ -597,22 +597,23 @@ Authors' Addresses<br />
 <dt>(C)</dt>
 <dd>
               クライアントは認可サーバーにより認証されたアクセストークンを要求し, アクセス許可を渡す.
-              トークン要求については<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載する.
+              トークンリクエストについては<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載する.
               
             
 </dd>
 <dt>(D)</dt>
 <dd>
-              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンをオプションなリクエストトークンとともに発行する.
+              認可サーバーはクライアントクレデンシャルとアクセス許可の正当性を確認し, アクセストークンを発行する. 
+              オプションでアクセストークンに付随するリフレッシュトークンを発行する場合もある.
               アクセストークンは通常, アクセス許可よりも短い生存期間を持つ.
               リフレッシュトークンは通常, アクセス許可の期間と等しい生存期間を持つ.
-              アクセストークンの有効期限が切れた時、リフレッシュトークンはリソースオーナーにもう一度アクセス許可を要求することなく新しいアクセストークンを取得するために利用されます.
+              アクセストークンの有効期限が切れた場合でも, リフレッシュトークンを利用すると, リソースオーナーに再度アクセス許可を要求することなく新しいアクセストークンが取得できる.
               
             
 </dd>
 <dt>(E)</dt>
 <dd>
-              クライアントはリソースサーバーへの保護リソース要求を作成し, アクセスを得るためにアクセストークンを提供する.
+              クライアントは保護リソースへのリクエストを実行し, アクセスを得るためにアクセストークンを提供する.
               保護リソースへのアクセスについては<a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>Accessing a Protected Resource</span><span>)</span></a>に記載する.
               
             
@@ -627,12 +628,12 @@ Authors' Addresses<br />
         
 </p>
 <p>
-          クライアントがリソースオーナーの代わりに動作する(クライアントがリソースオーナーでもある)とき, クライアントはアクセス権を取得しない. 
-          簡略化されたプロトコルフローは<a class='info' href='#図2'>Figure&nbsp;2<span> (</span><span class='info'>リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー</span><span>)</span></a>に示される.
+          クライアントが自身の代理として振る舞う (クライアントがリソースオーナーでもある) とき, クライアントはアクセス権を取得しない. 
+          簡略化されたプロトコルフローは<a class='info' href='#Figure 2'>Figure&nbsp;2<span> (</span><span class='info'>自身の代理として振る舞うクライアントのためのプロトコルフロー</span><span>)</span></a>に示される.
           
         
 </p><br /><hr class="insert" />
-<a name="図2"></a>
+<a name="Figure 2"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                                  +---------------+
@@ -647,14 +648,14 @@ Authors' Addresses<br />
   |        |&lt;-(F)---- Protected Resource -----|               |
   +--------+                                  +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: リソースオーナーの代わりに動作するクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: 自身の代理として振る舞うクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載される)を利用するとき、認可要求は<a class='info' href='#図3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
+          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載する)を利用するとき、認可リクエストは<a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
           
         
 </p><br /><hr class="insert" />
-<a name="図3"></a>
+<a name="Figure 3"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                        +----------+   +---------------+
@@ -675,26 +676,23 @@ Authors' Addresses<br />
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.4"></a><h3>1.4.&nbsp;
-Client Profiles</h3>
+クライアントプロファイル</h3>
 
 <p>
-          OAuth supports a wide range of client types by providing a rich and extensible framework
-          for establishing authorization and exchanging it for an access token. The methods detailed
-          in this specification were designed to accommodate four client types: web servers,
-          user-agents, native applications, and autonomous clients. Additional authorization flows
-          and client profiles may be defined by other specifications to cover additional scenarios
-          and client types.
+          OAuthは認可を確立しアクセストークンと交換するためのリッチで拡張可能なフレームワークを提供することで広範囲のクライアントタイプをサポートする．
+          この仕様書で詳述されている方式はウェブサーバー、ユーザーエージェント、ネイティブアプリケーション、自立アプリケーションの４つのクライアントタイプに対応するために作成されている．
+          追加のシナリオやクライアントタイプを対象に含めるには、他の仕様書によって追加の認可フローやクライアントプロファイルが定義されてもよい．
+	
         
 </p>
 <a name="anchor6"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.4.1"></a><h3>1.4.1.&nbsp;
-Web Server</h3>
+ウェブサーバー</h3>
 
 <p>
-            The web server profile is suitable for clients capable of interacting with the end-user's
-            user-agent (typically a web browser) and capable of receiving incoming requests from the
-            authorization server (capable of acting as an HTTP server).
+            ウェブサーバプロファイルはエンドユーザーのユーザーエージェント（通常はウェブブラウザー）と交信可能でかつ（HTTPサーバーとして動作できる）認可サーバーからのリクエストを受信可能なクライアントに適している．
+            
           
 </p><br /><hr class="insert" />
 <a name="Figure 4"></a>
@@ -719,48 +717,44 @@ Web Server</h3>
   |         |&lt;---(E)----- Access Token -------------------'
   +---------+       (w/ Optional Refresh Token)
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;4: Web Server Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;4: ウェブサーバーフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-            The web server flow illustrated in <a class='info' href='#Figure 4'>Figure&nbsp;4<span> (</span><span class='info'>Web Server Flow</span><span>)</span></a> includes the following
-            steps:
+            <a class='info' href='#Figure 4'>Figure&nbsp;4<span> (</span><span class='info'>ウェブサーバーフロー</span><span>)</span></a>に示されるウェブサーバーフローは以下の手順の通りである．
+            
 
             </p>
 <blockquote class="text"><dl>
 <dt>(A)</dt>
 <dd>
-                The web client initiates the flow by redirecting the end-user's user-agent to the
-                end-user authorization endpoint as described in <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a>.
-                The client includes its client identifier, requested scope, local state, and a
-                redirect URI to which the authorization server will send the end-user back once
-                access is granted (or denied).
+                ウェブクライアントはエンドユーザーのユーザーエージェントをSection 3に記載されているエンドユーザー認可のエンドポイントへリダイレクトするフローから開始する．
+                クライアントにはクライアント識別子、要求するスコープ、ローカルステート、アクセスが認可（もしくは否認）された時点でのエンドユーザーの戻り先となるリダイレクトURIが含まれる．
+                
               
 </dd>
 <dt>(B)</dt>
 <dd>
-                The authorization server authenticates the end-user (via the user-agent) and
-                establishes whether the end-user grants or denies the client's access request.
+                認証サーバーはブラウザ経由のエンドユーザーを認証し、エンドユーザーがクライアントのアクセス要求を許可もしくは拒否したかどうかを確認する．
+                
               
 </dd>
 <dt>(C)</dt>
 <dd>
-                Assuming the end-user granted access, the authorization server redirects the
-                user-agent back to the client to the redirection URI provided earlier. The
-                authorization includes an authorization code for the client to use to obtain an
-                access token.
+                エンドユーザーがアクセスを許可した場合、認可サーバーはユーザエージェントをクライアントにリダイレクトさせる．
+                認可にはクライアントがアクセストークン取得に使う認可コードが含まれる．
+                
               
 </dd>
 <dt>(D)</dt>
 <dd>
-                The client requests an access token from the authorization server by authenticating
-                and including the authorization code received in the previous step as described in
-                <a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>.
+                クライアントは認証後に<a class='info' href='#obtaining-token'>Section&nbsp;4<span> (</span><span class='info'>Obtaining an Access Token</span><span>)</span></a>に記載の通り、直前の手順で受け取った認可コードを含めて、認可サーバーからアクセストークンを要求する．
+                
               
 </dd>
 <dt>(E)</dt>
 <dd>
-                The authorization server validates the client credentials and the authorization
-                code and responds back with the access token.
+                認可サーバーはクライアントクレデンシャルと認可コードを検証し、アクセストークンを返す．
+                
               
 </dd>
 </dl></blockquote><p>
