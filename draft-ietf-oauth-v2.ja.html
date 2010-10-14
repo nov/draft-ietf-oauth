@@ -205,11 +205,11 @@ described in the Simplified BSD License.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">1.4.1.</a>&nbsp;
 ウェブサーバー<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#user-agent">1.4.2.</a>&nbsp;
-User-Agent<br />
+ユーザーエージェント<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">1.4.3.</a>&nbsp;
-Native Application<br />
+ネイティブアプリケーション<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">1.4.4.</a>&nbsp;
-Autonomous<br />
+自律性<br />
 <a href="#client-authentication">2.</a>&nbsp;
 Client Credentials<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">2.1.</a>&nbsp;
@@ -651,7 +651,7 @@ Authors' Addresses<br />
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: 自身の代理として振る舞うクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>User-Agent</span><span>)</span></a>に記載する)を利用するとき、認可リクエストは<a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
+          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>ユーザーエージェント</span><span>)</span></a>に記載する)を利用するとき、認可リクエストは<a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a>で表されるアクセストークンをもたらす.
           
         
 </p><br /><hr class="insert" />
@@ -763,29 +763,27 @@ Authors' Addresses<br />
 <a name="user-agent"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.4.2"></a><h3>1.4.2.&nbsp;
-User-Agent</h3>
+ユーザーエージェント</h3>
 
 <p>
-            The user-agent profile is suitable for client applications residing in a user-agent,
-            typically implemented in a browser using a scripting language such as JavaScript. These
-            clients cannot keep client secrets confidential and the authentication of the client is
-            based on the user-agent's same-origin policy.
+						JavaScriptのようなスクリプト言語を用いるブラウザで一般的に実装されているユーザーエージェントをもつクライアントアプリケーションに, ユーザーエージェントプロファイルは適している. 
+						これらのクライアントは, クライアントシークレットを機密に保つことができない. 
+						そして, クライアントの認証はユーザーエージェントの同起源ポリシーに基づいている. 
+						
           
 </p>
 <p>
-            Unlike other profiles in which the client makes separate requests for end-user
-            authorization and access token, the client receives the access token as a result of the
-            end-user authorization request in the form of an HTTP redirection. The client requests
-            the authorization server to redirect the user-agent to another web server or local
-            resource accessible to the user-agent which is capable of extracting the access token
-            from the response and passing it to the client.
+						クライアントがエンドユーザーの認可とアクセストークンのそれぞれの個別のリクエストを生成するような, その他のプロファイルとは違い, クライアントはHTTPリダイレクトの形式でエンドユーザー認可リクエストの結果として, アクセストークンを受け取る. 
+						他のウェブサーバにユーザーエージェントをリダイレクトする認可サーバーまたは, レスポンスからアクセストークンを抽出し, クライアントに渡すことが可能なユーザーエージェントが利用可能なローカルリソースに対して, クライアントはリクエストを行う. 
+						
+						
           
 </p>
 <p>
-            This user-agent profile does not utilize the client secret since the client executables
-            reside on the end-user's computer or device which makes the client secret accessible
-            and exploitable. Because the access token is encoded into the redirection URI, it may
-            be exposed to the end-user and other applications residing on the computer or device.
+						クライアントシークレットがアクセス可能および利用可能なエンドユーザーのコンピュータやデバイス上にはクライアントの実行ファイルが存在する. 
+						このため, このユーザーエージェントプロファイルはクライアントシークレットを利用しない. 
+						アクセストークンはリダイレクトURIの中にエンコードされているため, エンドユーザーとコンピュータまたはデバイスにあるその他のアプリケーションにさらされている可能性がある. 
+
           
 </p><br /><hr class="insert" />
 <a name="Figure 5"></a>
@@ -809,54 +807,50 @@ User-Agent</h3>
          |   Token  |                                +----------------+
          +----------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;5: User-Agent Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;5: ユーザーエージェントフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-            The user-agent flow illustrated in <a class='info' href='#Figure 5'>Figure&nbsp;5<span> (</span><span class='info'>User-Agent Flow</span><span>)</span></a> includes the following
-            steps:
-
+						ユーザーエージェントは図5に示す下記のステップのフローを含む. 
+						
             </p>
 <blockquote class="text"><dl>
 <dt>(A)</dt>
 <dd>
-                The client sends the user-agent to the end-user authorization endpoint as described
-                in <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a>. The client includes its client identifier,
-                requested scope, local state, and a redirect URI to which the authorization server
-                will send the end-user back once authorization is granted (or denied).
+								クライアントはユーザーエージェントを<a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a>として記述されたエンドユーザー認可エンドポイントに送る. 
+								クライアントの識別子, 要求するスコープ, ローカルステートおよび認可が許可(または拒否)されたあと認可サーバーがエンドユーザーを送るリダイレクトURIをリクエストに含める. 
+								
               
 </dd>
 <dt>(B)</dt>
 <dd>
-                The authorization server authenticates the end-user (via the user-agent) and
-                establishes whether the end-user grants or denies the client's access request.
+								認可サーバーはユーザーエージェントを通してエンドユーザーを認証し, クライアントのアクセスリクエストをエンドユーザーが許可または拒否するかを確立する. 
+								
               
 </dd>
 <dt>(C)</dt>
 <dd>
-                If the end-user granted access, the authorization server redirects the
-                user-agent to the redirection URI provided earlier. The redirection URI includes
-                the access token in the URI fragment.
+								もしエンドユーザーがアクセスを許可すれば, 認可サーバはユーザーエージェントを先ほどの提供されたリダイレクトURIにリダイレクトする. 
+								リダイレクトURIはURIの断片としてアクセストークンを含んでいる. 
+								
               
 </dd>
 <dt>(D)</dt>
 <dd>
-                The user-agent follows the redirection instructions by making a request to the web
-                server which does not include the fragment. The user-agent retains the fragment
-                information locally.
+								ユーザーエージェントはそれらの断片を含まないWebサーバへリクエストを生成し, リダイレクト命令に従う. 
+								ユーザーエージェントはローカルに断片情報を維持する. 
+								
               
 </dd>
 <dt>(E)</dt>
 <dd>
-                The web server returns a web page  (typically an HTML page with an embedded script)
-                capable of accessing the full redirection URI including the fragment retained by the
-                user-agent, and extracting the access token (and other parameters) contained in the
-                fragment.
+								webサーバーは, ユーザーエージェントによって維持されている断片を含む完全なリダイレクトURIにアクセスし, 断片に含まれるアクセストークン(およびその他のパラメーター)を抽出することが可能な(一般的には組み込みscriptを含むHTMLページ)webページを返却する. 
+								
               
 </dd>
 <dt>(F)</dt>
 <dd>
-                The user-agent executes the script provided by the web server locally, which
-                extracts the access token and passes it to the client.
+								webサーバーによって提供された, アクセストークンを抽出し, クライアントへと渡すscriptをユーザーエージェントはローカルで実行する. 
+								
               
 </dd>
 </dl></blockquote><p>
@@ -865,69 +859,63 @@ User-Agent</h3>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.4.3"></a><h3>1.4.3.&nbsp;
-Native Application</h3>
+ネイティブアプリケーション</h3>
 
 <p>
-            Native application are clients running as native code on the end-user's computer or
-            device (i.e. executing outside a user-agent or as a desktop program). These clients are
-            often capable of interacting with (or embedding) the end-user's user-agent but are
-            limited in how such interaction affects their end-user experience. In many cases,
-            native applications are incapable of receiving direct callback requests from the
-            server (e.g. firewall, operating system restrictions).
+						ネイティブアプリケーションは, エンドユーザーのコンピュータやデバイス上でネイティブコードとして動作するクライアントである(例えば, ユーザーエージェントの外部で実行される, またはデスクトッププログラム). 
+						これらのクライアントは, しばしば, エンドユーザーのユーザーエージェントとやりとりする(または組み込む)ことが可能である. 
+						しかし, そのようなやりとりがエンドユーザーの経験に影響を与えるかにおいて制限されている. 
+						多くの場合, ネイティブアプリケーションでは, サーバからのダイレクトコールバックリクエストは受けられない(例えば, ファイアウォールやOS制限のため)
+						
           
 </p>
 <p>
-            Native application clients can be implemented in different ways based on their
-            requirements and desired end-user experience. Native application clients can:
-
+						ネイティブアプリケーションクライアントは, それらの要件や望まれるエンドユーザーの経験に応じて異なる方法で実装されている. 
+						ネイティブアプリケーションクライアントは, 下記のことが可能である. 
+						
             </p>
 <ul class="text">
 <li>
-                Utilize the end-user authorization endpoint as described in
-                <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a> by launching an external user-agent. The
-                client can capture the response by providing a redirection URI with a custom URI
-                scheme (registered with the operating system to invoke the client application), or
-                by providing a redirection URI pointing to a server-hosted resource under the
-                client's control which makes the response available to the client (e.g. using the
-                window title or other locations accessible from outside the user-agent).
+								外部のユーザーエージェントを起動することで<a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a>として記載されたエンドユーザー認可エンドポイントを利用する. 
+								(クライアントアプリケーションを呼び出すようにOSに登録された)カスタムURIスキームでリダイレクトURIを提供すること, または, クライアントが利用可能なレスポンスを生成するクライアントの制御下にあるサーバーのリソースを示すリダイレクトURIの提供することで, クライアントはレスポンスを取得することが可能である(例えば, ウィンドウタイトルやその他のユーザーエージェント外部からアクセス可能なロケーション). 
+								
               
 </li>
 <li>
-                Utilize the end-user authorization endpoint as described in
-                <a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a> by using an embedded user-agent. The client
-                obtains the response by directly communicating with the embedded user-agent.
+								組み込みのユーザーエージェントを利用することで<a class='info' href='#user-authorization'>Section&nbsp;3<span> (</span><span class='info'>Obtaining End-User Authorization</span><span>)</span></a>として記載されたエンドユーザー認可エンドポイントを利用する. 
+								クライアントは組み込みのユーザーエージェントと直接的にやりとりすることでレスポンスを取得する. 
+								
               
 </li>
 <li>
-                Prompt end-users for their password and use them directly to obtain an access
-                token. This is generally discouraged, as it hands the end-user's password directly
-                to the third-party client which in turn has to store it in clear-text. It also
-                requires the server to support password-based authentication.
+								エンドユーザーにパスワードを促し, アクセストークンを得るためにパスワードを直接利用する. 
+								これは一般的には推奨されない. 
+								なぜなら, エンドユーザーのパスワードが, 直接的に3rd-partyのクライアントに手渡され, 平文で保存されざるを得ないからである. 
+								この方法は, サーバーに対してパスワードベースの認証をサポートすることを要求する. 
+								
               
 </li>
 </ul><p>
           
 </p>
 <p>
-            When choosing between launching an external browser and an embedded user-agent,
-            developers should consider the following:
-
+						外部ブラウザか組み込みユーザーエージェントの起動を選択する際に, 開発者は下記のことを熟考すべきである. 
+						
             </p>
 <ul class="text">
 <li>
-                External user-agents may improve completion rate as the end-user may already be
-                logged-in and not have to re-authenticate.
+								エンドユーザーがログインし, 再認証をする必要がないよう, 外部のユーザーエージェントが完成度の改善を行う可能性がある. 
+								
               
 </li>
 <li>
-                Embedded user-agents often offer a better end-user flow, as they remove the need to
-                switch context and open new windows.
+								コンテキストを変更したり, 新しいウィンドウを開いたりする必要性を除外するよう, 組み込みユーザーエージェントはしばしばよりよいエンドユーザーフローを提案する. 
+								
               
 </li>
 <li>
-                Embedded user-agents pose a security challenge because users are authenticating in
-                an unidentified window without access to the visual protections offered by many
-                user-agents.
+								多くのユーザーエージェントによって提示された視覚的なプロテクションにアクセスすることなく, 不特定のウィンドウでユーザーが認証するため, 組み込みエンドユーザーは, セキュリティ面の課題を課する. 
+								
               
 </li>
 </ul><p>
@@ -936,30 +924,26 @@ Native Application</h3>
 <a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.4.4"></a><h3>1.4.4.&nbsp;
-Autonomous</h3>
+自律性</h3>
 
 <p>
-            Autonomous clients utilize an existing trust relationship or framework to establish
-            authorization. Autonomous clients can be implemented in different ways based on their
-            requirements and the existing trust framework they rely upon. Autonomous clients can:
-
+						自律クライアントは, 既存の信頼関係または認可を確立するフレームワークを利用する. 
+						自律クライアントは, クライアントの要件またはクライアントが既存のトラストフレームワークに基づいて異なる方法で実装される. 
+						自律クライアントは下記を実現する.
+						
             </p>
 <ul class="text">
 <li>
-                Obtain an access token by authenticating with the authorization server using their
-                client credentials. The scope of the access token is limited to the protected
-                resources under the control of the client, or that of another resource owner
-                previously arranged with the authorization server.
+								クライアントクレデンシャルを利用した認可サーバで認証されたアクセストークンを取得する. 
+								アクセストークンのスコープは, クライアントの制御下の保護されたリソース, また, 以前に認可サーバとやりとりを行ったその他のリソースオーナーのリソースに制限されている. 
+								
               
 </li>
 <li>
-                Use an existing access grant expressed as an assertion using an assertion format
-                supported by the authorization server. Using assertions requires the client to
-                obtain a assertion (such as a <a class='info' href='#OASIS.saml-core-2.0-os'>SAML<span> (</span><span class='info'>Cantor, S., Kemp, J., Philpott, R., and E. Maler, &ldquo;Assertions and Protocol for the OASIS Security Assertion Markup Language             (SAML) V2.0,&rdquo; March&nbsp;2005.</span><span>)</span></a> [OASIS.saml&#8209;core&#8209;2.0&#8209;os]
-                assertion) from an assertion issuer or to self-issue an assertion. The assertion
-                format, the process by which the assertion is obtained, and the method of
-                validating the assertion are defined by the assertion issuer and the authorization
-                server, and are beyond the scope of this specification.
+								認可サーバによってサポートされているアサーションフォーマットを利用したアサーションとして表される既存のアクセス権を利用する. 
+								アサーションの利用は, クライアントに対してアサーション発行から, 自己発行アサーションまでのアサーションの取得を要求する(例えば, <a class='info' href='#OASIS.saml-core-2.0-os'>SAML<span> (</span><span class='info'>Cantor, S., Kemp, J., Philpott, R., and E. Maler, &ldquo;Assertions and Protocol for the OASIS Security Assertion Markup Language             (SAML) V2.0,&rdquo; March&nbsp;2005.</span><span>)</span></a> [OASIS.saml&#8209;core&#8209;2.0&#8209;os]のようなアサーション). 
+								アサーションフォーマット, アサーション得られるプロセス, アサーションの妥当性を調べるメソッドは, アサーション発行者と認可サーバによって定義されており, 本仕様の定めるところではない. 
+								
               
 </li>
 </ul><p>
