@@ -137,7 +137,7 @@
         which issues the printing service delegation-specific credentials (token). -->
       </t>
       <t>
-        この仕様書ではOAuthを<xref target='RFC2616'>HTTP</xref> (もしくは<xref target='RFC2818' />で定義されたHTTTP over TLS) の元で利用する方法を定める.
+        この仕様書ではOAuthを<xref target='RFC2616'>HTTP</xref> (もしくは<xref target='RFC2818' />で定義されたHTTP over TLS) の元で利用する方法を定める.
         他の仕様書がその他の転送プロトコルの元での利用について本仕様を拡張する可能性もある.
         <!-- This specification defines the use of OAuth over <xref target='RFC2616'>HTTP</xref>
         (or HTTP over TLS as defined by <xref target='RFC2818' />). Other specifications may
