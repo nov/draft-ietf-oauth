@@ -870,39 +870,67 @@
       </section>
 
     </section>
+    <section title='クライアントクレデンシャル' anchor='client-authentication'>
+    <!--
     <section title='Client Credentials' anchor='client-authentication'>
+    -->
       <t>
+        クライアントは, 認可サーバーとやりとりするとき, クライアント識別子を使ってクライアント自身を特定し, クライアントクレデンシャルを使って認証する. 
+        この仕様書では, パスワードクレデンシャルを使ってクライアントを認証するひとつのメカニズムを提供する. 
+        <!--
         When interacting with the authorization server, the client identifies itself using a client
         identifier and authenticates using a set of client credentials. This specification provides
         one mechanism for authenticating the client using password credentials.
+        -->
       </t>
       <t>
+        クライアントがクライアントクレデンシャルを取得する方法はこの仕様の範囲外であるが, 通常, 認可サーバーの登録に含まれている. [[ OAuth Discovery はクライアントパスワードを取得する方法を提供する. ]]
+        <!--
         The means through which the client obtains its credentials are beyond the scope of this
         specification, but usually involve registration with the authorization server.
         [[ OAuth Discovery provides one way of obtaining a client password ]]
+        -->
       </t>
       <t>
+        認可サーバーはクライアントオペレーターとの信頼を確立せずに, クライアントシークレットの機密性を信頼すべきではない. 
+        認可サーバーはクライアントシークレットの機密性を維持できないクライアントに対して, クライアントシークレットを発行するべきではない. 
+        <!--
         Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
         about the confidentiality of client secrets without establishing trust with the
         client operator. Authorization servers SHOULD NOT issue client secrets to clients
         incapable of keeping their secrets confidential.
+        -->
       </t>
       <t>
+        認可サーバーはあらゆるクレデンシャルと認証スキーマの組み合わせを使ったユーザーを認証してもよい. 
+        クライアントは1つ1つのリクエストに1つ以上のクレデンシャル, または認証メカニズムを利用してはならない. 
+        <!--
         The authorization server MAY authenticate the client using any appropriate set of
         credentials and authentication scheme. The client MUST NOT utilize more than one set of
         credentials or authentication mechanism with each request.
+        -->
       </t>
 
+      <section title='クライアントパスワードクレデンシャル'>
+      <!--
       <section title='Client Password Credentials'>
+      -->
         <t>
+         クライアントパスワードクレデンシャルはクライアントを認証するために, shared symmetric secretを使用する. 
+         クライアント識別子とパスワードは, [RFC2617]に定義されているようなパスワードとしてユーザー名およびクライアントパスワードを含めるようなHTTPベーシック認証を使ったリクエストに含まれる. 
+         <!--
           The client password credentials use a shared symmetric secret to authenticate the client.
           The client identifier and password are included in the request using the
           HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> by including the
           client identifier as the username and client password as the password.
+          -->
         </t>
         <figure>
           <preamble>
+            例 (改行は掲載上の都合による): 
+            <!--
             For example (line breaks are for display purposes only):
+            -->
           </preamble>
           <artwork>
             <![CDATA[
@@ -917,18 +945,28 @@
           </artwork>
         </figure>
         <t>
+          もうひとつの方法として, クライアントが付随するパラメータとしてリクエストのbodyにパスワードを含める方法もある. 
+          <!--
           Alternatively, the client MAY include the password in the request body using the
           following parameter:
-
+          -->
           <list style='hanging' hangIndent='6'>
+            <t hangText='client_secret'>
+              必須. クライアントパスワード.
+            </t>
+            <!--
             <t hangText='client_secret'>
               REQUIRED. The client password.
             </t>
+            -->
           </list>
         </t>
         <figure>
           <preamble>
+            例 (改行は掲載上の都合による): 
+            <!--
             For example (line breaks are for display purposes only):
+            -->
           </preamble>
           <artwork>
             <![CDATA[
@@ -943,9 +981,13 @@
           </artwork>
         </figure>
         <t>
+         認可サーバーは, リクエストパラメーターとHTTPベーシック認証の両方で使われているクライアントクレデンシャルを受理しなければならない. 
+         認可サーバーはパスワード送信にふさわしい認証スキームを追加でサポートしてもよい. 
+         <!--
           The authorization server MUST accept the client credentials using both the request
           parameter, and the HTTP Basic authentication scheme. The authorization server MAY
           support additional authentication schemes suitable for the transmission of a password.
+          -->
         </t>
       </section>
 
