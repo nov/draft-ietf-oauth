@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 17, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 18, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 14, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 15, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 17, 2011.</p>
+This Internet-Draft will expire on April 18, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -211,9 +211,9 @@ described in the Simplified BSD License.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">1.4.4.</a>&nbsp;
 自律性<br />
 <a href="#client-authentication">2.</a>&nbsp;
-Client Credentials<br />
+クライアントクレデンシャル<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">2.1.</a>&nbsp;
-Client Password Credentials<br />
+クライアントパスワードクレデンシャル<br />
 <a href="#user-authorization">3.</a>&nbsp;
 Obtaining End-User Authorization<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.1.</a>&nbsp;
@@ -502,7 +502,7 @@ Authors' Addresses<br />
               
               認可サーバーがクライアント自身を識別するために発行される一意な識別子.
               クライアント識別子に対応するシークレットがあってもよい.
-              クライアント識別子については<a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>に記載する.
+              クライアント識別子については<a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>に記載する.
               
             
 </dd>
@@ -957,47 +957,45 @@ Authors' Addresses<br />
 <a name="client-authentication"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2"></a><h3>2.&nbsp;
-Client Credentials</h3>
+クライアントクレデンシャル</h3>
 
 <p>
-        When interacting with the authorization server, the client identifies itself using a client
-        identifier and authenticates using a set of client credentials. This specification provides
-        one mechanism for authenticating the client using password credentials.
+        クライアントは, 認可サーバーとやりとりするとき, クライアント識別子を使ってクライアント自身を特定し, クライアントクレデンシャルを使って認証する. 
+        この仕様書では, パスワードクレデンシャルを使ってクライアントを認証するひとつのメカニズムを提供する. 
+        
       
 </p>
 <p>
-        The means through which the client obtains its credentials are beyond the scope of this
-        specification, but usually involve registration with the authorization server.
-        [[ OAuth Discovery provides one way of obtaining a client password ]]
+        クライアントがクライアントクレデンシャルを取得する方法はこの仕様の範囲外であるが, 通常, 認可サーバーの登録に含まれている. [[ OAuth Discovery はクライアントパスワードを取得する方法を提供する. ]]
+        
       
 </p>
 <p>
-        Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-        about the confidentiality of client secrets without establishing trust with the
-        client operator. Authorization servers SHOULD NOT issue client secrets to clients
-        incapable of keeping their secrets confidential.
+        認可サーバーはクライアントオペレーターとの信頼を確立せずに, クライアントシークレットの機密性を信頼すべきではない. 
+        認可サーバーはクライアントシークレットの機密性を維持できないクライアントに対して, クライアントシークレットを発行するべきではない. 
+        
       
 </p>
 <p>
-        The authorization server MAY authenticate the client using any appropriate set of
-        credentials and authentication scheme. The client MUST NOT utilize more than one set of
-        credentials or authentication mechanism with each request.
+        認可サーバーはあらゆるクレデンシャルと認証スキーマの組み合わせを使ったユーザーを認証してもよい. 
+        クライアントは1つ1つのリクエストに1つ以上のクレデンシャル, または認証メカニズムを利用してはならない. 
+        
       
 </p>
 <a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2.1"></a><h3>2.1.&nbsp;
-Client Password Credentials</h3>
+クライアントパスワードクレデンシャル</h3>
 
 <p>
-          The client password credentials use a shared symmetric secret to authenticate the client.
-          The client identifier and password are included in the request using the
-          HTTP Basic authentication scheme as defined in <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> by including the
-          client identifier as the username and client password as the password.
+         クライアントパスワードクレデンシャルはクライアントを認証するために, shared symmetric secretを使用する. 
+         クライアント識別子とパスワードは, [RFC2617]に定義されているようなパスワードとしてユーザー名およびクライアントパスワードを含めるようなHTTPベーシック認証を使ったリクエストに含まれる. 
+         
         
 </p>
 <p>
-            For example (line breaks are for display purposes only):
+            例 (改行は掲載上の都合による): 
+            
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1011,21 +1009,21 @@ Client Password Credentials</h3>
 
 </pre></div>
 <p>
-          Alternatively, the client MAY include the password in the request body using the
-          following parameter:
-
+          もうひとつの方法として, クライアントが付随するパラメータとしてリクエストのbodyにパスワードを含める方法もある. 
+          
           </p>
 <blockquote class="text"><dl>
 <dt>client_secret</dt>
 <dd>
-              REQUIRED. The client password.
+              必須. クライアントパスワード.
             
 </dd>
 </dl></blockquote><p>
         
 </p>
 <p>
-            For example (line breaks are for display purposes only):
+            例 (改行は掲載上の都合による): 
+            
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1039,9 +1037,9 @@ Client Password Credentials</h3>
 
 </pre></div>
 <p>
-          The authorization server MUST accept the client credentials using both the request
-          parameter, and the HTTP Basic authentication scheme. The authorization server MAY
-          support additional authentication schemes suitable for the transmission of a password.
+         認可サーバーは, リクエストパラメーターとHTTPベーシック認証の両方で使われているクライアントクレデンシャルを受理しなければならない. 
+         認可サーバーはパスワード送信にふさわしい認証スキームを追加でサポートしてもよい. 
+         
         
 </p>
 <a name="user-authorization"></a><br /><hr />
@@ -1106,7 +1104,7 @@ Obtaining End-User Authorization</h3>
 <dd>
             
             REQUIRED. The client identifier as described in
-            <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+            <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>.
           
 </dd>
 <dt>redirect_uri</dt>
@@ -1457,7 +1455,7 @@ Obtaining an Access Token</h3>
 </p>
 <p>
         The client authenticates with the authorization server by adding its client credentials to
-        the request as described in <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>. The authorization
+        the request as described in <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>. The authorization
         server MAY allow unauthenticated access token requests when the client identity does not
         matter (e.g. anonymous client) or when the client identity is established via other means
         (e.g. using an assertion access grant).
@@ -1484,7 +1482,7 @@ Obtaining an Access Token</h3>
 <dd>
             
             REQUIRED, unless the client identity can be establish via other means (e.g. assertion).
-            The client identifier as described in <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a>.
+            The client identifier as described in <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>.
           
 </dd>
 <dt>scope</dt>
@@ -1560,7 +1558,7 @@ Authorization Code</h3>
 <p>
               For example, the client makes the following HTTP request by including its client
               credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a> and using transport-layer security (line
+              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
               breaks are for display purposes only):
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -1627,7 +1625,7 @@ Resource Owner Password Credentials</h3>
 <p>
               For example, the client makes the following HTTP request by including its client
               credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a> and using transport-layer security (line
+              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
               breaks are for display purposes only):
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -1726,7 +1724,7 @@ Refresh Token</h3>
 <p>
               For example, the client makes the following HTTP request by including its client
               credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>Client Credentials</span><span>)</span></a> and using transport-layer security (line
+              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
               breaks are for display purposes only):
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -3072,4 +3070,3 @@ References</h3>
 <td class="author-text"><a href="http://dickhardt.org/">http://dickhardt.org/</a></td></tr>
 </table>
 </body></html>
-
