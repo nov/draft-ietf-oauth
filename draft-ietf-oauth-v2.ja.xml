@@ -993,93 +993,107 @@
 
     </section>
 
-    <section title='Obtaining End-User Authorization' anchor='user-authorization'>
+    <section title='エンドユーザーの認可を取得' anchor='user-authorization'>
+    <!--<section title='Obtaining End-User Authorization' anchor='user-authorization'>-->
       <t>
-        When the client interacts with an end-user, the end-user MUST first grant the client
+        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない. 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントに送る.
+        <!--When the client interacts with an end-user, the end-user MUST first grant the client
         authorization to access its protected resources. Once obtained, the end-user access
         grant is expressed as an authorization code which the client uses to obtain an access
         token. To obtain an end-user authorization, the client sends the end-user to the
-        end-user authorization endpoint.
+        end-user authorization endpoint.-->
       </t>
       <t>
-        At the end-user authorization endpoint, the end-user first authenticates with the
+        エンドユーザー認可エンドポイントでは, エンドユーザーは最初に認可サーバーを使って認証し, その後, アクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない.
+        <!-- At the end-user authorization endpoint, the end-user first authenticates with the
         authorization server, and then grants or denies the access request. The way in which the
         authorization server authenticates the end-user (e.g. username and password login, OpenID,
         session cookies) and in which the authorization server obtains the end-user's
         authorization, including whether it uses a secure channel such as TLS, is beyond the scope
         of this specification. However, the authorization server MUST first verify the identity of
-        the end-user.
+        the end-user. -->
       </t>
       <t>
-        The location of the end-user authorization endpoint can be found in the service
+        エンドユーザー認可エンドポイントの場所は対象サービスのドキュメントか, あるいは [[ OAuth Discovery ]] によって見つけられる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない. これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
+        <!-- The location of the end-user authorization endpoint can be found in the service
         documentation, or can be obtained by using [[ OAuth Discovery ]]. The end-user
         authorization endpoint URI MAY include a query component as defined by
         <xref target='RFC3986' /> section 3, which must be retained when adding additional
-        query parameters.
+        query parameters. -->
       </t>
       <t>
-        Since requests to the end-user authorization endpoint result in user authentication and
+        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである.
+        <!-- Since requests to the end-user authorization endpoint result in user authentication and
         the transmission of sensitive information, the authorization server SHOULD require the
         use of a transport-layer security mechanism such as TLS when sending requests to the
-        end-user authorization endpoint.
+        end-user authorization endpoint. -->
       </t>
       <t>
-        In order to direct the end-user's user-agent to the authorization server, the client
+        エンドユーザーのユーザーエージェントを認可サーバーへリダイレクトするために, クライアントはエンドユーザー認可エンドポイントのURIのクエリー部に, 次に述べるクエリーパラメーターを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットに従って追加することでリクエストURIを構築する:
+        <!-- In order to direct the end-user's user-agent to the authorization server, the client
         constructs the request URI by adding the following parameters to the end-user
         authorization endpoint URI query component using the
         <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
-        <xref target='W3C.REC-html401-19991224' />:
+        <xref target='W3C.REC-html401-19991224' />:-->
 
         <list style='hanging' hangIndent='6'>
           <t hangText='response_type'>
             <vspace />
+            必須. 要求するレスポンス（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定する. 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい. [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
+            <!--
             REQUIRED. The requested response: an access token, an authorization code, or both. The
             parameter value MUST be set to <spanx style='verb'>token</spanx> for requesting an
             access token, <spanx style='verb'>code</spanx> for requesting an authorization code, or
             <spanx style='verb'>code_and_token</spanx> to request both. The authorization server
             MAY decline to provide one or more of these response types. [[ The 'code_and_token'
-            type is pending use cases and may be removed for the specification ]]
+            type is pending use cases and may be removed for the specification ]] -->
           </t>
           <t hangText='client_id'>
             <vspace />
-            REQUIRED. The client identifier as described in
-            <xref target='client-authentication' />.
+            必須. <xref target='client-authentication' />で記載するクライアント識別子.
+            <!-- REQUIRED. The client identifier as described in
+            <xref target='client-authentication' />. -->
           </t>
           <t hangText='redirect_uri'>
             <vspace />
-            REQUIRED, unless a redirection URI has been established between the client and
+            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須. エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである.
+            <!-- REQUIRED, unless a redirection URI has been established between the client and
             authorization server via other means. An absolute URI to which the authorization
             server will redirect the user-agent to when the end-user authorization step is
             completed. The authorization server SHOULD require the client to pre-register
-            their redirection URI.
+            their redirection URI. -->
           </t>
           <t hangText='scope'>
             <vspace />
-            OPTIONAL. The scope of the access request expressed as a list of space-delimited
+            省略可. 要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
+            <!-- OPTIONAL. The scope of the access request expressed as a list of space-delimited
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
             strings, their order does not matter, and each string adds an additional access
-            range to the requested scope.
+            range to the requested scope. -->
           </t>
           <t hangText='state'>
             <vspace />
-            OPTIONAL. An opaque value used by the client to maintain state between the request
+            省略可. このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトさせる.
+            <!-- OPTIONAL. An opaque value used by the client to maintain state between the request
             and callback. The authorization server includes this value when redirecting the
-            user-agent back to the client.
+            user-agent back to the client. -->
           </t>
         </list>
       </t>
       <t>
-        The client directs the end-user to the constructed URI using an HTTP redirection
+        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトさせる. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず, <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてもよい.
+        <!-- The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
         authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
         method for the end-user authorization endpoint, and MAY support the use of the
-        <spanx style='verb'>POST</spanx> method as well.
+        <spanx style='verb'>POST</spanx> method as well. -->
       </t>
       <figure>
         <preamble>
-          For example, the client directs the end-user's user-agent to make the following HTTP
-          request using transport-layer security (line breaks are for display purposes only):
+          たとえば, クライアントはエンドユーザーのユーザーエージェントをリダイレクトさせ, 以下のHTTPリクエストをセキュリティ保護されたトランスポート層から送信させる (見やすいように改行してある):
+          <!-- For example, the client directs the end-user's user-agent to make the following HTTP
+          request using transport-layer security (line breaks are for display purposes only): -->
         </preamble>
         <artwork>
           <![CDATA[
@@ -1090,27 +1104,31 @@
         </artwork>
       </figure>
       <t>
-        If the client has previously registered a redirection URI with the authorization server,
+        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されたものとマッチするか検証しなければならない. [[ マッチングの方法について追記する ]]
+        <!-- If the client has previously registered a redirection URI with the authorization server,
         the authorization server MUST verify that the redirection URI received matches the
         registered URI associated with the client identifier. [[ provide guidance on how to
-        perform matching ]]
+        perform matching ]]-->
       </t>
       <t>
-        Parameters sent without a value MUST be treated as if they were omitted from the request.
-        The authorization server SHOULD ignore unrecognized request parameters.
+        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない. 認可サーバーは処理できないパラメーターを無視すべきである.
+        <!-- Parameters sent without a value MUST be treated as if they were omitted from the request.
+        The authorization server SHOULD ignore unrecognized request parameters. -->
       </t>
       <t>
-        The authorization server validates the request to ensure all required parameters are
+        認可サーバーはすべての必須パラメーターが正しく指定されていることを検証する. リクエストが不正だった場合, 認可サーバーはただちにユーザーエージェントをリダイレクトURIにリダイレクトし, そのときのリダイレクトURIには, <xref target='auth-error' /> で記載する適切なエラーコードが指定されている.
+        <!-- The authorization server validates the request to ensure all required parameters are
         present and valid. If the request is invalid, the authorization server immediately
         redirects the user-agent back to the client using the redirection URI provided with the
-        appropriate error code as described in <xref target='auth-error' />.
+        appropriate error code as described in <xref target='auth-error' />. -->
       </t>
       <t>
-        The authorization server authenticates the end-user and obtains an authorization
+        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトさせる.
+        <!-- The authorization server authenticates the end-user and obtains an authorization
         decision (by asking the end-user or by establishing approval via other means). When a
         decision has been established, the authorization server directs the end-user's
         user-agent to the provided client redirection URI using an HTTP redirection response,
-        or by other means available to it via the end-user's user-agent.
+        or by other means available to it via the end-user's user-agent. -->
       </t>
 
       <section title='Authorization Response'>
