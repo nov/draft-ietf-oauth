@@ -996,7 +996,7 @@
     <section title='エンドユーザーの認可を取得' anchor='user-authorization'>
     <!--<section title='Obtaining End-User Authorization' anchor='user-authorization'>-->
       <t>
-        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない. 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントに送る.
+        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない. 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
         <!--When the client interacts with an end-user, the end-user MUST first grant the client
         authorization to access its protected resources. Once obtained, the end-user access
         grant is expressed as an authorization code which the client uses to obtain an access
@@ -1004,7 +1004,7 @@
         end-user authorization endpoint.-->
       </t>
       <t>
-        エンドユーザー認可エンドポイントでは, エンドユーザーは最初に認可サーバーを使って認証し, その後, アクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない.
+        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず、認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない.
         <!-- At the end-user authorization endpoint, the end-user first authenticates with the
         authorization server, and then grants or denies the access request. The way in which the
         authorization server authenticates the end-user (e.g. username and password login, OpenID,
@@ -1014,7 +1014,7 @@
         the end-user. -->
       </t>
       <t>
-        エンドユーザー認可エンドポイントの場所は対象サービスのドキュメントか, あるいは [[ OAuth Discovery ]] によって見つけられる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない. これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
+        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない. これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
         <!-- The location of the end-user authorization endpoint can be found in the service
         documentation, or can be obtained by using [[ OAuth Discovery ]]. The end-user
         authorization endpoint URI MAY include a query component as defined by
@@ -1029,7 +1029,7 @@
         end-user authorization endpoint. -->
       </t>
       <t>
-        エンドユーザーのユーザーエージェントを認可サーバーへリダイレクトするために, クライアントはエンドユーザー認可エンドポイントのURIのクエリー部に, 次に述べるクエリーパラメーターを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットに従って追加することでリクエストURIを構築する:
+        エンドユーザーのユーザーエージェントを認可サーバーへリダイレクトするときのリクエストURIは, クライアントはエンドユーザー認可エンドポイントのURIのクエリー部に, 次に述べるクエリーパラメーターを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットに従って追加することで構築する:
         <!-- In order to direct the end-user's user-agent to the authorization server, the client
         constructs the request URI by adding the following parameters to the end-user
         authorization endpoint URI query component using the
@@ -1039,7 +1039,7 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='response_type'>
             <vspace />
-            必須. 要求するレスポンス（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定する. 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい. [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
+            必須. レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定する. 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい. [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
             <!--
             REQUIRED. The requested response: an access token, an authorization code, or both. The
             parameter value MUST be set to <spanx style='verb'>token</spanx> for requesting an
@@ -1065,7 +1065,7 @@
           </t>
           <t hangText='scope'>
             <vspace />
-            省略可. 要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
+            任意. このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
             <!-- OPTIONAL. The scope of the access request expressed as a list of space-delimited
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
@@ -1074,7 +1074,7 @@
           </t>
           <t hangText='state'>
             <vspace />
-            省略可. このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトさせる.
+            任意. このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
             <!-- OPTIONAL. An opaque value used by the client to maintain state between the request
             and callback. The authorization server includes this value when redirecting the
             user-agent back to the client. -->
@@ -1082,7 +1082,7 @@
         </list>
       </t>
       <t>
-        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトさせる. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず, <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてもよい.
+        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず, <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい.
         <!-- The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
         authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
@@ -1091,7 +1091,7 @@
       </t>
       <figure>
         <preamble>
-          たとえば, クライアントはエンドユーザーのユーザーエージェントをリダイレクトさせ, 以下のHTTPリクエストをセキュリティ保護されたトランスポート層から送信させる (見やすいように改行してある):
+          たとえば, クライアントはエンドユーザーのユーザーエージェントをリダイレクトし, 以下のHTTPリクエストをセキュリティ保護されたトランスポート層から送信させる (改行は掲載上の都合による): 
           <!-- For example, the client directs the end-user's user-agent to make the following HTTP
           request using transport-layer security (line breaks are for display purposes only): -->
         </preamble>
@@ -1104,7 +1104,7 @@
         </artwork>
       </figure>
       <t>
-        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されたものとマッチするか検証しなければならない. [[ マッチングの方法について追記する ]]
+        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない. [[ マッチングの方法について追記する ]]
         <!-- If the client has previously registered a redirection URI with the authorization server,
         the authorization server MUST verify that the redirection URI received matches the
         registered URI associated with the client identifier. [[ provide guidance on how to
@@ -1123,7 +1123,7 @@
         appropriate error code as described in <xref target='auth-error' />. -->
       </t>
       <t>
-        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトさせる.
+        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
         <!-- The authorization server authenticates the end-user and obtains an authorization
         decision (by asking the end-user or by establishing approval via other means). When a
         decision has been established, the authorization server directs the end-user's
