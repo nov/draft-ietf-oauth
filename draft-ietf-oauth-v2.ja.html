@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 21, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 22, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 18, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 19, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 21, 2011.</p>
+This Internet-Draft will expire on April 22, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -1161,8 +1161,8 @@ Authors' Addresses<br />
 <dt>code</dt>
 <dd>
               
-	      レスポンスタイプが<tt>code</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない(MUST NOT). 
-	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである(SHOULD). 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
+	      レスポンスタイプが<tt>code</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない. 
+	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである. 認可サーバーは一度使った認可コードを無効にしなけらばならない. 
 	      認可コードは, クライアント識別子とリダイレクトURIに紐付いている. 
 	      
             
@@ -1170,8 +1170,8 @@ Authors' Addresses<br />
 <dt>access_token</dt>
 <dd>
               
-	      レスポンスタイプが<tt>token</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない(MUST NOT). 
-	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない(MUST). 
+	      レスポンスタイプが<tt>token</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない. 
+	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない. 
 	      
             
 </dd>
@@ -1186,10 +1186,10 @@ Authors' Addresses<br />
 <dt>scope</dt>
 <dd>
               
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列のリストによって表したもの. 
+	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
               <tt>scope</tt> の値に何を指定するかは認可サーバーによって定義される. 
 	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
-	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである(SHOUD). 
+	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである. 
 	      
             
 </dd>
@@ -1205,13 +1205,14 @@ Authors' Addresses<br />
         
 </p>
 <p>
-	  認可サーバーがリダイレクトURIにパラメータを付加する方法は, クライアントからの認可リクエストで<tt>response_type</tt>パラメータによって指定されるレスポンスタイプで決定する. 
+	  認可サーバーがリダイレクトURIにパラメータを追加する方法は, クライアントからの認可リクエストで<tt>response_type</tt>パラメータによって指定されるレスポンスタイプで決まる. 
 	  
         
 </p>
 <p>
-	  レスポンスタイプが<tt>code</tt>の場合, 認可サーバーは<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>フォーマットを使って
-	  リダイレクトURIのクエリパラメータとしてパラメータを付加する. 
+	  レスポンスタイプが<tt>code</tt>の場合, 認可サーバーは
+	  <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>
+	  フォーマットで、リダイレクトURIのクエリ部にパラメータを追加する. 
 	  
         
 </p>
@@ -1226,8 +1227,9 @@ Authors' Addresses<br />
 
 </pre></div>
 <p>
-	  レスポンスタイプが<tt>token</tt>の場合, 認可サーバーは<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>フォーマットを使って
-	  リダイレクトURIのフラグメント部分にパラメータを付加する. 
+	  レスポンスタイプが<tt>token</tt>の場合, 認可サーバーは
+	  <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>
+	  フォーマットで、リダイレクトURIのフラグメント部にパラメータを追加する. 
 	  
         
 </p>
@@ -1242,15 +1244,18 @@ Authors' Addresses<br />
 
 </pre></div>
 <p>
-	  レスポンスタイプが<tt>code_and_token</tt>の場合, 認可サーバーは, <tt>code</tt>と<tt>state</tt>
-	  パラメータをクエリパラメータとして, <tt>access_token</tt>, <tt>scope</tt>と
-          <tt>expires_in</tt>パラメータをリダイレクトURIのフラグメントとして, <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>フォーマットを使って付加する. 
+	  レスポンスタイプが<tt>code_and_token</tt>の場合, 認可サーバーは, 
+	  <tt>code</tt>, <tt>state</tt>
+	  パラメータをリダイレクトURIのクエリ部に, <tt>access_token</tt>, <tt>scope</tt>, 
+          <tt>expires_in</tt>パラメータをフラグメント部に, 
+	  <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される
+	  <tt>application/x-www-form-urlencoded</tt>フォーマットで追加する. 
 	  
         
 </p>
 <p>
 	    例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる. 
-	    (改行は体裁を整えるためのものである. )
+	    (改行は掲載上の都合による. )
             
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -1261,8 +1266,8 @@ Authors' Addresses<br />
 
 </pre></div>
 <p>
-	  クライアントは, 認識できないレスポンスパラメータを無視すべきである(SHOULD). トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
-	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行する値のサイズについて明文化すべきである. 
+	  クライアントは, 処理できないレスポンスパラメータを無視すべきである. トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
+	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである. 
 	  
         
 </p>
