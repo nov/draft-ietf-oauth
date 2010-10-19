@@ -1178,7 +1178,7 @@
             </t>
             <t hangText='scope'>
               <vspace />
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列のリストによって表したもの. 
+	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
               <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 
 	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
 	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである. 
@@ -1204,7 +1204,7 @@
           </list>
         </t>
         <t>
-	  認可サーバーがリダイレクトURIにパラメータを付加する方法は, クライアントからの認可リクエストで<spanx style='verb'>response_type</spanx>パラメータによって指定されるレスポンスタイプで決定する. 
+	  認可サーバーがリダイレクトURIにパラメータを追加する方法は, クライアントからの認可リクエストで<spanx style='verb'>response_type</spanx>パラメータによって指定されるレスポンスタイプで決まる. 
 	  <!--
           The method in which the authorization server adds the parameter to the redirection
           URI is determined by the response type requested by the client in the authorization
@@ -1212,8 +1212,9 @@
 	  -->
         </t>
         <t>
-	  レスポンスタイプが<spanx style='verb'>code</spanx>の場合, 認可サーバーは<xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットを使って
-	  リダイレクトURIのクエリパラメータとしてパラメータを付加する. 
+	  レスポンスタイプが<spanx style='verb'>code</spanx>の場合, 認可サーバーは
+	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
+	  フォーマットで、リダイレクトURIのクエリ部にパラメータを追加する. 
 	  <!--
           If the response type is <spanx style='verb'>code</spanx>, the authorization
           server adds the parameters to the redirection URI query component using the
@@ -1237,8 +1238,9 @@
           </artwork>
         </figure>
         <t>
-	  レスポンスタイプが<spanx style='verb'>token</spanx>の場合, 認可サーバーは<xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットを使って
-	  リダイレクトURIのフラグメント部分にパラメータを付加する. 
+	  レスポンスタイプが<spanx style='verb'>token</spanx>の場合, 認可サーバーは
+	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
+	  フォーマットで、リダイレクトURIのフラグメント部にパラメータを追加する. 
 	  <!--
           If the response type is <spanx style='verb'>token</spanx>, the authorization
           server adds the parameters to the redirection URI fragment component using the
@@ -1262,9 +1264,12 @@
           </artwork>
         </figure>
         <t>
-	  レスポンスタイプが<spanx style='verb'>code_and_token</spanx>の場合, 認可サーバーは, <spanx style='verb'>code</spanx>と<spanx style='verb'>state</spanx>
-	  パラメータをクエリパラメータとして, <spanx style='verb'>access_token</spanx>, <spanx style='verb'>scope</spanx>と
-          <spanx style='verb'>expires_in</spanx>パラメータをリダイレクトURIのフラグメントとして, <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットを使って付加する. 
+	  レスポンスタイプが<spanx style='verb'>code_and_token</spanx>の場合, 認可サーバーは, 
+	  <spanx style='verb'>code</spanx>, <spanx style='verb'>state</spanx>
+	  パラメータをリダイレクトURIのクエリ部に, <spanx style='verb'>access_token</spanx>, <spanx style='verb'>scope</spanx>, 
+          <spanx style='verb'>expires_in</spanx>パラメータをフラグメント部に, 
+	  <xref target='W3C.REC-html401-19991224' />で定義される
+	  <spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットで追加する. 
 	  <!--
           If the response type is <spanx style='verb'>code_and_token</spanx>, the authorization
           server adds the <spanx style='verb'>code</spanx> and <spanx style='verb'>state</spanx>
@@ -1278,7 +1283,7 @@
         <figure>
           <preamble>
 	    例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる. 
-	    (改行は体裁を整えるためのものである. )
+	    (改行は掲載上の都合による. )
             <!--For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response (line breaks are for display purposes only):-->
           </preamble>
@@ -1291,8 +1296,8 @@
           </artwork>
         </figure>
         <t>
-	  クライアントは, 認識できないレスポンスパラメータを無視すべきである. トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
-	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行する値のサイズについて明文化すべきである. 
+	  クライアントは, 処理できないレスポンスパラメータを無視すべきである. トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
+	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである. 
 	  <!--
           Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
           values received from the authorization server, are left undefined by this specification.
