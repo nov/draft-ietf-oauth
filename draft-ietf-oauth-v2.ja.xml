@@ -1,3 +1,4 @@
+
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -1142,8 +1143,8 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='code'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>code</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない. 
-	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである. 認可サーバーは一度使った認可コードを無効にしなけらばならない. 
+	      レスポンスタイプが<spanx style='verb'>code</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない(MUST NOT). 
+	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである. 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
 	      認可コードは, クライアント識別子とリダイレクトURIに紐付いている. 
 	      <!--
               REQUIRED if the response type is <spanx style='verb'>code</spanx> or
@@ -1156,8 +1157,8 @@
             </t>
             <t hangText='access_token'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>token</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない. 
-	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <xref target='authz-header' />で定義されるアクセスークンのルールに従わなければならない. 
+	      レスポンスタイプが<spanx style='verb'>token</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない(MUST NOT).
+	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <xref target='authz-header' />で定義されるアクセスークンのルールに従わなければならない(MUST). 
 	      <!--
               REQUIRED if the response type is <spanx style='verb'>token</spanx> or
               <spanx style='verb'>code_and_token</spanx>, otherwise MUST NOT be included. The
@@ -1181,7 +1182,7 @@
 	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
               <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 
 	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
-	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである. 
+	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである(SHOULD). 
 	      <!--
               OPTIONAL. The scope of the access token as a list of space-delimited strings if an
               access token is included. The value of the <spanx style='verb'>scope</spanx>
@@ -1296,7 +1297,7 @@
           </artwork>
         </figure>
         <t>
-	  クライアントは, 処理できないレスポンスパラメータを無視すべきである. トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
+	  クライアントは, 処理できないレスポンスパラメータを無視すべきである(SHOULD). トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
 	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである. 
 	  <!--
           Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
