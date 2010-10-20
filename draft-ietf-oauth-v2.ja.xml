@@ -1,4 +1,3 @@
-
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -997,7 +996,7 @@
     <section title='エンドユーザーの認可を取得' anchor='user-authorization'>
     <!--<section title='Obtaining End-User Authorization' anchor='user-authorization'>-->
       <t>
-        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない. 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
+        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない(MUST). 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
         <!--When the client interacts with an end-user, the end-user MUST first grant the client
         authorization to access its protected resources. Once obtained, the end-user access
         grant is expressed as an authorization code which the client uses to obtain an access
@@ -1005,7 +1004,7 @@
         end-user authorization endpoint.-->
       </t>
       <t>
-        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず、認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない.
+        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず, 認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない(MUST).
         <!-- At the end-user authorization endpoint, the end-user first authenticates with the
         authorization server, and then grants or denies the access request. The way in which the
         authorization server authenticates the end-user (e.g. username and password login, OpenID,
@@ -1015,7 +1014,7 @@
         the end-user. -->
       </t>
       <t>
-        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない. これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
+        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない(MAY). これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
         <!-- The location of the end-user authorization endpoint can be found in the service
         documentation, or can be obtained by using [[ OAuth Discovery ]]. The end-user
         authorization endpoint URI MAY include a query component as defined by
@@ -1023,7 +1022,7 @@
         query parameters. -->
       </t>
       <t>
-        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである.
+        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである(SHOULD).
         <!-- Since requests to the end-user authorization endpoint result in user authentication and
         the transmission of sensitive information, the authorization server SHOULD require the
         use of a transport-layer security mechanism such as TLS when sending requests to the
@@ -1040,7 +1039,7 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='response_type'>
             <vspace />
-            必須. レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定する. 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい. [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
+            必須(REQUIRED). レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定しなければならない(MUST). 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい(MAY). [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
             <!--
             REQUIRED. The requested response: an access token, an authorization code, or both. The
             parameter value MUST be set to <spanx style='verb'>token</spanx> for requesting an
@@ -1051,13 +1050,13 @@
           </t>
           <t hangText='client_id'>
             <vspace />
-            必須. <xref target='client-authentication' />で記載するクライアント識別子.
+            必須(REQUIRED). <xref target='client-authentication' />で記載するクライアント識別子.
             <!-- REQUIRED. The client identifier as described in
             <xref target='client-authentication' />. -->
           </t>
           <t hangText='redirect_uri'>
             <vspace />
-            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須. エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである.
+            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須(REQUIRED). エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである(SHOULD).
             <!-- REQUIRED, unless a redirection URI has been established between the client and
             authorization server via other means. An absolute URI to which the authorization
             server will redirect the user-agent to when the end-user authorization step is
@@ -1066,7 +1065,7 @@
           </t>
           <t hangText='scope'>
             <vspace />
-            任意. このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
+            任意である(OPTIONAL). このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
             <!-- OPTIONAL. The scope of the access request expressed as a list of space-delimited
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
@@ -1075,7 +1074,7 @@
           </t>
           <t hangText='state'>
             <vspace />
-            任意. このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
+            任意である(OPTIONAL). このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
             <!-- OPTIONAL. An opaque value used by the client to maintain state between the request
             and callback. The authorization server includes this value when redirecting the
             user-agent back to the client. -->
@@ -1083,7 +1082,7 @@
         </list>
       </t>
       <t>
-        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず, <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい.
+        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず(MUST), <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい(MAY).
         <!-- The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
         authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
@@ -1105,14 +1104,14 @@
         </artwork>
       </figure>
       <t>
-        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない. [[ マッチングの方法について追記する ]]
+        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない(MUST). [[ マッチングの方法について追記する ]]
         <!-- If the client has previously registered a redirection URI with the authorization server,
         the authorization server MUST verify that the redirection URI received matches the
         registered URI associated with the client identifier. [[ provide guidance on how to
         perform matching ]]-->
       </t>
       <t>
-        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない. 認可サーバーは処理できないパラメーターを無視すべきである.
+        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない(MUST). 認可サーバーは処理できないパラメーターを無視すべきである(SHOULD).
         <!-- Parameters sent without a value MUST be treated as if they were omitted from the request.
         The authorization server SHOULD ignore unrecognized request parameters. -->
       </t>
@@ -1143,8 +1142,8 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='code'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>code</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない(MUST NOT). 
-	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである. 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
+	      レスポンスタイプが<spanx style='verb'>code</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT). 
+	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである(SHOULD). 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
 	      認可コードは, クライアント識別子とリダイレクトURIに紐付いている. 
 	      <!--
               REQUIRED if the response type is <spanx style='verb'>code</spanx> or
@@ -1157,7 +1156,7 @@
             </t>
             <t hangText='access_token'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>token</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須. その他の場合は含まれてはならない(MUST NOT).
+	      レスポンスタイプが<spanx style='verb'>token</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT).
 	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <xref target='authz-header' />で定義されるアクセスークンのルールに従わなければならない(MUST). 
 	      <!--
               REQUIRED if the response type is <spanx style='verb'>token</spanx> or
@@ -1168,7 +1167,7 @@
             </t>
             <t hangText='expires_in'>
               <vspace />
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの. 例えば, <spanx style='verb'>3600</spanx>
+	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの. 例えば, <spanx style='verb'>3600</spanx>
 	      という値は, 認可サーバーによってレスポンスが生成された後1時間でアクセストークンが失効することを表す. 
 	      <!--
               OPTIONAL. The duration in seconds of the access token lifetime if an access token
@@ -1179,7 +1178,7 @@
             </t>
             <t hangText='scope'>
               <vspace />
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
+	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
               <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 
 	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
 	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである(SHOULD). 
@@ -1195,7 +1194,7 @@
             </t>
             <t hangText='state'>
               <vspace />
-	      クライアントの認可リクエストに<spanx style='verb'>state</spanx>パラメータが含まれていた場合に必須. 
+	      クライアントの認可リクエストに<spanx style='verb'>state</spanx>パラメータが含まれていた場合に必須(REQUIRED).
 	      クライアントから受けとった値をそのままセットする. 
 	      <!--
               REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
@@ -1215,7 +1214,7 @@
         <t>
 	  レスポンスタイプが<spanx style='verb'>code</spanx>の場合, 認可サーバーは
 	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
-	  フォーマットで、リダイレクトURIのクエリ部にパラメータを追加する. 
+	  フォーマットで, リダイレクトURIのクエリ部にパラメータを追加する. 
 	  <!--
           If the response type is <spanx style='verb'>code</spanx>, the authorization
           server adds the parameters to the redirection URI query component using the
@@ -1241,7 +1240,7 @@
         <t>
 	  レスポンスタイプが<spanx style='verb'>token</spanx>の場合, 認可サーバーは
 	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
-	  フォーマットで、リダイレクトURIのフラグメント部にパラメータを追加する. 
+	  フォーマットで, リダイレクトURIのフラグメント部にパラメータを追加する. 
 	  <!--
           If the response type is <spanx style='verb'>token</spanx>, the authorization
           server adds the parameters to the redirection URI fragment component using the
