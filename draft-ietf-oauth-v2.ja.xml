@@ -1393,41 +1393,66 @@
 
     </section>
 
-    <section title='Obtaining an Access Token' anchor='obtaining-token'>
+    <section title='アクセストークンの取得' anchor='obtaining-token'>
+    <!-- <section title='Obtaining an Access Token' anchor='obtaining-token'> -->
       <t>
+        クライアントは認可サーバーに (認可コードやリソースオーナーのクレデンシャル, アサーションもしくはリフレッシュトークンの形で) アクセス許可を提示し, アクセストークンを取得する.
+        <!--
         The client obtains an access token by authenticating with the authorization server and
         presenting its access grant (in the form of an authorization code, resource owner
         credentials, an assertion, or a refresh token).
+        -->
       </t>
       <t>
+        トークンエンドポイントに対するリクエストではHTTPリクエストおよびレスポンス内にクレデンシャルが平文で含まれるため, 認可サーバーはトークンエンドポイントへのリクエストに対してトランスポート層でのセキュリティ機構の利用を必須としなければならない (MUST).
+        サーバーは<xref target='RFC5246' />で定義されるTLS 1.2をサポートしなければならず (MUST), それに加えて他のトランスポート層でのセキュリティ機構をサポートすることもできる (MAY).
+        <!--
         Since requests to the token endpoint result in the transmission of plain text
         credentials in the HTTP request and response, the authorization server MUST require the
         use of a transport-layer security mechanism when sending requests to the token endpoints.
         Servers MUST support TLS 1.2 as defined in <xref target='RFC5246' />, and MAY support
         additional transport-layer security mechanisms.
+        -->
       </t>
       <t>
+        クライアントはトークンエンドポイントにHTTP <spanx style='verb'>POST</spanx>リクエストを送信し, アクセストークンを要求する.
+        トークンエンドポイントのURIは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] を利用して得ることができる.
+        トークンエンドポイントURIはクエリー部を含んでいるかもしれない (MAY).
+        <!--
         The client requests an access token by making an HTTP <spanx style='verb'>POST</spanx>
         request to the token endpoint. The location of the token endpoint can be found in the
         service documentation, or can be obtained by using [[ OAuth Discovery ]]. The token
         endpoint URI MAY include a query component.
+        -->
       </t>
       <t>
+        クライアントは自身のクレデンシャルを<xref target='client-authentication' />に記載されたリクエストに追加することで, 認可サーバーに対して認証を行う.
+        認可サーバーはクライアントのアイデンティティを問わない場合 (匿名クライアントなど) やクライアントのアイデンティティが他の方法で確立されている場合 (アサーション形式のアクセス許可など), 認証無しのアクセストークンリクエストを受け入れることもある (MAY).
+        <!--
         The client authenticates with the authorization server by adding its client credentials to
         the request as described in <xref target='client-authentication' />. The authorization
         server MAY allow unauthenticated access token requests when the client identity does not
         matter (e.g. anonymous client) or when the client identity is established via other means
         (e.g. using an assertion access grant).
+        -->
       </t>
       <t>
+        クライアントは下記のパラメータを<spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットでHTTPリクエストボディーに含め, リクエストを構築する.
+        <!--
         The client constructs the request by including the following parameters using the
         <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the HTTP request
         entity-body:
+        -->
 
         <list style='hanging' hangIndent='6'>
           <t hangText='grant_type'>
             <vspace />
+            必須 (REQUIRED).
+            リクエストに含まれるアクセス許可タイプ.
+            値は以下のいずれかでなければならない (MUST).
+            <!--
             REQUIRED. The access grant type included in the request. Value MUST be one of
+            -->
             <spanx style='verb'>authorization_code</spanx>,
             <spanx style='verb'>password</spanx>,
             <spanx style='verb'>assertion</spanx>,
@@ -1435,11 +1460,22 @@
           </t>
           <t hangText='client_id'>
             <vspace />
+            クライアントアイデンティティが (アサーションなどの) 他の方法で確立されない限り必須 (REQUIRED).
+            <xref target='client-authentication' />に記載されるクライアント識別子.
+            <!--
             REQUIRED, unless the client identity can be establish via other means (e.g. assertion).
             The client identifier as described in <xref target='client-authentication' />.
+            -->
           </t>
           <t hangText='scope'>
             <vspace />
+            任意 (OPTIONAL).
+            要求するアクセス範囲.
+            空白区切りの文字列で表される.
+            <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される.
+            空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
+            利用されるアクセス許可がすでに承認済のスコープを持つ場合 (認可コードやアサーションを利用した場合), 要求されたスコープは先に承認されたスコープの範囲を超えてはならない (MUST).
+            <!--
             OPTIONAL. The scope of the access request expressed as a list of space-delimited
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
@@ -1447,16 +1483,25 @@
             range to the requested scope. If the access grant being used already represents an
             approved scope (e.g. authorization code, assertion), the requested scope MUST be equal
             or lesser than the scope previously granted.
+            -->
           </t>
         </list>
       </t>
       <t>
+        さらにクライアントは, 利用するアクセス許可タイプごとに決められた適切なパラメータを含めなければならない (MUST).
+        詳細は<xref target='access-grant-types' />に記述する.
+        <!--
         In addition, the client MUST include the appropriate parameters listed for the selected
         access grant type as described in <xref target='access-grant-types' />.
+        -->
       </t>
       <t>
+        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない(MUST).
+        認可サーバーは処理できないパラメーターを無視すべきである(SHOULD).
+        <!--
         Parameters sent without a value MUST be treated as if they were omitted from the request.
         The authorization server SHOULD ignore unrecognized request parameters.
+        -->
       </t>
 
       <section title='Access Grant Types' anchor='access-grant-types'>
