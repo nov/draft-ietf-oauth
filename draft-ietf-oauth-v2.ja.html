@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 22, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 23, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 19, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 20, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 22, 2011.</p>
+This Internet-Draft will expire on April 23, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -1048,27 +1048,27 @@ Authors' Addresses<br />
 エンドユーザーの認可を取得</h3>
 
 <p>
-        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない. 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
+        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない(MUST). 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
         
       
 </p>
 <p>
-        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず、認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない.
+        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず, 認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない(MUST).
         
       
 </p>
 <p>
-        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>のセクション3で定義されているクエリー部を含んでいるかもしれない. これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
+        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>のセクション3で定義されているクエリー部を含んでいるかもしれない(MAY). これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
         
       
 </p>
 <p>
-        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである.
+        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである(SHOULD).
         
       
 </p>
 <p>
-        エンドユーザーのユーザーエージェントを認可サーバーへリダイレクトするときのリクエストURIは, クライアントはエンドユーザー認可エンドポイントのURIのクエリー部に, 次に述べるクエリーパラメーターを<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義された <tt>application/x-www-form-urlencoded</tt> フォーマットに従って追加することで構築する:
+        エンドユーザーのユーザーエージェントを認可サーバーにリダイレクトさせるにあたり, クライアントはエンドユーザー認可エンドポイントURIのクエリー部に下記のパラメータを<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義された <tt>application/x-www-form-urlencoded</tt> フォーマットで追加して, リクエストURIを構築する.
         
 
         </p>
@@ -1076,35 +1076,35 @@ Authors' Addresses<br />
 <dt>response_type</dt>
 <dd>
             
-            必須. レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <tt>token</tt> を, 認可コードを要求する場合は <tt>code</tt>, またはその両方を要求する場合は <tt>code_and_token</tt> を指定する. 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい. [[<tt>code_and_token</tt> は検討中であり, 仕様から取り除かれるかもしれない ]]
+            必須(REQUIRED). レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <tt>token</tt> を, 認可コードを要求する場合は <tt>code</tt>, またはその両方を要求する場合は <tt>code_and_token</tt> を指定しなければならない(MUST). 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい(MAY). [[<tt>code_and_token</tt> は検討中であり, 仕様から取り除かれるかもしれない ]]
             
           
 </dd>
 <dt>client_id</dt>
 <dd>
             
-            必須. <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>で記載するクライアント識別子.
+            必須(REQUIRED). <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>で記載するクライアント識別子.
             
           
 </dd>
 <dt>redirect_uri</dt>
 <dd>
             
-            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須. エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである.
+            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須(REQUIRED). エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである(SHOULD).
             
           
 </dd>
 <dt>scope</dt>
 <dd>
             
-            任意. このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <tt>scope</tt> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
+            任意である(OPTIONAL). このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <tt>scope</tt> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
             
           
 </dd>
 <dt>state</dt>
 <dd>
             
-            任意. このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
+            任意である(OPTIONAL). このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
             
           
 </dd>
@@ -1112,7 +1112,7 @@ Authors' Addresses<br />
       
 </p>
 <p>
-        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <tt>GET</tt> メソッドをサポートしなければならず, <tt>POST</tt> メソッドも同様にサポートしてよい.
+        クライアントはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <tt>GET</tt> メソッドをサポートしなければならず(MUST), <tt>POST</tt> メソッドも同様にサポートしてよい(MAY).
         
       
 </p>
@@ -1128,12 +1128,12 @@ Authors' Addresses<br />
 
 </pre></div>
 <p>
-        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない. [[ マッチングの方法について追記する ]]
+        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない(MUST). [[ マッチングの方法について追記する ]]
         
       
 </p>
 <p>
-        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない. 認可サーバーは処理できないパラメーターを無視すべきである.
+        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない(MUST). 認可サーバーは処理できないパラメーターを無視すべきである(SHOULD).
         
       
 </p>
@@ -1143,7 +1143,7 @@ Authors' Addresses<br />
       
 </p>
 <p>
-        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
+        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
         
       
 </p>
@@ -1161,8 +1161,8 @@ Authors' Addresses<br />
 <dt>code</dt>
 <dd>
               
-	      レスポンスタイプが<tt>code</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない. 
-	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである. 認可サーバーは一度使った認可コードを無効にしなけらばならない. 
+	      レスポンスタイプが<tt>code</tt>または, <tt>code_and_token</tt>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT). 
+	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである(SHOULD). 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
 	      認可コードは, クライアント識別子とリダイレクトURIに紐付いている. 
 	      
             
@@ -1170,15 +1170,15 @@ Authors' Addresses<br />
 <dt>access_token</dt>
 <dd>
               
-	      レスポンスタイプが<tt>token</tt>または, <tt>code_and_token</tt>の場合に必須. その他の場合は含まれてはならない. 
-	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない. 
+	      レスポンスタイプが<tt>token</tt>または, <tt>code_and_token</tt>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT).
+	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない(MUST). 
 	      
             
 </dd>
 <dt>expires_in</dt>
 <dd>
               
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの. 例えば, <tt>3600</tt>
+	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの. 例えば, <tt>3600</tt>
 	      という値は, 認可サーバーによってレスポンスが生成された後1時間でアクセストークンが失効することを表す. 
 	      
             
@@ -1186,17 +1186,17 @@ Authors' Addresses<br />
 <dt>scope</dt>
 <dd>
               
-	      省略可. アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
+	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
               <tt>scope</tt> の値に何を指定するかは認可サーバーによって定義される. 
 	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
-	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである. 
+	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメータを含むべきである(SHOULD). 
 	      
             
 </dd>
 <dt>state</dt>
 <dd>
               
-	      クライアントの認可リクエストに<tt>state</tt>パラメータが含まれていた場合に必須. 
+	      クライアントの認可リクエストに<tt>state</tt>パラメータが含まれていた場合に必須(REQUIRED).
 	      クライアントから受けとった値をそのままセットする. 
 	      
             
@@ -1212,7 +1212,7 @@ Authors' Addresses<br />
 <p>
 	  レスポンスタイプが<tt>code</tt>の場合, 認可サーバーは
 	  <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>
-	  フォーマットで、リダイレクトURIのクエリ部にパラメータを追加する. 
+	  フォーマットで, リダイレクトURIのクエリ部にパラメータを追加する. 
 	  
         
 </p>
@@ -1229,7 +1229,7 @@ Authors' Addresses<br />
 <p>
 	  レスポンスタイプが<tt>token</tt>の場合, 認可サーバーは
 	  <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt>
-	  フォーマットで、リダイレクトURIのフラグメント部にパラメータを追加する. 
+	  フォーマットで, リダイレクトURIのフラグメント部にパラメータを追加する. 
 	  
         
 </p>
@@ -1266,7 +1266,7 @@ Authors' Addresses<br />
 
 </pre></div>
 <p>
-	  クライアントは, 処理できないレスポンスパラメータを無視すべきである. トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
+	  クライアントは, 処理できないレスポンスパラメータを無視すべきである(SHOULD). トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
 	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである. 
 	  
         
@@ -3026,4 +3026,3 @@ References</h3>
 <td class="author-text"><a href="http://dickhardt.org/">http://dickhardt.org/</a></td></tr>
 </table>
 </body></html>
-
