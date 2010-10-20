@@ -1029,7 +1029,7 @@
         end-user authorization endpoint. -->
       </t>
       <t>
-        エンドユーザーのユーザーエージェントを認可サーバーへリダイレクトするときのリクエストURIは, クライアントはエンドユーザー認可エンドポイントのURIのクエリー部に, 次に述べるクエリーパラメーターを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットに従って追加することで構築する:
+        エンドユーザーのユーザーエージェントを認可サーバーにリダイレクトさせるにあたり, クライアントはエンドユーザー認可エンドポイントURIのクエリー部に下記のパラメータを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで追加して, リクエストURIを構築する.
         <!-- In order to direct the end-user's user-agent to the authorization server, the client
         constructs the request URI by adding the following parameters to the end-user
         authorization endpoint URI query component using the
@@ -1082,7 +1082,7 @@
         </list>
       </t>
       <t>
-        クライアントはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず(MUST), <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい(MAY).
+        クライアントはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず(MUST), <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい(MAY).
         <!-- The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
         authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
@@ -1123,7 +1123,7 @@
         appropriate error code as described in <xref target='auth-error' />. -->
       </t>
       <t>
-        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPのリダイレクトや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
+        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
         <!-- The authorization server authenticates the end-user and obtains an authorization
         decision (by asking the end-user or by establishing approval via other means). When a
         decision has been established, the authorization server directs the end-user's
