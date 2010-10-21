@@ -1324,20 +1324,35 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='error'>
               <vspace />
+              必須(REQUIRED). <xref target='auth-error-codes' /> に記載するエラーコード.
+              <!--
               REQUIRED. A single error code as described in <xref target='auth-error-codes' />.
+              -->
             </t>
             <t hangText='error_description'>
+              任意である(OPTIONAL). エラーについての詳しい情報を人間に読めるかたちで記したもので,
+              起こっているエラーを理解・解決するために使用される.
+              <!--
               OPTIONAL. A human-readable text providing additional information, used to assist in
               the understanding and resolution of the error occurred.
+              -->
             </t>
             <t hangText='error_uri'>
+              任意である(OPTIONAL). エラーについての情報を記したウェブページを指すURIで,
+              エンドユーザーにエラーについての詳しい情報を提供するために使用される.
+              <!--
               OPTIONAL. A URI identifying a human-readable web page with information about the
               error, used to provide the end-user with additional information about the error.
+              -->
             </t>
             <t hangText='state'>
               <vspace />
+              クライアントの認可リクエストに<spanx style='verb'>state</spanx>パラメータが含まれていた場合に必須(REQUIRED).
+              クライアントから受け取った値をそのままセットする.
+              <!--
               REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
               client authorization request. Set to the exact value received from the client.
+              -->
             </t>
           </list>
         </t>
