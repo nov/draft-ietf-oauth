@@ -1307,7 +1307,8 @@
         </t>
       </section>
 
-      <section title='Error Response' anchor='auth-error'>
+      <section title='エラーレスポンス' anchor='auth-error'>
+        <!-- <section title='Error Response' anchor='auth-error'> -->
         <t>
           もしエンドユーザーがアクセス要求を拒否したか, 要求が不正だった場合, 認可サーバーは
           <xref target='W3C.REC-html401-19991224' />で定義される
@@ -1373,7 +1374,8 @@
           </artwork>
         </figure>
 
-        <section title='Error Codes' anchor='auth-error-codes'>
+        <section title='エラーコード' anchor='auth-error-codes'>
+          <!-- <section title='Error Codes' anchor='auth-error-codes'> -->
           <t>
             認可サーバーは以下のエラーコードのうちいずれか1つをエラーレスポンスに含む:
             <!--
