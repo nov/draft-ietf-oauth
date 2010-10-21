@@ -1375,43 +1375,71 @@
 
         <section title='Error Codes' anchor='auth-error-codes'>
           <t>
+            認可サーバーは以下のエラーコードのうちいずれか1つをエラーレスポンスに含む:
+            <!--
             The authorization server includes one of the following error codes with the error
             response:
+            -->
 
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid_request'>
                 <vspace />
+                このリクエストが必須のパラメータを含んでいない, サポートしていないパラメータないしパラメータの値を含む,
+                あるいは形式に問題がある.
+                <!--
                 The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, or is otherwise malformed.
+                -->
               </t>
               <t hangText='invalid_client'>
                 <vspace />
+                指定されたクライアント識別子が不正である.
+                <!--
                 The client identifier provided is invalid.
+                -->
               </t>
               <t hangText='unauthorized_client'>
                 <vspace />
+                このクライアントが要求されたレスポンスの種類について認可されていない.
+                <!--
                 The client is not authorized to use the requested response type.
+                -->
               </t>
               <t hangText='redirect_uri_mismatch'>
                 <vspace />
+                指定されたリダイレクトURIが事前登録されたものと一致しない.
+                <!--
                 The redirection URI provided does not match a pre-registered value.
+                -->
               </t>
               <t hangText='access_denied'>
                 <vspace />
+                エンドユーザーか認可サーバーが要求を拒否した.
+                <!--
                 The end-user or authorization server denied the request.
+                -->
               </t>
               <t hangText='unsupported_response_type'>
                 <vspace />
+                要求されたレスポンスの種類を認可サーバーがサポートしていない.
+                <!--
                 The requested response type is not supported by the authorization server.
+                -->
               </t>
               <t hangText='invalid_scope'>
                 <vspace />
+                要求されたスコープが不正か, 未知のものか, 書式に問題がある.
+                <!--
                 The requested scope is invalid, unknown, or malformed.
+                -->
               </t>
             </list>
           </t>
           <t>
+            [[ エラーコードの拡張方法について追記すること ]]
+            <!--
             [[ Add mechanism for extending error codes ]]
+            -->
           </t>
         </section>
 
