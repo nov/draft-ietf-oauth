@@ -1309,10 +1309,17 @@
 
       <section title='Error Response' anchor='auth-error'>
         <t>
+          もしエンドユーザーがアクセス要求を拒否したか, 要求が不正だった場合, 認可サーバーは
+          <xref target='W3C.REC-html401-19991224' />で定義される
+          <spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットで,
+          リダイレクトURIのクエリ部にパラメータを追加することで, クライアントにエラーを通知する:
+
+          <!--
           If the end-user denies the access request or if the request is invalid, the authorization
           server informs the client by adding the following parameters to the redirection URI query
           component using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format
           as defined by <xref target='W3C.REC-html401-19991224' />:
+          -->
 
           <list style='hanging' hangIndent='6'>
             <t hangText='error'>
@@ -1336,8 +1343,12 @@
         </t>
         <figure>
           <preamble>
+            例えば, 認可サーバーは以下のようなHTTPレスポンスを送出することで,
+            エンドユーザーのユーザーエージェントをリダイレクトする:
+            <!--
             For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response:
+            -->
           </preamble>
           <artwork>
             <![CDATA[
