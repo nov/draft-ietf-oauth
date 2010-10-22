@@ -1409,7 +1409,7 @@
               </t>
               <t hangText='redirect_uri_mismatch'>
                 <vspace />
-                指定されたリダイレクトURIが事前登録されたものと一致しない.
+                指定されたリダイレクトURIが事前登録されたものとマッチしない.
                 <!--
                 The redirection URI provided does not match a pre-registered value.
                 -->
