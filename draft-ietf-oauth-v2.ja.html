@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 24, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 25, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 21, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 22, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 24, 2011.</p>
+This Internet-Draft will expire on April 25, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -219,9 +219,9 @@ described in the Simplified BSD License.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">3.1.</a>&nbsp;
 認可レスポンス<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#auth-error">3.2.</a>&nbsp;
-Error Response<br />
+エラーレスポンス<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#auth-error-codes">3.2.1.</a>&nbsp;
-Error Codes<br />
+エラーコード<br />
 <a href="#obtaining-token">4.</a>&nbsp;
 アクセストークンの取得<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#access-grant-types">4.1.</a>&nbsp;
@@ -1138,7 +1138,7 @@ Authors' Addresses<br />
       
 </p>
 <p>
-        認可サーバーはすべての必須パラメーターが正しく指定されていることを検証する. リクエストが不正だった場合, 認可サーバーはただちにユーザーエージェントをリダイレクトURIにリダイレクトし, そのときのリダイレクトURIには, <a class='info' href='#auth-error'>Section&nbsp;3.2<span> (</span><span class='info'>Error Response</span><span>)</span></a> で記載する適切なエラーコードが指定されている.
+        認可サーバーはすべての必須パラメーターが正しく指定されていることを検証する. リクエストが不正だった場合, 認可サーバーはただちにユーザーエージェントをリダイレクトURIにリダイレクトし, そのときのリダイレクトURIには, <a class='info' href='#auth-error'>Section&nbsp;3.2<span> (</span><span class='info'>エラーレスポンス</span><span>)</span></a> で記載する適切なエラーコードが指定されている.
         
       
 </p>
@@ -1274,47 +1274,54 @@ Authors' Addresses<br />
 <a name="auth-error"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
-Error Response</h3>
+エラーレスポンス</h3>
 
 <p>
-          If the end-user denies the access request or if the request is invalid, the authorization
-          server informs the client by adding the following parameters to the redirection URI query
-          component using the <tt>application/x-www-form-urlencoded</tt> format
-          as defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+          もしエンドユーザーがアクセス要求を拒否したか, 要求が不正だった場合, 認可サーバーは
+          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される
+          <tt>application/x-www-form-urlencoded</tt>フォーマットで,
+          リダイレクトURIのクエリ部にパラメータを追加することで, クライアントにエラーを通知する:
+
+          
 
           </p>
 <blockquote class="text"><dl>
 <dt>error</dt>
 <dd>
               
-              REQUIRED. A single error code as described in <a class='info' href='#auth-error-codes'>Section&nbsp;3.2.1<span> (</span><span class='info'>Error Codes</span><span>)</span></a>.
+              必須(REQUIRED). <a class='info' href='#auth-error-codes'>Section&nbsp;3.2.1<span> (</span><span class='info'>エラーコード</span><span>)</span></a> に記載するエラーコード.
+              
             
 </dd>
 <dt>error_description</dt>
 <dd>
-              OPTIONAL. A human-readable text providing additional information, used to assist in
-              the understanding and resolution of the error occurred.
+              任意である(OPTIONAL). エラーについての詳しい情報を人間に読めるかたちで記したもので,
+              起こっているエラーを理解・解決するために使用される.
+              
             
 </dd>
 <dt>error_uri</dt>
 <dd>
-              OPTIONAL. A URI identifying a human-readable web page with information about the
-              error, used to provide the end-user with additional information about the error.
+              任意である(OPTIONAL). エラーについての情報を記したウェブページを指すURIで,
+              エンドユーザーにエラーについての詳しい情報を提供するために使用される.
+              
             
 </dd>
 <dt>state</dt>
 <dd>
               
-              REQUIRED if the <tt>state</tt> parameter was present in the
-              client authorization request. Set to the exact value received from the client.
+              クライアントの認可リクエストに<tt>state</tt>パラメータが含まれていた場合に必須(REQUIRED).
+              クライアントから受け取った値をそのままセットする.
+              
             
 </dd>
 </dl></blockquote><p>
         
 </p>
 <p>
-            For example, the authorization server redirects the end-user's user-agent by
-            sending the following HTTP response:
+            例えば, 認可サーバーは以下のようなHTTPレスポンスを送出することで,
+            エンドユーザーのユーザーエージェントをリダイレクトする:
+            
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1325,62 +1332,70 @@ Error Response</h3>
 <a name="auth-error-codes"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2.1"></a><h3>3.2.1.&nbsp;
-Error Codes</h3>
+エラーコード</h3>
 
 <p>
-            The authorization server includes one of the following error codes with the error
-            response:
+            認可サーバーは以下のエラーコードのうちいずれか1つをエラーレスポンスに含む:
+            
 
             </p>
 <blockquote class="text"><dl>
 <dt>invalid_request</dt>
 <dd>
                 
-                The request is missing a required parameter, includes an unsupported parameter or
-                parameter value, or is otherwise malformed.
+                このリクエストが必須のパラメータを含んでいない, サポートしていないパラメータないしパラメータの値を含む,
+                あるいは形式に問題がある.
+                
               
 </dd>
 <dt>invalid_client</dt>
 <dd>
                 
-                The client identifier provided is invalid.
+                指定されたクライアント識別子が不正である.
+                
               
 </dd>
 <dt>unauthorized_client</dt>
 <dd>
                 
-                The client is not authorized to use the requested response type.
+                このクライアントが要求されたレスポンスの種類について認可されていない.
+                
               
 </dd>
 <dt>redirect_uri_mismatch</dt>
 <dd>
                 
-                The redirection URI provided does not match a pre-registered value.
+                指定されたリダイレクトURIが事前登録されたものと一致しない.
+                
               
 </dd>
 <dt>access_denied</dt>
 <dd>
                 
-                The end-user or authorization server denied the request.
+                エンドユーザーか認可サーバーが要求を拒否した.
+                
               
 </dd>
 <dt>unsupported_response_type</dt>
 <dd>
                 
-                The requested response type is not supported by the authorization server.
+                要求されたレスポンスの種類を認可サーバーがサポートしていない.
+                
               
 </dd>
 <dt>invalid_scope</dt>
 <dd>
                 
-                The requested scope is invalid, unknown, or malformed.
+                要求されたスコープが不正か, 未知のものか, 書式に問題がある.
+                
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-            [[ Add mechanism for extending error codes ]]
+            [[ エラーコードの拡張方法について追記すること ]]
+            
           
 </p>
 <a name="obtaining-token"></a><br /><hr />
