@@ -1402,14 +1402,14 @@
               </t>
               <t hangText='unauthorized_client'>
                 <vspace />
-                このクライアントが要求されたレスポンスの種類について認可されていない.
+                このクライアントが要求されたレスポンスタイプについて認可されていない.
                 <!--
                 The client is not authorized to use the requested response type.
                 -->
               </t>
               <t hangText='redirect_uri_mismatch'>
                 <vspace />
-                指定されたリダイレクトURIが事前登録されたものと一致しない.
+                指定されたリダイレクトURIが事前登録されたものとマッチしない.
                 <!--
                 The redirection URI provided does not match a pre-registered value.
                 -->
@@ -1423,7 +1423,7 @@
               </t>
               <t hangText='unsupported_response_type'>
                 <vspace />
-                要求されたレスポンスの種類を認可サーバーがサポートしていない.
+                要求されたレスポンスタイプを認可サーバーがサポートしていない.
                 <!--
                 The requested response type is not supported by the authorization server.
                 -->
