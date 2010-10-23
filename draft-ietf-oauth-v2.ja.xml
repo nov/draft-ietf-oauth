@@ -1560,42 +1560,63 @@
         -->
       </t>
 
-      <section title='Access Grant Types' anchor='access-grant-types'>
+      <section title='アクセス許可タイプ' anchor='access-grant-types'>
+      <!-- section title='Access Grant Types' anchor='access-grant-types' -->
         <t>
+          クライアントはアクセストークンを要求する際, 次の4つのアクセス許可タイプ(認可コード, パスワードクレデンシャル, アサーション, リフレッシュトークン)のうち1つを利用する.
+          <!--
           The client requests an access token using one of the four types of access grants:
           authorization code, password credentials, assertion, or refresh token.
+          -->
         </t>
         <t>
+          アクセス許可タイプとして<spanx style='verb'>none</spanx>を使って(アクセス許可を含めずに)アクセストークンを要求する場合, 
+          クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが(本仕様のスコープ外の方法で)事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
+          <!--
           When requesting an access token using the <spanx style='verb'>none</spanx> access grant
           type (no access grant is included), the client is requesting access to the protected
           resources under its control, or those of another resource owner which has been previously
           arranged with the authorization server (the method of which is beyond the scope of this
           specification).
+          -->
         </t>
 
-        <section title='Authorization Code'>
+        <section title='認可コード'>
+        <!-- section title='Authorization Code'-->
           <t>
+            クライアントはアクセス許可タイプ<spanx style='verb'>authorization_code</spanx>を用いて認可コードと次のパラメータを含める. 
+            <!--
             The client includes the authorization code using the
             <spanx style='verb'>authorization_code</spanx> access grant type and the following
             parameters:
+            -->
 
             <list style='hanging' hangIndent='6'>
               <t hangText='code'>
                 <vspace />
+                必須(REQUIRED). 認可サーバーから取得する認可コード. 
+                <!--
                 REQUIRED. The authorization code received from the authorization server.
+                -->
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
+                必須(REQUIRED). 初期リクエストで利用するリダイレクト先URI.
+                <!--
                 REQUIRED. The redirection URI used in the initial request.
+                -->
               </t>
             </list>
           </t>
           <figure>
             <preamble>
+              例えば, クライアントはクライアントクレデンシャルを, <xref target='client-authentication' />に記載する<spanx style='verb'>client_secret</spanx>パラメータに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
+                <!--
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
+                -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -1610,48 +1631,66 @@
             </artwork>
           </figure>
           <t>
-            The authorization server MUST:
+            認可サーバーは次のことを実施しなければならない(MUST):
+            <!-- The authorization server MUST:-->
             
             <list style='symbols'>
               <t>
+                クライアントクレデンシャル(もし含まれていれば)の妥当性を確認し, 認可コードとそれらを結びつけておく. 
+                <!--
                 Validate the client credentials (if present) and ensure they match the
                 authorization code.
+                -->
               </t>
               <t>
+                認可コードとリダイレクトURIが妥当かつ保存済みアソシエーションに一致することを検証する.
+                <!--
                 Verify that the authorization code and redirection URI are all valid and match its
                 stored association.
+                -->
               </t>
             </list>
           </t>
           <t>
+            もしリクエストが妥当ならば, 認可サーバーは<xref target='access-token-response' />に記載の通り成功レスポンスを行う.
+            <!--
             If the request is valid, the authorization server issues a successful response as
             described in <xref target='access-token-response' />.
+            -->
           </t>
         </section>
 
-        <section title='Resource Owner Password Credentials'>
+        <section title='リソースオーナーパスワードクレデンシャル'>
+        <!-- section title='Resource Owner Password Credentials' -->
           <t>
+            クライアントは, アクセス許可タイプ<spanx style='verb'>password</spanx>を用いてリソースオーナークレデンシャルと次のパラメータを含める. [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
+            <!--
             The client includes the resource owner credentials using the
             <spanx style='verb'>password</spanx> access grant type and the following
             parameters: [[ add internationalization consideration for username and password ]]
-
+            -->
             <list style='hanging' hangIndent='6'>
               <t hangText='username'>
                 <vspace />
-                REQUIRED. The resource owner's username.
+                必須(REQUIRED). リソースオーナーのユーザー名.
+                <!-- REQUIRED. The resource owner's username. -->
               </t>
               <t hangText='password'>
                 <vspace />
-                REQUIRED. The resource owner's password.
+                必須(REQUIRED). リソースオーナーのパスワード.
+                <!-- REQUIRED. The resource owner's password. -->
               </t>
             </list>
           </t>
           <figure>
             <preamble>
+              例えば, クライアントはクライアントクレデンシャルを, <xref target='client-authentication' />に記載する<spanx style='verb'>client_secret</spanx>パラメータに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
+              <!-- 
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -1665,9 +1704,13 @@
             </artwork>
           </figure>
           <t>
+            認可サーバは(含まれていれば)クライアントクレデンシャルとエンドユーザークレデンシャルの妥当性を確認しなければならない(MUST).
+            また, もしそれらが妥当であれば, <xref target='access-token-response' />の記載通りアクセストークンレスポンスを行わなければならない(MUST).
+            <!--
             The authorization server MUST validate the client credentials (if present) and end-user
             credentials and if valid issue an access token response as described in
             <xref target='access-token-response' />.
+            -->
           </t>
         </section>
 
