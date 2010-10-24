@@ -1714,28 +1714,41 @@
           </t>
         </section>
 
-        <section title='Assertion'>
+        <section title='アサーション'>
+        <!-- <section title='Assertion'> -->
           <t>
+            クライアントはアクセス許可タイプ<spanx style='verb'>assertion</spanx>を用いてアサーションと以下のパラメータを含める. 
+            <!--
             The client includes the assertion using the <spanx style='verb'>assertion</spanx> access
             grant type and the following parameters:
+            -->
 
             <list style='hanging' hangIndent='6'>
               <t hangText='assertion_type'>
                 <vspace />
+                必須 (REQUIRED). 認可サーバーにより定義されるアサーションのフォーマット. 値は絶対URIでなければならない(MUST).
+                <!--
                 REQUIRED. The format of the assertion as defined by the authorization server. The
                 value MUST be an absolute URI.
+                -->
               </t>
               <t hangText='assertion'>
                 <vspace />
+                必須 (REQUIRED). アサーション.
+                <!--
                 REQUIRED. The assertion.
+                -->
               </t>
             </list>
           </t>
           <figure>
             <preamble>
+              例えば, クライアントは以下のHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信し, クライアント認証はアサーション経由で行われる (改行は掲載上の都合による):
+              <!--
               For example, the client makes the following HTTP request using transport-layer
               security, and client authentication is achieved via the assertion (line breaks are
               for display purposes only):
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -1750,37 +1763,56 @@
             </artwork>
           </figure>
           <t>
+            認可サーバーは(クライアントクレデンシャルがある場合は)クライアントクレデンシャルを検証し, <xref target='access-token-response' />で記載されるアクセストークンレスポンスを発行しなければならない(MUST).
+            認可サーバーはリフレッシュトークンを発行すべきでない(SHOULD NOT). (その代わりに, クライアントに同じもしくな新しいアサーションを要求する)
+            <!--
             The authorization server MUST validate the client credentials (if present) and the
             assertion and if valid issues an access token response as described in
             <xref target='access-token-response' />. The authorization server SHOULD NOT issue a
             refresh token (instead, require the client to use the same or new assertion).
+            -->
           </t>
           <t>
+            認可サーバーは生存時間が限られたアクセストークンを発行すべきである(SHOULD), 
+            もし同じアサーションが有効であるならばそれを用いて新しいアクセストークンを要求することによりクライアントにアクセストークンを更新させるべきである(SHOULD).  
+            アサーションが無効な場合, クライアントは新しい新しい有効なアサーションを取得しなければならない(MUST). 
+            <!--
             Authorization servers SHOULD issue access tokens with a limited lifetime and require
             clients to refresh them by requesting a new access token using the same assertion if it
             is still valid. Otherwise the client MUST obtain a new valid assertion.
+            -->
           </t>
         </section>
 
-        <section title='Refresh Token' anchor='token-refresh'>
+        <section title='リフレッシュトークン' anchor='token-refresh'>
+        <!-- <section title='Refresh Token' anchor='token-refresh'> -->
           <t>
+            クライアントはアクセス許可タイプ<spanx style='verb'>refresh_token</spanx>を用いてリフレッシュトークンと以下のパラメータを含める. 
+            <!--
             The client includes the refresh token using the
             <spanx style='verb'>refresh_token</spanx> access grant type and the following
             parameter:
+            -->
 
             <list style='hanging' hangIndent='6'>
               <t hangText='refresh_token'>
                 <vspace />
+                必須 (REQUIRED). 更新されるアクセストークンと関連づけられたリフレッシュトークン. 
+                <!--
                 REQUIRED. The refresh token associated with the access token to be refreshed.
+                -->
               </t>
             </list>
           </t>
           <figure>
             <preamble>
+              例えば, クライアントは<xref target='client-authentication' />に記載される<spanx style='verb'>client_secret</spanx>パラメーターによりクライアントクレデンシャルを含むHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信する (改行は掲載上の都合による):
+              <!--
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
               breaks are for display purposes only):
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -1794,11 +1826,16 @@
             </artwork>
           </figure>
           <t>
+            認可サーバーは(もしクライアントクレデンシャルが存在する場合は)クライアントクレデンシャルとリフレッシュトークンの正当性, リソースオーナーの認可が有効であることを検証しなければならない(MUST). 
+            もしリクエストが有効な場合, 認可サーバーは<xref target='access-token-response' />で記載されるアクセストークンレスポンスを発行する. 
+            認可サーバーは新しいリフレッシュトークンを発行してもよい(MAY).
+            <!--
             The authorization server MUST verify the client credentials (if present), the validity
             of the refresh token, and that the resource owner's authorization is still valid. If
             the request is valid, the authorization server issues an access token response as
             described in <xref target='access-token-response' />. The authorization server MAY
             issue a new refresh token.
+            -->
           </t>
         </section>
 

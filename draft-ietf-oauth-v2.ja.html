@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 25, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 27, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 22, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 24, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 25, 2011.</p>
+This Internet-Draft will expire on April 27, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -225,15 +225,15 @@ described in the Simplified BSD License.</p>
 <a href="#obtaining-token">4.</a>&nbsp;
 アクセストークンの取得<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#access-grant-types">4.1.</a>&nbsp;
-Access Grant Types<br />
+アクセス許可タイプ<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor11">4.1.1.</a>&nbsp;
-Authorization Code<br />
+認可コード<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor12">4.1.2.</a>&nbsp;
-Resource Owner Password Credentials<br />
+リソースオーナーパスワードクレデンシャル<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor13">4.1.3.</a>&nbsp;
-Assertion<br />
+アサーション<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#token-refresh">4.1.4.</a>&nbsp;
-Refresh Token<br />
+リフレッシュトークン<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#access-token-response">4.2.</a>&nbsp;
 Access Token Response<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#token-error">4.3.</a>&nbsp;
@@ -1471,7 +1471,7 @@ Authors' Addresses<br />
 </p>
 <p>
         さらにクライアントは, 利用するアクセス許可タイプごとに決められた適切なパラメータを含めなければならない (MUST).
-        詳細は<a class='info' href='#access-grant-types'>Section&nbsp;4.1<span> (</span><span class='info'>Access Grant Types</span><span>)</span></a>に記述する.
+        詳細は<a class='info' href='#access-grant-types'>Section&nbsp;4.1<span> (</span><span class='info'>アクセス許可タイプ</span><span>)</span></a>に記述する.
         
       
 </p>
@@ -1484,53 +1484,50 @@ Authors' Addresses<br />
 <a name="access-grant-types"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
-Access Grant Types</h3>
+アクセス許可タイプ</h3>
 
 <p>
-          The client requests an access token using one of the four types of access grants:
-          authorization code, password credentials, assertion, or refresh token.
+          クライアントはアクセストークンを要求する際, 次の4つのアクセス許可タイプ(認可コード, パスワードクレデンシャル, アサーション, リフレッシュトークン)のうち1つを利用する.
+          
         
 </p>
 <p>
-          When requesting an access token using the <tt>none</tt> access grant
-          type (no access grant is included), the client is requesting access to the protected
-          resources under its control, or those of another resource owner which has been previously
-          arranged with the authorization server (the method of which is beyond the scope of this
-          specification).
+          アクセス許可タイプとして<tt>none</tt>を使って(アクセス許可を含めずに)アクセストークンを要求する場合, 
+          クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが(本仕様のスコープ外の方法で)事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
+          
         
 </p>
 <a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.1"></a><h3>4.1.1.&nbsp;
-Authorization Code</h3>
+認可コード</h3>
 
 <p>
-            The client includes the authorization code using the
-            <tt>authorization_code</tt> access grant type and the following
-            parameters:
+            クライアントはアクセス許可タイプ<tt>authorization_code</tt>を用いて認可コードと次のパラメータを含める. 
+            
 
             </p>
 <blockquote class="text"><dl>
 <dt>code</dt>
 <dd>
                 
-                REQUIRED. The authorization code received from the authorization server.
+                必須(REQUIRED). 認可サーバーから取得する認可コード. 
+                
               
 </dd>
 <dt>redirect_uri</dt>
 <dd>
                 
-                REQUIRED. The redirection URI used in the initial request.
+                必須(REQUIRED). 初期リクエストで利用するリダイレクト先URI.
+                
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
-              breaks are for display purposes only):
+              例えば, クライアントはクライアントクレデンシャルを, <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>に記載する<tt>client_secret</tt>パラメータに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
+                
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1544,60 +1541,59 @@ Authorization Code</h3>
 
 </pre></div>
 <p>
-            The authorization server MUST:
+            認可サーバーは次のことを実施しなければならない(MUST):
+            
             
             </p>
 <ul class="text">
 <li>
-                Validate the client credentials (if present) and ensure they match the
-                authorization code.
+                クライアントクレデンシャル(もし含まれていれば)の妥当性を確認し, 認可コードとそれらを結びつけておく. 
+                
               
 </li>
 <li>
-                Verify that the authorization code and redirection URI are all valid and match its
-                stored association.
+                認可コードとリダイレクトURIが妥当かつ保存済みアソシエーションに一致することを検証する.
+                
               
 </li>
 </ul><p>
           
 </p>
 <p>
-            If the request is valid, the authorization server issues a successful response as
-            described in <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>.
+            もしリクエストが妥当ならば, 認可サーバーは<a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>に記載の通り成功レスポンスを行う.
+            
           
 </p>
 <a name="anchor12"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.2"></a><h3>4.1.2.&nbsp;
-Resource Owner Password Credentials</h3>
+リソースオーナーパスワードクレデンシャル</h3>
 
 <p>
-            The client includes the resource owner credentials using the
-            <tt>password</tt> access grant type and the following
-            parameters: [[ add internationalization consideration for username and password ]]
-
+            クライアントは, アクセス許可タイプ<tt>password</tt>を用いてリソースオーナークレデンシャルと次のパラメータを含める. [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
+            
             </p>
 <blockquote class="text"><dl>
 <dt>username</dt>
 <dd>
                 
-                REQUIRED. The resource owner's username.
+                必須(REQUIRED). リソースオーナーのユーザー名.
+                
               
 </dd>
 <dt>password</dt>
 <dd>
                 
-                REQUIRED. The resource owner's password.
+                必須(REQUIRED). リソースオーナーのパスワード.
+                
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
-              breaks are for display purposes only):
+              例えば, クライアントはクライアントクレデンシャルを, <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>に記載する<tt>client_secret</tt>パラメータに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
+              
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1610,42 +1606,42 @@ Resource Owner Password Credentials</h3>
 
 </pre></div>
 <p>
-            The authorization server MUST validate the client credentials (if present) and end-user
-            credentials and if valid issue an access token response as described in
-            <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>.
+            認可サーバは(含まれていれば)クライアントクレデンシャルとエンドユーザークレデンシャルの妥当性を確認しなければならない(MUST).
+            また, もしそれらが妥当であれば, <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>の記載通りアクセストークンレスポンスを行わなければならない(MUST).
+            
           
 </p>
 <a name="anchor13"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.3"></a><h3>4.1.3.&nbsp;
-Assertion</h3>
+アサーション</h3>
 
 <p>
-            The client includes the assertion using the <tt>assertion</tt> access
-            grant type and the following parameters:
+            クライアントはアクセス許可タイプ<tt>assertion</tt>を用いてアサーションと以下のパラメータを含める. 
+            
 
             </p>
 <blockquote class="text"><dl>
 <dt>assertion_type</dt>
 <dd>
                 
-                REQUIRED. The format of the assertion as defined by the authorization server. The
-                value MUST be an absolute URI.
+                必須 (REQUIRED). 認可サーバーにより定義されるアサーションのフォーマット. 値は絶対URIでなければならない(MUST).
+                
               
 </dd>
 <dt>assertion</dt>
 <dd>
                 
-                REQUIRED. The assertion.
+                必須 (REQUIRED). アサーション.
+                
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-              For example, the client makes the following HTTP request using transport-layer
-              security, and client authentication is achieved via the assertion (line breaks are
-              for display purposes only):
+              例えば, クライアントは以下のHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信し, クライアント認証はアサーション経由で行われる (改行は掲載上の都合による):
+              
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1659,44 +1655,42 @@ Assertion</h3>
 
 </pre></div>
 <p>
-            The authorization server MUST validate the client credentials (if present) and the
-            assertion and if valid issues an access token response as described in
-            <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>. The authorization server SHOULD NOT issue a
-            refresh token (instead, require the client to use the same or new assertion).
+            認可サーバーは(クライアントクレデンシャルがある場合は)クライアントクレデンシャルを検証し, <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>で記載されるアクセストークンレスポンスを発行しなければならない(MUST).
+            認可サーバーはリフレッシュトークンを発行すべきでない(SHOULD NOT). (その代わりに, クライアントに同じもしくな新しいアサーションを要求する)
+            
           
 </p>
 <p>
-            Authorization servers SHOULD issue access tokens with a limited lifetime and require
-            clients to refresh them by requesting a new access token using the same assertion if it
-            is still valid. Otherwise the client MUST obtain a new valid assertion.
+            認可サーバーは生存時間が限られたアクセストークンを発行すべきである(SHOULD), 
+            もし同じアサーションが有効であるならばそれを用いて新しいアクセストークンを要求することによりクライアントにアクセストークンを更新させるべきである(SHOULD).  
+            アサーションが無効な場合, クライアントは新しい新しい有効なアサーションを取得しなければならない(MUST). 
+            
           
 </p>
 <a name="token-refresh"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.4"></a><h3>4.1.4.&nbsp;
-Refresh Token</h3>
+リフレッシュトークン</h3>
 
 <p>
-            The client includes the refresh token using the
-            <tt>refresh_token</tt> access grant type and the following
-            parameter:
+            クライアントはアクセス許可タイプ<tt>refresh_token</tt>を用いてリフレッシュトークンと以下のパラメータを含める. 
+            
 
             </p>
 <blockquote class="text"><dl>
 <dt>refresh_token</dt>
 <dd>
                 
-                REQUIRED. The refresh token associated with the access token to be refreshed.
+                必須 (REQUIRED). 更新されるアクセストークンと関連づけられたリフレッシュトークン. 
+                
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <tt>client_secret</tt> parameter described in
-              <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> and using transport-layer security (line
-              breaks are for display purposes only):
+              例えば, クライアントは<a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a>に記載される<tt>client_secret</tt>パラメーターによりクライアントクレデンシャルを含むHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信する (改行は掲載上の都合による):
+              
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1709,11 +1703,10 @@ Refresh Token</h3>
 
 </pre></div>
 <p>
-            The authorization server MUST verify the client credentials (if present), the validity
-            of the refresh token, and that the resource owner's authorization is still valid. If
-            the request is valid, the authorization server issues an access token response as
-            described in <a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>. The authorization server MAY
-            issue a new refresh token.
+            認可サーバーは(もしクライアントクレデンシャルが存在する場合は)クライアントクレデンシャルとリフレッシュトークンの正当性, リソースオーナーの認可が有効であることを検証しなければならない(MUST). 
+            もしリクエストが有効な場合, 認可サーバーは<a class='info' href='#access-token-response'>Section&nbsp;4.2<span> (</span><span class='info'>Access Token Response</span><span>)</span></a>で記載されるアクセストークンレスポンスを発行する. 
+            認可サーバーは新しいリフレッシュトークンを発行してもよい(MAY).
+            
           
 </p>
 <a name="access-token-response"></a><br /><hr />
@@ -1753,7 +1746,7 @@ Access Token Response</h3>
 <dd>
               
               OPTIONAL. The refresh token used to obtain new access tokens using the same
-              end-user access grant as described in <a class='info' href='#token-refresh'>Section&nbsp;4.1.4<span> (</span><span class='info'>Refresh Token</span><span>)</span></a>. The
+              end-user access grant as described in <a class='info' href='#token-refresh'>Section&nbsp;4.1.4<span> (</span><span class='info'>リフレッシュトークン</span><span>)</span></a>. The
               authorization server SHOULD NOT issue a refresh token when the access grant type is
               set to <tt>none</tt>.
             
@@ -3041,3 +3034,4 @@ References</h3>
 <td class="author-text"><a href="http://dickhardt.org/">http://dickhardt.org/</a></td></tr>
 </table>
 </body></html>
+
