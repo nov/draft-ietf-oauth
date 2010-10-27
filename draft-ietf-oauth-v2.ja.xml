@@ -2050,62 +2050,109 @@
 
     </section>
 
+    <section title='保護リソースへのアクセス' anchor='access-resource'>
+		<!--
     <section title='Accessing a Protected Resource' anchor='access-resource'>
+			-->
       <t>
+				クライアントはアクセストークンをリソースサーバにし, 保護リソースにアクセスする. 
+				アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する
+				このことから, アクセストークンをその他の鍵と同じように扱う必要がある(例えば, エンドユーザのパスワードのように). 
+				アクセストークンはセキュアでないチャンネルを平文で送られるべきではない(SHOULD NOT).
+				<!--
         Clients access protected resources by presenting an access token to the resource server.
         Access tokens act as bearer tokens, where the token string acts as a shared symmetric
         secret. This requires treating the access token with the same care as other secrets (e.g.
         end-user passwords). Access tokens SHOULD NOT be sent in the clear over an insecure
         channel.
+				-->
       </t>
       <t>
+				セキュアな通信を使わずに平文でアクセストークンを送る必要がある場合には, 不正なアクセストークンがもつ潜在的なリスクを減じるために, 認可サーバはスコープと生存期間が限られたアクセストークンを発行すべきである(SHOULD). 
+				<!--
         However, when it is necessary to transmit access tokens in the clear without a secure
         channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
         to reduce the potential risk from a compromised access token.
+				-->
       </t>
       <t>
+				クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバに対してアクセストークンを含む認証されたリクエストを行ってはならない(MUST NOT).
+				<!--
         Clients MUST NOT make authenticated requests with an access token to unfamiliar resource
         servers, regardless of the presence of a secure channel.
+				-->
       </t>
       <t>
+				リソースサーバはアクセストークンを検証し, トークンの有効期限が切れてないこと, および, そのトークンのスコープが要求されたリソースをカバーしていることを確認しなければならない(MUST). 
+				リソースサーバがアクセストークンを検証するために用いるメソッドについては, この仕様の定める範囲ではない. 
+				しかし, 一般的に, それらのメソッドは, リソースサーバと認証サーバの間の連携および調整の方法を含んでいる. 
+				<!--
         The resource server MUST validate the access token and ensure it has not expired and
         that its scope covers the requested resource. The methods used by the resource server
         to validate the access token are beyond the scope of this specification, but generally
         involve an interaction or coordination between the resource server and authorization
         server.
+				-->
       </t>
 
+      <section title='認証されたリクエスト'>
+				<!--
       <section title='Authenticated Requests'>
+				-->
         <t>
+					クライアントは<spanx style='verb'>Authorization</spanx> リクエストヘッダを使って, 認証されたトークンリクエストを生成する. 
+					リソースサーバは, <xref target='authz-header' />に記載する<spanx style='verb'>OAuth</spanx> HTTP認証スキーマを用い, 認証されたリクエストを受け入れなければならない(MUST).
+					リソースサーバは付加的なメソッドをサポートしていても構わない(MAY). 
+					<!--
           Clients make authenticated token requests using the
           <spanx style='verb'>Authorization</spanx> request header field. Resource servers MUST
           accept authenticated requests using the <spanx style='verb'>OAuth</spanx> HTTP
           authentication scheme as described in <xref target='authz-header' />, and MAY support
           additional methods.
+					-->
         </t>
         <t>
+					もうひとつの方法として, クライアントは, 下記のどちらかに含まれるHTTPリクエストURIを用い, アクセストークンを含むことを受け入れることができる(MAY). 
+					上記のリクエストURIを含むのは, <xref target='query-param' />に記載するクエリー部, もしくは, <xref target='body-param' />に記載する<spanx style='verb'>application/x-www-form-urlencoded</spanx> コンテントタイプを用いたときのHTTPボディである. 
+					リソースサーバはこれらのどちらのメソッドをサポートしてもよい(MAY). 
+					<!--
           Alternatively, clients MAY attempt to include the access token using the HTTP request
           URI in the query component as described in <xref target='query-param' />, or in the HTTP
           body when using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content
           type as described in <xref target='body-param' />. Resource server MAY support these
           alternative methods.
+					-->
         </t>
         <t>
+					クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダが利用できない場合, リクエストURIまたはボディだけを用いるべきである(SHOULD). 
+					さらに, クライアントは一度のリクエストにひとつ以上のメソッドを含んではならない(MUST NOT). 
+					<!--
           Clients SHOULD only use the request URI or body when the
           <spanx style='verb'>Authorization</spanx> request header field is not available, and MUST
           NOT use more than one method in each request.
+					-->
         </t>
 
+        <section title='認証リクエストヘッダ' anchor='authz-header'>
+					<!--
         <section title='The Authorization Request Header Field' anchor='authz-header'>
+					-->
           <t>
+						クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダを用いて, 認証されたトークンリクエストを生成する. 
+						クライアントは, リクエストにアクセストークンを含めるために<spanx style='verb'>OAuth</spanx> 認証スキーマを用いる. 
+						<!--
             The <spanx style='verb'>Authorization</spanx> request header field is used by clients
             to make authenticated token requests. The client uses the
             <spanx style='verb'>OAuth</spanx> authentication scheme to include the access token in
             the request.
+						-->
           </t>
           <figure>
             <preamble>
+							例:
+							<!--
               For example:
+							-->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2116,8 +2163,11 @@
             </artwork>
           </figure>
           <t>
+						下記に示す<xref target='RFC2617' />によって定義されたフレームワークを用いた<spanx style='verb'>Authorization</spanx> ヘッダ
+						<!--
             The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
             <xref target='RFC2617' /> as follows:
+						-->
           </t>
           <figure>
             <artwork>
@@ -2138,27 +2188,41 @@
           <t>
             <list>
               <t>
+								注釈: <xref target='RFC5849' />は, <spanx style='verb'>OAuth</spanx> 認証スキーマの異なるフォーマットを定義している.
+								リソースサーバは, 以前のバージョンで要求された(REQUIRED)<spanx style='verb'>oauth_signature_method</spanx> の有無に基づいて2つのプロトコルのバージョンを区別することができる.
+								<spanx style='verb'>oauth_signature_method</spanx> は本仕様ではサポートしていない. 
+								<!--
                 NOTE: <xref target='RFC5849' /> defines a different format for the
                 <spanx style='verb'>OAuth</spanx> authentication scheme. Resource servers can
                 differentiate between the two protocol versions based on the presence of the
                 <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
+								-->
               </t>
             </list>
           </t>
 
         </section>
 
+        <section title='URI クエリパラメーター' anchor='query-param'>
+					<!--
         <section title='URI Query Parameter' anchor='query-param'>
+					-->
           <t>
+						HTTP リクエストURIにアクセストークンを含めるときに, クライアントは <spanx style='verb'>oauth_token</spanx> パラメーターとして, <xref target='RFC3986' /> に定義するリクエストURIのクエリ部にアクセストークンを追加する. 
+						<!--
             When including the access token in the HTTP request URI, the client adds the access
             token to the request URI query component as defined by <xref target='RFC3986' /> using
             the <spanx style='verb'>oauth_token</spanx> parameter.
+						-->
           </t>
           <figure>
             <preamble>
+							例えば, クライアントはトランスポート層のセキュリティ機能を利用し, 次のHTTP リクエストを行う:
+							<!--
               For example, the client makes the following HTTP request using transport-layer
               security:
+							-->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2168,10 +2232,14 @@
             </artwork>
           </figure>
           <t>
+						HTTPリクエストのURIのクエリにはその他のリクエスト固有のパラメーターを含むことができる. 
+						その場合, <spanx style='verb'>oauth_token</spanx> パラメータは適切に<spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割され, リクエスト固有のパラメタの後ろに付与されるべきである(SHOULD). 
+						<!--
             The HTTP request URI query can include other request-specific parameters, in which
             case, the <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended
             following the request-specific parameters, properly separated by an
             <spanx style='verb'>&amp;</spanx> character (ASCII code 38).
+						-->
           </t>
           <figure>
             <preamble>
@@ -2186,52 +2254,82 @@
           <t>
             <list>
               <t>
+								注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' />に記載するOAuth プロトコル以前のバージョンで用いられている. 
+								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<spanx style='verb'>oauth_signature_method</spanx> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
+								<!--
                 NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
                 version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
                 servers can differentiate between the two protocol versions based on the presence
                 of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
+								-->
               </t>
             </list>
           </t>
         </section>
 
+        <section title='フォームエンコードされたボディパラメーター' anchor='body-param'>
+					<!--
         <section title='Form-Encoded Body Parameter' anchor='body-param'>
+					-->
           <t>
+						HTTPリクエストのエンティティボディにアクセストークンが含まれる場合, クライアントは<spanx style='verb'>oauth_token</spanx>パラメーターとしてアクセストークンをリクエストボディに付与する. 
+						もし, 下記のような必要条件(REQUIRED)の場合には, クライアントはこのメソッドを用いることができる. 
+						<!--
             When including the access token in the HTTP request entity-body, the client adds the
             access token to the request body using the <spanx style='verb'>oauth_token</spanx>
             parameter. The client can use this method only if the following REQUIRED conditions are
             met:
+						-->
 
             <list style='symbols'>
               <t>
+								エンティティボディがシングルパートである. 
+								<!--
                 The entity-body is single-part.
+								-->
               </t>
               <t>
+								エンティティボディが<xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx> のコンテントタイプでエンコード要件を満たす
+								<!--
                 The entity-body follows the encoding requirements of the
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content-type as
                 defined by <xref target='W3C.REC-html401-19991224' />.
+								-->
               </t>
               <t>
+								HTTPリクエストエンティティヘッダーが, <spanx style='verb'>application/x-www-form-urlencoded</spanx>形式の<spanx style='verb'>Content-Type</spanx> ヘッダーフィールドセットを含む. 
+								<!--
                 The HTTP request entity-header includes the <spanx style='verb'>Content-Type</spanx>
                 header field set to <spanx style='verb'>application/x-www-form-urlencoded</spanx>.
+								-->
               </t>
               <t>
+								HTTPリクエストメソッドが<spanx style='verb'>POST</spanx>, <spanx style='verb'>PUT</spanx>, または <spanx style='verb'>DELETE</spanx> である.
+								<!--
                 The HTTP request method is <spanx style='verb'>POST</spanx>,
                 <spanx style='verb'>PUT</spanx>, or <spanx style='verb'>DELETE</spanx>.
+								-->
               </t>
             </list>
           </t>
           <t>
+						エンティティボディはその他のリクエスト固有パラメーターを含むことができる. 
+						その場合, <spanx style='verb'>oauth_token</spanx> パラメータは適切に<spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割され, リクエスト固有のパラメタの後ろに付与されるべきです(SHOULD). 
+						<!--
             The entity-body can include other request-specific parameters, in which case, the
             <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended following the
             request-specific parameters, properly separated by an <spanx style='verb'>&amp;</spanx>
             character (ASCII code 38).
+						-->
           </t>
           <figure>
             <preamble>
+							例えば, クライアントはトランスポート層のセキュリティ機能を利用して下記のようなHTTPリクエストを生成する. 
+							<!--
               For example, the client makes the following HTTP request using transport-layer
               security:
+							-->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2246,11 +2344,15 @@
           <t>
             <list>
               <t>
+								注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' />に記載するOAuth プロトコル以前のバージョンで用いられている. 
+								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<spanx style='verb'>oauth_signature_method</spanx> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
+								<!--
                 NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
                 version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
                 servers can differentiate between the two protocol versions based on the presence
                 of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
+								-->
               </t>
             </list>
           </t>
