@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: April 27, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: April 30, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">October 24, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 27, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on April 27, 2011.</p>
+This Internet-Draft will expire on April 30, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -241,15 +241,15 @@ Error Response<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#token-error-codes">4.3.1.</a>&nbsp;
 Error Codes<br />
 <a href="#access-resource">5.</a>&nbsp;
-Accessing a Protected Resource<br />
+保護リソースへのアクセス<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">5.1.</a>&nbsp;
-Authenticated Requests<br />
+認証されたリクエスト<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz-header">5.1.1.</a>&nbsp;
-The Authorization Request Header Field<br />
+認証リクエストヘッダ<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-param">5.1.2.</a>&nbsp;
-URI Query Parameter<br />
+URI クエリパラメーター<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body-param">5.1.3.</a>&nbsp;
-Form-Encoded Body Parameter<br />
+フォームエンコードされたボディパラメーター<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn-header">5.2.</a>&nbsp;
 The WWW-Authenticate Response Header Field<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#resource-error-codes">5.2.1.</a>&nbsp;
@@ -614,7 +614,7 @@ Authors' Addresses<br />
 <dt>(E)</dt>
 <dd>
               クライアントは保護リソースへのリクエストを実行し, アクセスを得るためにアクセストークンを提供する.
-              保護リソースへのアクセスについては<a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>Accessing a Protected Resource</span><span>)</span></a>に記載する.
+              保護リソースへのアクセスについては<a class='info' href='#access-resource'>Section&nbsp;5<span> (</span><span class='info'>保護リソースへのアクセス</span><span>)</span></a>に記載する.
               
             
 </dd>
@@ -1171,7 +1171,7 @@ Authors' Addresses<br />
 <dd>
               
 	      レスポンスタイプが<tt>token</tt>または, <tt>code_and_token</tt>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT).
-	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない(MUST). 
+	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>認証リクエストヘッダ</span><span>)</span></a>で定義されるアクセスークンのルールに従わなければならない(MUST). 
 	      
             
 </dd>
@@ -1731,7 +1731,7 @@ Access Token Response</h3>
               
               REQUIRED. The access token issued by the authorization server. The access token
               string MUST comply with the access-token rule defined in
-              <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>.
+              <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>認証リクエストヘッダ</span><span>)</span></a>.
             
 </dd>
 <dt>expires_in</dt>
@@ -1921,76 +1921,72 @@ Error Codes</h3>
 <a name="access-resource"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
-Accessing a Protected Resource</h3>
+保護リソースへのアクセス</h3>
 
 <p>
-        Clients access protected resources by presenting an access token to the resource server.
-        Access tokens act as bearer tokens, where the token string acts as a shared symmetric
-        secret. This requires treating the access token with the same care as other secrets (e.g.
-        end-user passwords). Access tokens SHOULD NOT be sent in the clear over an insecure
-        channel.
+				クライアントはアクセストークンをリソースサーバにし, 保護リソースにアクセスする. 
+				アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する
+				このことから, アクセストークンをその他の鍵と同じように扱う必要がある(例えば, エンドユーザのパスワードのように). 
+				アクセストークンはセキュアでないチャンネルを平文で送られるべきではない(SHOULD NOT).
+				
       
 </p>
 <p>
-        However, when it is necessary to transmit access tokens in the clear without a secure
-        channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
-        to reduce the potential risk from a compromised access token.
+				セキュアな通信を使わずに平文でアクセストークンを送る必要がある場合には, 不正なアクセストークンがもつ潜在的なリスクを減じるために, 認可サーバはスコープと生存期間が限られたアクセストークンを発行すべきである(SHOULD). 
+				
       
 </p>
 <p>
-        Clients MUST NOT make authenticated requests with an access token to unfamiliar resource
-        servers, regardless of the presence of a secure channel.
+				クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバに対してアクセストークンを含む認証されたリクエストを行ってはならない(MUST NOT).
+				
       
 </p>
 <p>
-        The resource server MUST validate the access token and ensure it has not expired and
-        that its scope covers the requested resource. The methods used by the resource server
-        to validate the access token are beyond the scope of this specification, but generally
-        involve an interaction or coordination between the resource server and authorization
-        server.
+				リソースサーバはアクセストークンを検証し, トークンの有効期限が切れてないこと, および, そのトークンのスコープが要求されたリソースをカバーしていることを確認しなければならない(MUST). 
+				リソースサーバがアクセストークンを検証するために用いるメソッドについては, この仕様の定める範囲ではない. 
+				しかし, 一般的に, それらのメソッドは, リソースサーバと認証サーバの間の連携および調整の方法を含んでいる. 
+				
       
 </p>
 <a name="anchor14"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1"></a><h3>5.1.&nbsp;
-Authenticated Requests</h3>
+認証されたリクエスト</h3>
 
 <p>
-          Clients make authenticated token requests using the
-          <tt>Authorization</tt> request header field. Resource servers MUST
-          accept authenticated requests using the <tt>OAuth</tt> HTTP
-          authentication scheme as described in <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>, and MAY support
-          additional methods.
+					クライアントは<tt>Authorization</tt> リクエストヘッダを使って, 認証されたトークンリクエストを生成する. 
+					リソースサーバは, <a class='info' href='#authz-header'>Section&nbsp;5.1.1<span> (</span><span class='info'>認証リクエストヘッダ</span><span>)</span></a>に記載する<tt>OAuth</tt> HTTP認証スキーマを用い, 認証されたリクエストを受け入れなければならない(MUST).
+					リソースサーバは付加的なメソッドをサポートしていても構わない(MAY). 
+					
         
 </p>
 <p>
-          Alternatively, clients MAY attempt to include the access token using the HTTP request
-          URI in the query component as described in <a class='info' href='#query-param'>Section&nbsp;5.1.2<span> (</span><span class='info'>URI Query Parameter</span><span>)</span></a>, or in the HTTP
-          body when using the <tt>application/x-www-form-urlencoded</tt> content
-          type as described in <a class='info' href='#body-param'>Section&nbsp;5.1.3<span> (</span><span class='info'>Form-Encoded Body Parameter</span><span>)</span></a>. Resource server MAY support these
-          alternative methods.
+					もうひとつの方法として, クライアントは, 下記のどちらかに含まれるHTTPリクエストURIを用い, アクセストークンを含むことを受け入れることができる(MAY). 
+					上記のリクエストURIを含むのは, <a class='info' href='#query-param'>Section&nbsp;5.1.2<span> (</span><span class='info'>URI クエリパラメーター</span><span>)</span></a>に記載するクエリー部, もしくは, <a class='info' href='#body-param'>Section&nbsp;5.1.3<span> (</span><span class='info'>フォームエンコードされたボディパラメーター</span><span>)</span></a>に記載する<tt>application/x-www-form-urlencoded</tt> コンテントタイプを用いたときのHTTPボディである. 
+					リソースサーバはこれらのどちらのメソッドをサポートしてもよい(MAY). 
+					
         
 </p>
 <p>
-          Clients SHOULD only use the request URI or body when the
-          <tt>Authorization</tt> request header field is not available, and MUST
-          NOT use more than one method in each request.
+					クライアントは, <tt>Authorization</tt> リクエストヘッダが利用できない場合, リクエストURIまたはボディだけを用いるべきである(SHOULD). 
+					さらに, クライアントは一度のリクエストにひとつ以上のメソッドを含んではならない(MUST NOT). 
+					
         
 </p>
 <a name="authz-header"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1.1"></a><h3>5.1.1.&nbsp;
-The Authorization Request Header Field</h3>
+認証リクエストヘッダ</h3>
 
 <p>
-            The <tt>Authorization</tt> request header field is used by clients
-            to make authenticated token requests. The client uses the
-            <tt>OAuth</tt> authentication scheme to include the access token in
-            the request.
+						クライアントは, <tt>Authorization</tt> リクエストヘッダを用いて, 認証されたトークンリクエストを生成する. 
+						クライアントは, リクエストにアクセストークンを含めるために<tt>OAuth</tt> 認証スキーマを用いる. 
+						
           
 </p>
 <p>
-              For example:
+							例:
+							
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2000,8 +1996,8 @@ The Authorization Request Header Field</h3>
 
 </pre></div>
 <p>
-            The <tt>Authorization</tt> header field uses the framework defined by
-            <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
+						下記に示す<a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>によって定義されたフレームワークを用いた<tt>Authorization</tt> ヘッダ
+						
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2021,11 +2017,10 @@ The Authorization Request Header Field</h3>
             </p>
 <blockquote class="text">
 <p>
-                NOTE: <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a> defines a different format for the
-                <tt>OAuth</tt> authentication scheme. Resource servers can
-                differentiate between the two protocol versions based on the presence of the
-                <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
+								注釈: <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>は, <tt>OAuth</tt> 認証スキーマの異なるフォーマットを定義している.
+								リソースサーバは, 以前のバージョンで要求された(REQUIRED)<tt>oauth_signature_method</tt> の有無に基づいて2つのプロトコルのバージョンを区別することができる.
+								<tt>oauth_signature_method</tt> は本仕様ではサポートしていない. 
+								
               
 </p>
 </blockquote><p>
@@ -2034,17 +2029,16 @@ The Authorization Request Header Field</h3>
 <a name="query-param"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1.2"></a><h3>5.1.2.&nbsp;
-URI Query Parameter</h3>
+URI クエリパラメーター</h3>
 
 <p>
-            When including the access token in the HTTP request URI, the client adds the access
-            token to the request URI query component as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> using
-            the <tt>oauth_token</tt> parameter.
+						HTTP リクエストURIにアクセストークンを含めるときに, クライアントは <tt>oauth_token</tt> パラメーターとして, <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> に定義するリクエストURIのクエリ部にアクセストークンを追加する. 
+						
           
 </p>
 <p>
-              For example, the client makes the following HTTP request using transport-layer
-              security:
+							例えば, クライアントはトランスポート層のセキュリティ機能を利用し, 次のHTTP リクエストを行う:
+							
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2053,10 +2047,9 @@ URI Query Parameter</h3>
 
 </pre></div>
 <p>
-            The HTTP request URI query can include other request-specific parameters, in which
-            case, the <tt>oauth_token</tt> parameters SHOULD be appended
-            following the request-specific parameters, properly separated by an
-            <tt>&amp;</tt> character (ASCII code 38).
+						HTTPリクエストのURIのクエリにはその他のリクエスト固有のパラメーターを含むことができる. 
+						その場合, <tt>oauth_token</tt> パラメータは適切に<tt>&amp;</tt> (ASCII code 38) で分割され, リクエスト固有のパラメタの後ろに付与されるべきである(SHOULD). 
+						
           
 </p>
 <p>
@@ -2071,11 +2064,9 @@ URI Query Parameter</h3>
             </p>
 <blockquote class="text">
 <p>
-                NOTE: The <tt>oauth_token</tt> parameter is used by the previous
-                version of the OAuth protocol as described in <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>. Resource
-                servers can differentiate between the two protocol versions based on the presence
-                of the <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
+								注釈: <tt>oauth_token</tt> パラメーターは, <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>に記載するOAuth プロトコル以前のバージョンで用いられている. 
+								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<tt>oauth_signature_method</tt> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
+								
               
 </p>
 </blockquote><p>
@@ -2084,49 +2075,47 @@ URI Query Parameter</h3>
 <a name="body-param"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1.3"></a><h3>5.1.3.&nbsp;
-Form-Encoded Body Parameter</h3>
+フォームエンコードされたボディパラメーター</h3>
 
 <p>
-            When including the access token in the HTTP request entity-body, the client adds the
-            access token to the request body using the <tt>oauth_token</tt>
-            parameter. The client can use this method only if the following REQUIRED conditions are
-            met:
+						HTTPリクエストのエンティティボディにアクセストークンが含まれる場合, クライアントは<tt>oauth_token</tt>パラメーターとしてアクセストークンをリクエストボディに付与する. 
+						もし, 下記のような必要条件(REQUIRED)の場合には, クライアントはこのメソッドを用いることができる. 
+						
 
             </p>
 <ul class="text">
 <li>
-                The entity-body is single-part.
+								エンティティボディがシングルパートである. 
+								
               
 </li>
 <li>
-                The entity-body follows the encoding requirements of the
-                <tt>application/x-www-form-urlencoded</tt> content-type as
-                defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
+								エンティティボディが<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>で定義される<tt>application/x-www-form-urlencoded</tt> のコンテントタイプでエンコード要件を満たす
+								
               
 </li>
 <li>
-                The HTTP request entity-header includes the <tt>Content-Type</tt>
-                header field set to <tt>application/x-www-form-urlencoded</tt>.
+								HTTPリクエストエンティティヘッダーが, <tt>application/x-www-form-urlencoded</tt>形式の<tt>Content-Type</tt> ヘッダーフィールドセットを含む. 
+								
               
 </li>
 <li>
-                The HTTP request method is <tt>POST</tt>,
-                <tt>PUT</tt>, or <tt>DELETE</tt>.
+								HTTPリクエストメソッドが<tt>POST</tt>, <tt>PUT</tt>, または <tt>DELETE</tt> である.
+								
               
 </li>
 </ul><p>
           
 </p>
 <p>
-            The entity-body can include other request-specific parameters, in which case, the
-            <tt>oauth_token</tt> parameters SHOULD be appended following the
-            request-specific parameters, properly separated by an <tt>&amp;</tt>
-            character (ASCII code 38).
+						エンティティボディはその他のリクエスト固有パラメーターを含むことができる. 
+						その場合, <tt>oauth_token</tt> パラメータは適切に<tt>&amp;</tt> (ASCII code 38) で分割され, リクエスト固有のパラメタの後ろに付与されるべきです(SHOULD). 
+						
           
 </p>
 <p>
-              For example, the client makes the following HTTP request using transport-layer
-              security:
+							例えば, クライアントはトランスポート層のセキュリティ機能を利用して下記のようなHTTPリクエストを生成する. 
+							
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2141,11 +2130,9 @@ Form-Encoded Body Parameter</h3>
             </p>
 <blockquote class="text">
 <p>
-                NOTE: The <tt>oauth_token</tt> parameter is used by the previous
-                version of the OAuth protocol as described in <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>. Resource
-                servers can differentiate between the two protocol versions based on the presence
-                of the <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
+								注釈: <tt>oauth_token</tt> パラメーターは, <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>に記載するOAuth プロトコル以前のバージョンで用いられている. 
+								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<tt>oauth_signature_method</tt> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
+								
               
 </p>
 </blockquote><p>
