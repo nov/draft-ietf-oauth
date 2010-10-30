@@ -2360,12 +2360,18 @@
 
       </section>
 
+      <section title='WWW-Authenticate レスポンスヘッダーフィールド' anchor='authn-header'>
+      <!--
       <section title='The WWW-Authenticate Response Header Field' anchor='authn-header'>
+      -->
         <t>
+          もし保護リソースリクエストが無効なアクセストークン, または不正な形式の場合, リソースサーバーはHTTP <spanx style='verb'>WWW-Authenticate</spanx> レスポンスヘッダーフィールドを含めなければならない (MUST) . <spanx style='verb'>WWW-Authenticate</spanx> は 以下のように<xref target='RFC2617' /> により定義されているフレームワークを使用する. 
+          <!--
           If the protected resource request contains an invalid access token or is malformed, the
           resource server MUST include the HTTP <spanx style='verb'>WWW-Authenticate</spanx>
           response header field. The <spanx style='verb'>WWW-Authenticate</spanx> header field
           uses the framework defined by <xref target='RFC2617' /> as follows:
+        -->
         </t>
         <figure>
           <artwork>
@@ -2390,7 +2396,10 @@
         </figure>
         <figure>
           <preamble>
+            例:
+            <!--
             For example:
+          -->
           </preamble>
           <artwork>
             <![CDATA[
@@ -2400,77 +2409,118 @@
           </artwork>
         </figure>
         <t>
+          <spanx style='verb'>realm</spanx> 属性は <xref target='RFC2617' /> により定義されているように, 保護リソースに分割を提供するために使用される. [[ 説明を追加 ]]
+          <!--
           The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
           resources partition as defined by <xref target='RFC2617' />. [[ add explanation ]]
+          -->
         </t>
         <t>
+          <spanx style='verb'>error</spanx> 属性はアクセスレクエストが拒否された理由をクライアントに通知するために使用する. パラメーターの値は <xref target='resource-error-codes' /> に記載する. 
+          <!--
           The <spanx style='verb'>error</spanx> attribute is used to provide the client with the
           reason why the access request was declined. The parameter values are described in
           <xref target='resource-error-codes' />.
+          -->
         </t>
         <t>
+          <spanx style='verb'>error_description</spanx> 属性は追加情報を含んだ解読可能なテキストを提供し, エラー原因の理解と解明を助ける. 
+          <!--
           The <spanx style='verb'>error_description</spanx> attribute provides a human-readable
           text containing additional information, used to assist in the understanding and
           resolution of the error occurred.
+          -->
         </t>
         <t>
+          <spanx style='verb'>error_uri</spanx> 属性は, エラーに関する情報をもつ解読可能なウェブページを識別するURIを提供する. また, エンドユーザーにエラーに関する情報を追加して提供するために使用される. もし, 値が絶対 URI でなければ, リクエストされた保護リソースのURIは相対的である. 
+          <!--
           The <spanx style='verb'>error_uri</spanx> attribute provides a URI identifying a
           human-readable web page with information about the error, used to offer the end-user
           with additional information about the error. If the value is not an absolute URI, it is
           relative to the URI of the requested protected resource.
+          -->
         </t>
         <t>
+          <spanx style='verb'>scope</spanx> 属性は要求されたリソースにアクセスするためのアクセストークンの必要な範囲を示すスコープの値がスペース区切りになっているリストである. 
+          <!--
           The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of scope values
           indicating the required scope of the access token for accessing the requested resource.
+          -->
         </t>
 
+        <section title='エラーコード' anchor='resource-error-codes'>
+        <!--
         <section title='Error Codes' anchor='resource-error-codes'>
+        -->
           <t>
+            <!--
             The authorization server includes one of the following error codes with the error
             response:
+            -->
 
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid_request'>
                 <vspace />
+                必須のパラメータを指定していない, サポートされていないパラメータもしくは値を含んでいる, 同じパラメータがある, アクセストークンを含むための1つ以上のメソッドを使っている, その他不正な形式のリクエスト. リソースサーバーは HTTP 400 (Bad Request)のステータスコードを応答しなければならない (MUST) . 
+                <!--
                 The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, repeats the same parameter, uses more than one method for
                 including an access token, or is otherwise malformed. The resource server MUST
                 respond with the HTTP 400 (Bad Request) status code.
+                -->
               </t>
               <t hangText='invalid_token'>
                 <vspace />
+                提供されたアクセストークンが無効. 新しい認可が必要であることをクライアントに示すために, リフレッシュできない,期限切れのトークンを受け取った場合, リソースサーバーはこのエラーコードを使用するべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを応答しなければならない (MUST) . 
+                <!--
                 The access token provided is invalid. Resource servers SHOULD use this error code
                 when receiving an expired token which cannot be refreshed to indicate to the client
                 that a new authorization is necessary. The resource server MUST respond with the
                 HTTP 401 (Unauthorized) status code.
+                -->
               </t>
               <t hangText='expired_token'>
                 <vspace />
+                提供されたアクセストークンが期限切れ. レスポンスを処理し, 期限切れのアクセストークンとリフレッシュトークンを使って新しいアクセストークンをリクエストすることができることをクライアントが期待しているとき, リソースサーバーはこのエラーコードのみを使用すべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを返さなければならない (MUST) . 
+                <!--
                 The access token provided has expired. Resource servers SHOULD only use this error
                 code when the client is expected to be able to handle the response and request a
                 new access token using the refresh token issued with the expired access token. The
                 resource server MUST respond with the HTTP 401 (Unauthorized) status code.
+                -->
               </t>
               <t hangText='insufficient_scope'>
                 <vspace />
+                リクエストはアクセストークンにより提供された, より高い権限を要求する. リソースサーバーは HTTP 403 (Forbidden) ステータスコードを返すべきである (SHOULD) . また, 保護リソースのアクセスに必要な範囲で, <spanx style='verb'>scope</spanx> 属性を含んでもよい (MAY) . 
+                <!--
                 The request requires higher privileges than provided by the access token. The
                 resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
                 include the <spanx style='verb'>scope</spanx> attribute with the scope necessary to
                 access the protected resource.
+                -->
               </t>
             </list>
           </t>
           <t>
+            [[ エラーコードを拡張する仕組みを追加 ]]
+            <!--
             [[ Add mechanism for extending error codes ]]
+            -->
           </t>
           <t>
+            もし, リクエストに認証情報がない場合 (例えば, クライアントが認証が必要なこと, またはサポートされていない認証方法を使って認証しようとしていることに気付かなかった場合) , リソースサーバーはエラーコード, またはその他のエラー情報を含めてはならない. 
+            <!--
             If the request lacks any authentication information (i.e. the client was unaware
             authentication is necessary or attempted using an unsupported authentication method),
             the resource server SHOULD not include an error code or other error information.
+            -->
           </t>
           <figure>
             <preamble>
+              例:
+              <!--
               For example:
+              -->
             </preamble>
             <artwork>
               <![CDATA[
