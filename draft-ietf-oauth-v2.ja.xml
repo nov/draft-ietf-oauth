@@ -2535,32 +2535,48 @@
 
     </section>
 
-    <section title='Extensibility'>
+    <section title='拡張性'>
+    <!-- section title='Extensibility' -->
 
-      <section title='Defining New Client Credentials Types'>
+      <section title='クライアントクレデンシャルタイプの拡張'>
+      <!-- section title='Defining New Client Credentials Types' -->
         <t>
           [[ TBD ]]
         </t>
       </section>
 
-      <section title='Defining New Endpoint Parameters'>
+      <section title='エンドポイントパラメーターの拡張'>
+      <!-- section title='Defining New Endpoint Parameters' -->
         <t>
+          エンドユーザー認可エンドポイントおよびトークンエンドポイントにおいて, リクエストおよびレスポンスパラメーターを追加定義するアプリケーションは, 以下の2つのいずれかを選択するものとする (SHALL).
+          (<xref target='parameters-registry' />で定められた手順に従って) パラメーターレジストリーに登録する.
+          <spanx style='verb'>x_</spanx> をパラメーター名のプレフィックスとして用いる.
+          <!--
           Applications that wish to define new request or response parameters for use with the
           end-user authorization endpoint or the token endpoint SHALL do so in one of two ways:
           register them in the parameters registry (following the procedures in 
           <xref target='parameters-registry' />), or use the <spanx style='verb'>x_</spanx>
           parameter name prefix.
+          -->
         </t>
         <t>
+          <spanx style='verb'>x_</spanx> プレフィクスを用いるパラメーターは, ベンダー固有の拡張に限定する (MUST).
+          これらの拡張は汎用に適用されるものではなく, パラメーターをサポートする認可サーバーの実装に固有のものである.
+          これに該当しないパラメーターは, レジストリー登録を必要とし (MUST), <spanx style='verb'>x_</spanx> プレフィックスを用いてはならない (MUST NOT).
+          <!--
           Parameters utilizing the <spanx style='verb'>x_</spanx> parameter name prefix MUST be
           limited to vendor-specific extensions that are not commonly applicable, and are specific
           to the implementation details of the authorization server where they are used. All other
           new parameters MUST be registered, and MUST NOT use the <spanx style='verb'>x_</spanx>
           parameter name prefix.
+          -->
         </t>
         <t>
+          パラメーター名はパラメーター名 ABNF に従い (MUST), パラメーター値のシンタックスは (ABNF や既存のパラメーターシンタックスを用いて) 明確に定義すること (MUST).
+          <!--
           Parameter names MUST conform to the param-name ABNF, and parameter values syntax MUST be
           well-defined (e.g., using ABNF, or a reference to the syntax of an existing parameter).
+          -->
         </t>
         <figure>
           <artwork>
@@ -2572,18 +2588,28 @@
         </figure>
       </section>
 
-      <section title='Defining New Header Field Parameters'>
+      <section title='ヘッダーパラメーターの拡張'>
+      <!-- section title='Defining New Header Field Parameters' -->
         <t>
+          OAuth の <spanx style='verb'>Authorization</spanx> および <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーパラメーターを追加定義するアプリケーションは, パラメーターレジストリーへの登録を行うこと (MUST).
+          レジストリーへの登録は <xref target='parameters-registry' /> に従う.
+          
+          <!--
           Applications that wish to define new parameters for use in the OAuth
           <spanx style='verb'>Authorization</spanx> or <spanx style='verb'>WWW-Authenticate</spanx>
           header fields MUST register them in the parameters registry, following the procedures in
           <xref target='parameters-registry' />.
+          -->
         </t>
         <t>
+          パラメーター名はパラメーター名 ABNF に従い (MUST), <spanx style='verb'>x_</spanx> で始まってはならない (MUST NOT).
+          パラメーター値はパラメーター値 ABNF に従い (MUST), そのシンタックスは (ABNF や既存のパラメーターシンタックスを用いて) 明確に定義すること (MUST).
+          <!--
           Parameter names MUST conform to the param-name ABNF and MUST NOT begin with
           <spanx style='verb'>x_</spanx>. Parameter values MUST conform to the param-value ABNF and
           their syntax MUST be well-defined (e.g., using ABNF, or a reference to the syntax of an
           existing parameter).
+          -->
         </t>
         <figure>
           <artwork>
@@ -2594,12 +2620,17 @@
         </figure>
       </section>
 
-      <section title='Defining New Access Grant Types'>
+      <section title='アクセス許可タイプの拡張'>
+      <!-- section title='Defining New Access Grant Types' -->
         <t>
+          アサーションアクセス許可タイプは, 認可サーバーが本使用で未定義の付加的なアクセス許可を受け入れることを想定している.
+          アクセス許可タイプを追加するアプリケーションは, 新規および既存のアサーションタイプおよびフォーマットを利用することができる.
+          <!--
           The assertion access grant type was designed to allow the authorization server to
           accept additional access grants not specified. Applications that wish to define
           additional access grant types can do so by utilizing a new or existing assertion type
           and format.
+          -->
         </t>
       </section>
 
