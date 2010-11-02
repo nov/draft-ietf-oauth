@@ -1764,7 +1764,7 @@
           </figure>
           <t>
             認可サーバーは(クライアントクレデンシャルがある場合は)クライアントクレデンシャルを検証し, <xref target='access-token-response' />で記載されるアクセストークンレスポンスを発行しなければならない(MUST).
-            認可サーバーはリフレッシュトークンを発行すべきでない(SHOULD NOT). (その代わりに, クライアントに同じもしくな新しいアサーションを要求する)
+            認可サーバーはリフレッシュトークンを発行すべきでない(SHOULD NOT). (その代わりに, クライアントに同じもしくは新しいアサーションを要求する)
             <!--
             The authorization server MUST validate the client credentials (if present) and the
             assertion and if valid issues an access token response as described in
@@ -1775,7 +1775,7 @@
           <t>
             認可サーバーは生存時間が限られたアクセストークンを発行すべきであり(SHOULD), 
             もし同じアサーションが有効であるならばそれを用いて新しいアクセストークンを要求することによりクライアントにアクセストークンを更新させるべきである(SHOULD).  
-            アサーションが無効な場合, クライアントは新しい新しい有効なアサーションを取得しなければならない(MUST). 
+            アサーションが無効な場合, クライアントは新しい有効なアサーションを取得しなければならない(MUST). 
             <!--
             Authorization servers SHOULD issue access tokens with a limited lifetime and require
             clients to refresh them by requesting a new access token using the same assertion if it
