@@ -2642,13 +2642,17 @@
       </t>
     </section>
 
-    <section title='IANA Considerations'>
+    <section title='IANAに関する考察<!-- IANA Considerations -->'>
 
-      <section title='The OAuth Parameters Registry' anchor='parameters-registry'>
+      <section title='OAuthパラメータの登録<!-- The OAuth Parameters Registry -->' anchor='parameters-registry'>
         <t>
-          This document establishes the OAuth parameters registry.
+          この文書はOAuthパラメータの登録について規定しています。
+          <!-- This document establishes the OAuth parameters registry. -->
         </t>
         <t>
+          エンドユーザの認可エンドポイントに対するリクエスト, エンドユーザの認可エンドポイントからのレスポンス, トークンエンドポイントに対するリクエスト, トークンエンドポイントからレスポンス, <spanx style='verb'>Authorization</spanx>ヘッダフィールド, または<spanx style='verb'>WWW-Authenticate</spanx>ヘッダフィールドで利用される追加パラメータは, IESGまたは代理に選出されたものにより指名をうけた, 1名以上の指定専門家のアドバイスに基づいて, 要求仕様(<xref target='RFC5226' />で使われる用語)とともに追加される.
+          しかしながら, 公開に先立って値を割り当てる行為を許可するために, 指定専門家は将来仕様が公開される条件が満たされるなどした場合は, 値の登録を許可しても良い.
+          <!--
           Additional parameters to be use in the end-user authorization endpoint request, the
           end-user authorization endpoint response, the token endpoint request, the token endpoint
           response, the <spanx style='verb'>Authorization</spanx> header field, or the
@@ -2657,75 +2661,105 @@
           Specification Required (using terminology from <xref target='RFC5226' />). However, to
           allow for the allocation of values prior to publication, the Designated Expert(s) may
           approve registration once they are satisfied that such a specification will be published.
+          -->
         </t>
         <t>
+          登録要求は, レビュー, コメントを目的として, 適切なサブジェクト(e.g., "Request for parameter: example")で[TBD]@ietf.orgメーリングリストに対して送られるべきである. 
+          <!--
           Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
           comment, with an appropriate subject (e.g., "Request for parameter: example").
+          -->
           [[ Note to RFC-EDITOR: The name of the mailing list should be determined in consultation
           with the IESG and IANA. Suggested name: oauth-ext-review. ]]
         </t>
         <t>
+          14日の期間が経過する前に, 指定専門家は登録要求を承認するか棄却し, この決定はレビューリストとIANAの両方に通知される.
+          棄却には説明, または内容自体が妥当であるならば, どうすれば要求が受理されるかという提案が伴なっているべきである.
+          21日間を越えて未決となっている登録要求は, 解決のために(iesq@iesq.orgメーリングリストを利用して)IESG宛に通知される. 
+          <!--
           Before a period of 14 days has passed, the Designated Expert(s) will either approve or
           deny the registration request, communicating this decision both to the review list and to
           IANA. Denials should include an explanation and, if applicable, suggestions as to how to
           make the request successful. Registration requests that are undetermined for a period
           longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org
           mailing list) for resolution.
+          -->
         </t>
 
-        <section title='Registration Template'>
+        <section title='登録用テンプレート<!-- Registration Template -->'>
           <t>
             <list style='hanging'>
-              <t hangText='Parameter name:'>
-                The name requested (e.g., "example").
+              <t hangText='<!-- Parameter name -->パラメータ名:'>
+                要求名称(e.g., "example").
+                <!-- The name requested (e.g., "example"). -->
               </t>
-              <t hangText='Parameter usage location:'>
+              <t hangText='<!-- Parameter usage location -->パラメータ使用位置:'>
+                パラメータが使用できる位置. 使用されうる位置は: エンドユーザー認可エンドポイントリクエスト, エンドユーザ認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, <spanx style='verb'>Authorization</spanx>ヘッダフィールド, そして<spanx style='verb'>WWW-Authenticate</spanx>ヘッダフィールドである.
+                <!--
                 The location(s) where parameter can be used. The possible locations are: the
                 end-user authorization endpoint request, the end-user authorization endpoint
                 response, the token endpoint request, the token endpoint response, the
                 <spanx style='verb'>Authorization</spanx> header field, or the
                 <spanx style='verb'>WWW-Authenticate</spanx> header field.
+                -->
               </t>
-              <t hangText='Change controller:'>
+              <t hangText='<!-- Change controller -->変更管理者:'>
+                標準化過程のRFCであるため, "IETF"と記載すること. その他, 責任ある当事者の名称を記載すること.
+                他の詳細(e.g. 住所, メールアドレス, ホームページURI)を含んでいても良い.
+                <!--
                 For standards-track RFCs, state "IETF". For others, give the name of the
                 responsible party. Other details (e.g., postal address, e-mail address, home page
                 URI) may also be included.
+                -->
               </t>
-              <t hangText='Specification document(s):'>
+
+              <t hangText='<!-- Specification document(s) -->仕様文書:'>
+                パラメータを規定する文書への参照であり, 文書のコピーを取得することができるURIを含むことが望ましい.
+                関連する節の表示を含んでいても良いが, 必須ではない.
+                <!--
                 Reference to document that specifies the parameter, preferably including a URI that
                 can be used to retrieve a copy of the document. An indication of the relevant
                 sections may also be included, but is not required.
+                -->
               </t>
-              <t hangText='Related information:'>
+              <t hangText='<!-- Related information -->関連情報:'>
+                任意で, さらなる関連情報を含む追加の文書への引用を記載する.
+                <!--
                 Optionally, citations to additional documents containing further relevant
                 information.
+                -->
               </t>
             </list>
           </t>
         </section>
 
-        <section title='Example'>
+        <section title='<!-- Example -->例'>
           <t>
+            次の例は, この仕様書で定義されている<spanx style='verb'>scope</spanx>パラメータに対するパラメータ登録要求である.
+            <!--
             The following is the parameter registration request for the
             <spanx style='verb'>scope</spanx> parameter as defined in this specification:
-            
+            -->
             <list style='hanging'>
-              <t hangText='Parameter name:'>
+              <t hangText='<!-- Parameter name -->パラメータ名:'>
                 scope
               </t>
-              <t hangText='Parameter usage location:'>
+              <t hangText='<!-- Parameter usage location -->パラメータ使用位置:'>
+                エンドユーザー認可エンドポイントリクエスト, エンドユーザ認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, 及び<spanx style='verb'>WWW-Authenticate</spanx>ヘッダフィールド.
+                <!--
                 The end-user authorization endpoint request, the end-user authorization endpoint
                 response, the token endpoint request, the token endpoint response, and the
                 <spanx style='verb'>WWW-Authenticate</spanx> header field.
+                -->
               </t>
-              <t hangText='Change controller:'>
+              <t hangText='<!-- Change controller -->変更管理者:'>
                 IETF
               </t>
-              <t hangText='Specification document(s):'>
-                [[ this document ]]
+              <t hangText='<!-- Specification document(s) -->仕様文書:'>
+                [[ 本文書 ]]
               </t>
-              <t hangText='Related information:'>
-                None
+              <t hangText='<!-- Related information -->関連情報:'>
+                なし.
               </t>
             </list>
           </t>
