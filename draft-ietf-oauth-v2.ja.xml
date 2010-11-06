@@ -2646,7 +2646,7 @@
 
       <section title='OAuthパラメータの登録<!-- The OAuth Parameters Registry -->' anchor='parameters-registry'>
         <t>
-          この文書はOAuthパラメータの登録について規定しています。
+          この文書はOAuthパラメータの登録について規定する.
           <!-- This document establishes the OAuth parameters registry. -->
         </t>
         <t>
