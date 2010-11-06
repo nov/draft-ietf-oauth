@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: May 6, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: May 10, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 2, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 6, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on May 6, 2011.</p>
+This Internet-Draft will expire on May 10, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -267,13 +267,13 @@ WWW-Authenticate レスポンスヘッダーフィールド<br />
 <a href="#anchor20">7.</a>&nbsp;
 Security Considerations<br />
 <a href="#anchor21">8.</a>&nbsp;
-IANA Considerations<br />
+IANAに関する考察<!-- IANA Considerations --><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#parameters-registry">8.1.</a>&nbsp;
-The OAuth Parameters Registry<br />
+OAuthパラメータの登録<!-- The OAuth Parameters Registry --><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor22">8.1.1.</a>&nbsp;
-Registration Template<br />
+登録用テンプレート<!-- Registration Template --><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor23">8.1.2.</a>&nbsp;
-Example<br />
+<!-- Example -->例<br />
 <a href="#anchor24">Appendix&nbsp;A.</a>&nbsp;
 Examples<br />
 <a href="#anchor25">Appendix&nbsp;B.</a>&nbsp;
@@ -2277,7 +2277,7 @@ WWW-Authenticate レスポンスヘッダーフィールド</h3>
 
 <p>
           エンドユーザー認可エンドポイントおよびトークンエンドポイントにおいて, リクエストおよびレスポンスパラメーターを追加定義するアプリケーションは, 以下の2つのいずれかを選択するものとする (SHALL).
-          (<a class='info' href='#parameters-registry'>Section&nbsp;8.1<span> (</span><span class='info'>The OAuth Parameters Registry</span><span>)</span></a>で定められた手順に従って) パラメーターレジストリーに登録する.
+          (<a class='info' href='#parameters-registry'>Section&nbsp;8.1<span> (</span><span class='info'>OAuthパラメータの登録<!-- The OAuth Parameters Registry --></span><span>)</span></a>で定められた手順に従って) パラメーターレジストリーに登録する.
           <tt>x_</tt> をパラメーター名のプレフィックスとして用いる.
           
         
@@ -2306,7 +2306,7 @@ WWW-Authenticate レスポンスヘッダーフィールド</h3>
 
 <p>
           OAuth の <tt>Authorization</tt> および <tt>WWW-Authenticate</tt> ヘッダーパラメーターを追加定義するアプリケーションは, パラメーターレジストリーへの登録を行うこと (MUST).
-          レジストリーへの登録は <a class='info' href='#parameters-registry'>Section&nbsp;8.1<span> (</span><span class='info'>The OAuth Parameters Registry</span><span>)</span></a> に従う.
+          レジストリーへの登録は <a class='info' href='#parameters-registry'>Section&nbsp;8.1<span> (</span><span class='info'>OAuthパラメータの登録<!-- The OAuth Parameters Registry --></span><span>)</span></a> に従う.
           
           
         
@@ -2344,84 +2344,76 @@ Security Considerations</h3>
 <a name="anchor21"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
-IANA Considerations</h3>
+IANAに関する考察<!-- IANA Considerations --></h3>
 
 <a name="parameters-registry"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.1"></a><h3>8.1.&nbsp;
-The OAuth Parameters Registry</h3>
+OAuthパラメータの登録<!-- The OAuth Parameters Registry --></h3>
 
 <p>
-          This document establishes the OAuth parameters registry.
+          この文書はOAuthパラメータの登録について規定する.
+          
         
 </p>
 <p>
-          Additional parameters to be use in the end-user authorization endpoint request, the
-          end-user authorization endpoint response, the token endpoint request, the token endpoint
-          response, the <tt>Authorization</tt> header field, or the
-          <tt>WWW-Authenticate</tt> header field, are registered on the advice
-          of one or more Designated Experts (appointed by the IESG or their delegate), with a
-          Specification Required (using terminology from <a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>). However, to
-          allow for the allocation of values prior to publication, the Designated Expert(s) may
-          approve registration once they are satisfied that such a specification will be published.
+          エンドユーザの認可エンドポイントに対するリクエスト, エンドユーザの認可エンドポイントからのレスポンス, トークンエンドポイントに対するリクエスト, トークンエンドポイントからレスポンス, <tt>Authorization</tt>ヘッダフィールド, または<tt>WWW-Authenticate</tt>ヘッダフィールドで利用される追加パラメータは, IESGまたは代理に選出されたものにより指名をうけた, 1名以上の指定専門家のアドバイスに基づいて, 要求仕様(<a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>で使われる用語)とともに追加される.
+          しかしながら, 公開に先立って値を割り当てる行為を許可するために, 指定専門家は将来仕様が公開される条件が満たされるなどした場合は, 値の登録を許可しても良い.
+          
         
 </p>
 <p>
-          Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
-          comment, with an appropriate subject (e.g., "Request for parameter: example").
+          登録要求は, レビュー, コメントを目的として, 適切なサブジェクト(e.g., "Request for parameter: example")で[TBD]@ietf.orgメーリングリストに対して送られるべきである. 
+          
           [[ Note to RFC-EDITOR: The name of the mailing list should be determined in consultation
           with the IESG and IANA. Suggested name: oauth-ext-review. ]]
         
 </p>
 <p>
-          Before a period of 14 days has passed, the Designated Expert(s) will either approve or
-          deny the registration request, communicating this decision both to the review list and to
-          IANA. Denials should include an explanation and, if applicable, suggestions as to how to
-          make the request successful. Registration requests that are undetermined for a period
-          longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org
-          mailing list) for resolution.
+          14日の期間が経過する前に, 指定専門家は登録要求を承認するか棄却し, この決定はレビューリストとIANAの両方に通知される.
+          棄却には説明, または内容自体が妥当であるならば, どうすれば要求が受理されるかという提案が伴なっているべきである.
+          21日間を越えて未決となっている登録要求は, 解決のために(iesq@iesq.orgメーリングリストを利用して)IESG宛に通知される. 
+          
         
 </p>
 <a name="anchor22"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.1.1"></a><h3>8.1.1.&nbsp;
-Registration Template</h3>
+登録用テンプレート<!-- Registration Template --></h3>
 
 <p>
             </p>
 <blockquote class="text"><dl>
-<dt>Parameter name:</dt>
+<dt><!-- Parameter name -->パラメータ名:</dt>
 <dd>
-                The name requested (e.g., "example").
+                要求名称(e.g., "example").
+                
               
 </dd>
-<dt>Parameter usage location:</dt>
+<dt><!-- Parameter usage location -->パラメータ使用位置:</dt>
 <dd>
-                The location(s) where parameter can be used. The possible locations are: the
-                end-user authorization endpoint request, the end-user authorization endpoint
-                response, the token endpoint request, the token endpoint response, the
-                <tt>Authorization</tt> header field, or the
-                <tt>WWW-Authenticate</tt> header field.
+                パラメータが使用できる位置. 使用されうる位置は: エンドユーザー認可エンドポイントリクエスト, エンドユーザ認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, <tt>Authorization</tt>ヘッダフィールド, そして<tt>WWW-Authenticate</tt>ヘッダフィールドである.
+                
               
 </dd>
-<dt>Change controller:</dt>
+<dt><!-- Change controller -->変更管理者:</dt>
 <dd>
-                For standards-track RFCs, state "IETF". For others, give the name of the
-                responsible party. Other details (e.g., postal address, e-mail address, home page
-                URI) may also be included.
+                標準化過程のRFCであるため, "IETF"と記載すること. その他, 責任ある当事者の名称を記載すること.
+                他の詳細(e.g. 住所, メールアドレス, ホームページURI)を含んでいても良い.
+                
               
 </dd>
-<dt>Specification document(s):</dt>
+<dt><!-- Specification document(s) -->仕様文書:</dt>
 <dd>
-                Reference to document that specifies the parameter, preferably including a URI that
-                can be used to retrieve a copy of the document. An indication of the relevant
-                sections may also be included, but is not required.
+                パラメータを規定する文書への参照であり, 文書のコピーを取得することができるURIを含むことが望ましい.
+                関連する節の表示を含んでいても良いが, 必須ではない.
+                
               
 </dd>
-<dt>Related information:</dt>
+<dt><!-- Related information -->関連情報:</dt>
 <dd>
-                Optionally, citations to additional documents containing further relevant
-                information.
+                任意で, さらなる関連情報を含む追加の文書への引用を記載する.
+                
               
 </dd>
 </dl></blockquote><p>
@@ -2430,39 +2422,37 @@ Registration Template</h3>
 <a name="anchor23"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.1.2"></a><h3>8.1.2.&nbsp;
-Example</h3>
+<!-- Example -->例</h3>
 
 <p>
-            The following is the parameter registration request for the
-            <tt>scope</tt> parameter as defined in this specification:
+            次の例は, この仕様書で定義されている<tt>scope</tt>パラメータに対するパラメータ登録要求である.
             
             </p>
 <blockquote class="text"><dl>
-<dt>Parameter name:</dt>
+<dt><!-- Parameter name -->パラメータ名:</dt>
 <dd>
                 scope
               
 </dd>
-<dt>Parameter usage location:</dt>
+<dt><!-- Parameter usage location -->パラメータ使用位置:</dt>
 <dd>
-                The end-user authorization endpoint request, the end-user authorization endpoint
-                response, the token endpoint request, the token endpoint response, and the
-                <tt>WWW-Authenticate</tt> header field.
+                エンドユーザー認可エンドポイントリクエスト, エンドユーザ認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, 及び<tt>WWW-Authenticate</tt>ヘッダフィールド.
+                
               
 </dd>
-<dt>Change controller:</dt>
+<dt><!-- Change controller -->変更管理者:</dt>
 <dd>
                 IETF
               
 </dd>
-<dt>Specification document(s):</dt>
+<dt><!-- Specification document(s) -->仕様文書:</dt>
 <dd>
-                [[ this document ]]
+                [[ 本文書 ]]
               
 </dd>
-<dt>Related information:</dt>
+<dt><!-- Related information -->関連情報:</dt>
 <dd>
-                None
+                なし.
               
 </dd>
 </dl></blockquote><p>
@@ -2998,4 +2988,3 @@ References</h3>
 <td class="author-text"><a href="http://dickhardt.org/">http://dickhardt.org/</a></td></tr>
 </table>
 </body></html>
-
