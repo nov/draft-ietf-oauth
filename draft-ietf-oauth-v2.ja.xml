@@ -2430,7 +2430,7 @@
           -->
         </t>
         <t>
-          <spanx style='verb'>error_uri</spanx> 属性は, エラーに関する情報をもつ解読可能なウェブページを識別するURIを提供する. また, エンドユーザーにエラーに関する情報を追加して提供するために使用される. もし, 値が絶対 URI でなければ, リクエストされた保護リソースのURIは相対的である. 
+          <spanx style='verb'>error_uri</spanx> 属性は, エラーに関する情報をもつ解読可能なウェブページを識別するURIを提供する. また, エンドユーザーにエラーに関する情報を追加して提供するために使用される. もし値が絶対URIでなければ, それはリクエストされた保護リソースに対する相対URIである. 
           <!--
           The <spanx style='verb'>error_uri</spanx> attribute provides a URI identifying a
           human-readable web page with information about the error, used to offer the end-user
@@ -2439,7 +2439,7 @@
           -->
         </t>
         <t>
-          <spanx style='verb'>scope</spanx> 属性は要求されたリソースにアクセスするためのアクセストークンの必要な範囲を示すスコープの値がスペース区切りになっているリストである. 
+          <spanx style='verb'>scope</spanx>属性は, 要求されたリソースへのアクセスに必要となる, スペース区切りのスコープ値のリストである. この属性は保護リソースへのアクセスに必要なアクセストークンのスコープを示す. 
           <!--
           The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of scope values
           indicating the required scope of the access token for accessing the requested resource.
@@ -2479,7 +2479,7 @@
               </t>
               <t hangText='expired_token'>
                 <vspace />
-                提供されたアクセストークンが期限切れ. レスポンスを処理し, 期限切れのアクセストークンとリフレッシュトークンを使って新しいアクセストークンをリクエストすることができることをクライアントが期待しているとき, リソースサーバーはこのエラーコードのみを使用すべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを返さなければならない (MUST) . 
+                提供されたアクセストークンが期限切れ. リソースサーバーは, クライアントがレスポンスを受け取り, 期限切れアクセストークンとセットで発行されたリフレッシュトークンを用いて新しいアクセストークンをリクエストできると期待する場合のみ, このエラーコードを用いるべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを返さなければならない (MUST) . 
                 <!--
                 The access token provided has expired. Resource servers SHOULD only use this error
                 code when the client is expected to be able to handle the response and request a
@@ -2489,7 +2489,7 @@
               </t>
               <t hangText='insufficient_scope'>
                 <vspace />
-                リクエストはアクセストークンにより提供された, より高い権限を要求する. リソースサーバーは HTTP 403 (Forbidden) ステータスコードを返すべきである (SHOULD) . また, 保護リソースのアクセスに必要な範囲で, <spanx style='verb'>scope</spanx> 属性を含んでもよい (MAY) . 
+                リクエストはアクセストークンの持つ権限よりも, より高い権限を要求する. リソースサーバーは HTTP 403 (Forbidden) ステータスコードを返すべきである (SHOULD) . また, 保護リソースのアクセスに必要な範囲で, <spanx style='verb'>scope</spanx> 属性を含んでもよい (MAY) . 
                 <!--
                 The request requires higher privileges than provided by the access token. The
                 resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
@@ -2506,7 +2506,7 @@
             -->
           </t>
           <t>
-            もし, リクエストに認証情報がない場合 (例えば, クライアントが認証が必要なこと, またはサポートされていない認証方法を使って認証しようとしていることに気付かなかった場合) , リソースサーバーはエラーコード, またはその他のエラー情報を含めてはならない. 
+            もし, リクエストに認証情報がない場合 (例えば, クライアントが認証が必要なこと, またはサポートされていない認証方法を使って認証しようとしていることに気付かなかった場合) , リソースサーバーはエラーコード, またはその他のエラー情報を含めてはならない (SHOULD). 
             <!--
             If the request lacks any authentication information (i.e. the client was unaware
             authentication is necessary or attempted using an unsupported authentication method),
