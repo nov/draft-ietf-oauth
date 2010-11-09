@@ -363,7 +363,7 @@
               -->
             </t>
             <t>
-              クライアントはリソースオーナーに提供された認可を表すアクセス許可を発行される.
+              クライアントはリソースオーナーの認可を表すアクセス許可を取得する.
               アクセス許可は以下のように表される :
               <!--
               The client is issued an access grant which represents the authorization provided by
@@ -413,7 +413,7 @@
               </list>
             </t>
             <t>
-              クライアントは認可サーバーにより認証されたアクセストークンを要求し, アクセス許可を渡す.
+              クライアントは, 認可サーバーに対して自身を認証し, アクセス許可を提示することで, アクセストークンを要求する.
               トークンリクエストについては<xref target='obtaining-token' />に記載する.
               <!--
               The client requests an access token by authenticating with the authorization server,
@@ -481,7 +481,7 @@
           </artwork>
         </figure>
         <t>
-          クライアントがユーザーエージェントプロファイル(<xref target='user-agent' />に記載する)を利用するとき, 認可リクエストは<xref target='Figure 3' />で表されるアクセストークンをもたらす.
+          クライアントがユーザーエージェントプロファイル(<xref target='user-agent' />に記載する)を利用するとき, クライアントは<xref target='Figure 3' />にあるように, 認可リクエストの結果としてアクセストークンを取得する.
           <!--
           When the client uses the user-agent profile (described in <xref target='user-agent' />),
           the authorization request results in an access token, as illustrated in
