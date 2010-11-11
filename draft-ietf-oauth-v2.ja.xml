@@ -879,8 +879,8 @@
     <section title='Client Credentials' anchor='client-authentication'>
     -->
       <t>
-        クライアントは, 認可サーバーとやりとりするとき, クライアント識別子を使ってクライアント自身を特定し, クライアントクレデンシャルを使って認証する.
-        この仕様書では, パスワードクレデンシャルを使ってクライアントを認証するひとつのメカニズムを提供する.
+        認可サーバーとやりとりする際, クライアントはクライアント識別子を使って自身を特定し, クライアントクレデンシャルを使って認証を行う.
+        この仕様書では, パスワードクレデンシャルによるクライアント認証メカニズムを提供する.
         <!--
         When interacting with the authorization server, the client identifies itself using a client
         identifier and authenticates using a set of client credentials. This specification provides
@@ -888,7 +888,8 @@
         -->
       </t>
       <t>
-        クライアントがクライアントクレデンシャルを取得する方法はこの仕様の範囲外であるが, 通常, 認可サーバーへの登録時に行われる. [[ OAuth Discovery はクライアントパスワードを取得する方法を提供する. ]]
+        クライアントクレデンシャルの取得方法はこの仕様の範囲外であるが, これは通常認可サーバーへの登録時に行われる.
+        [[ OAuth Discovery はクライアントパスワードを取得する方法を提供する. ]]
         <!--
         The means through which the client obtains its credentials are beyond the scope of this
         specification, but usually involve registration with the authorization server.
@@ -896,8 +897,8 @@
         -->
       </t>
       <t>
-        一部のクライアントの性質上, 認可サーバーはクライアントオペレーターとの信頼を確立せずに, クライアントシークレットの機密性を信頼すべきではない (SHOULD NOT).
-        認可サーバーはクライアントシークレットの機密性を維持できないクライアントに対して, クライアントシークレットを発行するべきではない (SHOULD NOT).
+        一部のクライアントの性質上, 認可サーバーは, クライアントオペレーターとの信頼確立なしにクライアントシークレットの機密性を仮定すべきではない (SHOULD NOT).
+        認可サーバーは, クライアントシークレットの機密性を確保できないクライアントに対してクライアントシークレットを発行すべきでははない (SHOULD NOT).
         <!--
         Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
         about the confidentiality of client secrets without establishing trust with the
@@ -907,7 +908,7 @@
       </t>
       <t>
         認可サーバーは, 任意の適切なクレデンシャルと認証スキーマの組み合わせによってクライアントを認証することができる (MAY).
-        クライアントは1つ1つのリクエストに1つ以上のクレデンシャル, または認証メカニズムを利用してはならない (MUST NOT).
+        クライアントは, 単一リクエスト中で複数のクレデンシャルまたは認証メカニズムを利用してはならない (MUST NOT).
         <!--
         The authorization server MAY authenticate the client using any appropriate set of
         credentials and authentication scheme. The client MUST NOT utilize more than one set of
@@ -920,7 +921,7 @@
       <section title='Client Password Credentials'>
       -->
         <t>
-         クライアントパスワードクレデンシャルはクライアントを認証するために, 秘密共有鍵を使用する.
+         クライアントパスワードクレデンシャルは, クライアント認証時に秘密共有鍵として利用される.
          クライアント識別子とパスワードは, クライアント識別子をユーザー名, クライアントパスワードをパスワードとし, <xref target='RFC2617' />で定義されたHTTPベーシック認証スキーマを利用してリクエスト中に含められる.
          <!--
           The client password credentials use a shared symmetric secret to authenticate the client.
@@ -949,7 +950,7 @@
           </artwork>
         </figure>
         <t>
-          もうひとつの方法として, クライアントが付随するパラメーターとして リクエストボディーにパスワードを含める方法もある.
+          代替方法として, 以下に示すパラメーターを利用してリクエストボディーにパスワードを含めることもできる (MAY).
           <!--
           Alternatively, the client MAY include the password in the request body using the
           following parameter:
@@ -985,8 +986,8 @@
           </artwork>
         </figure>
         <t>
-         認可サーバーは, クライアントクレデンシャル送信方法として, リクエストパラメーターとHTTPベーシック認証の両方をサポートしなければならない (MUST).
-         認可サーバーはパスワード送信にふさわしい認証スキームを追加でサポートしてもよい (MAY).
+         認可サーバーは, クライアントクレデンシャル送信方法として, リクエストパラメーターとHTTPベーシック認証スキーマの両方をサポートしなければならない (MUST).
+         認可サーバーはパスワード送信にふさわしい認証スキーマを追加でサポートしてもよい (MAY).
          <!--
           The authorization server MUST accept the client credentials using both the request
           parameter, and the HTTP Basic authentication scheme. The authorization server MAY
@@ -997,7 +998,7 @@
 
     </section>
 
-    <section title='エンドユーザーの認可を取得' anchor='user-authorization'>
+    <section title='エンドユーザー認可の取得' anchor='user-authorization'>
     <!--<section title='Obtaining End-User Authorization' anchor='user-authorization'>-->
       <t>
         クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない(MUST). 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
