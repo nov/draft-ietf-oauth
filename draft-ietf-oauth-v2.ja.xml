@@ -572,7 +572,7 @@
                 access is granted (or denied).-->
               </t>
               <t>
-                認証サーバーはブラウザ経由のエンドユーザーを認証し, エンドユーザーがクライアントのアクセス要求を許可もしくは拒否したかどうかを確認する.
+                認証サーバーはブラウザー経由のエンドユーザーを認証し, エンドユーザーがクライアントのアクセス要求を許可もしくは拒否したかどうかを確認する.
                 <!--The authorization server authenticates the end-user (via the user-agent) and
                 establishes whether the end-user grants or denies the client's access request.-->
               </t>
@@ -605,7 +605,7 @@
         <section title='ユーザーエージェント' anchor='user-agent'>
           <t>
             ユーザーエージェントプロファイルは, ユーザーエージェント上で動作するクライアントアプリケーションに適している.
-            典型例としては, JavaScriptなどのスクリプト言語が利用可能なブラウザで実装されている.
+            典型例としては, JavaScriptなどのスクリプト言語が利用可能なブラウザーで実装されている.
             これらのクライアントは, クライアントシークレットを機密に保つことができない.
             そして, クライアントの認証はユーザーエージェントのsame origin policyに基づいている.
             <!--
@@ -793,7 +793,7 @@
             </list>
           </t>
           <t>
-            外部ブラウザか組み込みユーザーエージェントの起動を選択する際に, 開発者は下記のことを考慮すべきである.
+            外部ブラウザーか組み込みユーザーエージェントの起動を選択する際に, 開発者は下記のことを考慮すべきである.
             <!--
             When choosing between launching an external browser and an embedded user-agent,
             developers should consider the following:
