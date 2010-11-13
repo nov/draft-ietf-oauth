@@ -67,7 +67,7 @@
         credentials. In order to provide third-party applications access to protected resources,
         the resource owner shares its credentials with the third-party. This creates several
         problems and limitations: -->
-        
+       
         <list style='symbols'>
           <t>
             サードパーティーアプリケーションは, 後の利用のためにリソースオーナーのクレデンシャルを保存しておかなければならない.
@@ -137,7 +137,7 @@
         which issues the printing service delegation-specific credentials (token). -->
       </t>
       <t>
-        この仕様書ではOAuthを<xref target='RFC2616'>HTTP</xref> (もしくは<xref target='RFC2818' />で定義されたHTTP over TLS) の元で利用する方法を定める.
+        この仕様書ではOAuthを <xref target='RFC2616'>HTTP</xref> (もしくは <xref target='RFC2818' /> で定義されたHTTP over TLS) の元で利用する方法を定める.
         他の仕様書がその他の転送プロトコルの元での利用について本仕様を拡張する可能性もある.
         <!-- This specification defines the use of OAuth over <xref target='RFC2616'>HTTP</xref>
         (or HTTP over TLS as defined by <xref target='RFC2818' />). Other specifications may
@@ -146,7 +146,7 @@
 
       <section title='表記規約<!--Notational Conventions-->'>
         <t>
-          本文書で用いられる各キーワード「MUST(しなければならない)」, 「MUST NOT(してはならない)」, 「REQUIRED(必須である)」, 「SHALL(するものとする)」, 「SHALL NOT(しないものとする)」, 「SHOULD(すべきである)」, 「SHOULD NOT(すべきではない)」, 「RECOMMENDED(推奨される)」, 「MAY(してもよい)」, 「OPTIONAL(任意である)」は<xref target='RFC2119' />で述べられている通りに解釈されるべきものである.
+          本文書で用いられる各キーワード「MUST (しなければならない)」, 「MUST NOT (してはならない)」, 「REQUIRED (必須である)」, 「SHALL (するものとする)」, 「SHALL NOT (しないものとする)」, 「SHOULD (すべきである)」, 「SHOULD NOT (すべきではない)」, 「RECOMMENDED (推奨される)」, 「MAY (してもよい)」, 「OPTIONAL (任意である)」は <xref target='RFC2119' /> で述べられている通りに解釈されるべきものである.
           <!--
           The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
           NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as
@@ -154,16 +154,15 @@
           -->
         </t>
         <t>
-          このドキュメントでは<xref target='I-D.ietf-httpbis-p1-messaging' />におけるAugmented Backus-Naur Form(ABNF)表記法を利用している.
-          加えて, 次の規則(<xref target='RFC2617' />記載: realm, auth-param; <xref target='RFC3986' />記載: URI-Reference;
-          <xref target='I-D.ietf-httpbis-p1-messaging' />記載: OWS, RWS, and quoted-string)に従う.
-    <!--
+          このドキュメントでは <xref target='I-D.ietf-httpbis-p1-messaging' /> におけるAugmented Backus-Naur Form(ABNF)表記法を利用している.
+          加えて, 次の規則(<xref target='RFC2617' /> 記載: realm, auth-param; <xref target='RFC3986' /> 記載: URI-Reference; <xref target='I-D.ietf-httpbis-p1-messaging' /> 記載: OWS, RWS, and quoted-string)に従う.
+          <!--
           This document uses the Augmented Backus-Naur Form (ABNF) notation of
           <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules are
           included from <xref target='RFC2617' />: realm, auth-param; from
           <xref target='RFC3986' />: URI-Reference; and from
           <xref target='I-D.ietf-httpbis-p1-messaging' />: OWS, RWS, and quoted-string.
-    -->
+          -->
         </t>
         <t>
           特に記載が無い限り, 全てのプロトコルパラメーター名と値は, 大文字・小文字を区別する.
@@ -269,7 +268,7 @@
             <t hangText='エンドユーザー認可エンドポイント<!--end-user authorization endpoint-->'>
               <vspace />
               認可サーバーのHTTPエンドポイントで, エンドユーザーの認証と認可の取得を行う.
-              エンドユーザー認可エンドポイントについては<xref target='user-authorization' />に記載する.
+              エンドユーザー認可エンドポイントについては <xref target='user-authorization' /> に記載する.
               <!--
               The authorization server's HTTP endpoint capable of authenticating the end-user and
               obtaining authorization. The end-user authorization endpoint is described in
@@ -279,7 +278,7 @@
             <t hangText='トークンエンドポイント<!--token endpoint-->'>
               <vspace />
               認可サーバーのHTTPエンドポイントで, トークンの発行と期限切れトークンのリフレッシュを行う.
-              トークンエンドポイントについては<xref target='obtaining-token' />に記載する.
+              トークンエンドポイントについては <xref target='obtaining-token' /> に記載する.
               <!--
               The authorization server's HTTP endpoint capable of issuing tokens and refreshing
               expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
@@ -289,7 +288,7 @@
               <vspace />
               認可サーバーがクライアント自身を識別するために発行される一意な識別子.
               クライアント識別子に対応するシークレットがあってもよい.
-              クライアント識別子については<xref target='client-authentication' />に記載する.
+              クライアント識別子については <xref target='client-authentication' /> に記載する.
               <!--
               A unique identifier issued to the client to identify itself to the authorization
               server. Client identifiers may have a matching secret. The client identifier is
@@ -338,7 +337,7 @@
           </artwork>
         </figure>
         <t>
-          <xref target='Figure 1' />で示されたフロー概要は以下のステップを含む.
+          <xref target='Figure 1' /> で示されたフロー概要は以下のステップを含む.
           <!--
           The abstract flow illustrated in <xref target='Figure 1' /> includes the following
           steps:
@@ -398,7 +397,7 @@
                   リソースオーナーパスワードクレデンシャル (すなわちユーザー名とパスワード) は,
                   リソースオーナーとクライアントの間に高度な信用があるときのみ利用されるべきである.
                   (例えばコンピューターOSや特別に許可されたアプリケーションを利用するときなど)
-                  しかしながら, <xref target='RFC2617' />で定義されるHTTP Basic認証とは異なり,
+                  しかしながら, <xref target='RFC2617' /> で定義されるHTTP Basic認証とは異なり,
                   リソースオーナーのクレデンシャルは1つのリクエストのために利用され, アクセストークンおよびリフレッシュトークンと交換される.
                   よってクライアントはリソースオーナーのクレデンシャルを将来の利用のため保存する必要はない.
                   <!--
@@ -417,7 +416,7 @@
             </t>
             <t>
               クライアントは, 認可サーバーに対して自身を認証し, アクセス許可を提示することで, アクセストークンを要求する.
-              トークンリクエストについては<xref target='obtaining-token' />に記載する.
+              トークンリクエストについては <xref target='obtaining-token' /> に記載する.
               <!--
               The client requests an access token by authenticating with the authorization server,
               and presenting the access grant. The token request is described in
@@ -441,7 +440,7 @@
             </t>
             <t>
               クライアントは保護リソースへのリクエストを実行し, アクセスを得るためにアクセストークンを提供する.
-              保護リソースへのアクセスについては<xref target='access-resource' />に記載する.
+              保護リソースへのアクセスについては <xref target='access-resource' /> に記載する.
               <!--
               The client makes a protected resource request to the resource server, and presents
               the access token in order to gain access. Accessing a protected resource is described
@@ -458,7 +457,7 @@
         </t>
         <t>
           クライアントが自身の代理として振る舞う (クライアントがリソースオーナーでもある) とき, クライアントはアクセス権を取得しない.
-          簡略化されたプロトコルフローは<xref target='Figure 2' />に示される.
+          簡略化されたプロトコルフローは <xref target='Figure 2' /> に示される.
           <!--
           When the client is acting on its own behalf (the client is also the resource owner),
           the client does not obtain an access grant. The simplified protocol flow is illustrated
@@ -484,7 +483,7 @@
           </artwork>
         </figure>
         <t>
-          クライアントがユーザーエージェントプロファイル(<xref target='user-agent' />に記載する)を利用するとき, クライアントは<xref target='Figure 3' />にあるように, 認可リクエストの結果としてアクセストークンを取得する.
+          クライアントがユーザーエージェントプロファイル(<xref target='user-agent' /> に記載する)を利用するとき, クライアントは <xref target='Figure 3' /> にあるように, 認可リクエストの結果としてアクセストークンを取得する.
           <!--
           When the client uses the user-agent profile (described in <xref target='user-agent' />),
           the authorization request results in an access token, as illustrated in
@@ -529,7 +528,7 @@
         <section title='ウェブサーバー'>
         <!--<section title='Web Server'>-->
           <t>
-            ウェブサーバープロファイルは, エンドユーザーのユーザーエージェント（通常はウェブブラウザー）と交信可能で, かつ認可サーバーからのリクエストを受信可能な（HTTPサーバーとして動作できる）クライアントに適している.
+            ウェブサーバープロファイルは, エンドユーザーのユーザーエージェント (通常はウェブブラウザー) と交信可能で, かつ認可サーバーからのリクエストを受信可能な (HTTPサーバーとして動作できる) クライアントに適している.
             <!--The web server profile is suitable for clients capable of interacting with the end-user's
             user-agent (typically a web browser) and capable of receiving incoming requests from the
             authorization server (capable of acting as an HTTP server).-->
@@ -560,14 +559,14 @@
             </artwork>
           </figure>
           <t>
-            <xref target='Figure 4' />に示すウェブサーバーフローの手順を以下に述べる.
+            <xref target='Figure 4' /> に示すウェブサーバーフローの手順を以下に述べる.
             <!--The web server flow illustrated in <xref target='Figure 4' /> includes the following
             steps:-->
 
             <list style='format (%C)'>
               <t>
-                ウェブクライアントは, まず初めにエンドユーザーのユーザーエージェントを<xref target='user-authorization' />に記載されているエンドユーザー認可エンドポイントへリダイレクトする.
-                その際クライアントは, クライアント識別子, 要求するスコープ, ローカルステート, アクセスが認可（もしくは否認）された時点でエンドユーザーがリダイレクトされるリダイレクトURIをリクエストに含める.
+                ウェブクライアントは, まず初めにエンドユーザーのユーザーエージェントを <xref target='user-authorization' /> に記載されているエンドユーザー認可エンドポイントへリダイレクトする.
+                その際クライアントは, クライアント識別子, 要求するスコープ, ローカルステート, アクセスが認可 (もしくは否認) された時点でエンドユーザーがリダイレクトされるリダイレクトURIをリクエストに含める.
                 <!--The web client initiates the flow by redirecting the end-user's user-agent to the
                 end-user authorization endpoint as described in <xref target='user-authorization' />.
                 The client includes its client identifier, requested scope, local state, and a
@@ -588,7 +587,7 @@
                 access token.-->
               </t>
               <t>
-                クライアントは<xref target='obtaining-token' />に記載の通り, 認可サーバーに対して認証を行い直前の手順で受け取った認可コードを提示することで, 認可サーバーにアクセストークンを要求する.
+                クライアントは <xref target='obtaining-token' /> に記載の通り, 認可サーバーに対して認証を行い直前の手順で受け取った認可コードを提示することで, 認可サーバーにアクセストークンを要求する.
                 <!--The client requests an access token from the authorization server by authenticating
                 and including the authorization code received in the previous step as described in
                 <xref target='obtaining-token' />.-->
@@ -604,7 +603,7 @@
 
         <!--
         <section title='User-Agent' anchor='user-agent'>
-        -->      
+        -->     
         <section title='ユーザーエージェント' anchor='user-agent'>
           <t>
             ユーザーエージェントプロファイルは, ユーザーエージェント上で動作するクライアントアプリケーションに適している.
@@ -664,20 +663,20 @@
          |    (F)   |<---(E)--- Web Page with ------<|    Resource    |
          |  Access  |              Script            |                |
          |   Token  |                                +----------------+
-         +----------+                                
+         +----------+                               
 ]]>
             </artwork>
           </figure>
           <t>
-            <xref target='Figure 5' />に示すユーザーエージェントフローの手順を以下に述べる.
+            <xref target='Figure 5' /> に示すユーザーエージェントフローの手順を以下に述べる.
             <!--
             The user-agent flow illustrated in <xref target='Figure 5' /> includes the following
             steps:
               -->
             <list style='format (%C)'>
               <t>
-                クライアントはユーザーエージェントを<xref target='user-authorization' />に記載されたエンドユーザー認可エンドポイントに送る.
-                その際クライアントは, クライアント識別子, 要求するスコープ, ローカルステート, アクセスが認可（もしくは否認）された時点でエンドユーザーがリダイレクトされるリダイレクトURIをリクエストに含める.
+                クライアントはユーザーエージェントを <xref target='user-authorization' /> に記載されたエンドユーザー認可エンドポイントに送る.
+                その際クライアントは, クライアント識別子, 要求するスコープ, ローカルステート, アクセスが認可 (もしくは否認) された時点でエンドユーザーがリダイレクトされるリダイレクトURIをリクエストに含める.
                 <!--
                 The client sends the user-agent to the end-user authorization endpoint as described
                 in <xref target='user-authorization' />. The client includes its client identifier,
@@ -760,11 +759,11 @@
             -->
             <list style='symbols'>
               <t>
-                外部のユーザーエージェント経由で, <xref target='user-authorization' />に記載されたエンドユーザー認可エンドポイントを利用する.
+                外部のユーザーエージェント経由で, <xref target='user-authorization' /> に記載されたエンドユーザー認可エンドポイントを利用する.
                 この場合クライアントは, カスタムURIスキーマではじまるURIや, 自身のサーバー上にあるリソースのURIをリダイレクトURIとして提供することで, レスポンスを取得する.
                 前者の場合, そのスキーマはこのクライアントアプリケーションを呼び出すようにOSに登録されている.
                 後者の場合, そのリソースはウィンドウタイトルやユーザーエージェント外からアクセス可能なその他のロケーションを利用して, クライアントにレスポンスを渡す.
-                <!-- 
+                <!--
                 Utilize the end-user authorization endpoint as described in
                 <xref target='user-authorization' /> by launching an external user-agent. The
                 client can capture the response by providing a redirection URI with a custom URI
@@ -775,7 +774,7 @@
                 -->
               </t>
               <t>
-                組み込みユーザーエージェント経由で, <xref target='user-authorization' />に記載されたエンドユーザー認可エンドポイントを利用する.
+                組み込みユーザーエージェント経由で, <xref target='user-authorization' /> に記載されたエンドユーザー認可エンドポイントを利用する.
                 クライアントは組み込みユーザーエージェントと直接やりとりすることでレスポンスを取得する.
                 <!--
                 Utilize the end-user authorization endpoint as described in
@@ -855,7 +854,7 @@
               </t>
               <t>
                 認可サーバーがサポートするアサーションフォーマットで示される, 既存のアクセス許可を利用する.
-                この場合クライアントは, アサーション発行者から (<xref target='OASIS.saml-core-2.0-os'>SAML</xref>などの) アサーションを獲得したり, アサーションを自己発行する必要がある.
+                この場合クライアントは, アサーション発行者から (<xref target='OASIS.saml-core-2.0-os'>SAML</xref> などの) アサーションを獲得したり, アサーションを自己発行する必要がある.
                 アサーションフォーマット, アサーション獲得プロセス, アサーション検証方法は, アサーション発行者と認可サーバーによって定義されており, 本仕様の定めるところではない.
                 <!--
                 Use an existing access grant expressed as an assertion using an assertion format
@@ -922,7 +921,7 @@
       -->
         <t>
          クライアントパスワードクレデンシャルは, クライアント認証時に秘密共有鍵として利用される.
-         クライアント識別子とパスワードは, クライアント識別子をユーザー名, クライアントパスワードをパスワードとし, <xref target='RFC2617' />で定義されたHTTPベーシック認証スキーマを利用してリクエスト中に含められる.
+         クライアント識別子とパスワードは, クライアント識別子をユーザー名, クライアントパスワードをパスワードとし, <xref target='RFC2617' /> で定義されたHTTPベーシック認証スキーマを利用してリクエスト中に含められる.
          <!--
           The client password credentials use a shared symmetric secret to authenticate the client.
           The client identifier and password are included in the request using the
@@ -932,7 +931,7 @@
         </t>
         <figure>
           <preamble>
-            例 (改行は掲載上の都合による): 
+            例 (改行は掲載上の都合による)
             <!--
             For example (line breaks are for display purposes only):
             -->
@@ -957,7 +956,8 @@
           -->
           <list style='hanging' hangIndent='6'>
             <t hangText='client_secret'>
-              必須 (REQUIRED). クライアントパスワード.
+              必須 (REQUIRED).
+              クライアントパスワード.
             </t>
             <!--
             <t hangText='client_secret'>
@@ -968,7 +968,7 @@
         </t>
         <figure>
           <preamble>
-            例 (改行は掲載上の都合による): 
+            例 (改行は掲載上の都合による)
             <!--
             For example (line breaks are for display purposes only):
             -->
@@ -986,9 +986,9 @@
           </artwork>
         </figure>
         <t>
-         認可サーバーは, クライアントクレデンシャル送信方法として, リクエストパラメーターとHTTPベーシック認証スキーマの両方をサポートしなければならない (MUST).
-         認可サーバーはパスワード送信にふさわしい認証スキーマを追加でサポートしてもよい (MAY).
-         <!--
+          認可サーバーは, クライアントクレデンシャル送信方法として, リクエストパラメーターとHTTPベーシック認証スキーマの両方をサポートしなければならない (MUST).
+          認可サーバーはパスワード送信にふさわしい認証スキーマを追加でサポートしてもよい (MAY).
+          <!--
           The authorization server MUST accept the client credentials using both the request
           parameter, and the HTTP Basic authentication scheme. The authorization server MAY
           support additional authentication schemes suitable for the transmission of a password.
@@ -1001,7 +1001,9 @@
     <section title='エンドユーザー認可の取得' anchor='user-authorization'>
     <!--<section title='Obtaining End-User Authorization' anchor='user-authorization'>-->
       <t>
-        クライアントがエンドユーザーの保護リソースにアクセスするとき, エンドユーザーはまず最初に, クライアントが保護リソースにアクセスするための認可を与えなければならない(MUST). 認可を与えると, クライアントにはアクセストークンと交換するための認可コードが渡される. この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
+        クライアントがエンドユーザーの保護リソースにアクセスするには, まず最初にエンドユーザーから保護リソースにアクセスするための認可を得なければならない (MUST).
+        エンドユーザーの認可を得ると, クライアントはアクセストークンと交換するための認可コードを取得する.
+        この認可を得るために, クライアントはエンドユーザーをエンドユーザー認可エンドポイントにリダイレクトする.
         <!--When the client interacts with an end-user, the end-user MUST first grant the client
         authorization to access its protected resources. Once obtained, the end-user access
         grant is expressed as an authorization code which the client uses to obtain an access
@@ -1009,7 +1011,9 @@
         end-user authorization endpoint.-->
       </t>
       <t>
-        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーはまず, 認可サーバーの認証をしたあと, クライアントからのアクセス要求を承認または否認する. 認可サーバーによる認証方法（例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー）, およびエンドユーザーから認可の承認・否認を得る方法は, TLS のようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない. しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない(MUST).
+        エンドユーザー認可エンドポイントにリダイレクトされたエンドユーザーは, まず認可サーバーに対して認証を行い, クライアントからのアクセス要求を承認または否認する.
+        認可サーバーによる認証方法 (例. ユーザー名とパスワードによるログイン, OpenID, セッション・クッキー), およびエンドユーザーから認可の承認・否認を得る方法は, TLSのようなセキュアな通信を使うかどうかを含めて, 本仕様の定めるところではない.
+        しかしながら, 認可サーバーは最初にエンドユーザーのアイデンティティを確認しなければならない (MUST).
         <!-- At the end-user authorization endpoint, the end-user first authenticates with the
         authorization server, and then grants or denies the access request. The way in which the
         authorization server authenticates the end-user (e.g. username and password login, OpenID,
@@ -1019,7 +1023,9 @@
         the end-user. -->
       </t>
       <t>
-        エンドユーザー認可エンドポイントのURLは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] から見つけることができる. エンドユーザー認可エンドポイントのURIは<xref target='RFC3986' />のセクション3で定義されているクエリー部を含んでいるかもしれない(MAY). これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
+        エンドユーザー認可エンドポイントのURLは, 対象サービスのドキュメントあるいは [[ OAuth Discovery ]] から見つけることができる.
+        エンドユーザー認可エンドポイントのURIは <xref target='RFC3986' /> のSection 3で定義されているクエリー部を含んでいる可能性がある (MAY).
+        これらのクエリーパラメーターは, 他のクエリーパラメーターを追加する場合もそのままにしなければならない.
         <!-- The location of the end-user authorization endpoint can be found in the service
         documentation, or can be obtained by using [[ OAuth Discovery ]]. The end-user
         authorization endpoint URI MAY include a query component as defined by
@@ -1027,14 +1033,14 @@
         query parameters. -->
       </t>
       <t>
-        エンドユーザー認可エンドポイントへのリクエストはユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストに, TLSのようなトランスポート層でのセキュリティ機構を必須とすべきである(SHOULD).
+        エンドユーザー認可エンドポイントへのリクエストは, ユーザー認証および重要な情報の伝送をともなうため, 認可サーバーはエンドポイントへのリクエストにTLSのようなトランスポート層でのセキュリティ機構を必須とすべきである (SHOULD).
         <!-- Since requests to the end-user authorization endpoint result in user authentication and
         the transmission of sensitive information, the authorization server SHOULD require the
         use of a transport-layer security mechanism such as TLS when sending requests to the
         end-user authorization endpoint. -->
       </t>
       <t>
-        エンドユーザーのユーザーエージェントを認可サーバーにリダイレクトさせるにあたり, クライアントはエンドユーザー認可エンドポイントURIのクエリー部に下記のパラメーターを<xref target='W3C.REC-html401-19991224' />で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで追加して, リクエストURIを構築する.
+        エンドユーザーのユーザーエージェントを認可サーバーにリダイレクトさせるにあたり, クライアントはエンドユーザー認可エンドポイントURIのクエリー部に下記のパラメーターを <xref target='W3C.REC-html401-19991224' /> で定義された <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで追加して, リクエストURIを構築する.
         <!-- In order to direct the end-user's user-agent to the authorization server, the client
         constructs the request URI by adding the following parameters to the end-user
         authorization endpoint URI query component using the
@@ -1044,7 +1050,11 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='response_type'>
             <vspace />
-            必須(REQUIRED). レスポンスとして要求するもの（アクセストークン, 認可コード, またはその両方）. レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定しなければならない(MUST). 認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい(MAY). [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
+            必須 (REQUIRED).
+            レスポンスとして要求するもの (アクセストークン, 認可コード, またはその両方).
+            レスポンスとしてアクセストークンを要求する場合は <spanx style='verb'>token</spanx> を, 認可コードを要求する場合は <spanx style='verb'>code</spanx>, またはその両方を要求する場合は <spanx style='verb'>code_and_token</spanx> を指定しなければならない (MUST).
+            認可サーバーはこれらのうちひとつかそれ以上のパラメーターをサポートしなくてもよい (MAY).
+            [[<spanx style='verb'>code_and_token</spanx> は検討中であり, 仕様から取り除かれるかもしれない ]]
             <!--
             REQUIRED. The requested response: an access token, an authorization code, or both. The
             parameter value MUST be set to <spanx style='verb'>token</spanx> for requesting an
@@ -1055,13 +1065,16 @@
           </t>
           <t hangText='client_id'>
             <vspace />
-            必須(REQUIRED). <xref target='client-authentication' />で記載するクライアント識別子.
+            必須 (REQUIRED).
+            <xref target='client-authentication' /> で記載するクライアント識別子.
             <!-- REQUIRED. The client identifier as described in
             <xref target='client-authentication' />. -->
           </t>
           <t hangText='redirect_uri'>
             <vspace />
-            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須(REQUIRED). エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI. 認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである(SHOULD).
+            クライアントと認可サーバー間で事前にリダイレクト先のURIが決められていない場合は必須 (REQUIRED).
+            エンドユーザーによる認可ステップ完了時に, 認可サーバーがユーザーエージェントをリダイレクトする先の絶対URI.
+            認可サーバーはクライアントにリダイレクト先のURIを事前登録させるべきである (SHOULD).
             <!-- REQUIRED, unless a redirection URI has been established between the client and
             authorization server via other means. An absolute URI to which the authorization
             server will redirect the user-agent to when the end-user authorization step is
@@ -1070,7 +1083,10 @@
           </t>
           <t hangText='scope'>
             <vspace />
-            任意である(OPTIONAL). このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する. <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
+            任意 (OPTIONAL).
+            このリクエストで要求するアクセス権のスコープを空白区切りの文字列で指定する.
+            <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される.
+            空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせた範囲が要求するアクセス権になる.
             <!-- OPTIONAL. The scope of the access request expressed as a list of space-delimited
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
@@ -1079,7 +1095,9 @@
           </t>
           <t hangText='state'>
             <vspace />
-            任意である(OPTIONAL). このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値. 認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
+            任意 (OPTIONAL).
+            このリクエストから完了時のコールバックまでのあいだ, クライアントが状態管理に利用できる値.
+            認可サーバーはここで指定された値をそのままリダイレクトURIに含めて, ユーザーエージェントをリダイレクトする.
             <!-- OPTIONAL. An opaque value used by the client to maintain state between the request
             and callback. The authorization server includes this value when redirecting the
             user-agent back to the client. -->
@@ -1087,7 +1105,8 @@
         </list>
       </t>
       <t>
-        クライアントはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする. 認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず(MUST), <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい(MAY).
+        クライアントはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, ここで構築したURIにリダイレクトする.
+        認可サーバーはエンドユーザー認可エンドポイントでHTTPの <spanx style='verb'>GET</spanx> メソッドをサポートしなければならず (MUST), <spanx style='verb'>POST</spanx> メソッドも同様にサポートしてよい (MAY).
         <!-- The client directs the end-user to the constructed URI using an HTTP redirection
         response, or by other means available to it via the end-user's user-agent. The
         authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
@@ -1096,7 +1115,7 @@
       </t>
       <figure>
         <preamble>
-          たとえば, クライアントはエンドユーザーのユーザーエージェントをリダイレクトし, 以下のHTTPリクエストをセキュリティ保護されたトランスポート層から送信させる (改行は掲載上の都合による): 
+          たとえば, クライアントはエンドユーザーのユーザーエージェントをリダイレクトし, 以下のHTTPリクエストをセキュリティ保護されたトランスポート層から送信させる (改行は掲載上の都合による)
           <!-- For example, the client directs the end-user's user-agent to make the following HTTP
           request using transport-layer security (line breaks are for display purposes only): -->
         </preamble>
@@ -1109,26 +1128,29 @@
         </artwork>
       </figure>
       <t>
-        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない(MUST). [[ マッチングの方法について追記する ]]
+        クライアントがリダイレクトURIを認可サーバーに事前登録していた場合, 認可サーバーは受け取ったリダイレクトURIが登録されているものとマッチするか検証しなければならない (MUST). [[ マッチングの方法について追記する ]]
         <!-- If the client has previously registered a redirection URI with the authorization server,
         the authorization server MUST verify that the redirection URI received matches the
         registered URI associated with the client identifier. [[ provide guidance on how to
         perform matching ]]-->
       </t>
       <t>
-        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない(MUST). 認可サーバーは処理できないパラメーターを無視すべきである(SHOULD).
+        パラメーターの値が空の場合は, パラメーター自体が指定されていないものとして扱われなければならない (MUST).
+        認可サーバーは処理できないパラメーターを無視すべきである (SHOULD).
         <!-- Parameters sent without a value MUST be treated as if they were omitted from the request.
         The authorization server SHOULD ignore unrecognized request parameters. -->
       </t>
       <t>
-        認可サーバーはすべての必須パラメーターが正しく指定されていることを検証する. リクエストが不正だった場合, 認可サーバーはただちにユーザーエージェントをリダイレクトURIにリダイレクトし, そのときのリダイレクトURIには, <xref target='auth-error' /> で記載する適切なエラーコードが指定されている.
+        認可サーバーはすべての必須パラメーターが正しく指定されていることを検証し, リクエストが不正だった場合はただちにユーザーエージェントをリダイレクトURIにリダイレクトする.
+        そのときのリダイレクトURIには, <xref target='auth-error' /> で記載する適切なエラーコードが指定されている.
         <!-- The authorization server validates the request to ensure all required parameters are
         present and valid. If the request is invalid, the authorization server immediately
         redirects the user-agent back to the client using the redirection URI provided with the
         appropriate error code as described in <xref target='auth-error' />. -->
       </t>
       <t>
-        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る. その後, 認可サーバーはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
+        認可サーバーはエンドユーザーを認証し, (エンドユーザーに選択させるか, 他の方法で確認することで) 認可の可否を得る.
+        その後, 認可サーバーはHTTPリダイレクトレスポンスや, 他にエンドユーザーのユーザーエージェントで利用可能な手段を使って, 指定されたリダイレクトURIにリダイレクトする.
         <!-- The authorization server authenticates the end-user and obtains an authorization
         decision (by asking the end-user or by establishing approval via other means). When a
         decision has been established, the authorization server directs the end-user's
@@ -1139,7 +1161,7 @@
       <section title='認可レスポンス'>
       <!-- <section title='Authorization Response'> -->
         <t>
-	  エンドユーザーがアクセスリクエストを許可した場合, 認可サーバーはアクセストークン, 認可コード, またはその両方を発行し, 以下のパラメーターを付加した上でリダイレクトURIへリダイレクトさせる. 
+          エンドユーザーがアクセス要求を許可した場合, 認可サーバーはアクセストークン, 認可コード, またはその両方を発行し, 以下のパラメーターを付加した上でリダイレクトURIへリダイレクトさせる.
           <!-- If the end-user grants the access request, the authorization server issues an access
           token, an authorization code, or both, and delivers them to the client by adding the
           following parameters to the redirection URI (as described below): -->
@@ -1147,47 +1169,54 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='code'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>code</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT). 
-	      認可サーバーによって発行された認可コード. 認可コードは発行された後, 短時間で失効すべきである(SHOULD). 認可サーバーは一度使った認可コードを無効にしなけらばならない(MUST). 
-	      認可コードは, クライアント識別子とリダイレクトURIに紐付いている. 
-	      <!--
+              レスポンスタイプが <spanx style='verb'>code</spanx> または <spanx style='verb'>code_and_token</spanx> の場合は必須 (REQUIRED).
+              その他の場合は含まれてはならない (MUST NOT).
+              認可サーバーによって発行された認可コード.
+              認可コードは発行された後, 短時間で失効すべきである (SHOULD).
+              認可サーバーは一度使われた認可コードを無効にしなけらばならない (MUST).
+              認可コードはクライアント識別子とリダイレクトURIに紐付いている.
+              <!--
               REQUIRED if the response type is <spanx style='verb'>code</spanx> or
               <spanx style='verb'>code_and_token</spanx>, otherwise MUST NOT be included. The
               authorization code generated by the authorization server. The authorization code
               SHOULD expire shortly after it is issued. The authorization server MUST invalidate
               the authorization code after a single usage. The authorization code is bound to the
               client identifier and redirection URI.
-	      -->
+              -->
             </t>
             <t hangText='access_token'>
               <vspace />
-	      レスポンスタイプが<spanx style='verb'>token</spanx>または, <spanx style='verb'>code_and_token</spanx>の場合に必須(REQUIRED). その他の場合は含まれてはならない(MUST NOT).
-	      認可サーバーによって発行されたアクセストークン. アクセストークン文字列は, <xref target='authz-header' />で定義されるアクセスークンのルールに従わなければならない(MUST). 
-	      <!--
+              レスポンスタイプが <spanx style='verb'>token</spanx> または <spanx style='verb'>code_and_token</spanx> の場合に必須 (REQUIRED).
+              その他の場合は含まれてはならない (MUST NOT).
+              認可サーバーによって発行されたアクセストークン.
+              アクセストークン文字列は, <xref target='authz-header' /> で定義されるアクセスークンのルールに従わなければならない (MUST).
+              <!--
               REQUIRED if the response type is <spanx style='verb'>token</spanx> or
               <spanx style='verb'>code_and_token</spanx>, otherwise MUST NOT be included. The
               access token issued by the authorization server. The access token string MUST comply
               with the access-token rule defined in <xref target='authz-header' />.
-	      -->
+              -->
             </t>
             <t hangText='expires_in'>
               <vspace />
-	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの. 例えば, <spanx style='verb'>3600</spanx>
-	      という値は, 認可サーバーによってレスポンスが生成された後1時間でアクセストークンが失効することを表す. 
-	      <!--
+              任意 (OPTIONAL).
+              アクセストークンが含まれていた場合に, アクセストークンの生存期間を秒数で表したもの.
+              例えば, <spanx style='verb'>3600</spanx> という値は, 認可サーバーによってレスポンスが生成された1時間後にアクセストークンが失効することを表す.
+              <!--
               OPTIONAL. The duration in seconds of the access token lifetime if an access token
               is included. For example, the value <spanx style='verb'>3600</spanx> denotes that the
               access token will expire in one hour from the time the response was generated by the
               authorization server.
-	      -->
+              -->
             </t>
             <t hangText='scope'>
               <vspace />
-	      任意である(OPTIONAL). アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの. 
-              <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される. 
-	      空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
-	      認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメーターを含むべきである(SHOULD). 
-	      <!--
+              任意 (OPTIONAL).
+              アクセストークンが含まれていた場合に, アクセストークンのスコープを空白区切りの文字列で表したもの.
+              <spanx style='verb'>scope</spanx> の値に何を指定するかは認可サーバーによって定義される.
+              空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
+              認可サーバーはクライアントによってリクエストされたスコープと異なるスコープを与えた場合, このパラメーターを含むべきである (SHOULD).
+              <!--
               OPTIONAL. The scope of the access token as a list of space-delimited strings if an
               access token is included. The value of the <spanx style='verb'>scope</spanx>
               parameter is defined by the authorization server. If the value contains multiple
@@ -1195,45 +1224,43 @@
               additional access range to the requested scope. The authorization server SHOULD
               include the parameter if the requested scope is different from the one requested by
               the client.
-	      -->
+              -->
             </t>
             <t hangText='state'>
               <vspace />
-	      クライアントの認可リクエストに<spanx style='verb'>state</spanx>パラメーターが含まれていた場合に必須(REQUIRED).
-	      クライアントから受けとった値をそのままセットする. 
-	      <!--
+              クライアントの認可リクエストに <spanx style='verb'>state</spanx> パラメーターが含まれていた場合に必須 (REQUIRED).
+              クライアントから受けとった値をそのままセットする.
+              <!--
               REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
               client authorization request. Set to the exact value received from the client.
-	      -->
+              -->
             </t>
           </list>
         </t>
         <t>
-	  認可サーバーがリダイレクトURIにパラメーターを追加する方法は, クライアントからの認可リクエストで<spanx style='verb'>response_type</spanx>パラメーターによって指定されるレスポンスタイプで決まる. 
-	  <!--
+          認可サーバーがリダイレクトURIにパラメーターを追加する方法は, クライアントからの認可リクエストで <spanx style='verb'>response_type</spanx> パラメーターによって指定されるレスポンスタイプで決まる.
+          <!--
           The method in which the authorization server adds the parameter to the redirection
           URI is determined by the response type requested by the client in the authorization
           request using the <spanx style='verb'>response_type</spanx> parameter.
-	  -->
+          -->
         </t>
         <t>
-	  レスポンスタイプが<spanx style='verb'>code</spanx>の場合, 認可サーバーは
-	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
-	  フォーマットで, リダイレクトURIのクエリー部にパラメーターを追加する. 
-	  <!--
+          レスポンスタイプが <spanx style='verb'>code</spanx> の場合, 認可サーバーは <xref target='W3C.REC-html401-19991224' /> で定義される <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで, リダイレクトURIのクエリー部にパラメーターを追加する.
+          <!--
           If the response type is <spanx style='verb'>code</spanx>, the authorization
           server adds the parameters to the redirection URI query component using the
           <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
           <xref target='W3C.REC-html401-19991224' />.
-	  -->
+          -->
         </t>
         <figure>
           <preamble>
-	    例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる. 
-	    <!--
+            例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる.
+            <!--
             For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response:
-	    -->
+            -->
           </preamble>
           <artwork>
             <![CDATA[
@@ -1243,23 +1270,21 @@
           </artwork>
         </figure>
         <t>
-	  レスポンスタイプが<spanx style='verb'>token</spanx>の場合, 認可サーバーは
-	  <xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx>
-	  フォーマットで, リダイレクトURIのフラグメント部にパラメーターを追加する. 
-	  <!--
+          レスポンスタイプが <spanx style='verb'>token</spanx> の場合, 認可サーバーは <xref target='W3C.REC-html401-19991224' /> で定義される <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで, リダイレクトURIのフラグメント部にパラメーターを追加する.
+          <!--
           If the response type is <spanx style='verb'>token</spanx>, the authorization
           server adds the parameters to the redirection URI fragment component using the
           <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
           <xref target='W3C.REC-html401-19991224' />.
-	  -->
+          -->
         </t>
         <figure>
           <preamble>
-	    例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる. 
-	    <!--
+            例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる.
+            <!--
             For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response:
-	    -->
+            -->
           </preamble>
           <artwork>
             <![CDATA[
@@ -1269,13 +1294,8 @@
           </artwork>
         </figure>
         <t>
-	  レスポンスタイプが<spanx style='verb'>code_and_token</spanx>の場合, 認可サーバーは, 
-	  <spanx style='verb'>code</spanx>, <spanx style='verb'>state</spanx>
-	  パラメーターをリダイレクトURIのクエリー部に, <spanx style='verb'>access_token</spanx>, <spanx style='verb'>scope</spanx>, 
-          <spanx style='verb'>expires_in</spanx>パラメーターをフラグメント部に, 
-	  <xref target='W3C.REC-html401-19991224' />で定義される
-	  <spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットで追加する. 
-	  <!--
+          レスポンスタイプが <spanx style='verb'>code_and_token</spanx> の場合, 認可サーバーは, <spanx style='verb'>code</spanx>, <spanx style='verb'>state</spanx> パラメーターをリダイレクトURIのクエリー部に, <spanx style='verb'>access_token</spanx>, <spanx style='verb'>scope</spanx>, <spanx style='verb'>expires_in</spanx> パラメーターをフラグメント部に, <xref target='W3C.REC-html401-19991224' /> で定義される <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットで追加する.
+          <!--
           If the response type is <spanx style='verb'>code_and_token</spanx>, the authorization
           server adds the <spanx style='verb'>code</spanx> and <spanx style='verb'>state</spanx>
           parameters to the redirection URI query component and the
@@ -1283,12 +1303,12 @@
           <spanx style='verb'>expires_in</spanx> to the redirection URI fragment using the
           <spanx style='verb'>application/x-www-form-urlencoded</spanx> format as defined by
           <xref target='W3C.REC-html401-19991224' />.
-	  -->
+          -->
         </t>
         <figure>
           <preamble>
-	    例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる. 
-	    (改行は掲載上の都合による. )
+            例えば, 認可サーバーはエンドユーザーのユーザーエージェントを以下のHTTPレスポンスによってリダイレクトさせる.
+            (改行は掲載上の都合による)
             <!--For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response (line breaks are for display purposes only):-->
           </preamble>
@@ -1301,24 +1321,23 @@
           </artwork>
         </figure>
         <t>
-	  クライアントは, 処理できないレスポンスパラメーターを無視すべきである(SHOULD). トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない. 
-	  クライアントは値のサイズについてなんらかの仮定をすべきではない. サーバーは, 自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである. 
-	  <!--
+          クライアントは処理できないレスポンスパラメーターを無視すべきである (SHOULD).
+          トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない.
+          クライアントは値のサイズについてなんらかの仮定をすべきではない.
+          サーバーは自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである.
+          <!--
           Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
           values received from the authorization server, are left undefined by this specification.
           Clients should avoid making assumptions about value sizes. Servers should document the
           expected size of any value they issue.
-	  -->
+          -->
         </t>
       </section>
 
       <section title='エラーレスポンス' anchor='auth-error'>
         <!-- <section title='Error Response' anchor='auth-error'> -->
         <t>
-          もしエンドユーザーがアクセス要求を拒否したか, 要求が不正だった場合, 認可サーバーは
-          <xref target='W3C.REC-html401-19991224' />で定義される
-          <spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットで,
-          リダイレクトURIのクエリー部にパラメーターを追加することで, クライアントにエラーを通知する:
+          エンドユーザーがアクセス要求を拒否したか要求が不正だった場合, 認可サーバーは <xref target='W3C.REC-html401-19991224' /> で定義される <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットでリダイレクトURIのクエリー部に以下に示すパラメーターを追加して, クライアントにエラーを通知する:
 
           <!--
           If the end-user denies the access request or if the request is invalid, the authorization
@@ -1330,22 +1349,23 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='error'>
               <vspace />
-              必須(REQUIRED). <xref target='auth-error-codes' /> に記載するエラーコード.
+              必須 (REQUIRED).
+              <xref target='auth-error-codes' /> に記載するいずれか1つのエラーコード.
               <!--
               REQUIRED. A single error code as described in <xref target='auth-error-codes' />.
               -->
             </t>
             <t hangText='error_description'>
-              任意である(OPTIONAL). エラーについての詳しい情報を人間に読めるかたちで記したもので,
-              起こっているエラーを理解・解決するために使用される.
+              任意 (OPTIONAL).
+              エラーについての詳しい情報を人間に読めるかたちで記したもので, 起こっているエラーを理解・解決するために使用される.
               <!--
               OPTIONAL. A human-readable text providing additional information, used to assist in
               the understanding and resolution of the error occurred.
               -->
             </t>
             <t hangText='error_uri'>
-              任意である(OPTIONAL). エラーについての情報を記したウェブページを指すURIで,
-              エンドユーザーにエラーについての詳しい情報を提供するために使用される.
+              任意 (OPTIONAL).
+              エラーについての情報を記したウェブページを指すURIで, エンドユーザーにエラーについての詳しい情報を提供するために使用される.
               <!--
               OPTIONAL. A URI identifying a human-readable web page with information about the
               error, used to provide the end-user with additional information about the error.
@@ -1353,7 +1373,7 @@
             </t>
             <t hangText='state'>
               <vspace />
-              クライアントの認可リクエストに<spanx style='verb'>state</spanx>パラメーターが含まれていた場合に必須(REQUIRED).
+              クライアントの認可リクエストに <spanx style='verb'>state</spanx> パラメーターが含まれていた場合に必須 (REQUIRED).
               クライアントから受け取った値をそのままセットする.
               <!--
               REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
@@ -1364,8 +1384,7 @@
         </t>
         <figure>
           <preamble>
-            例えば, 認可サーバーは以下のようなHTTPレスポンスを送出することで,
-            エンドユーザーのユーザーエージェントをリダイレクトする:
+            例えば, 認可サーバーは以下のようなHTTPレスポンスを送出することで, エンドユーザーのユーザーエージェントをリダイレクトする:
             <!--
             For example, the authorization server redirects the end-user's user-agent by
             sending the following HTTP response:
@@ -1382,7 +1401,7 @@
         <section title='エラーコード' anchor='auth-error-codes'>
           <!-- <section title='Error Codes' anchor='auth-error-codes'> -->
           <t>
-            認可サーバーは以下のエラーコードのうちいずれか1つをエラーレスポンスに含む:
+            認可サーバーは以下のいずれかのエラーコードをエラーレスポンスに含める.
             <!--
             The authorization server includes one of the following error codes with the error
             response:
@@ -1391,8 +1410,7 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid_request'>
                 <vspace />
-                このリクエストが必須のパラメーターを含んでいない, サポートしていないパラメーターないしパラメーターの値を含む,
-                あるいは形式に問題がある.
+                リクエストが必須のパラメーターを含んでいない, サポートしていないパラメーターないしパラメーター値を含む, あるいは形式に問題がある.
                 <!--
                 The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, or is otherwise malformed.
@@ -1407,7 +1425,7 @@
               </t>
               <t hangText='unauthorized_client'>
                 <vspace />
-                このクライアントが要求されたレスポンスタイプについて認可されていない.
+                クライアントは指定されたレスポンスタイプを使用する権限を持たない.
                 <!--
                 The client is not authorized to use the requested response type.
                 -->
@@ -1435,7 +1453,7 @@
               </t>
               <t hangText='invalid_scope'>
                 <vspace />
-                要求されたスコープが不正か, 未知のものか, 書式に問題がある.
+                要求されたスコープが不正か, 未知のものか, 形式に問題がある.
                 <!--
                 The requested scope is invalid, unknown, or malformed.
                 -->
@@ -1457,7 +1475,7 @@
     <section title='アクセストークンの取得' anchor='obtaining-token'>
     <!-- <section title='Obtaining an Access Token' anchor='obtaining-token'> -->
       <t>
-        クライアントは認可サーバーに (認可コードやリソースオーナーのクレデンシャル, アサーションもしくはリフレッシュトークンの形で) アクセス許可を提示し, アクセストークンを取得する.
+        クライアントは, 認可サーバーに (認可コードやリソースオーナーのクレデンシャル, アサーションもしくはリフレッシュトークンの形で) アクセス許可を提示し, アクセストークンを取得する.
         <!--
         The client obtains an access token by authenticating with the authorization server and
         presenting its access grant (in the form of an authorization code, resource owner
@@ -1465,8 +1483,8 @@
         -->
       </t>
       <t>
-        トークンエンドポイントに対するリクエストではHTTPリクエストおよびレスポンス内にクレデンシャルが平文で含まれるため, 認可サーバーはトークンエンドポイントへのリクエストに対してトランスポート層でのセキュリティ機構の利用を必須としなければならない (MUST).
-        サーバーは<xref target='RFC5246' />で定義されるTLS 1.2をサポートしなければならず (MUST), それに加えて他のトランスポート層でのセキュリティ機構をサポートすることもできる (MAY).
+        トークンエンドポイントに対するリクエストでは, HTTPリクエストおよびレスポンス内にクレデンシャルが平文で含まれるため, 認可サーバーはトークンエンドポイントへのリクエストに対してトランスポート層でのセキュリティ機構の利用を必須としなければならない (MUST).
+        サーバーは <xref target='RFC5246' /> で定義されるTLS 1.2をサポートしなければならず (MUST), それに加えて他のトランスポート層でのセキュリティ機構をサポートすることもできる (MAY).
         <!--
         Since requests to the token endpoint result in the transmission of plain text
         credentials in the HTTP request and response, the authorization server MUST require the
@@ -1476,9 +1494,9 @@
         -->
       </t>
       <t>
-        クライアントはトークンエンドポイントにHTTP <spanx style='verb'>POST</spanx>リクエストを送信し, アクセストークンを要求する.
+        クライアントはトークンエンドポイントにHTTP <spanx style='verb'>POST</spanx> リクエストを送信し, アクセストークンを要求する.
         トークンエンドポイントのURIは対象サービスのドキュメント, あるいは [[ OAuth Discovery ]] を利用して得ることができる.
-        トークンエンドポイントURIはクエリー部を含んでいるかもしれない (MAY).
+        トークンエンドポイントURIはクエリー部を含んでいる可能性がある (MAY).
         <!--
         The client requests an access token by making an HTTP <spanx style='verb'>POST</spanx>
         request to the token endpoint. The location of the token endpoint can be found in the
@@ -1487,8 +1505,8 @@
         -->
       </t>
       <t>
-        クライアントは自身のクレデンシャルを<xref target='client-authentication' />に記載されたリクエストに追加することで, 認可サーバーに対して認証を行う.
-        認可サーバーはクライアントのアイデンティティを問わない場合 (匿名クライアントなど) やクライアントのアイデンティティが他の方法で確立されている場合 (アサーション形式のアクセス許可など), 認証無しのアクセストークンリクエストを受け入れることもある (MAY).
+        クライアントは, 自身のクレデンシャルを <xref target='client-authentication' /> に記載された方法でリクエストに追加することで, 認可サーバーに対して認証を行う.
+        認可サーバーは, クライアントのアイデンティティを問わない場合 (匿名クライアントなど) やクライアントのアイデンティティが他の方法で確立されている場合 (アサーション形式のアクセス許可など), 認証無しのアクセストークンリクエストを受け入れてもよい (MAY).
         <!--
         The client authenticates with the authorization server by adding its client credentials to
         the request as described in <xref target='client-authentication' />. The authorization
@@ -1498,7 +1516,7 @@
         -->
       </t>
       <t>
-        クライアントは下記のパラメーターを<spanx style='verb'>application/x-www-form-urlencoded</spanx>フォーマットでHTTPリクエストボディーに含め, リクエストを構築する.
+        クライアントは, 下記のパラメーターを <spanx style='verb'>application/x-www-form-urlencoded</spanx> フォーマットでHTTPリクエストボディーに含め, リクエストを構築する.
         <!--
         The client constructs the request by including the following parameters using the
         <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the HTTP request
@@ -1514,15 +1532,12 @@
             <!--
             REQUIRED. The access grant type included in the request. Value MUST be one of
             -->
-            <spanx style='verb'>authorization_code</spanx>,
-            <spanx style='verb'>password</spanx>,
-            <spanx style='verb'>assertion</spanx>,
-            <spanx style='verb'>refresh_token</spanx>, or <spanx style='verb'>none</spanx>.
+            <spanx style='verb'>authorization_code</spanx>, <spanx style='verb'>password</spanx>, <spanx style='verb'>assertion</spanx>, <spanx style='verb'>refresh_token</spanx>, <spanx style='verb'>none</spanx>.
           </t>
           <t hangText='client_id'>
             <vspace />
             クライアントアイデンティティが (アサーションなどの) 他の方法で確立されない限り必須 (REQUIRED).
-            <xref target='client-authentication' />に記載されるクライアント識別子.
+            <xref target='client-authentication' /> に記載されるクライアント識別子.
             <!--
             REQUIRED, unless the client identity can be establish via other means (e.g. assertion).
             The client identifier as described in <xref target='client-authentication' />.
@@ -1550,15 +1565,15 @@
       </t>
       <t>
         さらにクライアントは, 利用するアクセス許可タイプごとに決められた適切なパラメーターを含めなければならない (MUST).
-        詳細は<xref target='access-grant-types' />に記述する.
+        詳細は <xref target='access-grant-types' /> に記述する.
         <!--
         In addition, the client MUST include the appropriate parameters listed for the selected
         access grant type as described in <xref target='access-grant-types' />.
         -->
       </t>
       <t>
-        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない(MUST).
-        認可サーバーは処理できないパラメーターを無視すべきである(SHOULD).
+        パラメーターの値が空の場合はパラメーター自体が指定されていないものとして扱われなければならない (MUST).
+        認可サーバーは処理できないパラメーターを無視すべきである (SHOULD).
         <!--
         Parameters sent without a value MUST be treated as if they were omitted from the request.
         The authorization server SHOULD ignore unrecognized request parameters.
@@ -1568,15 +1583,14 @@
       <section title='アクセス許可タイプ' anchor='access-grant-types'>
       <!-- section title='Access Grant Types' anchor='access-grant-types' -->
         <t>
-          クライアントはアクセストークンを要求する際, 次の4つのアクセス許可タイプ(認可コード, パスワードクレデンシャル, アサーション, リフレッシュトークン)のうち1つを利用する.
+          クライアントは, アクセストークンを要求する際, 次の4つのアクセス許可タイプ (認可コード, パスワードクレデンシャル, アサーション, リフレッシュトークン) のうち1つを利用する.
           <!--
           The client requests an access token using one of the four types of access grants:
           authorization code, password credentials, assertion, or refresh token.
           -->
         </t>
         <t>
-          アクセス許可タイプとして<spanx style='verb'>none</spanx>を使って(アクセス許可を含めずに)アクセストークンを要求する場合, 
-          クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが(本仕様のスコープ外の方法で)事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
+          アクセス許可タイプとして <spanx style='verb'>none</spanx> を使って (アクセス許可を含めずに) アクセストークンを要求する場合, クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが (本仕様のスコープ外の方法で) 事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
           <!--
           When requesting an access token using the <spanx style='verb'>none</spanx> access grant
           type (no access grant is included), the client is requesting access to the protected
@@ -1589,7 +1603,7 @@
         <section title='認可コード'>
         <!-- section title='Authorization Code'-->
           <t>
-            クライアントはアクセス許可タイプ<spanx style='verb'>authorization_code</spanx>を用いて認可コードと次のパラメーターを含める. 
+            クライアントは, アクセス許可タイプ <spanx style='verb'>authorization_code</spanx> を用いて, 次のパラメーターを含める.
             <!--
             The client includes the authorization code using the
             <spanx style='verb'>authorization_code</spanx> access grant type and the following
@@ -1599,14 +1613,16 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='code'>
                 <vspace />
-                必須(REQUIRED). 認可サーバーから取得する認可コード. 
+                必須 (REQUIRED).
+                認可サーバーから取得した認可コード.
                 <!--
                 REQUIRED. The authorization code received from the authorization server.
                 -->
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
-                必須(REQUIRED). 初期リクエストで利用するリダイレクト先URI.
+                必須 (REQUIRED).
+                初期リクエストで利用したリダイレクトURI.
                 <!--
                 REQUIRED. The redirection URI used in the initial request.
                 -->
@@ -1615,7 +1631,8 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントはクライアントクレデンシャルを, <xref target='client-authentication' />に記載する<spanx style='verb'>client_secret</spanx>パラメーターに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
+              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              (改行は掲載上の都合による)
                 <!--
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
@@ -1636,12 +1653,12 @@
             </artwork>
           </figure>
           <t>
-            認可サーバーは次のことを実施しなければならない(MUST):
+            認可サーバーは次のことを実施しなければならない (MUST):
             <!-- The authorization server MUST:-->
-            
+           
             <list style='symbols'>
               <t>
-                クライアントクレデンシャル(もし含まれていれば)の妥当性を確認し, 認可コードとそれらを結びつけておく. 
+                (もしクライアントクレデンシャルが含まれていれば) クライアントクレデンシャルの妥当性を確認し, それが認可コードとマッチすることを確認する.
                 <!--
                 Validate the client credentials (if present) and ensure they match the
                 authorization code.
@@ -1657,7 +1674,7 @@
             </list>
           </t>
           <t>
-            もしリクエストが妥当ならば, 認可サーバーは<xref target='access-token-response' />に記載の通り成功レスポンスを行う.
+            もしリクエストが妥当ならば, 認可サーバーは <xref target='access-token-response' /> に記載の通り成功レスポンスを返す.
             <!--
             If the request is valid, the authorization server issues a successful response as
             described in <xref target='access-token-response' />.
@@ -1668,7 +1685,8 @@
         <section title='リソースオーナーパスワードクレデンシャル'>
         <!-- section title='Resource Owner Password Credentials' -->
           <t>
-            クライアントは, アクセス許可タイプ<spanx style='verb'>password</spanx>を用いてリソースオーナークレデンシャルと次のパラメーターを含める. [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
+            クライアントは, アクセス許可タイプ <spanx style='verb'>password</spanx> を用いて, 次のパラメーターを含める.
+            [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
             <!--
             The client includes the resource owner credentials using the
             <spanx style='verb'>password</spanx> access grant type and the following
@@ -1677,20 +1695,23 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='username'>
                 <vspace />
-                必須(REQUIRED). リソースオーナーのユーザー名.
+                必須 (REQUIRED).
+                リソースオーナーのユーザー名.
                 <!-- REQUIRED. The resource owner's username. -->
               </t>
               <t hangText='password'>
                 <vspace />
-                必須(REQUIRED). リソースオーナーのパスワード.
+                必須 (REQUIRED).
+                リソースオーナーのパスワード.
                 <!-- REQUIRED. The resource owner's password. -->
               </t>
             </list>
           </t>
           <figure>
             <preamble>
-              例えば, クライアントはクライアントクレデンシャルを, <xref target='client-authentication' />に記載する<spanx style='verb'>client_secret</spanx>パラメーターに載せ, トランスポート層セキュリティを用いて次のようなHTTPリクエストを行う.(改行は表示目的のみで利用):  
-              <!-- 
+              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              (改行は掲載上の都合による)
+              <!--
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
               <xref target='client-authentication' /> and using transport-layer security (line
@@ -1702,15 +1723,15 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
-  
+ 
   grant_type=password&client_id=s6BhdRkqt3&
   client_secret=47HDu8s&username=johndoe&password=A3ddj3w
 ]]>
             </artwork>
           </figure>
           <t>
-            認可サーバーは(含まれていれば)クライアントクレデンシャルとエンドユーザークレデンシャルの妥当性を確認しなければならない(MUST).
-            また, もしそれらが妥当であれば, <xref target='access-token-response' />の記載通りアクセストークンレスポンスを行わなければならない(MUST).
+            認可サーバーは (クライアントクレデンシャルが含まれていればクライアントクレデンシャルと) エンドユーザークレデンシャルの妥当性を確認しなければならない (MUST).
+            それらが妥当であれば, <xref target='access-token-response' /> に記載の通り, アクセストークンレスポンスを返さなければならない (MUST).
             <!--
             The authorization server MUST validate the client credentials (if present) and end-user
             credentials and if valid issue an access token response as described in
@@ -1722,7 +1743,7 @@
         <section title='アサーション'>
         <!-- <section title='Assertion'> -->
           <t>
-            クライアントはアクセス許可タイプ<spanx style='verb'>assertion</spanx>を用いてアサーションと以下のパラメーターを含める. 
+            クライアントは, アクセス許可タイプ <spanx style='verb'>assertion</spanx> を用いて, 以下のパラメーターを含める.
             <!--
             The client includes the assertion using the <spanx style='verb'>assertion</spanx> access
             grant type and the following parameters:
@@ -1731,7 +1752,9 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='assertion_type'>
                 <vspace />
-                必須 (REQUIRED). 認可サーバーにより定義されるアサーションのフォーマット. 値は絶対URIでなければならない(MUST).
+                必須 (REQUIRED).
+                認可サーバーにより定義されるアサーションのフォーマット.
+                値は絶対URIでなければならない (MUST).
                 <!--
                 REQUIRED. The format of the assertion as defined by the authorization server. The
                 value MUST be an absolute URI.
@@ -1739,7 +1762,8 @@
               </t>
               <t hangText='assertion'>
                 <vspace />
-                必須 (REQUIRED). アサーション.
+                必須 (REQUIRED).
+                アサーション.
                 <!--
                 REQUIRED. The assertion.
                 -->
@@ -1748,7 +1772,9 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは以下のHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信し, クライアント認証はアサーション経由で行われる (改行は掲載上の都合による):
+              例えば, クライアントは, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              この場合, クライアント認証はアサーション経由で行われる.
+              (改行は掲載上の都合による)
               <!--
               For example, the client makes the following HTTP request using transport-layer
               security, and client authentication is achieved via the assertion (line breaks are
@@ -1760,7 +1786,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
-  
+ 
   grant_type=assertion&
   assertion_type=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Aassertion&
   assertion=PHNhbWxwOl...[omitted for brevity]...ZT4%3D
@@ -1768,8 +1794,9 @@
             </artwork>
           </figure>
           <t>
-            認可サーバーは(クライアントクレデンシャルがある場合は)クライアントクレデンシャルを検証し, <xref target='access-token-response' />で記載されるアクセストークンレスポンスを発行しなければならない(MUST).
-            認可サーバーはリフレッシュトークンを発行すべきでない(SHOULD NOT). (その代わりに, クライアントに同じもしくは新しいアサーションを要求する)
+            認可サーバーは (クライアントクレデンシャルがある場合は) クライアントクレデンシャルを検証し, <xref target='access-token-response' /> で記載されるアクセストークンレスポンスを返さなければならない (MUST).
+            認可サーバーはリフレッシュトークンを発行すべきでない (SHOULD NOT).
+            (その代わりクライアントに同じもしくは新しいアサーションを要求する)
             <!--
             The authorization server MUST validate the client credentials (if present) and the
             assertion and if valid issues an access token response as described in
@@ -1778,9 +1805,8 @@
             -->
           </t>
           <t>
-            認可サーバーは生存時間が限られたアクセストークンを発行すべきであり(SHOULD), 
-            もし同じアサーションが有効であるならばそれを用いて新しいアクセストークンを要求することによりクライアントにアクセストークンを更新させるべきである(SHOULD).  
-            アサーションが無効な場合, クライアントは新しい有効なアサーションを取得しなければならない(MUST). 
+            認可サーバーは生存時間が限られたアクセストークンを発行すべきであり (SHOULD), もし同じアサーションが有効であるならば, それを用いて新しいアクセストークンを要求することによりクライアントにアクセストークンを更新させるべきである (SHOULD). 
+            アサーションが無効な場合, クライアントは新しい有効なアサーションを取得しなければならない (MUST).
             <!--
             Authorization servers SHOULD issue access tokens with a limited lifetime and require
             clients to refresh them by requesting a new access token using the same assertion if it
@@ -1792,7 +1818,7 @@
         <section title='リフレッシュトークン' anchor='token-refresh'>
         <!-- <section title='Refresh Token' anchor='token-refresh'> -->
           <t>
-            クライアントはアクセス許可タイプ<spanx style='verb'>refresh_token</spanx>を用いてリフレッシュトークンと以下のパラメーターを含める. 
+            クライアントは, アクセス許可タイプ <spanx style='verb'>refresh_token</spanx> を用いて, 以下のパラメーターを含める.
             <!--
             The client includes the refresh token using the
             <spanx style='verb'>refresh_token</spanx> access grant type and the following
@@ -1802,7 +1828,8 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='refresh_token'>
                 <vspace />
-                必須 (REQUIRED). 更新されるアクセストークンと関連づけられたリフレッシュトークン. 
+                必須 (REQUIRED).
+                更新されるアクセストークンと関連づけられたリフレッシュトークン.
                 <!--
                 REQUIRED. The refresh token associated with the access token to be refreshed.
                 -->
@@ -1811,7 +1838,8 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは<xref target='client-authentication' />に記載される<spanx style='verb'>client_secret</spanx>パラメーターによりクライアントクレデンシャルを含むHTTPリクエストをセキュリティ保護されたトランスポート層を用いて送信する (改行は掲載上の都合による):
+              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              (改行は掲載上の都合による)
               <!--
               For example, the client makes the following HTTP request by including its client
               credentials via the <spanx style='verb'>client_secret</spanx> parameter described in
@@ -1824,16 +1852,16 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
-  
+ 
   grant_type=refresh_token&client_id=s6BhdRkqt3&
   client_secret=8eSEIpnqmM&refresh_token=n4E9O119d
 ]]>
             </artwork>
           </figure>
           <t>
-            認可サーバーは(もしクライアントクレデンシャルが存在する場合は)クライアントクレデンシャルとリフレッシュトークンの正当性, リソースオーナーの認可が有効であることを検証しなければならない(MUST). 
-            もしリクエストが有効な場合, 認可サーバーは<xref target='access-token-response' />で記載されるアクセストークンレスポンスを発行する. 
-            認可サーバーは新しいリフレッシュトークンを発行してもよい(MAY).
+            認可サーバーは (もしクライアントクレデンシャルが存在する場合はクライアントクレデンシャルと) リフレッシュトークンの正当性, リソースオーナーの認可の有効性を検証しなければならない (MUST).
+            リクエストが有効であれば, 認可サーバーは <xref target='access-token-response' /> で記載されるアクセストークンレスポンスを返す.
+            認可サーバーは新しいリフレッシュトークンを発行してもよい (MAY).
             <!--
             The authorization server MUST verify the client credentials (if present), the validity
             of the refresh token, and that the resource owner's authorization is still valid. If
@@ -1849,36 +1877,40 @@
       <section title='アクセストークンレスポンス' anchor='access-token-response'>
       <!--<section title='Access Token Response' anchor='access-token-response'>-->
         <t>
-          有効で認可済のアクセストークンのリクエストをクライアントから受信し検証した後、認可サーバーはアクセストークンと任意でリフレッシュトークンを発行し、以下のパラメーターをステータスコード200(OK)とHTTPレスポンスのエンティティーボディーに付加するレスポンスを構築する。
+          認可サーバーは, 認可済の有効なアクセストークンリクエストを受信および検証した後, アクセストークン (と任意でリフレッシュトークン) を発行し, ステータスコード200 (OK) とともに以下のパラメーターをHTTPレスポンスボディーに付加してレスポンスを構築する.
           <!--After receiving and verifying a valid and authorized access token request from the
           client, the authorization server issues the access token and optional refresh token,
           and constructs the response by adding the following parameters to the entity body of
           the HTTP response with a 200 (OK) status code:-->
         </t>
         <t>
-          トークンレスポンスには以下のパラメーターが含まれる。
+          トークンレスポンスは以下のパラメーターを含む.
           <!--The token response contains the following parameters:-->
 
           <list style='hanging' hangIndent='6'>
             <t hangText='access_token'>
               <vspace />
-              必須(REQUIRED)。認可サーバーによって発行されたアクセストークン。
-              アクセストークンの文字列は<xref target='authz-header' />で定義されたアクセストークンのルールに従わなければならない。
+              必須 (REQUIRED).
+              認可サーバーによって発行されたアクセストークン.
+              アクセストークンの文字列は <xref target='authz-header' /> で定義されたアクセストークンのルールに従わなければならない.
               <!--REQUIRED. The access token issued by the authorization server. The access token
               string MUST comply with the access-token rule defined in
               <xref target='authz-header' />.-->
             </t>
             <t hangText='expires_in'>
               <vspace />
-              任意(OPTIONAL)。アクセストークンの有効期間を表す秒数。
-              例えば<spanx style='verb'>3600</spanx>は、アクセストークンは認可サーバーによってレスポンスが生成された時間から１時間で期限切れになることを意味している。
+              任意 (OPTIONAL).
+              アクセストークンの有効期間を表す秒数.
+              例えば, <spanx style='verb'>3600</spanx> という値は, 認可サーバーによってレスポンスが生成された1時間後にアクセストークンが失効することを表す.
               <!--OPTIONAL. The duration in seconds of the access token lifetime. For example, the
               value <spanx style='verb'>3600</spanx> denotes that the access token will expire in
               one hour from the time the response was generated by the authorization server.-->
             </t>
             <t hangText='refresh_token'>
               <vspace />
-              任意(OPTIONAL)。リフレッシュトークンは<xref target='token-refresh' />で記載通りに同一のエンドユーザーのアクセス許可を使って新しいアクセストークンを取得するのに利用される。
+              任意 (OPTIONAL).
+              リフレッシュトークンは <xref target='token-refresh' /> で記載される通り, 同一のエンドユーザーのアクセス許可を使って新しいアクセストークンを取得するのに利用される.
+              認可サーバーはアクセス許可タイプが <spanx style='verb'>none</spanx> に設定されている場合, リフレッシュトークンを発行すべきでない (SHOULD NOT).
               <!--OPTIONAL. The refresh token used to obtain new access tokens using the same
               end-user access grant as described in <xref target='token-refresh' />. The
               authorization server SHOULD NOT issue a refresh token when the access grant type is
@@ -1886,10 +1918,11 @@
             </t>
             <t hangText='scope'>
               <vspace />
-              任意(OPTIONAL)。スペース区切りの文字列のリストで表されるアクセストークンのスコープ。
-              <spanx style='verb'>scope</spanx>の値は認可サーバーによって定義される。
-              複数のスペース区切り文字を含む場合は、並び順に意味はなく、それぞれの文字列はリクエストされたスコープに追加アクセス範囲を付加する。
-              要求されたスコープがクライアントから要求されたものと異なる場合、認可サーバーはこのパラメーターを含めるべきである。
+              任意 (OPTIONAL).
+              スペース区切りの文字列のリストで表されるアクセストークンのスコープ.
+              <spanx style='verb'>scope</spanx> の値は認可サーバーによって定義される.
+              空白区切りで複数の値を含む場合は, その順序に意味はなく, それぞれの値を合わせたアクセス範囲が要求するアクセス権になる.
+              要求されたスコープがクライアントから要求されたものと異なる場合, 認可サーバーはこのパラメーターを含めるべきである.
               <!--OPTIONAL. The scope of the access token as a list of space-delimited strings. The
               value of the <spanx style='verb'>scope</spanx> parameter is defined by the
               authorization server. If the value contains multiple space-delimited strings,
@@ -1900,9 +1933,9 @@
           </list>
         </t>
         <t>
-          これらのパラメーターは、RFC4627で定義されているメディアタイプ"application/json"形式でHTTPレスポンスのエンティティーボディーに含まれなければならない。
-          パラメーターはデータ構造体の最上位に追加され、JSON形式に変換される。
-          パラメーター名と文字列値はJSON文字列、数値はJSON数字として追加される。
+          これらのパラメーターは, <xref target='RFC4627' /> で定義されているメディアタイプ <spanx style='verb'>application/json</spanx> 形式で, HTTPレスポンスボディーに含まれる.
+          JSONへのシリアライゼーションは, 各パラメーターをJSONオブジェクトの最上位要素とする形式で行う.
+          パラメーター名と文字列値はJSON文字列, 数値はJSON数値となる.
           <!--The parameters are including in the entity body of the HTTP response using the
           <spanx style='verb'>application/json</spanx> media type as defined by
           <xref target='RFC4627' />. The parameters are serialized into a JSON structure by
@@ -1910,9 +1943,9 @@
           are included as JSON strings. Numerical values are included as JSON numbers.-->
         </t>
         <t>
-          認可サーバーはトークン、シークレット、その他センシティブな情報を含むいかなるレスポンスにおいてもHTTP <spanx style='verb'>Cache-Control</spanx>ヘッダーの値を<spanx style='verb'>no-store</spanx>として含めなければならない(MUST)。
+          認可サーバーは, トークン, シークレット, その他センシティブな情報を含むいかなるレスポンスにおいても, HTTP <spanx style='verb'>Cache-Control</spanx> ヘッダーの値を <spanx style='verb'>no-store</spanx> として含めなければならない (MUST).
           <!--The authorization server MUST include the HTTP <spanx style='verb'>Cache-Control</spanx>
-	  response header field with a value of <spanx style='verb'>no-store</spanx> in any
+    response header field with a value of <spanx style='verb'>no-store</spanx> in any
           response containing tokens, secrets, or other sensitive information.-->
         </t>
         <figure>
@@ -1934,10 +1967,10 @@
           </artwork>
         </figure>
         <t>
-          クライアントは認識できないレスポンスパラメーターは無視するべきである(SHOULD)。
-          トークンや認可サーバーから受信したその他の値のサイズについては本仕様では未定義のままである。
-          クライアントは値のサイズを決めてかかるのは避けるべきである。
-          サーバーは発行する全ての値についてとりうるサイズについて記述すべきである。
+          クライアントは処理できないレスポンスパラメーターを無視すべきである (SHOULD).
+          トークンや認可サーバーから受けとるその他の値のサイズは, 本仕様では定義しない.
+          クライアントは値のサイズについてなんらかの仮定をすべきではない.
+          サーバーは自身が発行するあらゆる値のサイズについてドキュメントに明記すべきである.
           <!--Clients SHOULD ignore unrecognized response parameters. The sizes of tokens and other
           values received from the authorization server, are left undefined by this specification.
           Clients should avoid making assumptions about value sizes. Servers should document the
@@ -1948,7 +1981,7 @@
       <section title='エラーレスポンス' anchor='token-error'>
       <!--<section title='Error Response' anchor='token-error'>-->
         <t>
-          トークンリクエストが無効または未認可の場合、認可サーバーはメディアタイプ<spanx style='verb'>application/json</spanx>を使用して以下のパラメーターをHTTPレスポンスのエンティティーボディーに付加してレスポンスを構築する。
+          トークンリクエストが不正または未認可の場合, 認可サーバーはメディアタイプ <spanx style='verb'>application/json</spanx> でHTTPレスポンスボディーに以下に示すパラメーターを付与して, クライアントにエラーを通知する.
           <!--If the token request is invalid or unauthorized, the authorization server constructs
           the response by adding the following parameter to the entity body of the HTTP
           response using the <spanx style='verb'>application/json</spanx> media type:-->
@@ -1956,18 +1989,25 @@
           <list style='hanging' hangIndent='6'>
             <t hangText='error'>
               <vspace />
-              必須(REQUIRED)。<xref target='token-error-codes' />に記載されている単一のエラーコード。
+              必須 (REQUIRED).
+              <xref target='token-error-codes' /> に記載されているいずれか1つのエラーコード.
               <!--REQUIRED. A single error code as described in <xref target='token-error-codes' />.-->
             </t>
             <t hangText='error_description'>
-              任意(OPTIONAL)。発生したエラーについて理解する手助けや解決策として利用される追加情報を含む、人が読める形式の文字列。
-              <!--OPTIONAL. A human-readable text providing additional information, used to assist in
-              the understanding and resolution of the error occurred.-->
+              任意 (OPTIONAL).
+              エラーについての詳しい情報を人間に読めるかたちで記したもので, 起こっているエラーを理解・解決するために使用される.
+              <!--
+              OPTIONAL. A human-readable text providing additional information, used to assist in
+              the understanding and resolution of the error occurred.
+              -->
             </t>
             <t hangText='error_uri'>
-              任意(OPTIONAL)。エンドユーザーにエラーに関する追加情報を提供するのに利用される、エラーに関する情報が載っている人が読める形式のウェブページのURI。
-              <!--OPTIONAL. A URI identifying a human-readable web page with information about the
-              error, used to provide the end-user with additional information about the error.-->
+              任意 (OPTIONAL).
+              エラーについての情報を記したウェブページを指すURIで, エンドユーザーにエラーについての詳しい情報を提供するために使用される.
+              <!--
+              OPTIONAL. A URI identifying a human-readable web page with information about the
+              error, used to provide the end-user with additional information about the error.
+              -->
             </t>
           </list>
         </t>
@@ -1989,8 +2029,8 @@
           </artwork>
         </figure>
         <t>
-          クライアントが<spanx style='verb'>Authorization</spanx>リクエストヘッダーによるHTTP認証を利用して無効なクレデンシャルを与えた場合、認可サーバーはステータスコード HTTP 401(Unauthorized)を返さなくてはならない。
-          そうでなければ認可サーバーはステータスコードHTTP 400 (Bad Request) を返すものとする(SHALL)。
+          クライアントが <spanx style='verb'>Authorization</spanx> リクエストヘッダーによるHTTP認証を利用して無効なクレデンシャルを与えた場合, 認可サーバーはステータスコード HTTP 401 (Unauthorized) を返さなくてはならない.
+          そうでなければ認可サーバーはステータスコードHTTP 400 (Bad Request) を返すものとする (SHALL).
           <!--If the client provided invalid credentials using an HTTP authentication scheme via the
           <spanx style='verb'>Authorization</spanx> request header field, the authorization server
           MUST respond with the HTTP 401 (Unauthorized) status code. Otherwise, the authorization
@@ -2000,48 +2040,60 @@
         <section title='エラーコード' anchor='token-error-codes'>
         <!--<section title='Error Codes' anchor='token-error-codes'>-->
           <t>
-            認可サーバーは以下のいずれかのエラーコードをエラーレスポンスに含める。
+            認可サーバーは以下のいずれかのエラーコードをエラーレスポンスに含める.
             <!--The authorization server includes one of the following error codes with the error
             response:-->
-
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid_request'>
                 <vspace />
-                必須のパラメーターを指定していない、サポートされていないパラメーターもしくは値を含んでいる、同じパラメーターがある、複数のクレデンシャルをふくんでいる、クライアントを認証するのに２つ以上の仕組みを使っている、その他不正なリクエスト。
-                <!--The request is missing a required parameter, includes an unsupported parameter or
+                必須のパラメーターを指定していない, サポートされていないパラメーターもしくは値を含んでいる, パラメーターに重複がある, 複数クレデンシャルを含む, クライアント認証の為の2つ以上のメソッドを利用している, あるいは形式に問題がある.
+                <!--
+                The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, repeats a parameter, includes multiple credentials, utilizes
-                more than one mechanism for authenticating the client, or is otherwise malformed.-->
+                more than one mechanism for authenticating the client, or is otherwise malformed.
+                -->
               </t>
               <t hangText='invalid_client'>
                 <vspace />
-                無効なクライアント識別子を指定した、クライアントが認証に失敗した、クライアントがクレデンシャルを含めなかった、複数のクライアントクレデンシャルを指定した、サポートされていないクレデンシャルタイプを使用した。
-                <!--The client identifier provided is invalid, the client failed to authenticate, the
+                不正なクライアント識別子を指定した, クライアントが認証に失敗した, クライアントがクレデンシャルを含めなかった, 複数のクライアントクレデンシャルを指定した, サポートされていないクレデンシャルタイプを使用した.
+                <!--
+                The client identifier provided is invalid, the client failed to authenticate, the
                 client did not include its credentials, provided multiple client credentials, or
-                used unsupported credentials type.-->
+                used unsupported credentials type.
+                -->
               </t>
               <t hangText='unauthorized_client'>
                 <vspace />
-                認証されたクライアントは指定されたアクセス許可タイプを使用することが認められていない。
-                <!--The authenticated client is not authorized to use the access grant type provided.-->
+                クライアントは指定されたアクセス許可タイプを使用する権限を持たない.
+                <!--
+                The authenticated client is not authorized to use the access grant type provided.
+                -->
               </t>
               <t hangText='invalid_grant'>
                 <vspace />
-                指定されたアクセス認可が無効、期限切れ、もしくは取り消された。（例：無効なアサーション、期限切れの認可コード、間違ったエンドユーザーのパスワードクレデンシャル、認可コードとリダイレクト先URIの不一致）
-                <!--The provided access grant is invalid, expired, or revoked (e.g. invalid assertion,
+                指定されたアクセス認可が無効, 期限切れ, もしくは取り消された.
+                (例：無効なアサーション, 期限切れの認可コード, 間違ったエンドユーザーのパスワードクレデンシャル, 認可コードとリダイレクトURIの不一致)
+                <!--
+                The provided access grant is invalid, expired, or revoked (e.g. invalid assertion,
                 expired authorization token, bad end-user password credentials, or mismatching
-                authorization code and redirection URI).-->
+                authorization code and redirection URI).
+                -->
               </t>
               <t hangText='unsupported_grant_type'>
                 <vspace />
-                リクエストに含むアクセス許可のタイプもしくは他の属性が認可サーバーでサポートされていない。
-                <!--The access grant included - its type or another attribute - is not supported by the
-                authorization server.-->
+                リクエストに含むアクセス許可のタイプもしくは他の属性が認可サーバーでサポートされていない.
+                <!--
+                The access grant included - its type or another attribute - is not supported by the
+                authorization server.
+                -->
               </t>
               <t hangText='invalid_scope'>
                 <vspace />
-                指定されたscopeが無効、不明、不正、もしくは前回許可したscopeより多い。
-                <!--The requested scope is invalid, unknown, malformed, or exceeds the previously
-                granted scope.-->
+                指定されたscopeが不正, 未知, 形式に問題がある, もしくは前回許可したscopeの範囲を超えている.
+                <!--
+                The requested scope is invalid, unknown, malformed, or exceeds the previously
+                granted scope.
+                -->
               </t>
             </list>
           </t>
@@ -2056,106 +2108,106 @@
     </section>
 
     <section title='保護リソースへのアクセス' anchor='access-resource'>
-		<!--
+    <!--
     <section title='Accessing a Protected Resource' anchor='access-resource'>
-			-->
+    -->
       <t>
-				クライアントはアクセストークンをリソースサーバーに提示し, 保護リソースにアクセスする. 
-				アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する
-				このことから, アクセストークンをその他の鍵と同じように扱う必要がある(例えば, エンドユーザーのパスワードのように). 
-				アクセストークンはセキュアでないチャンネルを平文で送られるべきではない(SHOULD NOT).
-				<!--
+        クライアントはアクセストークンをリソースサーバーに提示し, 保護リソースにアクセスする.
+        アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する.
+        このことから, アクセストークンをその他の鍵と同じように扱う必要がある (例えば, エンドユーザーのパスワードのように).
+        アクセストークンはセキュアでないチャンネルを平文で送られるべきではない (SHOULD NOT).
+        <!--
         Clients access protected resources by presenting an access token to the resource server.
         Access tokens act as bearer tokens, where the token string acts as a shared symmetric
         secret. This requires treating the access token with the same care as other secrets (e.g.
         end-user passwords). Access tokens SHOULD NOT be sent in the clear over an insecure
         channel.
-				-->
+        -->
       </t>
       <t>
-				セキュアな通信を使わずに平文でアクセストークンを送る必要がある場合には, 不正なアクセストークンがもつ潜在的なリスクを減じるために, 認可サーバーはスコープと生存期間が限られたアクセストークンを発行すべきである(SHOULD). 
-				<!--
+        セキュアな通信を使わずに平文でアクセストークンを送る必要がある場合には, 不正なアクセストークンがもつ潜在的なリスクを減じるために, 認可サーバーはスコープと生存期間が限られたアクセストークンを発行すべきである (SHOULD).
+        <!--
         However, when it is necessary to transmit access tokens in the clear without a secure
         channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
         to reduce the potential risk from a compromised access token.
-				-->
+        -->
       </t>
       <t>
-				クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない(MUST NOT).
-				<!--
+        クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない (MUST NOT).
+        <!--
         Clients MUST NOT make authenticated requests with an access token to unfamiliar resource
         servers, regardless of the presence of a secure channel.
-				-->
+        -->
       </t>
       <t>
-				リソースサーバーはアクセストークンを検証し, トークンの有効期限が切れてないこと, および, そのトークンのスコープが要求されたリソースをカバーしていることを確認しなければならない(MUST). 
-				リソースサーバーがアクセストークンを検証するために用いるメソッドについては, この仕様の定める範囲ではない. 
-				しかし, 一般的に, それらのメソッドは, リソースサーバーと認証サーバーの間の連携および調整の方法を含んでいる. 
-				<!--
+        リソースサーバーはアクセストークンを検証し, トークンの有効期限が切れてないこと, およびそのトークンのスコープが要求されたリソースをカバーしていることを確認しなければならない (MUST).
+        リソースサーバーがアクセストークンを検証するために用いるメソッドについては, この仕様の定める範囲ではない.
+        しかし, 一般的にそれらのメソッドは, リソースサーバーと認証サーバーの間の連携および調整の方法を含んでいる.
+        <!--
         The resource server MUST validate the access token and ensure it has not expired and
         that its scope covers the requested resource. The methods used by the resource server
         to validate the access token are beyond the scope of this specification, but generally
         involve an interaction or coordination between the resource server and authorization
         server.
-				-->
+        -->
       </t>
 
       <section title='認証済リクエスト'>
-				<!--
+        <!--
       <section title='Authenticated Requests'>
-				-->
+        -->
         <t>
-					クライアントは<spanx style='verb'>Authorization</spanx> リクエストヘッダーを使って, 認証されたトークンリクエストを生成する. 
-					リソースサーバーは, <xref target='authz-header' />に記載する<spanx style='verb'>OAuth</spanx> HTTP認証スキーマを用い, 認証されたリクエストを受け入れなければならない(MUST).
-					リソースサーバーは付加的なメソッドをサポートしていても構わない(MAY). 
-					<!--
+          クライアントは <spanx style='verb'>Authorization</spanx> リクエストヘッダーを使って, 認証済トークンリクエストを生成する.
+          リソースサーバーは, <xref target='authz-header' /> に記載する <spanx style='verb'>OAuth</spanx> HTTP認証スキーマを用いた認証済リクエストを受け入れなければならない (MUST).
+          リソースサーバーは付加的なメソッドをサポートしてもよい (MAY).
+          <!--
           Clients make authenticated token requests using the
           <spanx style='verb'>Authorization</spanx> request header field. Resource servers MUST
           accept authenticated requests using the <spanx style='verb'>OAuth</spanx> HTTP
           authentication scheme as described in <xref target='authz-header' />, and MAY support
           additional methods.
-					-->
+          -->
         </t>
         <t>
-					もうひとつの方法として, クライアントは<xref target='query-param' />に記載するHTTPリクエストURI中のクエリー部, もしくは<xref target='body-param' />に記載する<spanx style='verb'>application/x-www-form-urlencoded</spanx> コンテントタイプのHTTPボディーのいずれかにアクセストークンを含むことができる(MAY). 
-					<!--
+          代替手段として, クライアントは, <xref target='query-param' /> に記載するHTTPリクエストURI中のクエリー部, もしくは <xref target='body-param' /> に記載する <spanx style='verb'>application/x-www-form-urlencoded</spanx> コンテントタイプのHTTPボディーのいずれかにアクセストークンを含めてもよい (MAY).
+          <!--
           Alternatively, clients MAY attempt to include the access token using the HTTP request
           URI in the query component as described in <xref target='query-param' />, or in the HTTP
           body when using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> content
           type as described in <xref target='body-param' />. Resource server MAY support these
           alternative methods.
-					-->
+          -->
         </t>
         <t>
-					クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダーが利用できない場合, リクエストURIまたはボディーだけを用いるべきである(SHOULD). 
-					さらに, クライアントは一度のリクエストにひとつ以上のメソッドを含んではならない(MUST NOT). 
-					<!--
+          クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダーが利用できない場合, リクエストURIまたはボディーだけを用いるべきである (SHOULD).
+          さらに, クライアントは1リクエスト中で2つ以上のメソッドを使用してはならない (MUST NOT).
+          <!--
           Clients SHOULD only use the request URI or body when the
           <spanx style='verb'>Authorization</spanx> request header field is not available, and MUST
           NOT use more than one method in each request.
-					-->
+          -->
         </t>
 
         <section title='認証リクエストヘッダー' anchor='authz-header'>
-					<!--
+        <!--
         <section title='The Authorization Request Header Field' anchor='authz-header'>
-					-->
+        -->
           <t>
-						クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダーを用いて, 認証されたトークンリクエストを生成する. 
-						クライアントは, リクエストにアクセストークンを含めるために<spanx style='verb'>OAuth</spanx> 認証スキーマを用いる. 
-						<!--
+            クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダーを用いて, 認証済トークンリクエストを生成する.
+            クライアントは, リクエストにアクセストークンを含めるために <spanx style='verb'>OAuth</spanx> 認証スキーマを用いる.
+            <!--
             The <spanx style='verb'>Authorization</spanx> request header field is used by clients
             to make authenticated token requests. The client uses the
             <spanx style='verb'>OAuth</spanx> authentication scheme to include the access token in
             the request.
-						-->
+            -->
           </t>
           <figure>
             <preamble>
-							例:
-							<!--
+              例:
+              <!--
               For example:
-							-->
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2166,18 +2218,18 @@
             </artwork>
           </figure>
           <t>
-						<spanx style='verb'>Authorization</spanx> ヘッダーは, <xref target='RFC2617' />によって定義された下記に示すフレームワークに従う.
-						<!--
+            <spanx style='verb'>Authorization</spanx> ヘッダーは, <xref target='RFC2617' /> によって定義された下記に示すフレームワークに従う.
+            <!--
             The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
             <xref target='RFC2617' /> as follows:
-						-->
+            -->
           </t>
           <figure>
             <artwork>
               <![CDATA[
   credentials    = "OAuth" RWS access-token [ CS 1#auth-param ]
   access-token   = 1*( quoted-char / <"> )
-  
+ 
   CS             = OWS "," OWS
 
   quoted-char    =   "!" / "#" / "$" / "%" / "&" / "'" / "("
@@ -2191,16 +2243,16 @@
           <t>
             <list>
               <t>
-								注釈: <xref target='RFC5849' />は, <spanx style='verb'>OAuth</spanx> 認証スキーマの異なるフォーマットを定義している.
-								リソースサーバーは, 以前のバージョンで要求された(REQUIRED)<spanx style='verb'>oauth_signature_method</spanx> の有無に基づいて2つのプロトコルのバージョンを区別することができる.
-								<spanx style='verb'>oauth_signature_method</spanx> は本仕様ではサポートしていない. 
-								<!--
+                注釈: <xref target='RFC5849' /> は, <spanx style='verb'>OAuth</spanx> 認証スキーマの異なるフォーマットを定義している.
+                リソースサーバーは, 以前のバージョンで必須 (REQUIRED) とされていた <spanx style='verb'>oauth_signature_method</spanx> パラメーターの有無を元に, 2つのバージョンを区別することができる.
+                <spanx style='verb'>oauth_signature_method</spanx> は本仕様ではサポートしていない.
+                <!--
                 NOTE: <xref target='RFC5849' /> defines a different format for the
                 <spanx style='verb'>OAuth</spanx> authentication scheme. Resource servers can
                 differentiate between the two protocol versions based on the presence of the
                 <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
-								-->
+                -->
               </t>
             </list>
           </t>
@@ -2208,24 +2260,24 @@
         </section>
 
         <section title='URI クエリーパラメーター' anchor='query-param'>
-					<!--
+        <!--
         <section title='URI Query Parameter' anchor='query-param'>
-					-->
+        -->
           <t>
-						HTTP リクエストURIにアクセストークンを含めるときに, クライアントは <spanx style='verb'>oauth_token</spanx> パラメーターとして, <xref target='RFC3986' /> に定義するリクエストURIのクエリー部にアクセストークンを追加する. 
-						<!--
+            HTTPリクエストURIにアクセストークンを含める場合, クライアントは <spanx style='verb'>oauth_token</spanx> パラメーターとして, <xref target='RFC3986' /> に定義するリクエストURIのクエリー部にアクセストークンを付与する.
+            <!--
             When including the access token in the HTTP request URI, the client adds the access
             token to the request URI query component as defined by <xref target='RFC3986' /> using
             the <spanx style='verb'>oauth_token</spanx> parameter.
-						-->
+            -->
           </t>
           <figure>
             <preamble>
-							例えば, クライアントはトランスポート層のセキュリティ機能を利用し, 次のHTTP リクエストを行う:
-							<!--
+              例えば, クライアントはトランスポート層のセキュリティ機能を利用し, 次のようなHTTPリクエストを行う.
+              <!--
               For example, the client makes the following HTTP request using transport-layer
               security:
-							-->
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2235,18 +2287,18 @@
             </artwork>
           </figure>
           <t>
-						HTTPリクエストのURIのクエリー部には, OAuth以外ののリクエスト固有のパラメーターが含まれる可能性がある
-						その場合, <spanx style='verb'>oauth_token</spanx> パラメーターはリクエスト固有のパラメーターの後ろに付与され, 適切に<spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割されるべきである(SHOULD). 
-						<!--
+            HTTPリクエストURIのクエリー部には, OAuth以外のリクエスト固有のパラメーターが含まれる可能性がある.
+            その場合, <spanx style='verb'>oauth_token</spanx> パラメーターはリクエスト固有のパラメーターの後ろに付与され, 適切に <spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割されるべきである (SHOULD).
+            <!--
             The HTTP request URI query can include other request-specific parameters, in which
             case, the <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended
             following the request-specific parameters, properly separated by an
             <spanx style='verb'>&amp;</spanx> character (ASCII code 38).
-						-->
+            -->
           </t>
           <figure>
             <preamble>
-              For example:
+              例:
             </preamble>
             <artwork>
               <![CDATA[
@@ -2257,82 +2309,83 @@
           <t>
             <list>
               <t>
-								注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' />に記載する以前のバージョンのOAuth プロトコルで用いられている. 
-								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<spanx style='verb'>oauth_signature_method</spanx> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
-								<!--
+                注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' /> に記載する以前のバージョンのOAuthプロトコルで用いられている.
+                リソースサーバーは, 以前のバージョンで必須 (REQUIRED) とされていた <spanx style='verb'>oauth_signature_method</spanx> パラメーターの有無を元に, 2つのバージョンを区別することができる.
+                <spanx style='verb'>oauth_signature_method</spanx> は本仕様ではサポートしていない.
+                <!--
                 NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
                 version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
                 servers can differentiate between the two protocol versions based on the presence
                 of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
-								-->
+                -->
               </t>
             </list>
           </t>
         </section>
 
-        <section title='フォームエンコードされたボディーパラメーター' anchor='body-param'>
-					<!--
+        <section title='フォームエンコードボディーパラメーター' anchor='body-param'>
+          <!--
         <section title='Form-Encoded Body Parameter' anchor='body-param'>
-					-->
+          -->
           <t>
-						HTTPリクエストのエンティティーボディーにアクセストークンが含まれる場合, クライアントは<spanx style='verb'>oauth_token</spanx>パラメーターとしてアクセストークンをリクエストボディーに付与する. 
-						クライアントは下記の必要条件(REQUIRED)が成り立つ場合のみ, このメソッドを用いることができる. 
-						<!--
+            HTTPリクエストボディーにアクセストークンを含める場合, クライアントは <spanx style='verb'>oauth_token</spanx> パラメーターとしてアクセストークンをリクエストボディーに付与する.
+            クライアントは下記の必要条件 (REQUIRED) が成り立つ場合のみ, このメソッドを用いることができる.
+            <!--
             When including the access token in the HTTP request entity-body, the client adds the
             access token to the request body using the <spanx style='verb'>oauth_token</spanx>
             parameter. The client can use this method only if the following REQUIRED conditions are
             met:
-						-->
+            -->
 
             <list style='symbols'>
               <t>
-								エンティティーボディーがシングルパートである. 
-								<!--
+                エンティティーボディーがシングルパートである.
+                <!--
                 The entity-body is single-part.
-								-->
+                -->
               </t>
               <t>
-								エンティティーボディーが<xref target='W3C.REC-html401-19991224' />で定義される<spanx style='verb'>application/x-www-form-urlencoded</spanx> コンテントタイプのエンコード要件を満たす
-								<!--
+                エンティティーボディーが <xref target='W3C.REC-html401-19991224' /> で定義される <spanx style='verb'>application/x-www-form-urlencoded</spanx> コンテントタイプのエンコード要件を満たす
+                <!--
                 The entity-body follows the encoding requirements of the
                 <spanx style='verb'>application/x-www-form-urlencoded</spanx> content-type as
                 defined by <xref target='W3C.REC-html401-19991224' />.
-								-->
+                -->
               </t>
               <t>
-								HTTPリクエストエンティティーヘッダーの<spanx style='verb'>Content-Type</spanx> フィールドが, <spanx style='verb'>application/x-www-form-urlencoded</spanx>である.
-								<!--
+                HTTPリクエストエンティティーヘッダーの <spanx style='verb'>Content-Type</spanx> フィールドが, <spanx style='verb'>application/x-www-form-urlencoded</spanx> である.
+                <!--
                 The HTTP request entity-header includes the <spanx style='verb'>Content-Type</spanx>
                 header field set to <spanx style='verb'>application/x-www-form-urlencoded</spanx>.
-								-->
+                -->
               </t>
               <t>
-								HTTPリクエストメソッドが<spanx style='verb'>POST</spanx>, <spanx style='verb'>PUT</spanx>, または <spanx style='verb'>DELETE</spanx> である.
-								<!--
+                HTTPリクエストメソッドが <spanx style='verb'>POST</spanx>, <spanx style='verb'>PUT</spanx>, または <spanx style='verb'>DELETE</spanx> である.
+                <!--
                 The HTTP request method is <spanx style='verb'>POST</spanx>,
                 <spanx style='verb'>PUT</spanx>, or <spanx style='verb'>DELETE</spanx>.
-								-->
+                -->
               </t>
             </list>
           </t>
           <t>
-						エンティティーボディーには, OAuth以外のリクエスト固有パラメーターが含まれる可能性がある.
-						その場合, <spanx style='verb'>oauth_token</spanx> パラメーターはリクエスト固有のパラメーターの後ろに付与され, 適切に<spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割されるべきである(SHOULD). 
-						<!--
+            エンティティーボディーには, OAuth以外のリクエスト固有パラメーターが含まれる可能性がある.
+            その場合, <spanx style='verb'>oauth_token</spanx> パラメーターはリクエスト固有のパラメーターの後ろに付与され, 適切に <spanx style='verb'>&amp;</spanx> (ASCII code 38) で分割されるべきである (SHOULD).
+            <!--
             The entity-body can include other request-specific parameters, in which case, the
             <spanx style='verb'>oauth_token</spanx> parameters SHOULD be appended following the
             request-specific parameters, properly separated by an <spanx style='verb'>&amp;</spanx>
             character (ASCII code 38).
-						-->
+            -->
           </t>
           <figure>
             <preamble>
-							例えば, クライアントはトランスポート層のセキュリティ機能を利用して下記のようなHTTPリクエストを生成する. 
-							<!--
+              例えば, クライアントはトランスポート層のセキュリティ機能を利用し, 次のようなHTTPリクエストを行う.
+              <!--
               For example, the client makes the following HTTP request using transport-layer
               security:
-							-->
+              -->
             </preamble>
             <artwork>
               <![CDATA[
@@ -2347,15 +2400,16 @@
           <t>
             <list>
               <t>
-								注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' />に記載する以前のバージョンのOAuth プロトコルで用いられている. 
-								リソースサーバーは, 以前のバージョンで必要とされており(REQUIRED) , 本仕様ではサポートされていない<spanx style='verb'>oauth_signature_method</spanx> の有無に基づき, 2つのプロトコルのバージョンを識別する. 
-								<!--
+                注釈: <spanx style='verb'>oauth_token</spanx> パラメーターは, <xref target='RFC5849' /> に記載する以前のバージョンのOAuthプロトコルで用いられている.
+                リソースサーバーは, 以前のバージョンで必須 (REQUIRED) とされていた <spanx style='verb'>oauth_signature_method</spanx> パラメーターの有無を元に, 2つのバージョンを区別することができる.
+                <spanx style='verb'>oauth_signature_method</spanx> は本仕様ではサポートしていない.
+                <!--
                 NOTE: The <spanx style='verb'>oauth_token</spanx> parameter is used by the previous
                 version of the OAuth protocol as described in <xref target='RFC5849' />. Resource
                 servers can differentiate between the two protocol versions based on the presence
                 of the <spanx style='verb'>oauth_signature_method</spanx> which is REQUIRED in the
                 previous version and is not supported by this specification.
-								-->
+                -->
               </t>
             </list>
           </t>
@@ -2368,13 +2422,14 @@
       <section title='The WWW-Authenticate Response Header Field' anchor='authn-header'>
       -->
         <t>
-          もし保護リソースリクエストが無効なアクセストークン, または不正な形式の場合, リソースサーバーはHTTP <spanx style='verb'>WWW-Authenticate</spanx> レスポンスヘッダーフィールドを含めなければならない (MUST) . <spanx style='verb'>WWW-Authenticate</spanx> は 以下のように<xref target='RFC2617' /> により定義されているフレームワークを使用する. 
+          保護リソースへのリクエストが, 不正または形式に問題があるアクセストークンを含む場合, リソースサーバーはHTTP <spanx style='verb'>WWW-Authenticate</spanx> レスポンスヘッダーフィールドを含めなければならない (MUST).
+          <spanx style='verb'>WWW-Authenticate</spanx> は, <xref target='RFC2617' /> により定義されている以下のフレームワークを使用する.
           <!--
           If the protected resource request contains an invalid access token or is malformed, the
           resource server MUST include the HTTP <spanx style='verb'>WWW-Authenticate</spanx>
           response header field. The <spanx style='verb'>WWW-Authenticate</spanx> header field
           uses the framework defined by <xref target='RFC2617' /> as follows:
-        -->
+          -->
         </t>
         <figure>
           <artwork>
@@ -2387,7 +2442,7 @@
                     [ CS error-uri ]
                     [ CS scope ]
                     [ CS 1#auth-param ]
-                    
+                   
   error           = "error" "=" <"> token <">
   error-desc      = "error_description" "=" quoted-string
   error-uri       = "error_uri" = <"> URI-Reference <">
@@ -2412,14 +2467,16 @@
           </artwork>
         </figure>
         <t>
-          <spanx style='verb'>realm</spanx> 属性は <xref target='RFC2617' /> により定義されているように, 保護リソースに分割を提供するために使用される. [[ 説明を追加 ]]
+          <spanx style='verb'>realm</spanx> 属性は, <xref target='RFC2617' /> に定義された通り, 保護リソース領域を分割するために使用される.
+          [[ 説明を追加 ]]
           <!--
           The <spanx style='verb'>realm</spanx> attribute is used to provide the protected
           resources partition as defined by <xref target='RFC2617' />. [[ add explanation ]]
           -->
         </t>
         <t>
-          <spanx style='verb'>error</spanx> 属性はアクセスレクエストが拒否された理由をクライアントに通知するために使用する. パラメーターの値は <xref target='resource-error-codes' /> に記載する. 
+          <spanx style='verb'>error</spanx> 属性は, リクエストが拒否された理由をクライアントに通知するために使用される.
+          パラメーターの値は <xref target='resource-error-codes' /> に記載する.
           <!--
           The <spanx style='verb'>error</spanx> attribute is used to provide the client with the
           reason why the access request was declined. The parameter values are described in
@@ -2427,7 +2484,7 @@
           -->
         </t>
         <t>
-          <spanx style='verb'>error_description</spanx> 属性は追加情報を含んだ解読可能なテキストを提供し, エラー原因の理解と解明を助ける. 
+          <spanx style='verb'>error_description</spanx> 属性は, 追加情報を含んだ解読可能なテキストを提供し, エラー原因の理解と解明を助ける.
           <!--
           The <spanx style='verb'>error_description</spanx> attribute provides a human-readable
           text containing additional information, used to assist in the understanding and
@@ -2435,7 +2492,8 @@
           -->
         </t>
         <t>
-          <spanx style='verb'>error_uri</spanx> 属性は, エラーに関する情報をもつ解読可能なウェブページを識別するURIを提供する. また, エンドユーザーにエラーに関する情報を追加して提供するために使用される. もし値が絶対URIでなければ, それはリクエストされた保護リソースに対する相対URIである. 
+          <spanx style='verb'>error_uri</spanx> 属性は, エラーに関する情報をもつ解読可能なウェブページを識別するURIを提供し, エンドユーザーにエラーに関する追加情報を提供するために使用される.
+          もし値が絶対URIでなければ, それはリクエストされた保護リソースに対する相対URIである.
           <!--
           The <spanx style='verb'>error_uri</spanx> attribute provides a URI identifying a
           human-readable web page with information about the error, used to offer the end-user
@@ -2444,7 +2502,8 @@
           -->
         </t>
         <t>
-          <spanx style='verb'>scope</spanx>属性は, 要求されたリソースへのアクセスに必要となる, スペース区切りのスコープ値のリストである. この属性は保護リソースへのアクセスに必要なアクセストークンのスコープを示す. 
+          <spanx style='verb'>scope</spanx> 属性は, 要求されたリソースへのアクセスに必要となるスペース区切りのスコープ値のリストである.
+          この属性は保護リソースへのアクセスに必要なアクセストークンのスコープを示す.
           <!--
           The <spanx style='verb'>scope</spanx> attribute is a space-delimited list of scope values
           indicating the required scope of the access token for accessing the requested resource.
@@ -2464,7 +2523,8 @@
             <list style='hanging' hangIndent='6'>
               <t hangText='invalid_request'>
                 <vspace />
-                必須のパラメーターを指定していない, サポートされていないパラメーターもしくは値を含んでいる, 同じパラメーターがある, アクセストークンを含むための1つ以上のメソッドを使っている, その他不正な形式のリクエスト. リソースサーバーは HTTP 400 (Bad Request)のステータスコードを応答しなければならない (MUST) . 
+                必須のパラメーターを指定していない, サポートされていないパラメーターもしくは値を含んでいる, パラメーターに重複がある, アクセストークンを含むための2つ以上のメソッドを使っている, その他不正な形式のリクエスト.
+                リソースサーバーは HTTP 400 (Bad Request)のステータスコードを応答しなければならない (MUST).
                 <!--
                 The request is missing a required parameter, includes an unsupported parameter or
                 parameter value, repeats the same parameter, uses more than one method for
@@ -2474,7 +2534,9 @@
               </t>
               <t hangText='invalid_token'>
                 <vspace />
-                提供されたアクセストークンが無効. 新しい認可が必要であることをクライアントに示すために, リフレッシュできない,期限切れのトークンを受け取った場合, リソースサーバーはこのエラーコードを使用するべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを応答しなければならない (MUST) . 
+                提供されたアクセストークンが無効.
+                新しい認可が必要であることをクライアントに示すために, リフレッシュできない期限切れのトークンを受け取った場合, リソースサーバーはこのエラーコードを使用するべきである (SHOULD).
+                リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを応答しなければならない (MUST).
                 <!--
                 The access token provided is invalid. Resource servers SHOULD use this error code
                 when receiving an expired token which cannot be refreshed to indicate to the client
@@ -2484,7 +2546,9 @@
               </t>
               <t hangText='expired_token'>
                 <vspace />
-                提供されたアクセストークンが期限切れ. リソースサーバーは, クライアントがレスポンスを受け取り, 期限切れアクセストークンとセットで発行されたリフレッシュトークンを用いて新しいアクセストークンをリクエストできると期待する場合のみ, このエラーコードを用いるべきである (SHOULD) . リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを返さなければならない (MUST) . 
+                提供されたアクセストークンが期限切れ.
+                リソースサーバーは, クライアントがレスポンスを受け取り, 期限切れアクセストークンとセットで発行されたリフレッシュトークンを用いて新しいアクセストークンをリクエストできると期待する場合のみ, このエラーコードを用いるべきである (SHOULD).
+                 リソースサーバーは HTTP 401 (Unauthorized) ステータスコードを返さなければならない (MUST).
                 <!--
                 The access token provided has expired. Resource servers SHOULD only use this error
                 code when the client is expected to be able to handle the response and request a
@@ -2494,7 +2558,9 @@
               </t>
               <t hangText='insufficient_scope'>
                 <vspace />
-                リクエストはアクセストークンの持つ権限よりも, より高い権限を要求する. リソースサーバーは HTTP 403 (Forbidden) ステータスコードを返すべきである (SHOULD) . また, 保護リソースのアクセスに必要な範囲で, <spanx style='verb'>scope</spanx> 属性を含んでもよい (MAY) . 
+                リクエストはアクセストークンの持つ権限よりも, より高い権限を要求する.
+                リソースサーバーは HTTP 403 (Forbidden) ステータスコードを返すべきである (SHOULD).
+                また, 保護リソースのアクセスに必要なスコープを <spanx style='verb'>scope</spanx> 属性として含んでもよい (MAY).
                 <!--
                 The request requires higher privileges than provided by the access token. The
                 resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
@@ -2511,7 +2577,7 @@
             -->
           </t>
           <t>
-            もし, リクエストに認証情報がない場合 (例えば, クライアントが認証が必要なこと, またはサポートされていない認証方法を使って認証しようとしていることに気付かなかった場合) , リソースサーバーはエラーコード, またはその他のエラー情報を含めてはならない (SHOULD). 
+            リクエストが認証情報を欠いている場合 (例えば, クライアントが認証が必要なこと, またはサポートされていない認証方法を使って認証しようとしていることに気付かなかった場合), リソースサーバーはエラーコードおよびその他のエラー情報を含めてはならない (SHOULD).
             <!--
             If the request lacks any authentication information (i.e. the client was unaware
             authentication is necessary or attempted using an unsupported authentication method),
@@ -2552,12 +2618,12 @@
       <!-- section title='Defining New Endpoint Parameters' -->
         <t>
           エンドユーザー認可エンドポイントおよびトークンエンドポイントにおいて, リクエストおよびレスポンスパラメーターを追加定義するアプリケーションは, 以下の2つのいずれかを選択するものとする (SHALL).
-          (<xref target='parameters-registry' />で定められた手順に従って) パラメーターレジストリーに登録する.
+          (<xref target='parameters-registry' /> で定められた手順に従って) パラメーターレジストリーに登録する.
           <spanx style='verb'>x_</spanx> をパラメーター名のプレフィックスとして用いる.
           <!--
           Applications that wish to define new request or response parameters for use with the
           end-user authorization endpoint or the token endpoint SHALL do so in one of two ways:
-          register them in the parameters registry (following the procedures in 
+          register them in the parameters registry (following the procedures in
           <xref target='parameters-registry' />), or use the <spanx style='verb'>x_</spanx>
           parameter name prefix.
           -->
@@ -2565,7 +2631,7 @@
         <t>
           <spanx style='verb'>x_</spanx> プレフィクスを用いるパラメーターは, ベンダー固有の拡張に限定する (MUST).
           これらの拡張は汎用に適用されるものではなく, パラメーターをサポートする認可サーバーの実装に固有のものである.
-          これに該当しないパラメーターは, レジストリー登録を必要とし (MUST), <spanx style='verb'>x_</spanx> プレフィックスを用いてはならない (MUST NOT).
+          これに該当しないパラメーターはレジストリー登録を必要とし (MUST), <spanx style='verb'>x_</spanx> プレフィックスを用いてはならない (MUST NOT).
           <!--
           Parameters utilizing the <spanx style='verb'>x_</spanx> parameter name prefix MUST be
           limited to vendor-specific extensions that are not commonly applicable, and are specific
@@ -2594,9 +2660,9 @@
       <section title='ヘッダーパラメーターの拡張'>
       <!-- section title='Defining New Header Field Parameters' -->
         <t>
-          OAuth の <spanx style='verb'>Authorization</spanx> および <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーパラメーターを追加定義するアプリケーションは, パラメーターレジストリーへの登録を行うこと (MUST).
+          OAuthの <spanx style='verb'>Authorization</spanx> および <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーパラメーターを追加定義するアプリケーションは, パラメーターレジストリーへの登録を行うこと (MUST).
           レジストリーへの登録は <xref target='parameters-registry' /> に従う.
-          
+         
           <!--
           Applications that wish to define new parameters for use in the OAuth
           <spanx style='verb'>Authorization</spanx> or <spanx style='verb'>WWW-Authenticate</spanx>
@@ -2626,7 +2692,7 @@
       <section title='アクセス許可タイプの拡張'>
       <!-- section title='Defining New Access Grant Types' -->
         <t>
-          アサーションアクセス許可タイプは, 認可サーバーが本使用で未定義の付加的なアクセス許可を受け入れることを想定している.
+          アサーションアクセス許可タイプは, 認可サーバーが本仕様で未定義の付加的なアクセス許可を受け入れることを想定している.
           アクセス許可タイプを追加するアプリケーションは, 新規および既存のアサーションタイプおよびフォーマットを利用することができる.
           <!--
           The assertion access grant type was designed to allow the authorization server to
@@ -2653,7 +2719,7 @@
           <!-- This document establishes the OAuth parameters registry. -->
         </t>
         <t>
-          エンドユーザーの認可エンドポイントに対するリクエスト, エンドユーザーの認可エンドポイントからのレスポンス, トークンエンドポイントに対するリクエスト, トークンエンドポイントからレスポンス, <spanx style='verb'>Authorization</spanx>ヘッダーフィールド, または<spanx style='verb'>WWW-Authenticate</spanx>ヘッダーフィールドで利用される追加パラメーターは, IESGまたは代理に選出されたものにより指名をうけた, 1名以上の指定専門家のアドバイスに基づいて, 要求仕様(<xref target='RFC5226' />で使われる用語)とともに追加される.
+          エンドユーザーの認可エンドポイントに対するリクエスト, エンドユーザーの認可エンドポイントからのレスポンス, トークンエンドポイントに対するリクエスト, トークンエンドポイントからのレスポンス, <spanx style='verb'>Authorization</spanx> ヘッダーフィールド, および <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーフィールドで利用される追加パラメーターは, IESGまたは代理に選出されたものにより指名をうけた, 1名以上の指定専門家のアドバイスに基づいて, 要求仕様(<xref target='RFC5226' /> で使われる用語)とともに追加される.
           しかしながら, 公開に先立って値を割り当てる行為を許可するために, 指定専門家は将来仕様が公開される条件が満たされるなどした場合は, 値の登録を許可しても良い.
           <!--
           Additional parameters to be use in the end-user authorization endpoint request, the
@@ -2667,7 +2733,7 @@
           -->
         </t>
         <t>
-          登録要求は, レビュー, コメントを目的として, 適切なサブジェクト(e.g., "Request for parameter: example")で[TBD]@ietf.orgメーリングリストに対して送られるべきである. 
+          登録要求は, レビュー, コメントを目的として, 適切なサブジェクト (e.g., "Request for parameter: example") で [TBD]@ietf.org メーリングリストに対して送られるべきである.
           <!--
           Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
           comment, with an appropriate subject (e.g., "Request for parameter: example").
@@ -2678,7 +2744,7 @@
         <t>
           14日の期間が経過する前に, 指定専門家は登録要求を承認するか棄却し, この決定はレビューリストとIANAの両方に通知される.
           棄却には説明, または内容自体が妥当であるならば, どうすれば要求が受理されるかという提案が伴なっているべきである.
-          21日間を越えて未決となっている登録要求は, 解決のために(iesq@iesq.orgメーリングリストを利用して)IESG宛に通知される. 
+          21日間を越えて未決となっている登録要求は, 解決のために (iesq@iesq.org メーリングリストを利用して) IESG宛に通知される.
           <!--
           Before a period of 14 days has passed, the Designated Expert(s) will either approve or
           deny the registration request, communicating this decision both to the review list and to
@@ -2693,11 +2759,11 @@
           <t>
             <list style='hanging'>
               <t hangText='<!-- Parameter name -->パラメーター名:'>
-                要求名称(e.g., "example").
+                要求名称 (e.g., "example").
                 <!-- The name requested (e.g., "example"). -->
               </t>
               <t hangText='<!-- Parameter usage location -->パラメーター使用位置:'>
-                パラメーターが使用できる位置. 使用されうる位置は: エンドユーザー認可エンドポイントリクエスト, エンドユーザー認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, <spanx style='verb'>Authorization</spanx>ヘッダーフィールド, そして<spanx style='verb'>WWW-Authenticate</spanx>ヘッダーフィールドである.
+                パラメーターが使用できる位置. 使用されうる位置は, エンドユーザー認可エンドポイントリクエスト, エンドユーザー認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, <spanx style='verb'>Authorization</spanx> ヘッダーフィールド, そして <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーフィールドである.
                 <!--
                 The location(s) where parameter can be used. The possible locations are: the
                 end-user authorization endpoint request, the end-user authorization endpoint
@@ -2707,8 +2773,8 @@
                 -->
               </t>
               <t hangText='<!-- Change controller -->変更管理者:'>
-                標準化過程のRFCであるため, "IETF"と記載すること. その他, 責任ある当事者の名称を記載すること.
-                他の詳細(e.g. 住所, メールアドレス, ホームページURI)を含んでいても良い.
+                標準化過程のRFCであるため, "IETF" と記載すること. その他, 責任ある当事者の名称を記載すること.
+                他の詳細 (e.g. 住所, メールアドレス, ホームページURI) を含んでいても良い.
                 <!--
                 For standards-track RFCs, state "IETF". For others, give the name of the
                 responsible party. Other details (e.g., postal address, e-mail address, home page
@@ -2738,7 +2804,7 @@
 
         <section title='<!-- Example -->例'>
           <t>
-            次の例は, この仕様書で定義されている<spanx style='verb'>scope</spanx>パラメーターに対するパラメーター登録要求である.
+            次の例は, この仕様書で定義されている <spanx style='verb'>scope</spanx> パラメーターに対するパラメーター登録要求である.
             <!--
             The following is the parameter registration request for the
             <spanx style='verb'>scope</spanx> parameter as defined in this specification:
@@ -2748,7 +2814,7 @@
                 scope
               </t>
               <t hangText='<!-- Parameter usage location -->パラメーター使用位置:'>
-                エンドユーザー認可エンドポイントリクエスト, エンドユーザー認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, 及び<spanx style='verb'>WWW-Authenticate</spanx>ヘッダーフィールド.
+                エンドユーザー認可エンドポイントリクエスト, エンドユーザー認可エンドポイントレスポンス, トークンエンドポイントリクエスト, トークンエンドポイントレスポンス, および <spanx style='verb'>WWW-Authenticate</spanx> ヘッダーフィールド.
                 <!--
                 The end-user authorization endpoint request, the end-user authorization endpoint
                 response, the token endpoint request, the token endpoint response, and the
@@ -2812,7 +2878,7 @@
       </t>
       <t>
         -10
-        
+       
         <list style='symbols'>
           <t>
             Fixed typos. Many editorial changes. Rewrote introduction. removed terminology
