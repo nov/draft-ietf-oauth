@@ -144,7 +144,7 @@
         extend it for use with other transport protocols. -->
       </t>
 
-      <section title='表記規約<!--Notational Conventions-->'>
+      <section title='要求記法および規則<!--Notational Conventions-->'>
         <t>
           本文書で用いられる各キーワード「MUST (しなければならない)」, 「MUST NOT (してはならない)」, 「REQUIRED (必須である)」, 「SHALL (するものとする)」, 「SHALL NOT (しないものとする)」, 「SHOULD (すべきである)」, 「SHOULD NOT (すべきではない)」, 「RECOMMENDED (推奨される)」, 「MAY (してもよい)」, 「OPTIONAL (任意である)」は <xref target='RFC2119' /> で述べられている通りに解釈されるべきものである.
           <!--
@@ -172,7 +172,7 @@
         </t>
       </section>
 
-      <section title='用語<!--Terminology-->'>
+      <section title='用語定義<!--Terminology-->'>
         <t>
           <list style='hanging' hangIndent='6'>
             <t hangText='保護リソース<!--protected resource-->'>
@@ -490,7 +490,7 @@
           <xref target='Figure 3' />:
           -->
         </t>
-        <figure title='間接的なアクセス権プロトコルフロー' anchor='Figure 3'>
+        <figure title='間接的なアクセス許可プロトコルフロー' anchor='Figure 3'>
         <!--<figure title='Indirect Access Grant Protocol Flow' anchor='Figure 3'>-->
           <artwork>
             <![CDATA[
@@ -2113,7 +2113,7 @@
     -->
       <t>
         クライアントはアクセストークンをリソースサーバーに提示し, 保護リソースにアクセスする.
-        アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する.
+        アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対称鍵として機能する.
         このことから, アクセストークンをその他の鍵と同じように扱う必要がある (例えば, エンドユーザーのパスワードのように).
         アクセストークンはセキュアでないチャンネルを平文で送られるべきではない (SHOULD NOT).
         <!--
