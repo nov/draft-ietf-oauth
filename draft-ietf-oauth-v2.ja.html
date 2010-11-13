@@ -195,9 +195,9 @@ described in the Simplified BSD License.</p>
 <a href="#anchor1">1.</a>&nbsp;
 はじめに<!--Introduction--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor2">1.1.</a>&nbsp;
-表記規約<!--Notational Conventions--><br />
+要求記法および規則<!--Notational Conventions--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor3">1.2.</a>&nbsp;
-用語<!--Terminology--><br />
+用語定義<!--Terminology--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">1.3.</a>&nbsp;
 概要<!--Overview--><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">1.4.</a>&nbsp;
@@ -377,7 +377,7 @@ Authors' Addresses<br />
 <a name="anchor2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.1"></a><h3>1.1.&nbsp;
-表記規約<!--Notational Conventions--></h3>
+要求記法および規則<!--Notational Conventions--></h3>
 
 <p>
           本文書で用いられる各キーワード「MUST (しなければならない)」, 「MUST NOT (してはならない)」, 「REQUIRED (必須である)」, 「SHALL (するものとする)」, 「SHALL NOT (しないものとする)」, 「SHOULD (すべきである)」, 「SHOULD NOT (すべきではない)」, 「RECOMMENDED (推奨される)」, 「MAY (してもよい)」, 「OPTIONAL (任意である)」は <a class='info' href='#RFC2119'>[RFC2119]<span> (</span><span class='info'>Bradner, S., &ldquo;Key words for use in RFCs to Indicate Requirement Levels,&rdquo; March&nbsp;1997.</span><span>)</span></a> で述べられている通りに解釈されるべきものである.
@@ -398,7 +398,7 @@ Authors' Addresses<br />
 <a name="anchor3"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.1.2"></a><h3>1.2.&nbsp;
-用語<!--Terminology--></h3>
+用語定義<!--Terminology--></h3>
 
 <p>
           </p>
@@ -653,7 +653,7 @@ Authors' Addresses<br />
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: 自身の代理として振る舞うクライアントのためのプロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>ユーザーエージェント</span><span>)</span></a> に記載する)を利用するとき, クライアントは <a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス権プロトコルフロー</span><span>)</span></a> にあるように, 認可リクエストの結果としてアクセストークンを取得する.
+          クライアントがユーザーエージェントプロファイル(<a class='info' href='#user-agent'>Section&nbsp;1.4.2<span> (</span><span class='info'>ユーザーエージェント</span><span>)</span></a> に記載する)を利用するとき, クライアントは <a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>間接的なアクセス許可プロトコルフロー</span><span>)</span></a> にあるように, 認可リクエストの結果としてアクセストークンを取得する.
           
         
 </p><br /><hr class="insert" />
@@ -673,7 +673,7 @@ Authors' Addresses<br />
   |        |&lt;-(F)------ Protected Resource --------|               |
   +--------+                                       +---------------+
 
-</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3: 間接的なアクセス権プロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
+</pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3: 間接的なアクセス許可プロトコルフロー&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -1960,7 +1960,7 @@ Authors' Addresses<br />
 
 <p>
         クライアントはアクセストークンをリソースサーバーに提示し, 保護リソースにアクセスする.
-        アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対象鍵として機能する.
+        アクセストークンはbearer tokenとして機能し, アクセストークンのトークン文字列は共有対称鍵として機能する.
         このことから, アクセストークンをその他の鍵と同じように扱う必要がある (例えば, エンドユーザーのパスワードのように).
         アクセストークンはセキュアでないチャンネルを平文で送られるべきではない (SHOULD NOT).
         
