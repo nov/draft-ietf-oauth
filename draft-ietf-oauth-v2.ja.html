@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: May 17, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: May 19, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 13, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 15, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-10</h1>
 
@@ -173,7 +173,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on May 17, 2011.</p>
+This Internet-Draft will expire on May 19, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -306,7 +306,7 @@ Authors' Addresses<br />
 </p>
 <p>
         従来のクライアントサーバー型の認証モデルでは, クライアントはリソースオーナーのクレデンシャルを使ってサーバーに対して認証を行いサーバー上の保護リソースにアクセスする.
-        つまり, サードパーティーアプリケーションに保護リソースへのアクセス権を与えるには, リソースオーナーは自身のクレデンシャルをサードパーティーに共有する必要がある.
+        つまり, サードパーティーアプリケーションに保護リソースへのアクセス権を与えるには, リソースオーナーは自身のクレデンシャルをサードパーティーと共有する必要がある.
         これはいくつかの問題と制限をもたらす.
         
        
@@ -681,10 +681,10 @@ Authors' Addresses<br />
 クライアントプロファイル</h3>
 
 <p>
-          OAuthは認可を確立しアクセストークンと交換するためのリッチで拡張可能なフレームワークを提供することで広範囲のクライアントタイプをサポートする.
-          この仕様書で詳述されている方式はウェブサーバー, ユーザーエージェント, ネイティブアプリケーション, 自律アプリケーションの４つのクライアントタイプに対応するために作成されている.
+          OAuthは, 認可を確立しアクセストークンと交換するための, リッチで拡張可能なフレームワークを提供することで, 広範囲のクライアントタイプをサポートする.
+          この仕様書で詳述されている方式は, ウェブサーバー, ユーザーエージェント, ネイティブアプリケーション, 自律アプリケーションの４つのクライアントタイプに対応するために作成されている.
           追加のシナリオやクライアントタイプを対象に含めるため, 他の仕様書によって追加の認可フローやクライアントプロファイルが定義されることもある.
-  
+          
         
 </p>
 <a name="anchor6"></a><br /><hr />
@@ -1512,7 +1512,7 @@ Authors' Addresses<br />
         
 </p>
 <p>
-          アクセス許可タイプとして <tt>none</tt> を使って (アクセス許可を含めずに) アクセストークンを要求する場合, クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが (本仕様のスコープ外の方法で) 事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
+          アクセス許可タイプとして <tt>none</tt> を指定して (アクセス許可を含めずに) アクセストークンを要求する場合, それは自身のコントロール下にある保護リソースや, 他のリソースオーナーが (本仕様のスコープ外の方法で) 事前に認可サーバーと調整を終えている保護リソースに対するアクセス要求を意味する.
           
         
 </p>
@@ -1522,7 +1522,7 @@ Authors' Addresses<br />
 認可コード</h3>
 
 <p>
-            クライアントは, アクセス許可タイプ <tt>authorization_code</tt> を用いて, 次のパラメーターを含める.
+            アクセス許可タイプ <tt>authorization_code</tt> を用いる場合は, 次のパラメーターを含める.
             
 
             </p>
@@ -1547,7 +1547,7 @@ Authors' Addresses<br />
           
 </p>
 <p>
-              例えば, クライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
                 
             
@@ -1592,7 +1592,7 @@ Authors' Addresses<br />
 リソースオーナーパスワードクレデンシャル</h3>
 
 <p>
-            クライアントは, アクセス許可タイプ <tt>password</tt> を用いて, 次のパラメーターを含める.
+            アクセス許可タイプ <tt>password</tt> を用いる場合は, 次のパラメーターを含める.
             [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
             
             </p>
@@ -1617,7 +1617,7 @@ Authors' Addresses<br />
           
 </p>
 <p>
-              例えば, クライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
               
             
@@ -1643,7 +1643,7 @@ Authors' Addresses<br />
 アサーション</h3>
 
 <p>
-            クライアントは, アクセス許可タイプ <tt>assertion</tt> を用いて, 以下のパラメーターを含める.
+            アクセス許可タイプ <tt>assertion</tt> を用いる場合は, 以下のパラメーターを含める.
             
 
             </p>
@@ -1669,7 +1669,7 @@ Authors' Addresses<br />
           
 </p>
 <p>
-              例えば, クライアントは, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               この場合, クライアント認証はアサーション経由で行われる.
               (改行は掲載上の都合による)
               
@@ -1704,7 +1704,7 @@ Authors' Addresses<br />
 リフレッシュトークン</h3>
 
 <p>
-            クライアントは, アクセス許可タイプ <tt>refresh_token</tt> を用いて, 以下のパラメーターを含める.
+            アクセス許可タイプ <tt>refresh_token</tt> を用いる場合は, 以下のパラメーターを含める.
             
 
             </p>
@@ -1721,7 +1721,7 @@ Authors' Addresses<br />
           
 </p>
 <p>
-              例えば, クライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <a class='info' href='#client-authentication'>Section&nbsp;2<span> (</span><span class='info'>クライアントクレデンシャル</span><span>)</span></a> に記載する <tt>client_secret</tt> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
               
             
@@ -1972,7 +1972,7 @@ Authors' Addresses<br />
       
 </p>
 <p>
-        クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない (MUST NOT).
+        クライアントは, セキュアな通信かそうでないかに関わらず, 未知のリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない (MUST NOT).
         
       
 </p>
@@ -2012,7 +2012,7 @@ Authors' Addresses<br />
 認証リクエストヘッダー</h3>
 
 <p>
-            クライアントは, <tt>Authorization</tt> リクエストヘッダーを用いて, 認証済トークンリクエストを生成する.
+            クライアントは <tt>Authorization</tt> リクエストヘッダーを用いて, 認証済トークンリクエストを生成する.
             クライアントは, リクエストにアクセストークンを含めるために <tt>OAuth</tt> 認証スキーマを用いる.
             
           

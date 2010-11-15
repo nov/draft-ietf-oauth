@@ -60,7 +60,7 @@
       </t>
       <t>
         従来のクライアントサーバー型の認証モデルでは, クライアントはリソースオーナーのクレデンシャルを使ってサーバーに対して認証を行いサーバー上の保護リソースにアクセスする.
-        つまり, サードパーティーアプリケーションに保護リソースへのアクセス権を与えるには, リソースオーナーは自身のクレデンシャルをサードパーティーに共有する必要がある.
+        つまり, サードパーティーアプリケーションに保護リソースへのアクセス権を与えるには, リソースオーナーは自身のクレデンシャルをサードパーティーと共有する必要がある.
         これはいくつかの問題と制限をもたらす.
         <!-- In the traditional client-server authentication model, the client accesses a protected
         resource on the server by authenticating with the server using the resource owner's
@@ -514,15 +514,17 @@
       <section title='クライアントプロファイル'>
       <!--<section title='Client Profiles'>-->
         <t>
-          OAuthは認可を確立しアクセストークンと交換するためのリッチで拡張可能なフレームワークを提供することで広範囲のクライアントタイプをサポートする.
-          この仕様書で詳述されている方式はウェブサーバー, ユーザーエージェント, ネイティブアプリケーション, 自律アプリケーションの４つのクライアントタイプに対応するために作成されている.
+          OAuthは, 認可を確立しアクセストークンと交換するための, リッチで拡張可能なフレームワークを提供することで, 広範囲のクライアントタイプをサポートする.
+          この仕様書で詳述されている方式は, ウェブサーバー, ユーザーエージェント, ネイティブアプリケーション, 自律アプリケーションの４つのクライアントタイプに対応するために作成されている.
           追加のシナリオやクライアントタイプを対象に含めるため, 他の仕様書によって追加の認可フローやクライアントプロファイルが定義されることもある.
-  <!-- OAuth supports a wide range of client types by providing a rich and extensible framework
+          <!--
+          OAuth supports a wide range of client types by providing a rich and extensible framework
           for establishing authorization and exchanging it for an access token. The methods detailed
           in this specification were designed to accommodate four client types: web servers,
           user-agents, native applications, and autonomous clients. Additional authorization flows
           and client profiles may be defined by other specifications to cover additional scenarios
-          and client types.-->
+          and client types.
+          -->
         </t>
 
         <section title='ウェブサーバー'>
@@ -1590,7 +1592,7 @@
           -->
         </t>
         <t>
-          アクセス許可タイプとして <spanx style='verb'>none</spanx> を使って (アクセス許可を含めずに) アクセストークンを要求する場合, クライアントは自身のコントロール下にある保護リソースや, 他のリソースオーナーが (本仕様のスコープ外の方法で) 事前に認可サーバーと調整を終えている保護リソースに対してアクセスを要求していることになる.
+          アクセス許可タイプとして <spanx style='verb'>none</spanx> を指定して (アクセス許可を含めずに) アクセストークンを要求する場合, それは自身のコントロール下にある保護リソースや, 他のリソースオーナーが (本仕様のスコープ外の方法で) 事前に認可サーバーと調整を終えている保護リソースに対するアクセス要求を意味する.
           <!--
           When requesting an access token using the <spanx style='verb'>none</spanx> access grant
           type (no access grant is included), the client is requesting access to the protected
@@ -1603,7 +1605,7 @@
         <section title='認可コード'>
         <!-- section title='Authorization Code'-->
           <t>
-            クライアントは, アクセス許可タイプ <spanx style='verb'>authorization_code</spanx> を用いて, 次のパラメーターを含める.
+            アクセス許可タイプ <spanx style='verb'>authorization_code</spanx> を用いる場合は, 次のパラメーターを含める.
             <!--
             The client includes the authorization code using the
             <spanx style='verb'>authorization_code</spanx> access grant type and the following
@@ -1631,7 +1633,7 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
                 <!--
               For example, the client makes the following HTTP request by including its client
@@ -1685,7 +1687,7 @@
         <section title='リソースオーナーパスワードクレデンシャル'>
         <!-- section title='Resource Owner Password Credentials' -->
           <t>
-            クライアントは, アクセス許可タイプ <spanx style='verb'>password</spanx> を用いて, 次のパラメーターを含める.
+            アクセス許可タイプ <spanx style='verb'>password</spanx> を用いる場合は, 次のパラメーターを含める.
             [[ ユーザー名とパスワードの国際化に関する考察を追記 ]]
             <!--
             The client includes the resource owner credentials using the
@@ -1709,7 +1711,7 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
               <!--
               For example, the client makes the following HTTP request by including its client
@@ -1743,7 +1745,7 @@
         <section title='アサーション'>
         <!-- <section title='Assertion'> -->
           <t>
-            クライアントは, アクセス許可タイプ <spanx style='verb'>assertion</spanx> を用いて, 以下のパラメーターを含める.
+            アクセス許可タイプ <spanx style='verb'>assertion</spanx> を用いる場合は, 以下のパラメーターを含める.
             <!--
             The client includes the assertion using the <spanx style='verb'>assertion</spanx> access
             grant type and the following parameters:
@@ -1772,7 +1774,7 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               この場合, クライアント認証はアサーション経由で行われる.
               (改行は掲載上の都合による)
               <!--
@@ -1818,7 +1820,7 @@
         <section title='リフレッシュトークン' anchor='token-refresh'>
         <!-- <section title='Refresh Token' anchor='token-refresh'> -->
           <t>
-            クライアントは, アクセス許可タイプ <spanx style='verb'>refresh_token</spanx> を用いて, 以下のパラメーターを含める.
+            アクセス許可タイプ <spanx style='verb'>refresh_token</spanx> を用いる場合は, 以下のパラメーターを含める.
             <!--
             The client includes the refresh token using the
             <spanx style='verb'>refresh_token</spanx> access grant type and the following
@@ -1838,7 +1840,7 @@
           </t>
           <figure>
             <preamble>
-              例えば, クライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
+              例えばクライアントは, クライアントクレデンシャルを <xref target='client-authentication' /> に記載する <spanx style='verb'>client_secret</spanx> パラメーターに載せ, セキュリティ保護されたトランスポート層を用いて次のようなHTTPリクエストを行う.
               (改行は掲載上の都合による)
               <!--
               For example, the client makes the following HTTP request by including its client
@@ -2133,7 +2135,7 @@
         -->
       </t>
       <t>
-        クライアントは, セキュアな通信かそうでないかに関わらず, 知らないリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない (MUST NOT).
+        クライアントは, セキュアな通信かそうでないかに関わらず, 未知のリソースサーバーに対してアクセストークンを含む認証済リクエストを行ってはならない (MUST NOT).
         <!--
         Clients MUST NOT make authenticated requests with an access token to unfamiliar resource
         servers, regardless of the presence of a secure channel.
@@ -2193,7 +2195,7 @@
         <section title='The Authorization Request Header Field' anchor='authz-header'>
         -->
           <t>
-            クライアントは, <spanx style='verb'>Authorization</spanx> リクエストヘッダーを用いて, 認証済トークンリクエストを生成する.
+            クライアントは <spanx style='verb'>Authorization</spanx> リクエストヘッダーを用いて, 認証済トークンリクエストを生成する.
             クライアントは, リクエストにアクセストークンを含めるために <spanx style='verb'>OAuth</spanx> 認証スキーマを用いる.
             <!--
             The <spanx style='verb'>Authorization</spanx> request header field is used by clients
