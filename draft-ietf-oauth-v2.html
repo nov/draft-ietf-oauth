@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en"><head><title>The OAuth 2.0 Protocol</title>
+<html lang="en"><head><title>The OAuth 2.0 Protocol Framework</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="The OAuth 2.0 Protocol">
+<meta name="description" content="The OAuth 2.0 Protocol Framework">
 <meta name="generator" content="xml2rfc v1.35 (http://xml.resource.org/)">
 <style type='text/css'><!--
         body {
@@ -145,16 +145,16 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: March 7, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: May 28, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">September 3, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">November 24, 2010</td></tr>
 </table></td></tr></table>
-<h1><br />The OAuth 2.0 Protocol<br />draft-ietf-oauth-v2-11</h1>
+<h1><br />The OAuth 2.0 Protocol Framework<br />draft-ietf-oauth-v2-11</h1>
 
 <h3>Abstract</h3>
 
 <p>
-        This specification describes the OAuth 2.0 protocol.
+        This specification describes the OAuth 2.0 protocol framework.
       
 </p>
 <h3>Status of this Memo</h3>
@@ -172,7 +172,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on March 7, 2011.</p>
+This Internet-Draft will expire on May 28, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -259,45 +259,39 @@ Error Response<br />
 Error Codes<br />
 <a href="#access-resource">6.</a>&nbsp;
 Accessing a Protected Resource<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor22">6.1.</a>&nbsp;
-Authenticated Requests<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz-header">6.1.1.</a>&nbsp;
-The Authorization Request Header Field<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query-param">6.1.2.</a>&nbsp;
-URI Query Parameter<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body-param">6.1.3.</a>&nbsp;
-Form-Encoded Body Parameter<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#token-types">6.1.</a>&nbsp;
+Access Token Types<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn-header">6.2.</a>&nbsp;
 The WWW-Authenticate Response Header Field<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#resource-error-codes">6.2.1.</a>&nbsp;
 Error Codes<br />
-<a href="#anchor23">7.</a>&nbsp;
+<a href="#anchor22">7.</a>&nbsp;
 Extensibility<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor24">7.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor23">7.1.</a>&nbsp;
 Defining New Client Credentials Types<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor25">7.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor24">7.2.</a>&nbsp;
 Defining New Endpoint Parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor26">7.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor25">7.3.</a>&nbsp;
 Defining New Header Field Parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor27">7.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor26">7.4.</a>&nbsp;
 Defining New Access Grant Types<br />
-<a href="#anchor28">8.</a>&nbsp;
+<a href="#anchor27">8.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor29">9.</a>&nbsp;
+<a href="#anchor28">9.</a>&nbsp;
 IANA Considerations<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#parameters-registry">9.1.</a>&nbsp;
 The OAuth Parameters Registry<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor30">9.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor29">9.1.1.</a>&nbsp;
 Registration Template<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor31">9.1.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor30">9.1.2.</a>&nbsp;
 Example<br />
-<a href="#anchor32">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor31">Appendix&nbsp;A.</a>&nbsp;
 Examples<br />
-<a href="#anchor33">Appendix&nbsp;B.</a>&nbsp;
+<a href="#anchor32">Appendix&nbsp;B.</a>&nbsp;
 Contributors<br />
-<a href="#anchor34">Appendix&nbsp;C.</a>&nbsp;
+<a href="#anchor33">Appendix&nbsp;C.</a>&nbsp;
 Acknowledgements<br />
-<a href="#anchor35">Appendix&nbsp;D.</a>&nbsp;
+<a href="#anchor34">Appendix&nbsp;D.</a>&nbsp;
 Document History<br />
 <a href="#rfc.references1">10.</a>&nbsp;
 References<br />
@@ -357,7 +351,7 @@ Introduction</h3>
       
 </p>
 <p>
-        OAuth address these issues by separating the role of the client from that of the
+        OAuth addresses these issues by separating the role of the client from that of the
         resource owner. In OAuth, the client (which is usually not the resource owner, but is
         acting on the resource owner's behalf) requests access to resources controlled by the
         resource owner and hosted by the resource server, and is issued a different set of
@@ -387,9 +381,11 @@ Introduction</h3>
       
 </p>
 <p>
-        This specification defines the use of OAuth over <a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616]
-        (or HTTP over TLS as defined by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>). Other specifications may
-        extend it for use with other transport protocols.
+        This specification describes the OAuth protocol framework and defines methods for obtaining
+        access tokens using resource owner credentials over <a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616]
+        (or HTTP over TLS as defined by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>). The access tokens format and
+        attributes (e.g. cryptographic properties), as well as the methods for using access tokens
+        to access protected resource are defined by companion specifications.
       
 </p>
 <a name="anchor2"></a><br /><hr />
@@ -406,7 +402,7 @@ Notational Conventions</h3>
 <p>
           This document uses the Augmented Backus-Naur Form (ABNF) notation of
           <a class='info' href='#I-D.ietf-httpbis-p1-messaging'>[I&#8209;D.ietf&#8209;httpbis&#8209;p1&#8209;messaging]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;HTTP/1.1, part 1: URIs, Connections, and Message Parsing,&rdquo; March&nbsp;2010.</span><span>)</span></a>. Additionally, the following rules are
-          included from <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>: realm, auth-param; from
+          included from <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>: auth-param; from
           <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>: URI-Reference; and from
           <a class='info' href='#I-D.ietf-httpbis-p1-messaging'>[I&#8209;D.ietf&#8209;httpbis&#8209;p1&#8209;messaging]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;HTTP/1.1, part 1: URIs, Connections, and Message Parsing,&rdquo; March&nbsp;2010.</span><span>)</span></a>: OWS, RWS, and quoted-string.
         
@@ -1091,7 +1087,7 @@ User-Agent</h3>
 Native Application</h3>
 
 <p>
-          Native application are clients running as native code on the end-user's computer or
+          Native applications are clients running as native code on the end-user's computer or
           device (i.e. executing outside a user-agent or as a desktop program). These clients are
           often capable of interacting with (or embedding) the end-user's user-agent but are
           limited in how such interaction affects their end-user experience. In many cases,
@@ -1419,7 +1415,7 @@ Authorization Request</h3>
           constructs the request URI by adding the following parameters to the end-user
           authorization endpoint URI query component using the
           <tt>application/x-www-form-urlencoded</tt> format as defined by
-          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
 
           </p>
 <blockquote class="text"><dl>
@@ -1550,8 +1546,15 @@ Authorization Response</h3>
               
               REQUIRED if the response type is <tt>token</tt> or
               <tt>code_and_token</tt>, otherwise MUST NOT be included. The
-              access token issued by the authorization server. The access token string MUST comply
-              with the access-token rule defined in <a class='info' href='#authz-header'>Section&nbsp;6.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>.
+              access token issued by the authorization server.
+            
+</dd>
+<dt>token_type</dt>
+<dd>
+              
+              REQUIRED if the response includes an access token. The type of the token issued.
+              The token type informs the client how the access token is to be used when accessing a
+              protected resource as described in <a class='info' href='#token-types'>Section&nbsp;6.1<span> (</span><span class='info'>Access Token Types</span><span>)</span></a>.
             
 </dd>
 <dt>expires_in</dt>
@@ -1595,7 +1598,7 @@ Authorization Response</h3>
           If the response type is <tt>code</tt>, the authorization
           server adds the parameters to the redirection URI query component using the
           <tt>application/x-www-form-urlencoded</tt> format as defined by
-          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
+          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
         
 </p>
 <p>
@@ -1613,17 +1616,18 @@ Authorization Response</h3>
           <tt>code_and_token</tt>, the authorization server adds the parameters
           to the redirection URI fragment component using the
           <tt>application/x-www-form-urlencoded</tt> format as defined by
-          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
+          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
         
 </p>
 <p>
             For example, the authorization server redirects the end-user's user-agent by
-            sending the following HTTP response:
+            sending the following HTTP response (URI line breaks are for display purposes only):
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   HTTP/1.1 302 Found
-  Location: http://example.com/rd#access_token=FJQbwq9&amp;expires_in=3600
+  Location: http://example.com/rd#access_token=FJQbwq9&amp;token_type=bearer
+            &amp;expires_in=3600
 
 </pre></div>
 <p>
@@ -1642,7 +1646,7 @@ Error Response</h3>
           If the end-user denies the access request or if the request is invalid, the authorization
           server informs the client by adding the following parameters to the redirection URI query
           component using the <tt>application/x-www-form-urlencoded</tt> format
-          as defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+          as defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
 
           </p>
 <blockquote class="text"><dl>
@@ -2076,9 +2080,15 @@ Access Token Response</h3>
 <dt>access_token</dt>
 <dd>
               
-              REQUIRED. The access token issued by the authorization server. The access token
-              string MUST comply with the access-token rule defined in
-              <a class='info' href='#authz-header'>Section&nbsp;6.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>.
+              REQUIRED. The access token issued by the authorization server.
+            
+</dd>
+<dt>token_type</dt>
+<dd>
+              
+              REQUIRED. The type of the token issued. The token type informs the client how the
+              access token is to be used when accessing a protected resource as described in
+              <a class='info' href='#token-types'>Section&nbsp;6.1<span> (</span><span class='info'>Access Token Types</span><span>)</span></a>.
             
 </dd>
 <dt>expires_in</dt>
@@ -2137,6 +2147,7 @@ Access Token Response</h3>
 
   {
     "access_token":"SlAV32hkKG",
+    "token_type":"bearer",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8"
   }
@@ -2272,24 +2283,6 @@ Accessing a Protected Resource</h3>
 
 <p>
         Clients access protected resources by presenting an access token to the resource server.
-        Access tokens are bearer authentication tokens, such as passwords or capabilities (as
-        defined by <a class='info' href='#RFC2828'>[RFC2828]<span> (</span><span class='info'>Shirey, R., &ldquo;Internet Security Glossary,&rdquo; May&nbsp;2000.</span><span>)</span></a>). This requires treating the access token with the
-        same care as other passwords. Access tokens SHOULD NOT be sent in the clear over an
-        insecure channel.
-      
-</p>
-<p>
-        However, when it is necessary to transmit access tokens in the clear without a secure
-        channel, authorization servers SHOULD issue access tokens with limited scope and lifetime
-        to reduce the potential risk from a compromised access token.
-      
-</p>
-<p>
-        Clients MUST NOT make authenticated requests with an access token to unfamiliar resource
-        servers, regardless of the presence of a secure channel.
-      
-</p>
-<p>
         The resource server MUST validate the access token and ensure it has not expired and
         that its scope covers the requested resource. The methods used by the resource server
         to validate the access token are beyond the scope of this specification, but generally
@@ -2297,204 +2290,14 @@ Accessing a Protected Resource</h3>
         server.
       
 </p>
-<a name="anchor22"></a><br /><hr />
+<a name="token-types"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1"></a><h3>6.1.&nbsp;
-Authenticated Requests</h3>
+Access Token Types</h3>
 
 <p>
-          Clients make authenticated token requests using the
-          <tt>Authorization</tt> request header field. Resource servers MUST
-          accept authenticated requests using the <tt>OAuth</tt> HTTP
-          authentication scheme as described in <a class='info' href='#authz-header'>Section&nbsp;6.1.1<span> (</span><span class='info'>The Authorization Request Header Field</span><span>)</span></a>, and MAY support
-          additional methods.
+          
         
-</p>
-<p>
-          Alternatively, clients MAY attempt to include the access token using the HTTP request
-          URI in the query component as described in <a class='info' href='#query-param'>Section&nbsp;6.1.2<span> (</span><span class='info'>URI Query Parameter</span><span>)</span></a>, or in the HTTP
-          body when using the <tt>application/x-www-form-urlencoded</tt> content
-          type as described in <a class='info' href='#body-param'>Section&nbsp;6.1.3<span> (</span><span class='info'>Form-Encoded Body Parameter</span><span>)</span></a>. Resource server MAY support these
-          alternative methods.
-        
-</p>
-<p>
-          Clients SHOULD only use the request URI or body when the
-          <tt>Authorization</tt> request header field is not available, and MUST
-          NOT use more than one method in each request.
-        
-</p>
-<a name="authz-header"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6.1.1"></a><h3>6.1.1.&nbsp;
-The Authorization Request Header Field</h3>
-
-<p>
-            The <tt>Authorization</tt> request header field is used by clients
-            to make authenticated token requests. The client uses the
-            <tt>OAuth</tt> authentication scheme to include the access token in
-            the request.
-          
-</p>
-<p>
-              For example:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  GET /resource HTTP/1.1
-  Host: server.example.com
-  Authorization: OAuth vF9dft4qmT
-
-</pre></div>
-<p>
-            The <tt>Authorization</tt> header field uses the framework defined by
-            <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
-          
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
-  access-token   = 1*( quoted-char / &lt;"&gt; )
-
-  quoted-char    =   "!" / "#" / "$" / "%" / "&amp;" / "'" / "("
-                   / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
-                   / ":" / "&lt;" / "=" / "&gt;" / "?" / "@" / ALPHA
-                   / "[" / "]" / "^" / "_" / "`" / "{" / "|"
-                   / "}" / "~" / "\" / "," / ";"
-
-</pre></div>
-<p>
-            </p>
-<blockquote class="text">
-<p>
-                NOTE: <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a> defines a different format for the
-                <tt>OAuth</tt> authentication scheme. Resource servers can
-                differentiate between the two protocol versions based on the presence of the
-                <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
-              
-</p>
-</blockquote><p>
-          
-</p>
-<a name="query-param"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6.1.2"></a><h3>6.1.2.&nbsp;
-URI Query Parameter</h3>
-
-<p>
-            When including the access token in the HTTP request URI, the client adds the access
-            token to the request URI query component as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> using
-            the <tt>oauth_token</tt> parameter.
-          
-</p>
-<p>
-              For example, the client makes the following HTTP request using transport-layer
-              security:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  GET /resource?oauth_token=vF9dft4qmT HTTP/1.1
-  Host: server.example.com
-
-</pre></div>
-<p>
-            The HTTP request URI query can include other request-specific parameters, in which
-            case, the <tt>oauth_token</tt> parameters SHOULD be appended
-            following the request-specific parameters, properly separated by an
-            <tt>&amp;</tt> character (ASCII code 38).
-          
-</p>
-<p>
-              For example:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  http://example.com/resource?x=y&amp;oauth_token=vF9dft4qmT
-
-</pre></div>
-<p>
-            </p>
-<blockquote class="text">
-<p>
-                NOTE: The <tt>oauth_token</tt> parameter is used by the previous
-                version of the OAuth protocol as described in <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>. Resource
-                servers can differentiate between the two protocol versions based on the presence
-                of the <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
-              
-</p>
-</blockquote><p>
-          
-</p>
-<a name="body-param"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6.1.3"></a><h3>6.1.3.&nbsp;
-Form-Encoded Body Parameter</h3>
-
-<p>
-            When including the access token in the HTTP request entity-body, the client adds the
-            access token to the request body using the <tt>oauth_token</tt>
-            parameter. The client can use this method only if the following REQUIRED conditions are
-            met:
-
-            </p>
-<ul class="text">
-<li>
-                The entity-body is single-part.
-              
-</li>
-<li>
-                The entity-body follows the encoding requirements of the
-                <tt>application/x-www-form-urlencoded</tt> content-type as
-                defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>.
-              
-</li>
-<li>
-                The HTTP request entity-header includes the <tt>Content-Type</tt>
-                header field set to <tt>application/x-www-form-urlencoded</tt>.
-              
-</li>
-<li>
-                The HTTP request method is <tt>POST</tt>,
-                <tt>PUT</tt>, or <tt>DELETE</tt>.
-              
-</li>
-</ul><p>
-          
-</p>
-<p>
-            The entity-body can include other request-specific parameters, in which case, the
-            <tt>oauth_token</tt> parameters SHOULD be appended following the
-            request-specific parameters, properly separated by an <tt>&amp;</tt>
-            character (ASCII code 38).
-          
-</p>
-<p>
-              For example, the client makes the following HTTP request using transport-layer
-              security:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  POST /resource HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  oauth_token=vF9dft4qmT
-
-</pre></div>
-<p>
-            </p>
-<blockquote class="text">
-<p>
-                NOTE: The <tt>oauth_token</tt> parameter is used by the previous
-                version of the OAuth protocol as described in <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>. Resource
-                servers can differentiate between the two protocol versions based on the presence
-                of the <tt>oauth_signature_method</tt> which is REQUIRED in the
-                previous version and is not supported by this specification.
-              
-</p>
-</blockquote><p>
-          
 </p>
 <a name="authn-header"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -2509,10 +2312,9 @@ The WWW-Authenticate Response Header Field</h3>
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-  challenge       = "OAuth" RWS token-challenge
+  challenge       = "OAuth2" RWS token-challenge
 
-  token-challenge = realm
-                    [ CS error ]
+  token-challenge = [ CS error ]
                     [ CS error-desc ]
                     [ CS error-uri ]
                     [ CS scope ]
@@ -2527,6 +2329,15 @@ The WWW-Authenticate Response Header Field</h3>
 
   CS              = OWS "," OWS
 
+  credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
+  access-token   = 1*( quoted-char / &lt;"&gt; )
+
+  quoted-char    =   "!" / "#" / "$" / "%" / "&amp;" / "'" / "("
+                   / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
+                   / ":" / "&lt;" / "=" / "&gt;" / "?" / "@" / ALPHA
+                   / "[" / "]" / "^" / "_" / "`" / "{" / "|"
+                   / "}" / "~" / "\" / "," / ";"
+
 </pre></div>
 <p>
             For example:
@@ -2534,16 +2345,11 @@ The WWW-Authenticate Response Header Field</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: OAuth realm="Example Service",
+  WWW-Authenticate: OAuth2
                     error="invalid_token",
                     error_description="The access token expired"
 
 </pre></div>
-<p>
-          The <tt>realm</tt> attribute is used to provide the protected
-          resources partition as defined by <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>. [[ add explanation ]]
-        
-</p>
 <p>
           The <tt>error</tt> attribute is used to provide the client with the
           reason why the access request was declined. The parameter values are described in
@@ -2557,8 +2363,8 @@ The WWW-Authenticate Response Header Field</h3>
         
 </p>
 <p>
-          The <tt>error_uri</tt> attribute provides a URI identifying a
-          human-readable web page with information about the error, used to offer the end-user
+          The <tt>error_uri</tt> attribute provides an absolute URI identifying
+          a human-readable web page with information about the error, used to offer the end-user
           with additional information about the error. If the value is not an absolute URI, it is
           relative to the URI of the requested protected resource.
         
@@ -2626,15 +2432,15 @@ Error Codes</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: OAuth realm="Example Service"
+  WWW-Authenticate: OAuth2
 
 </pre></div>
-<a name="anchor23"></a><br /><hr />
+<a name="anchor22"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7"></a><h3>7.&nbsp;
 Extensibility</h3>
 
-<a name="anchor24"></a><br /><hr />
+<a name="anchor23"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7.1"></a><h3>7.1.&nbsp;
 Defining New Client Credentials Types</h3>
@@ -2643,7 +2449,7 @@ Defining New Client Credentials Types</h3>
           [[ TBD ]]
         
 </p>
-<a name="anchor25"></a><br /><hr />
+<a name="anchor24"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7.2"></a><h3>7.2.&nbsp;
 Defining New Endpoint Parameters</h3>
@@ -2674,16 +2480,15 @@ Defining New Endpoint Parameters</h3>
   name-char   = "-" / "." / "_" / DIGIT / ALPHA
 
 </pre></div>
-<a name="anchor26"></a><br /><hr />
+<a name="anchor25"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7.3"></a><h3>7.3.&nbsp;
 Defining New Header Field Parameters</h3>
 
 <p>
           Applications that wish to define new parameters for use in the OAuth
-          <tt>Authorization</tt> or <tt>WWW-Authenticate</tt>
-          header fields MUST register them in the parameters registry, following the procedures in
-          <a class='info' href='#parameters-registry'>Section&nbsp;9.1<span> (</span><span class='info'>The OAuth Parameters Registry</span><span>)</span></a>.
+          <tt>WWW-Authenticate</tt> header field MUST register them in the
+          parameters registry, following the procedures in <a class='info' href='#parameters-registry'>Section&nbsp;9.1<span> (</span><span class='info'>The OAuth Parameters Registry</span><span>)</span></a>.
         
 </p>
 <p>
@@ -2697,7 +2502,7 @@ Defining New Header Field Parameters</h3>
   param-value  = quoted-value | quoted-string
 
 </pre></div>
-<a name="anchor27"></a><br /><hr />
+<a name="anchor26"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.7.4"></a><h3>7.4.&nbsp;
 Defining New Access Grant Types</h3>
@@ -2708,7 +2513,7 @@ Defining New Access Grant Types</h3>
           types can do so by utilizing a new or existing assertion type and format.
         
 </p>
-<a name="anchor28"></a><br /><hr />
+<a name="anchor27"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 Security Considerations</h3>
@@ -2717,7 +2522,7 @@ Security Considerations</h3>
         [[ TBD ]]
       
 </p>
-<a name="anchor29"></a><br /><hr />
+<a name="anchor28"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 IANA Considerations</h3>
@@ -2734,12 +2539,12 @@ The OAuth Parameters Registry</h3>
 <p>
           Additional parameters to be use in the end-user authorization endpoint request, the
           end-user authorization endpoint response, the token endpoint request, the token endpoint
-          response, the <tt>Authorization</tt> header field, or the
-          <tt>WWW-Authenticate</tt> header field, are registered on the advice
-          of one or more Designated Experts (appointed by the IESG or their delegate), with a
-          Specification Required (using terminology from <a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>). However, to
-          allow for the allocation of values prior to publication, the Designated Expert(s) may
-          approve registration once they are satisfied that such a specification will be published.
+          response, or the <tt>WWW-Authenticate</tt> header field, are
+          registered on the advice of one or more Designated Experts (appointed by the IESG or
+          their delegate), with a Specification Required (using terminology from 
+          <a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>). However, to allow for the allocation of values prior to
+          publication, the Designated Expert(s) may approve registration once they are satisfied
+          that such a specification will be published.
         
 </p>
 <p>
@@ -2758,7 +2563,7 @@ The OAuth Parameters Registry</h3>
           mailing list) for resolution.
         
 </p>
-<a name="anchor30"></a><br /><hr />
+<a name="anchor29"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9.1.1"></a><h3>9.1.1.&nbsp;
 Registration Template</h3>
@@ -2775,8 +2580,7 @@ Registration Template</h3>
 <dd>
                 The location(s) where parameter can be used. The possible locations are: the
                 end-user authorization endpoint request, the end-user authorization endpoint
-                response, the token endpoint request, the token endpoint response, the
-                <tt>Authorization</tt> header field, or the
+                response, the token endpoint request, the token endpoint response, the or the
                 <tt>WWW-Authenticate</tt> header field.
               
 </dd>
@@ -2803,7 +2607,7 @@ Registration Template</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor31"></a><br /><hr />
+<a name="anchor30"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9.1.2"></a><h3>9.1.2.&nbsp;
 Example</h3>
@@ -2844,7 +2648,7 @@ Example</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor32"></a><br /><hr />
+<a name="anchor31"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Examples</h3>
@@ -2853,7 +2657,7 @@ Examples</h3>
         [[ TBD ]]
       
 </p>
-<a name="anchor33"></a><br /><hr />
+<a name="anchor32"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
 Contributors</h3>
@@ -2875,13 +2679,13 @@ Contributors</h3>
 <p>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
         Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert, Justin Hart,
-        John Kemp, Chasen Le Hara, Torsten Lodderstedt, Eve Maler, James Manger, Laurence Miao,
-        Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
+        Mike Jones, John Kemp, Chasen Le Hara, Torsten Lodderstedt, Eve Maler, James Manger,
+        Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
         Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
         and Franklin Tse.
       
 </p>
-<a name="anchor34"></a><br /><hr />
+<a name="anchor33"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.C"></a><h3>Appendix C.&nbsp;
 Acknowledgements</h3>
@@ -2890,7 +2694,7 @@ Acknowledgements</h3>
         [[ Add OAuth 1.0a authors + WG contributors ]]
       
 </p>
-<a name="anchor35"></a><br /><hr />
+<a name="anchor34"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.D"></a><h3>Appendix D.&nbsp;
 Document History</h3>
@@ -2942,6 +2746,27 @@ Document History</h3>
 </li>
 <li>
             Added note about redirecting to invalid redirection URIs (open redirectors).
+          
+</li>
+<li>
+            Removed bearer token section, added new required 'token_type' parameter with
+            extensibility.
+          
+</li>
+<li>
+            'error-uri' parameter value changed to absolute URI.
+          
+</li>
+<li>
+            OAuth 2.0 HTTP authentication scheme name changed to 'OAuth2'.
+          
+</li>
+<li>
+            Dropped the 'WWW-Authenticate' header field 'realm' parameter.
+          
+</li>
+<li>
+            Removed definition of access token characters.
           
 </li>
 </ul><p>
@@ -3377,7 +3202,7 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC5849">[RFC5849]</a></td>
 <td class="author-text">Hammer-Lahav, E., &ldquo;<a href="http://tools.ietf.org/html/rfc5849">The OAuth 1.0 Protocol</a>,&rdquo; RFC&nbsp;5849, April&nbsp;2010 (<a href="http://www.rfc-editor.org/rfc/rfc5849.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html401-19991224">[W3C.REC-html401-19991224]</a></td>
-<td class="author-text">Hors, A., Raggett, D., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
+<td class="author-text">Raggett, D., Hors, A., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />
