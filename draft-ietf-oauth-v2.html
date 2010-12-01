@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: May 28, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: June 4, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">November 24, 2010</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">December 1, 2010</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Protocol Framework<br />draft-ietf-oauth-v2-11</h1>
 
@@ -172,7 +172,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on May 28, 2011.</p>
+This Internet-Draft will expire on June 4, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -359,17 +359,11 @@ Introduction</h3>
       
 </p>
 <p>
-        Instead of using the resource owner's credentials to access protected resources, clients
-        obtain an access token (a string which denotes a specific scope, duration, and other
-        attributes). The format and structure of access tokens is beyond the scope of this
-        specification.
-      
-</p>
-<p>
-        Tokens are issued to third-party clients by an authorization server with the approval of
-        the resource owner. The client uses the access token to access the protected resources
-        hosted by the resource server. The interaction between the authorization server and
-        resource server is beyond the scope of this specification.
+        Instead of using the resource owner's credentials to access protected resources, the client
+        obtains an access token - a string which denotes a specific scope, duration, and other
+        attributes. Access tokens are issued to third-party clients by an authorization server with
+        the approval of the resource owner. The client uses the access token to access the
+        protected resources hosted by the resource server.
       
 </p>
 <p>
@@ -381,11 +375,11 @@ Introduction</h3>
       
 </p>
 <p>
-        This specification describes the OAuth protocol framework and defines methods for obtaining
-        access tokens using resource owner credentials over <a class='info' href='#RFC2616'>HTTP<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> [RFC2616]
-        (or HTTP over TLS as defined by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>). The access tokens format and
-        attributes (e.g. cryptographic properties), as well as the methods for using access tokens
-        to access protected resource are defined by companion specifications.
+        Access tokens can have different formats, structures, and methods of utilization (e.g.
+        cryptographic properties), based on the resource server security requirements. Access token
+        attributes and the methods used to access protected resources are beyond the scope of this
+        specification and are defined by companion specifications. The interaction between the
+        authorization server and resource server is beyond the scope of this specification.
       
 </p>
 <a name="anchor2"></a><br /><hr />
@@ -402,8 +396,7 @@ Notational Conventions</h3>
 <p>
           This document uses the Augmented Backus-Naur Form (ABNF) notation of
           <a class='info' href='#I-D.ietf-httpbis-p1-messaging'>[I&#8209;D.ietf&#8209;httpbis&#8209;p1&#8209;messaging]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;HTTP/1.1, part 1: URIs, Connections, and Message Parsing,&rdquo; March&nbsp;2010.</span><span>)</span></a>. Additionally, the following rules are
-          included from <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a>: auth-param; from
-          <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>: URI-Reference; and from
+          included from <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>: URI-reference; and from
           <a class='info' href='#I-D.ietf-httpbis-p1-messaging'>[I&#8209;D.ietf&#8209;httpbis&#8209;p1&#8209;messaging]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;HTTP/1.1, part 1: URIs, Connections, and Message Parsing,&rdquo; March&nbsp;2010.</span><span>)</span></a>: OWS, RWS, and quoted-string.
         
 </p>
@@ -581,7 +574,7 @@ Overview</h3>
 <dt>(A)</dt>
 <dd>
               The client requests authorization from the resource owner. The authorization request
-              can be made directly to the resource owner, or preferebly indirectly via an
+              can be made directly to the resource owner, or preferably indirectly via an
               intermediary such as an authorization server.
             
 </dd>
@@ -746,8 +739,8 @@ Resource Owner Password Credentials</h3>
 </p>
 <p>
             In <a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>Obtaining Resource Owner Password Credentials</span><span>)</span></a>, the client requests authorization from the resource
-            owner directly. When interacting with an end-user, the client typically promopts the
-            end-user for the username and password.
+            owner directly. When the resource owner is an end-user, the client typically prompts
+            the end-user for the username and password.
           
 </p><br /><hr class="insert" />
 <a name="Figure 3"></a>
@@ -896,7 +889,8 @@ Assertion</h3>
 Client Profiles</h3>
 
 <p>
-        
+        [[ add intro and find new names for the profiles. this section will have normative language
+        in future drafts, similar to -05 and earlier. ]]
       
 </p>
 <a name="anchor12"></a><br /><hr />
@@ -1199,9 +1193,9 @@ Client Credentials</h3>
 </p>
 <p>
         Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-        about the confidentiality of client secrets without establishing trust with the
-        client operator. Authorization servers SHOULD NOT issue client secrets to clients
-        incapable of keeping their secrets confidential.
+        about the confidentiality of client secrets without establishing trust with the client.
+        Authorization servers SHOULD NOT issue client secrets to clients incapable of keeping their
+        secrets confidential.
       
 </p>
 <p>
@@ -1284,7 +1278,7 @@ Client Assertion Credentials</h3>
 
 <p>
           The client assertion credentials are used in cases where a password (clear-text shared
-          symetric secret) is unsuitable or does not provide sufficient security for client
+          symmetric secret) is unsuitable or does not provide sufficient security for client
           authentication. In such cases it is common to use other mechanisms such as HMAC or
           digital signatures that do not require sending clear-text secrets. The client assertion
           credentials provide an extensible mechanism to use an assertion format supported by the
@@ -1320,7 +1314,7 @@ Client Assertion Credentials</h3>
 </p>
 <p>
             For example, the client sends the following access token request using a SAML 2.0
-            assersion to authenticate itself (line breaks are for display purposes only):
+            assertion to authenticate itself (line breaks are for display purposes only):
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -1626,8 +1620,8 @@ Authorization Response</h3>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   HTTP/1.1 302 Found
-  Location: http://example.com/rd#access_token=FJQbwq9&amp;token_type=bearer
-            &amp;expires_in=3600
+  Location: http://example.com/rd#access_token=FJQbwq9&amp;
+            token_type=example&amp;expires_in=3600
 
 </pre></div>
 <p>
@@ -1643,10 +1637,11 @@ Authorization Response</h3>
 Error Response</h3>
 
 <p>
-          If the end-user denies the access request or if the request is invalid, the authorization
-          server informs the client by adding the following parameters to the redirection URI query
-          component using the <tt>application/x-www-form-urlencoded</tt> format
-          as defined by <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+          If the end-user denies the access request or if the request fails for reasons other than
+          a missing or invalid redirection URI, the authorization server informs the client by
+          adding the following parameters to the redirection URI query component using the
+          <tt>application/x-www-form-urlencoded</tt> format as defined by
+          <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
 
           </p>
 <blockquote class="text"><dl>
@@ -1688,6 +1683,12 @@ Error Response</h3>
   Location: https://client.example.com/cb?error=access_denied
 
 </pre></div>
+<p>
+          If the request fails due to a missing or invalid redirection URI, the authorization
+          server SHOULD inform the end-user of the error, and MUST NOT redirect the end-user's
+          user-agent to the invalid redirection URI.
+        
+</p>
 <a name="auth-error-codes"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.1"></a><h3>4.3.1.&nbsp;
@@ -1809,7 +1810,8 @@ Obtaining an Access Token</h3>
             strings, their order does not matter, and each string adds an additional access
             range to the requested scope. If the access grant being used already represents an
             approved scope (e.g. authorization code, assertion), the requested scope MUST be equal
-            or lesser than the scope previously granted.
+            or lesser than the scope previously granted, and if omitted is treated as equal to the
+            previously approved scope.
           
 </dd>
 </dl></blockquote><p>
@@ -2017,7 +2019,7 @@ Refresh Token</h3>
 Assertion</h3>
 
 <p>
-            The client includes an assertion by specifying the assertion format using an abolute
+            The client includes an assertion by specifying the assertion format using an absolute
             URI (as defined by the authorization server) as the value of the
             <tt>grant_type</tt> parameter and by adding the following parameter:
 
@@ -2147,7 +2149,7 @@ Access Token Response</h3>
 
   {
     "access_token":"SlAV32hkKG",
-    "token_type":"bearer",
+    "token_type":"example",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8"
   }
@@ -2290,13 +2292,18 @@ Accessing a Protected Resource</h3>
         server.
       
 </p>
+<p>
+        The method in which the client utilized the access token to authenticate with the resource
+        server depends on the type of access token issued by the authorization server.
+      
+</p>
 <a name="token-types"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.1"></a><h3>6.1.&nbsp;
 Access Token Types</h3>
 
 <p>
-          
+          [[ add token type explanation, maybe with links to other token specs ]]
         
 </p>
 <a name="authn-header"></a><br /><hr />
@@ -2305,42 +2312,64 @@ Access Token Types</h3>
 The WWW-Authenticate Response Header Field</h3>
 
 <p>
-          If the protected resource request contains an invalid access token or is malformed, the
-          resource server MUST include the HTTP <tt>WWW-Authenticate</tt>
-          response header field. The <tt>WWW-Authenticate</tt> header field
-          uses the framework defined by <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
+          If the protected resource request does not include authentication credentials, contains
+          an invalid access token, or is malformed, the resource server MUST include the HTTP
+          <tt>WWW-Authenticate</tt> response header field. The
+          <tt>WWW-Authenticate</tt> header field uses the framework defined by
+          <a class='info' href='#RFC2617'>[RFC2617]<span> (</span><span class='info'>Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S., Leach, P., Luotonen, A., and L. Stewart, &ldquo;HTTP Authentication: Basic and Digest Access Authentication,&rdquo; June&nbsp;1999.</span><span>)</span></a> as follows:
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-  challenge       = "OAuth2" RWS token-challenge
+  challenge       = "OAuth2" [ RWS 1#param ]
 
-  token-challenge = [ CS error ]
-                    [ CS error-desc ]
-                    [ CS error-uri ]
-                    [ CS scope ]
-                    [ CS 1#auth-param ]
+  param           = scope /
+                    error / error-desc / error-uri /
+                    ( token "=" ( token / quoted-string ) )
 
-  error           = "error" "=" &lt;"&gt; token &lt;"&gt;
+  scope           = "scope" "=" &lt;"&gt; scope-v *( SP scope-v ) &lt;"&gt;
+  scope-v         = 1*quoted-char
+
+  quoted-char     = ALPHA / DIGIT /
+                    "!" / "#" / "$" / "%" / "&amp;" / "'" / "(" / ")" /
+                    "*" / "+" / "-" / "." / "/" / ":" / "&lt;" / "=" /
+                    "&gt;" / "?" / "@" / "[" / "]" / "^" / "_" / "`" /
+                    "{" / "|" / "}" / "~" / "\" / "," / ";"
+
+  error           = "error" "=" quoted-string
   error-desc      = "error_description" "=" quoted-string
-  error-uri       = "error_uri" = &lt;"&gt; URI-Reference &lt;"&gt;
-  scope           = quoted-value /
-                    &lt;"&gt; quoted-value *( 1*SP quoted-value ) &lt;"&gt;
-  quoted-value    = 1*quoted-char
-
-  CS              = OWS "," OWS
-
-  credentials    = "OAuth" RWS access-token [ RWS 1#auth-param ]
-  access-token   = 1*( quoted-char / &lt;"&gt; )
-
-  quoted-char    =   "!" / "#" / "$" / "%" / "&amp;" / "'" / "("
-                   / ")" / "*" / "+" / "-" / "." / "/" / DIGIT
-                   / ":" / "&lt;" / "=" / "&gt;" / "?" / "@" / ALPHA
-                   / "[" / "]" / "^" / "_" / "`" / "{" / "|"
-                   / "}" / "~" / "\" / "," / ";"
+  error-uri       = "error_uri" = &lt;"&gt; URI-reference &lt;"&gt;
 
 </pre></div>
 <p>
-            For example:
+          The <tt>scope</tt> attribute is a space-delimited list of scope values
+          indicating the required scope of the access token for accessing the requested resource.
+          The <tt>scope</tt> attribute MUST NOT appear more than once.
+        
+</p>
+<p>
+          If the protected resource request included an access token and failed authentication, the
+          resource server SHOULD include the <tt>error</tt> attribute to provide
+          the client with the reason why the access request was declined. The parameter value is
+          described in <a class='info' href='#resource-error-codes'>Section&nbsp;6.2.1<span> (</span><span class='info'>Error Codes</span><span>)</span></a>. In addition, the resource server MAY
+          include the <tt>error_description</tt> attribute to provide a
+          human-readable explanation, and the <tt>error-uri</tt> attribute with
+          an absolute URI identifying a human-readable web page explaining the error.
+          The <tt>error</tt>, <tt>error_description</tt>, and
+          <tt>error_uri</tt> attribute MUST NOT appear more than once.
+        
+</p>
+<p>
+            For example, in response to a protected resource request without authentication:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: OAuth2
+
+</pre></div>
+<p>
+            And in response to a protected resource request with an authentication attempt using an
+            expired access token:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
@@ -2350,30 +2379,6 @@ The WWW-Authenticate Response Header Field</h3>
                     error_description="The access token expired"
 
 </pre></div>
-<p>
-          The <tt>error</tt> attribute is used to provide the client with the
-          reason why the access request was declined. The parameter values are described in
-          <a class='info' href='#resource-error-codes'>Section&nbsp;6.2.1<span> (</span><span class='info'>Error Codes</span><span>)</span></a>.
-        
-</p>
-<p>
-          The <tt>error_description</tt> attribute provides a human-readable
-          text containing additional information, used to assist in the understanding and
-          resolution of the error occurred.
-        
-</p>
-<p>
-          The <tt>error_uri</tt> attribute provides an absolute URI identifying
-          a human-readable web page with information about the error, used to offer the end-user
-          with additional information about the error. If the value is not an absolute URI, it is
-          relative to the URI of the requested protected resource.
-        
-</p>
-<p>
-          The <tt>scope</tt> attribute is a space-delimited list of scope values
-          indicating the required scope of the access token for accessing the requested resource.
-        
-</p>
 <a name="resource-error-codes"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6.2.1"></a><h3>6.2.1.&nbsp;
@@ -2678,11 +2683,12 @@ Contributors</h3>
 </p>
 <p>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
-        Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert, Justin Hart,
-        Mike Jones, John Kemp, Chasen Le Hara, Torsten Lodderstedt, Eve Maler, James Manger,
-        Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
+        Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
+        Kristoffer Gronowski, Justin Hart, Mike Jones, John Kemp, Chasen Le Hara,
+        Torsten Lodderstedt, Alastair Mair, Eve Maler, James Manger, Laurence Miao,
+        Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
         Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
-        and Franklin Tse.
+        Franklin Tse, and Nick Walker.
       
 </p>
 <a name="anchor33"></a><br /><hr />
@@ -2710,7 +2716,7 @@ Document History</h3>
 <ul class="text">
 <li>
             Many editorial changes. Fixed user authorization section structure.
-            Removed unused normative references. Adjusted langugage regarding single use of
+            Removed unused normative references. Adjusted language regarding single use of
             authorization codes.
           
 </li>
@@ -2767,6 +2773,10 @@ Document History</h3>
 </li>
 <li>
             Removed definition of access token characters.
+          
+</li>
+<li>
+            Added instructions for dealing with error and an invalid redirection URI.
           
 </li>
 </ul><p>
