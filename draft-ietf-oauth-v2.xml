@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-11'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-12'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -24,7 +24,7 @@
     <author fullname='David Recordon' surname='Recordon' initials='D'>
       <organization>Facebook</organization>
       <address>
-        <email>davidrecordon@facebook.com</email>
+        <email>dr@fb.com</email>
         <uri>http://www.davidrecordon.com/</uri>
       </address>
     </author>
@@ -49,12 +49,6 @@
 
     <section title='Introduction'>
       <t>
-        With the increasing use of distributed web services and cloud computing, third-party
-        applications require access to server-hosted resources. These resources are usually
-        protected and require authentication using the resource owner's credentials (typically a
-        username and password).
-      </t>
-      <t>
         In the traditional client-server authentication model, the client accesses a protected
         resource on the server by authenticating with the server using the resource owner's
         credentials. In order to provide third-party applications access to protected resources,
@@ -73,8 +67,7 @@
           <t>
             Third-party applications gain overly broad access to the resource-owner's protected
             resources, leaving resource owners without any ability to restrict access to a limited
-            subset of resources, to limit access duration, or to limit access to the methods
-            supported by these resources.
+            subset of resources or its duration.
           </t>
           <t>
             Resource owners cannot revoke access to an individual third-party without revoking
@@ -84,14 +77,13 @@
       </t>
       <t>
         OAuth addresses these issues by separating the role of the client from that of the
-        resource owner. In OAuth, the client (which is usually not the resource owner, but is
-        acting on the resource owner's behalf) requests access to resources controlled by the
+        resource owner. In OAuth, the client requests access to resources controlled by the
         resource owner and hosted by the resource server, and is issued a different set of
         credentials than those of the resource owner.
       </t>
       <t>
         Instead of using the resource owner's credentials to access protected resources, the client
-        obtains an access token - a string which denotes a specific scope, duration, and other
+        obtains an access token - a string denoting a specific scope, duration, and other access
         attributes. Access tokens are issued to third-party clients by an authorization server with
         the approval of the resource owner. The client uses the access token to access the
         protected resources hosted by the resource server.
@@ -100,127 +92,105 @@
         For example, a web user (resource owner) can grant a printing service (client) access to
         her protected photos stored at a photo sharing service (resource server), without sharing
         her username and password with the printing service. Instead, she authenticates directly
-        with an authentication service trusted by the photo sharing service (authorization server)
-        which issues the printing service delegation-specific credentials (token).
+        with a server trusted by the photo sharing service (authorization server) which issues the
+        printing service delegation-specific credentials (access token).
       </t>
       <t>
         Access tokens can have different formats, structures, and methods of utilization (e.g.
-        cryptographic properties), based on the resource server security requirements. Access token
+        cryptographic properties) based on the resource server security requirements. Access token
         attributes and the methods used to access protected resources are beyond the scope of this
-        specification and are defined by companion specifications. The interaction between the
-        authorization server and resource server is beyond the scope of this specification.
+        specification and are defined by companion specifications.
       </t>
 
-      <section title='Notational Conventions'>
+      <section title='Roles'>
         <t>
-          The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
-          NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as
-          described in <xref target='RFC2119' />.
-        </t>
-        <t>
-          This document uses the Augmented Backus-Naur Form (ABNF) notation of
-          <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules are
-          included from <xref target='RFC3986' />: URI-reference; and from
-          <xref target='I-D.ietf-httpbis-p1-messaging' />: OWS, RWS, and quoted-string.
-        </t>
-        <t>
-          Unless otherwise noted, all the protocol parameter names and values are case sensitive.
-        </t>
-      </section>
+          OAuth includes four roles working together to grant and provide access to protected
+          resources - access restricted resources which require authentication to access:
 
-      <section title='Terminology'>
-        <t>
-          <list style='hanging' hangIndent='6'>
-            <t hangText='protected resource'>
+          <list style='hanging'>
+            <t hangText='resource owner'>
               <vspace />
-              An access-restricted resource which can be obtained using an OAuth-authenticated
-              request.
+              An entity capable of granting access to a protected resource. When the resource owner
+              is a person, it is refered to as an end-user.
             </t>
             <t hangText='resource server'>
               <vspace />
-              A server capable of accepting and responding to protected resource requests.
+              The server hosting the protected resources, capable of accepting and responding to
+              protected resource requests.
             </t>
             <t hangText='client'>
               <vspace />
-              An application obtaining authorization and making protected resource requests.
-            </t>
-            <t hangText='resource owner'>
-              <vspace />
-              An entity capable of granting access to a protected resource.
-            </t>
-            <t hangText='end-user'>
-              <vspace />
-              A human resource owner.
-            </t>
-            <t hangText='token'>
-              <vspace />
-              A string representing an access authorization issued to the client. The string is
-              usually opaque to the client. Tokens represent specific scopes and durations of
-              access, granted by the resource owner, and enforced by the resource server and
-              authorization servers. The token may denote an identifier used to retrieve the
-              authorization information, or self-contain the authorization information in a
-              verifiable manner (i.e. a token string consisting of some data and a signature).
-              Tokens may be pure capabilities. Specific additional authentication credentials may
-              be required in order for a client to use a token.
-            </t>
-            <t hangText='access token'>
-              <vspace />
-              A token used by the client to make authenticated requests on behalf of the resource
-              owner.
-            </t>
-            <t hangText='refresh token'>
-              <vspace />
-              A token used by the client to obtain a new access token without having to involve
-              the resource owner.
-            </t>
-            <t hangText='authorization code'>
-              A short-lived token representing the authorization provided by the end-user. The
-              authorization code is used to obtain an access token and a refresh token.
-            </t>
-            <t hangText='access grant'>
-              A general term used to describe the intermediate credentials (such as an end-user
-              password or authorization code) representing the resource owner authorization. Access
-              grants are used by the client to obtain an access token. By exchanging access
-              grants of different types for an access token, the resource server is only required
-              to support a single authentication scheme.
+              An application making protected resource requests on behalf of the resource owner and
+              with its authorization.
             </t>
             <t hangText='authorization server'>
               <vspace />
-              A server capable of issuing tokens after successfully authenticating the resource
-              owner and obtaining authorization. The authorization server may be the same server as
-              the resource server, or a separate entity. A single authorization server may issue
-              tokens for multiple resource servers.
-            </t>
-            <t hangText='end-user authorization endpoint'>
-              <vspace />
-              The authorization server's HTTP endpoint capable of authenticating the end-user and
-              obtaining authorization. The end-user authorization endpoint is described in
-              <xref target='user-authorization' />.
-            </t>
-            <t hangText='token endpoint'>
-              <vspace />
-              The authorization server's HTTP endpoint capable of issuing tokens and refreshing
-              expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
-            </t>
-            <t hangText='client identifier'>
-              <vspace />
-              A unique identifier issued to the client to identify itself to the authorization
-              server. Client identifiers may have a matching secret. The client identifier is
-              described in <xref target='client-authentication' />.
+              The server issuing access tokens to clients after successfully authenticating the
+              resource owner and obtaining authorization.
             </t>
           </list>
         </t>
+        <t>
+          The interaction between the authorization server and resource server is beyond the scope
+          of this specification. The authorization server may be the same server as the resource
+          server or separate. A single authorization server may issue access tokens accepted by
+          multiple resource servers.
+        </t>
       </section>
 
-      <section title='Overview'>
-        <t>
-          OAuth provides a method for clients to access a protected resource on behalf of a
-          resource owner. Before a client can access a protected resource, it must first obtain
-          authorization (access grant) from the resource owner, then exchange the access grant for
-          an access token (representing the grant's scope, duration, and other attributes). The
-          client accesses the protected resource by presenting the access token to the resource
-          server.
+<!--
+        <t hangText='token'>
+          <vspace />
+          A string representing an access authorization issued to the client. The string is
+          usually opaque to the client. Tokens represent specific scopes and durations of
+          access, granted by the resource owner, and enforced by the resource server and
+          authorization servers. The token may denote an identifier used to retrieve the
+          authorization information, or self-contain the authorization information in a
+          verifiable manner (i.e. a token string consisting of some data and a signature).
+          Tokens may be pure capabilities. Specific additional authentication credentials may
+          be required in order for a client to use a token.
         </t>
+        <t hangText='access token'>
+          <vspace />
+          A token used by the client to make authenticated requests on behalf of the resource
+          owner.
+        </t>
+        <t hangText='refresh token'>
+          <vspace />
+          A token used by the client to obtain a new access token without having to involve
+          the resource owner.
+        </t>
+        <t hangText='authorization code'>
+          A short-lived token representing the authorization provided by the end-user. The
+          authorization code is used to obtain an access token and a refresh token.
+        </t>
+        <t hangText='access grant'>
+          A general term used to describe the intermediate credentials (such as an end-user
+          password or authorization code) representing the resource owner authorization. Access
+          grants are used by the client to obtain an access token. By exchanging access
+          grants of different types for an access token, the resource server is only required
+          to support a single authentication scheme.
+        </t>
+        <t hangText='end-user authorization endpoint'>
+          <vspace />
+          The authorization server's HTTP endpoint capable of authenticating the end-user and
+          obtaining authorization. The end-user authorization endpoint is described in
+          <xref target='user-authorization' />.
+        </t>
+        <t hangText='token endpoint'>
+          <vspace />
+          The authorization server's HTTP endpoint capable of issuing tokens and refreshing
+          expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
+        </t>
+        <t hangText='client identifier'>
+          <vspace />
+          A unique identifier issued to the client to identify itself to the authorization
+          server. Client identifiers may have a matching secret. The client identifier is
+          described in <xref target='client-authentication' />.
+        </t>
+
+-->      
+      <section title='Overview'>
         <t>
           The access token provides an abstraction layer, replacing different authorization
           constructs (e.g. username and password, assertion) for a single token understood by the
@@ -505,6 +475,23 @@
           </t>
         </section>
 
+      </section>
+
+      <section title='Notational Conventions'>
+        <t>
+          The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
+          NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as
+          described in <xref target='RFC2119' />.
+        </t>
+        <t>
+          This document uses the Augmented Backus-Naur Form (ABNF) notation of
+          <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules are
+          included from <xref target='RFC3986' />: URI-reference; and from
+          <xref target='I-D.ietf-httpbis-p1-messaging' />: OWS, RWS, and quoted-string.
+        </t>
+        <t>
+          Unless otherwise noted, all the protocol parameter names and values are case sensitive.
+        </t>
       </section>
 
     </section>
@@ -1061,7 +1048,8 @@
               <vspace />
               REQUIRED if the response includes an access token. The type of the token issued.
               The token type informs the client how the access token is to be used when accessing a
-              protected resource as described in <xref target='token-types' />.
+              protected resource as described in <xref target='token-types' />. Value is case
+              insensitive.
             </t>
             <t hangText='expires_in'>
               <vspace />
@@ -1512,7 +1500,7 @@
               <vspace />
               REQUIRED. The type of the token issued. The token type informs the client how the
               access token is to be used when accessing a protected resource as described in
-              <xref target='token-types' />.
+              <xref target='token-types' />. Value is case insensitive.
             </t>
             <t hangText='expires_in'>
               <vspace />
@@ -1904,7 +1892,7 @@
           end-user authorization endpoint response, the token endpoint request, the token endpoint
           response, or the <spanx style='verb'>WWW-Authenticate</spanx> header field, are
           registered on the advice of one or more Designated Experts (appointed by the IESG or
-          their delegate), with a Specification Required (using terminology from 
+          their delegate), with a Specification Required (using terminology from
           <xref target='RFC5226' />). However, to allow for the allocation of values prior to
           publication, the Designated Expert(s) may approve registration once they are satisfied
           that such a specification will be published.
@@ -1985,6 +1973,90 @@
 
     </section>
 
+    <appendix title='Terminology'>
+      <t>
+        <list style='hanging' hangIndent='6'>
+          <t hangText='protected resource'>
+            <vspace />
+            An access-restricted resource which can be obtained using an OAuth-authenticated
+            request.
+          </t>
+          <t hangText='resource server'>
+            <vspace />
+            A server capable of accepting and responding to protected resource requests.
+          </t>
+          <t hangText='client'>
+            <vspace />
+            An application obtaining authorization and making protected resource requests.
+          </t>
+          <t hangText='resource owner'>
+            <vspace />
+            An entity capable of granting access to a protected resource.
+          </t>
+          <t hangText='end-user'>
+            <vspace />
+            A human resource owner.
+          </t>
+          <t hangText='token'>
+            <vspace />
+            A string representing an access authorization issued to the client. The string is
+            usually opaque to the client. Tokens represent specific scopes and durations of
+            access, granted by the resource owner, and enforced by the resource server and
+            authorization servers. The token may denote an identifier used to retrieve the
+            authorization information, or self-contain the authorization information in a
+            verifiable manner (i.e. a token string consisting of some data and a signature).
+            Tokens may be pure capabilities. Specific additional authentication credentials may
+            be required in order for a client to use a token.
+          </t>
+          <t hangText='access token'>
+            <vspace />
+            A token used by the client to make authenticated requests on behalf of the resource
+            owner.
+          </t>
+          <t hangText='refresh token'>
+            <vspace />
+            A token used by the client to obtain a new access token without having to involve
+            the resource owner.
+          </t>
+          <t hangText='authorization code'>
+            A short-lived token representing the authorization provided by the end-user. The
+            authorization code is used to obtain an access token and a refresh token.
+          </t>
+          <t hangText='access grant'>
+            A general term used to describe the intermediate credentials (such as an end-user
+            password or authorization code) representing the resource owner authorization. Access
+            grants are used by the client to obtain an access token. By exchanging access
+            grants of different types for an access token, the resource server is only required
+            to support a single authentication scheme.
+          </t>
+          <t hangText='authorization server'>
+            <vspace />
+            A server capable of issuing tokens after successfully authenticating the resource
+            owner and obtaining authorization. The authorization server may be the same server as
+            the resource server, or a separate entity. A single authorization server may issue
+            tokens for multiple resource servers.
+          </t>
+          <t hangText='end-user authorization endpoint'>
+            <vspace />
+            The authorization server's HTTP endpoint capable of authenticating the end-user and
+            obtaining authorization. The end-user authorization endpoint is described in
+            <xref target='user-authorization' />.
+          </t>
+          <t hangText='token endpoint'>
+            <vspace />
+            The authorization server's HTTP endpoint capable of issuing tokens and refreshing
+            expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
+          </t>
+          <t hangText='client identifier'>
+            <vspace />
+            A unique identifier issued to the client to identify itself to the authorization
+            server. Client identifiers may have a matching secret. The client identifier is
+            described in <xref target='client-authentication' />.
+          </t>
+        </list>
+      </t>
+    </appendix>
+
     <appendix title='Examples'>
       <t>
         [[ TBD ]]
@@ -2024,6 +2096,18 @@
     <appendix title='Document History'>
       <t>
         [[ to be removed by RFC editor before publication as an RFC ]]
+      </t>
+      <t>
+        -12
+
+        <list style='symbols'>
+          <t>
+            Clarified 'token_type' as case insensitive.
+          </t>
+          <t>
+            Moved terminology to an appendix and expanded terms in overview.
+          </t>
+        </list>
       </t>
       <t>
         -11
@@ -2379,6 +2463,7 @@
         </list>
       </t>
     </appendix>
+
 
   </middle>
 
