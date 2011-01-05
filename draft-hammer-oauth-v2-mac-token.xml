@@ -12,7 +12,7 @@
   <?rfc subcompact='no' ?>
 
   <front>
-    <title abbrev='Token Authentication'>OAuth 2.0 MAC Token and Authentication</title>
+    <title abbrev='OAuth 2.0 MAC Token'>OAuth 2.0 MAC Token and Authentication</title>
 
     <author fullname='Eran Hammer-Lahav' surname='Hammer-Lahav' initials='E'>
       <organization>Yahoo!</organization>
@@ -22,7 +22,7 @@
       </address>
     </author>
 
-    <date year='2010'/>
+    <date year='2011'/>
 
     <abstract>
       <t>
@@ -41,27 +41,22 @@
 
     <section title='Introduction'>
       <t>
-        OAuth 2.0 (<xref target='I-D.ietf-oauth-v2' />) provides a token-based authentication
+        OAuth 2.0 (<xref target='I-D.ietf-oauth-v2' />) defines a token-based authentication
         framework in which third-party applications (clients) access protected resources using
         access tokens. Access tokens are obtained via the resource owners' authorization from an
         authorization server.
       </t>
       <t>
-        OAuth 2.0 supports using different access token types based on the application security
-        requirements. The decision which access token types to support and issue is left to the
-        authorization server.
-      </t>
-      <t>
         This specification defines the MAC token type for use with the OAuth 2.0 framework. It
-        defines additional token attributes and provides a method for making authenticated HTTP
-        requests with partial cryptographic verification of the request, covering the HTTP
-        method, request URI, and host, as well as some types of request body.
+        defines type-specific token attributes and provides a method for making authenticated HTTP
+        requests with partial cryptographic verification of the request - covering the HTTP
+        method, request URI, host, and in some cases the request body.
       </t>
       <t>
         This specification does not define methods for the client to specifically request a
-        MAC-type token from the authorization server. It also does not include any discovery
-        facilities for identifying which token types are supported by a resource server or how the
-        client may go about obtaining an access token. This specification assumes that the
+        MAC-type token from the authorization server. Additionally, it does not include any
+        discovery facilities for identifying which token types are supported by a resource server
+        or how the client may go about obtaining access tokens. This specification assumes that the
         authorization server has issued the client a MAC-type token and describes how the client
         authenticates using that access token.
       </t>
@@ -114,9 +109,9 @@
         </t>
         <t>
           The client attempts the HTTP request again, this time using the token credentials
-          issued by the authorization server earlier to authenticate. To construct the request,
-          the client calculates a timestamp and nonce. The nonce is typically a random string,
-          unique to the timestamp used:
+          issued by the authorization server earlier to authenticate. To construct the
+          authentication header, the client calculates the current timestamp and a nonce. The nonce
+          is unique to the timestamp used, typically a random string:
 
           <list style='hanging' hangIndent='6'>
             <t hangText='Timestamp:'>137131200</t>
@@ -152,32 +147,30 @@
         <figure>
           <artwork>
             <![CDATA[
-  digest = HMAC-SHA1 (key, text)
-  signature = BASE64 (digest)
+  IdSrHQHTwCPWGrqzGGIR791ZJXE=
 ]]>
           </artwork>
         </figure>
         <t>
-          The client includes the access token, timestamp, nonce, and signature with the the
-          request using the <spanx style='verb'>Authorization</spanx> request header field:
+          The client includes the access token, timestamp, nonce, and signature with the request
+          using the <spanx style='verb'>Authorization</spanx> request header field:
         </t>
         <figure>
           <artwork>
             <![CDATA[
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: OAuth2-MAC
-                 token='h480djs93hd8',
-                 timestamp='137131200',
-                 nonce='dj83hs9s',
-                 signature='IdSrHQHTwCPWGrqzGGIR791ZJXE='
+  Authorization: MAC token='h480djs93hd8',
+                     timestamp='137131200',
+                     nonce='dj83hs9s',
+                     signature='IdSrHQHTwCPWGrqzGGIR791ZJXE='
 ]]>
           </artwork>
         </figure>
         <t>
-          After validating the request by calculating the signature again and verifying the
-          validity and scope of the access token, the resource server responds with the requested
-          protected resource representation.
+          The resource server validates the request by calculating the signature again based on the
+          request received and verifies the validity and scope of the access token. If valid, the
+          resource server responds with the requested protected resource representation.
         </t>
       </section>
 
@@ -200,7 +193,7 @@
       <t>
         Authorization servers issuing MAC-type access tokens MUST include the following parameters
         whenever a response includes the <spanx style='verb'>access_token</spanx> parameter:
-        
+
         <list style='hanging' hangIndent='6'>
           <t hangText='secret'>
             <vspace />
@@ -210,7 +203,7 @@
             <vspace />
             REQUIRED. The MAC algorithm used to calculate the request signature. Value MUST be one
             of <spanx style='verb'>hmac-sha-1</spanx>, <spanx style='verb'>hmac-sha-256</spanx>, or
-            a registered extension algorithm name.
+            a registered extension algorithm name as described in <xref target='extensions' />.
           </t>
         </list>
       </t>
@@ -218,318 +211,146 @@
 
     <section title='Making Requests' anchor='requests'>
       <t>
-        To make authenticated requests, the client must be in the possession of a valid MAC-type
-        access token, issued by an authorization server accepted by the resource server. The client makes authenticated requests by obtaining a MAC-type access token, calculating
-        the values of a set of attributes, and adding them to the HTTP request using the
-        <xref target='authz_header'>Authorization header field</xref>. Authenticated request can be
-        sent either directly (without first receiving a challenge), or in response to an
-        authentication challenge.
+        To make authenticated requests, the client must be in possession of a valid MAC-type access
+        token, issued by an authorization server accepted by the resource server. The client
+        constructs the request by calculating of a set of attributes, and adding them to the HTTP
+        request using the <xref target='authz_header'>Authorization header field</xref>.
+        Authenticated request can be sent in response to an authentication challenge or directly.
       </t>
-      <t>
-        Once a valid MAC-type access token is obtained, the client:
 
-        <list style='numbers'>
-          <t>
-            Assign values based on its selection to the following attributes:
+      <section title='The Authorization Request Header' anchor='authz_header'>
+        <t>
+          The <spanx style='verb'>Authorization</spanx> request header field uses the framework
+          defined by <xref target='RFC2617' /> as follows:
+        </t>
+        <figure>
+          <artwork>
+            <![CDATA[
+  credentials    = 'MAC' [ RWS 1#param ]
+  
+  param          = access-token /
+                   timestamp /
+                   nonce /
+                   signature
 
-            <list style='symbols'>
-              <t>
-                <spanx style='verb'>token</spanx>
-              </t>
-              <t>
-                <spanx style='verb'>coverage</spanx>
-              </t>
-            </list>
-          </t>
-          <t>
-            If the client uses a coverage method other than <spanx style='verb'>none</spanx> it
-            MUST assign values to the following attributes:
-
-            <list style='symbols'>
-              <t>
-                <spanx style='verb'>nonce</spanx>
-              </t>
-              <t>
-                <spanx style='verb'>timestamp</spanx>
-              </t>
-            </list>
-          </t>
-          <t>
-            Assigns value to any additional method-specific, or coverage-specific attributes as
-            defined by protocol extensions.
-          </t>
-          <t>
-            If the client uses a coverage method other than <spanx style='verb'>none</spanx> it
-            constructs the normalized request string based on the selected coverage as described in
-            <xref target='coverage' />.
-          </t>
-          <t>
-            Calculates the value of the <spanx style='verb'>auth</spanx> attribute as defined by
-            the selected authentication method.
-          </t>
-          <t>
-            Adds the assigned attributes to the request via the
-            <xref target='authz_header'>Authorization header field</xref>.
-          </t>
-          <t>
-            Sends the authenticated HTTP request to the server.
-          </t>
-        </list>
-      </t>
-    </section>
-
-    <section title='Verifying Requests' anchor='verify_request'>
-      <t>
-        A servers receiving an authenticated request validates it by performing the following
-        REQUIRED steps:
-
-        <list style='numbers'>
-          <t>
-            Verify that the token used by the client as well as the coverage method matches the
-            server's requirements.
-          </t>
-          <t>
-            If the client used a coverage method other than <spanx style='verb'>none</spanx>,
-            construct the normalized request string based on the selected coverage as described in
-            <xref target='coverage' />.
-          </t>
-          <t>
-            If the client used an authentication method other than <spanx style='verb'>none</spanx>,
-            recalculate the value of the <spanx style='verb'>auth</spanx> attribute as described in
-            <xref target='methods' /> and compare it to the value received from the client via
-            the <spanx style='verb'>auth</spanx> attribute.
-          </t>
-          <t>
-            If the client used a coverage method other than <spanx style='verb'>none</spanx>,
-            ensure that the combination of nonce, timestamp, and token received from the client has
-            not been used before in a previous request (the server MAY reject requests with stale
-            timestamps; the determination of staleness is left up to the server to define).
-          </t>
-          <t>
-            Verify the scope and status of the client credentials as represented by the token.
-          </t>
-        </list>
-      </t>
-      <t>
-        If the request fails verification, the server SHOULD respond with an HTTP 401 (unauthorized)
-        status code, and SHOULD include a token scheme authentication challenge using the
-        <xref target='error_header'>WWW-Authenticate header field</xref>. The server MAY include
-        further details about why the request was rejected using the
-        <xref target='error_header'>Authorization-Error header field</xref>.
-      </t>
-    </section>
-
-    <section title='The Authorization Request Header' anchor='authz_header'>
-      <t>
-        A client making a request for a protected resource either directly, or in retrying a
-        request after receiving a 401 status code (Unauthorized) with a token challenge, MUST
-        include at least one <spanx style='verb'>Authorization</spanx> header field including
-        token scheme credentials.
-      </t>
-      <t>
-        The <spanx style='verb'>Authorization</spanx> header field uses the framework defined by
-        <xref target='RFC2617' /> as follows:
-      </t>
-      <figure>
-        <artwork>
-          <![CDATA[
- credentials    = 'Token' RWS token-response
-   
- token-response = token-id
-                  CS coverage
-                  [ CS nonce ]
-                  [ CS timestamp ]
-                  [ CS auth ]
-
- token-id         = 'token' '=' <'> token <'>
- coverage         = 'coverage' '=' <'> coverage-name <'>
- nonce            = 'nonce' '=' <'> token <'>
- auth             = 'auth' '=' <'> token <'>
+  access-token   = 'token' '=' quoted-string
+  timestamp      = 'timestamp' '=' <"> 1*DIGIT <">
+  nonce          = 'nonce' '=' quoted-string
+  signature      = 'signature' '=' quoted-string
 ]]>
-        </artwork>
-      </figure>
+          </artwork>
+        </figure>
 
-      <section title='The "token" Attribute'>
         <t>
-          The value used to identify the set of token credentials used by the client to
-          authenticate. The token identifier can be an opaque string or use a well-defined internal
-          structure.
+          The <spanx style='verb'>token</spanx> attribute value is set to the access token received
+          from the authorization server.
+        </t>
+        <t>
+          The <spanx style='verb'>timestamp</spanx> attribute value is set to the current time
+          expressed in the number of seconds since January 1, 1970 00:00:00 GMT, and MUST be a
+          positive integer.
+        </t>
+        <t>
+          The <spanx style='verb'>nonce</spanx> attribute value is set to a random string, uniquely
+          generated by the client to allow the resource server to verify that a request has never
+          been made before and helps prevent replay attacks when requests are made over an insecure
+          channel.  The nonce value MUST be unique across all requests with the same timestamp and
+          access token combination.
+        </t>
+        <t>
+          To avoid the need to retain an infinite number of nonce values for future checks, servers
+          MAY choose to restrict the time period after which a request with an old timestamp is
+          rejected.  Such a restriction implies a level of synchronization between the client's and
+          server's clocks. The client MAY use the <spanx style='verb'>Date</spanx> response header
+          field to synchronize its clock after a failed request.
+        </t>
+        <t>
+          The <spanx style='verb'>signature</spanx> attribute value is set as described in
+          <xref target='signature' />.
         </t>
       </section>
 
-      <section title='The "coverage" Attribute'>
+      <section title='Siganture' anchor='signature'>
         <t>
-          The name of the authentication coverage method used by the client to make the request.
-          If the attribute is omitted, its value defaults to <spanx style='verb'>base</spanx>.
+          The client uses the MAC token algorithm and the access token secret - both provided by
+          the authorization server - to calculate the request signature. This specification defines
+          two algorithms: <spanx style='verb'>hmac-sha-1</spanx> and
+          <spanx style='verb'>hmac-sha-256</spanx>, and provides an extension registry for
+          additional algorithms.
         </t>
-      </section>
 
-      <section title='The "nonce" Attribute'>
-        <t>
-          A random string, uniquely generated by the client to allow the server to verify that a
-          request has never been made before and helps prevent replay attacks when requests are
-          made over a non-secure channel. The nonce value MUST be unique across all requests with
-          the same timestamp and token combinations.
-        </t>
-      </section>
+        <section title='hmac-sha-1'>
+          <t>
+            <spanx style='verb'>hmac-sha-1</spanx> uses the HMAC-SHA1 algorithm as defined in
+            <xref target='RFC2104' />:
 
-      <section title='The "timestamp" Attribute'>
-        <t>
-          The timestamp value is the current time expressed in the number of seconds since
-          January 1, 1970 00:00:00 GMT, and MUST be a positive integer.
-        </t>
-      </section>
-
-      <section title='The "signature" Attribute'>
-        <t>
-          The output of the authentication method function after applying it to the selected
-          coverage as described in <xref target='methods' />.
-        </t>
-      </section>
-
-    </section>
-
-    <section title='Authentication Methods' anchor='methods'>
-      <t>
-        In order for the server to verify the authenticity of the request and prevent unauthorized
-        access, the client must prove it is the rightful owner of the credentials. This is
-        accomplished using the authentication method associated with the token.
-      </t>
-      <t>
-        This specification provides three methods for the client to prove its rightful ownership of
-        the credentials: <spanx style='verb'>hmac-sha-1</spanx>, <spanx style='verb'>hmac-sha-256</spanx>,
-        and <spanx style='verb'>rsassa-pkcs1-v1.5-sha-256</spanx>. In addition, the
-        <spanx style='verb'>none</spanx> method is defined to allow the use of bearer token which
-        does not utilizes any cryptographic means.
-      </t>
-      <figure>
-        <artwork>
-          <![CDATA[
- method-name     = 'none' /
-                   'hmac-sha-1' /
-                   'hmac-sha-256' /
-                   'rsassa-pkcs1-v1.5-sha-256' /
-                   token
-]]>
-        </artwork>
-      </figure>
-      <t>
-        The authentication process does not change the request or its parameters, with the exception
-        of the <spanx style='verb'>auth</spanx> attribute.
-      </t>
-
-      <section title='The "hmac-sha-1" Method'>
-        <t>
-          The <spanx style='verb'>hmac-sha-1</spanx> authentication method uses the HMAC-SHA1
-          algorithm as defined in <xref target='RFC2104' />:
-
-          <figure>
-            <artwork>
-              <![CDATA[
+            <figure>
+              <artwork>
+                <![CDATA[
   digest = HMAC-SHA1 (key, text)
 ]]>
-            </artwork>
-          </figure>
-        </t>
-        <t>
-          The HMAC-SHA1 function variables are used in following way:
+              </artwork>
+            </figure>
+          </t>
+          <t>
+            Where:
 
-          <list style='hanging' hangIndent='6'>
-            <t hangText='text'>
-              <vspace />
-              is set to the value of the normalize request string as described in
-              <xref target='coverage' />.
-            </t>
-            <t hangText='key'>
-              <vspace />
-              is set to the shared-secret associated with the token.
-            </t>
-            <t hangText='digest'>
-              <vspace />
-              is used to set the value of the <spanx style='verb'>auth</spanx>
-              attribute, after the result octet string is base64-encoded per
-              <xref target='RFC2045' /> section 6.8.
-            </t>
-          </list>
-        </t>
-      </section>
+            <list style='hanging' hangIndent='6'>
+              <t hangText='text'>
+                <vspace />
+                is set to the value of the normalize request string as described in
+                <xref target='coverage' />.
+              </t>
+              <t hangText='key'>
+                <vspace />
+                is set to the access token shared-secret provided by the authorization server.
+              </t>
+              <t hangText='digest'>
+                <vspace />
+                is used to set the value of the <spanx style='verb'>signature</spanx> attribute,
+                after the result octet string is base64-encoded per <xref target='RFC2045' />
+                section 6.8.
+              </t>
+            </list>
+          </t>
+        </section>
 
-      <section title='The "hmac-sha-256" Method'>
-        <t>
-          The <spanx style='verb'>hmac-sha-256</spanx> authentication method uses the HMAC
-          algorithm as defined in <xref target='RFC2104' /> together with the SHA-256 hash
-          function defined in <xref target='NIST FIPS-180-3' />:
+        <section title='hmac-sha-256'>
+          <t>
+            <spanx style='verb'>hmac-sha-1</spanx> uses the HMAC algorithm as defined in
+            <xref target='RFC2104' /> together with the SHA-256 hash function defined in
+            <xref target='NIST FIPS-180-3' />:
 
-          <figure>
-            <artwork>
-              <![CDATA[
+            <figure>
+              <artwork>
+                <![CDATA[
   digest = HMAC-SHA256 (key, text)
 ]]>
-            </artwork>
-          </figure>
-        </t>
-        <t>
-          The HMAC-SHA256 function variables are used in following way:
+              </artwork>
+            </figure>
+          </t>
+          <t>
+            Where:
 
-          <list style='hanging' hangIndent='6'>
-            <t hangText='text'>
-              <vspace />
-              is set to the value of the normalize request string as described in
-              <xref target='coverage' />.
-            </t>
-            <t hangText='key'>
-              <vspace />
-              is set to the shared-secret associated with the token.
-            </t>
-            <t hangText='digest'>
-              <vspace />
-              is used to set the value of the <spanx style='verb'>auth</spanx>
-              attribute, after the result octet string is base64-encoded per
-              <xref target='RFC2045' /> section 6.8.
-            </t>
-          </list>
-        </t>
-      </section>
-
-    </section>
-
-    <section title='Coverage Methods' anchor='coverage'>
-      <t>
-        The normalized request string is a consistent, reproducible concatenation of several
-        of the HTTP request elements into a single string. The string is used as an input to
-        the authentication methods with the exception of <spanx style='verb'>none</spanx>.
-      </t>
-
-      <section title='The "base" Method'>
-        <t>
-          When using the <spanx style='verb'>base</spanx> method, the normalized request string
-          includes the following components of the HTTP request:
-
-          <list style='symbols'>
-            <t>
-              The HTTP request method (e.g. <spanx style='verb'>GET</spanx>,
-              <spanx style='verb'>POST</spanx>, etc.).
-            </t>
-            <t>
-              The authority as declared by the HTTP <spanx style='verb'>Host</spanx> request
-              header.
-            </t>
-            <t>
-              The request resource URI.
-            </t>
-            <t>
-              The <xref target='authz_header'>Authorization header field</xref> attributes, with the
-              exception of the <spanx style='verb'>auth</spanx> attribute.
-            </t>
-          </list>
-        </t>
-        <t>
-          The <spanx style='verb'>base</spanx> normalized request string does not cover the entire
-          HTTP request. Most notably, it does not include the entity-body or most HTTP
-          entity-headers. It is important to note that the server cannot verify the authenticity
-          of the excluded request elements without using additional protections such as SSL/TLS or
-          other methods.
-        </t>
+            <list style='hanging' hangIndent='6'>
+              <t hangText='text'>
+                <vspace />
+                is set to the value of the normalize request string as described in
+                <xref target='coverage' />.
+              </t>
+              <t hangText='key'>
+                <vspace />
+                is set to the access token shared-secret provided by the authorization server.
+              </t>
+              <t hangText='digest'>
+                <vspace />
+                is used to set the value of the <spanx style='verb'>signature</spanx> attribute,
+                after the result octet string is base64-encoded per <xref target='RFC2045' />
+                section 6.8.
+              </t>
+            </list>
+          </t>
+        </section>
 
         <section title='String Construction' anchor='base_string'>
           <t>
@@ -586,36 +407,47 @@
 
       </section>
 
-      <section title='The "base+body-hmac-sha-256" Method'>
-        <t>
-          The <spanx style='verb'>base+body-hmac-sha-256</spanx> method added the request entity-body
-          to the elements included in the normalized request string. It does not include the
-          entity-body directly in the normalized string. Instead, it calculates the hash value of
-          the entity-body using the SHA-256 hash function defined in <xref target='NIST FIPS-180-3' />.
-        </t>
-        <t>
-          The normalized request string is constructed following the same process defined in
-          <xref target='base_string' />, with the following addition:
+    </section>
 
-          <list style='symbols'>
-            <t>
-              Before constructing the string, the entity-body hash is calculated by applying the
-              SHA-256 hash function on the raw entity-body content.
-            </t>
-            <t>
-              The hash value is added to the list of authentication attributes by assigning its
-              value to the <spanx style='verb'>body-hash</spanx> attribute name. This is done
-              prior to the attributes being sorted and added to the string.
-            </t>
-            <t>
-              The <spanx style='verb'>body-hash</spanx> attribute is only included in the
-              normalized request string and is not added to the
-              <xref target='authz_header'>Authorization header field</xref>.
-            </t>
-          </list>
-        </t>
-      </section>
+    <section title='Verifying Requests' anchor='verify_request'>
+      <t>
+        A servers receiving an authenticated request validates it by performing the following
+        REQUIRED steps:
 
+        <list style='numbers'>
+          <t>
+            Verify that the token used by the client as well as the coverage method matches the
+            server's requirements.
+          </t>
+          <t>
+            If the client used a coverage method other than <spanx style='verb'>none</spanx>,
+            construct the normalized request string based on the selected coverage as described in
+            <xref target='coverage' />.
+          </t>
+          <t>
+            If the client used an authentication method other than <spanx style='verb'>none</spanx>,
+            recalculate the value of the <spanx style='verb'>auth</spanx> attribute as described in
+            <xref target='methods' /> and compare it to the value received from the client via
+            the <spanx style='verb'>auth</spanx> attribute.
+          </t>
+          <t>
+            If the client used a coverage method other than <spanx style='verb'>none</spanx>,
+            ensure that the combination of nonce, timestamp, and token received from the client has
+            not been used before in a previous request (the server MAY reject requests with stale
+            timestamps; the determination of staleness is left up to the server to define).
+          </t>
+          <t>
+            Verify the scope and status of the client credentials as represented by the token.
+          </t>
+        </list>
+      </t>
+      <t>
+        If the request fails verification, the server SHOULD respond with an HTTP 401 (unauthorized)
+        status code, and SHOULD include a token scheme authentication challenge using the
+        <xref target='error_header'>WWW-Authenticate header field</xref>. The server MAY include
+        further details about why the request was rejected using the
+        <xref target='error_header'>Authorization-Error header field</xref>.
+      </t>
     </section>
 
     <section title='Scheme Extensions'>
@@ -780,8 +612,7 @@
 
     <section title='Acknowledgments'>
       <t>
-        The author would like to thank Richard Barnes, Breno de Medeiros, Brian Eaton, Ben Laurie,
-        Mark Nottingham, John Panzer, and Peter Saint-Andre for their suggestions, feedback, and
+        The author would like to thank [[ some people ]] for their suggestions, feedback, and
         continued support.
       </t>
     </section>
@@ -791,22 +622,11 @@
         [[ To be removed by the RFC editor before publication as an RFC. ]]
       </t>
       <t>
-        -01
-
-        <list style='symbols'>
-          <t>
-            Simplified challenge, moving the supported authentication methods to the token
-            definition, as well as using the 'realm' parameter as defined by RFC 2617 instead of
-            the 'class' parameter (which has been dropped).
-          </t>
-        </list>
-      </t>
-      <t>
         -00
 
         <list style='symbols'>
           <t>
-            Initial (incomplete) draft.
+            Initial draft.
           </t>
         </list>
       </t>

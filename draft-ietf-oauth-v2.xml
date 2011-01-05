@@ -36,7 +36,7 @@
       </address>
     </author>
 
-    <date year='2010' />
+    <date year='2011' />
 
     <abstract>
       <t>
@@ -95,12 +95,6 @@
         with a server trusted by the photo sharing service (authorization server) which issues the
         printing service delegation-specific credentials (access token).
       </t>
-      <t>
-        Access tokens can have different formats, structures, and methods of utilization (e.g.
-        cryptographic properties) based on the resource server security requirements. Access token
-        attributes and the methods used to access protected resources are beyond the scope of this
-        specification and are defined by companion specifications.
-      </t>
 
       <section title='Roles'>
         <t>
@@ -133,70 +127,15 @@
         <t>
           The interaction between the authorization server and resource server is beyond the scope
           of this specification. The authorization server may be the same server as the resource
-          server or separate. A single authorization server may issue access tokens accepted by
-          multiple resource servers.
+          server or a separate entity. A single authorization server may issue access tokens
+          accepted by multiple resource servers.
         </t>
-      </section>
-
-<!--
-        <t hangText='token'>
-          <vspace />
-          A string representing an access authorization issued to the client. The string is
-          usually opaque to the client. Tokens represent specific scopes and durations of
-          access, granted by the resource owner, and enforced by the resource server and
-          authorization servers. The token may denote an identifier used to retrieve the
-          authorization information, or self-contain the authorization information in a
-          verifiable manner (i.e. a token string consisting of some data and a signature).
-          Tokens may be pure capabilities. Specific additional authentication credentials may
-          be required in order for a client to use a token.
-        </t>
-        <t hangText='access token'>
-          <vspace />
-          A token used by the client to make authenticated requests on behalf of the resource
-          owner.
-        </t>
-        <t hangText='refresh token'>
-          <vspace />
-          A token used by the client to obtain a new access token without having to involve
-          the resource owner.
-        </t>
-        <t hangText='authorization code'>
-          A short-lived token representing the authorization provided by the end-user. The
-          authorization code is used to obtain an access token and a refresh token.
-        </t>
-        <t hangText='access grant'>
-          A general term used to describe the intermediate credentials (such as an end-user
-          password or authorization code) representing the resource owner authorization. Access
-          grants are used by the client to obtain an access token. By exchanging access
-          grants of different types for an access token, the resource server is only required
-          to support a single authentication scheme.
-        </t>
-        <t hangText='end-user authorization endpoint'>
-          <vspace />
-          The authorization server's HTTP endpoint capable of authenticating the end-user and
-          obtaining authorization. The end-user authorization endpoint is described in
-          <xref target='user-authorization' />.
-        </t>
-        <t hangText='token endpoint'>
-          <vspace />
-          The authorization server's HTTP endpoint capable of issuing tokens and refreshing
-          expired tokens. The token endpoint is described in <xref target='obtaining-token' />.
-        </t>
-        <t hangText='client identifier'>
-          <vspace />
-          A unique identifier issued to the client to identify itself to the authorization
-          server. Client identifiers may have a matching secret. The client identifier is
-          described in <xref target='client-authentication' />.
-        </t>
-
--->      
-      <section title='Overview'>
         <t>
-          The access token provides an abstraction layer, replacing different authorization
-          constructs (e.g. username and password, assertion) for a single token understood by the
-          resource server. This abstraction enables issuing access tokens valid for a short time
-          period, as well as removing the resource server's need to understand a wide range of
-          authentication schemes.
+          When interacting with the authorization server, the client identifies itself using a set of
+          client credentials which include a client identifier and other attributes for client
+          authentication. The means through which the client obtains its credentials are beyond the
+          scope of this specification, but typically involve registration with the authorization
+          server.
         </t>
         <figure title='Abstract Protocol Flow' anchor='Figure 1'>
           <artwork>
@@ -204,10 +143,10 @@
   +--------+                               +---------------+
   |        |--(A)- Authorization Request ->|   Resource    |
   |        |                               |     Owner     |
-  |        |<-(B)----- Access Grant -------|               |
+  |        |<-(B)-- Authorization Grant ---|               |
   |        |                               +---------------+
   |        |
-  |        |           Access Grant &      +---------------+
+  |        |        Authorization Grant &  +---------------+
   |        |--(C)--- Client Credentials -->| Authorization |
   | Client |                               |     Server    |
   |        |<-(D)----- Access Token -------|               |
@@ -222,30 +161,32 @@
           </artwork>
         </figure>
         <t>
-          The abstract flow illustrated in <xref target='Figure 1' /> describes the overall
-          protocol architecture and includes the following steps:
+          The abstract flow illustrated in <xref target='Figure 1' /> describes the interaction
+          between the four roles and includes the following steps:
 
           <list style='format (%C)'>
             <t>
               The client requests authorization from the resource owner. The authorization request
-              can be made directly to the resource owner, or preferably indirectly via an
-              intermediary such as an authorization server.
+              can be made directly to the resource owner (as shown), or preferably indirectly via
+              an intermediary such as an authorization server.
             </t>
             <t>
-              The client receives an access grant which represents the authorization provided by
-              the resource owner.
+              The client receives an authorization grant which represents the authorization
+              provided by the resource owner. The authorization grant type depends on the method used by
+              the client and supported by the authorization server to obtain it.
             </t>
             <t>
               The client requests an access token by authenticating with the authorization server
-              using its client credentials, and presenting the access grant.
+              using its client credentials (prearranged between the client and authorization
+              server) and presenting the authorization grant.
             </t>
             <t>
-              The authorization server validates the client credentials and the access grant, and
+              The authorization server validates the client credentials and the authorization grant, and
               if valid issues an access token.
             </t>
             <t>
-              The client makes a protected resource request to the resource server by presenting
-              the access token.
+              The client requests the protected resource from the resource server and authenticates
+              by presenting the access token.
             </t>
             <t>
               The resource server validates the access token, and if valid, serves the request.
@@ -254,100 +195,65 @@
         </t>
       </section>
 
-      <section title='Access Grants'>
+      <section title='Access Tokens'>
         <t>
-          The access grant represents the authorization provided by the resource owner. The access
-          grant type depends on the method used by the client and supported by the authorization
-          server to obtain it.
+          An access token is a string representing an authorization issued to the client. The
+          string is usually opaque to the client. Tokens represent specific scopes and durations of
+          access, granted by the resource owner, and enforced by the resource server and
+          authorization server.
+        </t>
+        <t>
+          The token may denote an identifier used to retrieve the authorization information, or
+          self-contain the authorization information in a verifiable manner (i.e. a token string
+          consisting of some data and a signature). Tokens may be pure capabilities. Additional
+          authentication credentials may be required in order for the client to use a token.
+        </t>
+        <t>
+          The access token provides an abstraction layer, replacing different authorization
+          constructs (e.g. username and password) with a single token understood by the resource
+          server. This abstraction enables issuing access tokens more restrictive than the
+          authorization grant used to obtain them, as well as removing the resource server's need to
+          understand a wide range of authentication schemes.
+        </t>
+        <t>
+          Access tokens can have different formats, structures, and methods of utilization (e.g.
+          cryptographic properties) based on the resource server security requirements. Access token
+          attributes and the methods used to access protected resources are beyond the scope of this
+          specification and are defined by companion specifications.
+        </t>
+      </section>
+
+      <section title='Authorization Grants'>
+        <t>
+          An authorization grant is a general term used to describe the intermediate credentials
+          representing the resource owner authorization. An authorization grant is used by the client to
+          obtain an access token. By exchanging authorization grants of different types for access tokens,
+          the resource server is only required to support a single authentication scheme.
         </t>
 
         <section title='Authorization Code'>
           <t>
-            The authorization code is an access grant obtained by directing the end-user to an
-            authorization server. The authorization server authenticates the end-user, obtains
-            authorization, and issues the an authorization code to the client. Because the end-user
-            only authenticates with the authorization server, the end-user's password is never
-            shared with the client.
+            The authorization code is an authorization grant obtained by using an authorization server
+            as an intermediary between the client and resource owner. Instead of requesting
+            authorization directly from the resource owner, the client directs the resource owner
+            to an authorization server which in turns directs the resource owner back to the client
+            with the authorization code.
           </t>
           <t>
-            The authorization code access grant is suitable when the client is interacting with an
-            end-user via a user-agent.
-          </t>
-          <figure title='Obtaining an Authorization Code' anchor='Figure 2'>
-            <artwork>
-              <![CDATA[
-  +----------+
-  |          |
-  | End-User |
-  |          |
-  +----------+
-       ^
-       |
-      (B)      
-  +----|-----+        Client Identifier     +---------------+
-  |         -+--(A)--- & Redirect URI ----->|               |
-  |  User-   |                              | Authorization |
-  |  Agent  -|--(B)-- User authenticates -->|     Server    |
-  |          |                              |               |
-  |         -+--(C)-- Authorization Code --<|               |
-  +-|----|---+                              +---------------+
-   (A)  (C)
-    |    |
-    ^    v
-  +---------+
-  |         |
-  |  Client |
-  |         |
-  +---------+
-]]>
-            </artwork>
-          </figure>
-          <t>
-            The authorization code flow illustrated in <xref target='Figure 2' /> includes the
-            following steps:
-
-            <list style='format (%C)'>
-              <t>
-                The client initiates the flow by directing the end-user's user-agent to the
-                authorization server's end-user authorization endpoint. The client includes its
-                client identifier, requested scope, local state, and a redirection URI (to which
-                the authorization server will send the user-agent back once access is granted or
-                denied).
-              </t>
-              <t>
-                The authorization server authenticates the end-user (via the user-agent) and
-                establishes whether the end-user grants or denies the client's access request.
-              </t>
-              <t>
-                If access is granted, the authorization server directs the user-agent back to the
-                client using the redirection URI provided. The authorization server includes an
-                authorization code for the client to use to obtain an access token.
-              </t>
-            </list>
-          </t>
-          <t>
-            Once the client obtains an authorization code, it requests an access token by
-            authenticating with the authorization server (using its client credentials) and
-            presenting the authorization code (access grant).
-          </t>
-          <t>
-            In cases where the client is incapable of maintaining its client credentials secret
-            (such as native applications or an application implemented as a user-agent script), the
-            authorization server issues an access token directly to the client in step (C), instead
-            of issuing an authorization code.
-          </t>
-          <t>
-            Obtaining an authorization code is described in <xref target='user-authorization' />.
+            Before directing the resource owner back to the client with the authrozation code, the
+            authorization server authenticates the resource owner and obtains authorization.
+            Because the end-user only authenticates with the authorization server, the resource
+            owner's credentials are never shared with the client.
           </t>
         </section>
 
-        <section title='Resource Owner Password Credentials'>
+        <section title="Resource Owner's Password Credentials">
           <t>
-            The resource owner password credentials (e.g. a username and password) can be used
-            directly as an access grant to obtain an access token. The credentials should only be
+            The resource owner's password credentials (e.g. a username and password) can be used
+            directly as an authorization grant to obtain an access token. The credentials should only be
             used when there is a high degree of trust between the resource owner and the client
             (e.g. its computer operating system or a highly privileged application), and when
-            other access grant types are not available (such as an authorization code).
+            other authorization grant types are not available (such as an authorization code).
           </t>
           <t>
             Even though this grant type requires direct client access to the resource owner's
@@ -356,122 +262,36 @@
             <xref target='RFC2617' />, this grant type eliminates the need for the client to store
             the resource-owner's credentials for future use.
           </t>
-          <t>
-            In <xref target='Figure 3' />, the client requests authorization from the resource
-            owner directly. When the resource owner is an end-user, the client typically prompts
-            the end-user for the username and password.
-          </t>
-          <figure title='Obtaining Resource Owner Password Credentials' anchor='Figure 3'>
-            <artwork>
-              <![CDATA[
-  +--------+                               +----------+
-  |        |--(A)- Authorization Request ->| Resource |
-  | Client |                               |   Owner  |
-  |        |<-(B)-- Username & Password ---|          |
-  +--------+                               +----------+
-]]>
-            </artwork>
-          </figure>
         </section>
 
         <section title='Client Credentials'>
           <t>
-            The client credentials can be used as an access grant when the authorization scope is
-            limited to the protected resources under the control of the client, or other protected
+            The client credentials can be used as an authorization grant when the authorization scope is
+            limited to the protected resources under the control of the client, or to protected
             resources previously arranged with the authorization server. Client credentials are
-            used as an access grant typically when the client is acting on its own behalf (the
+            used as an authorization grant typically when the client is acting on its own behalf (the
             client is also the resource owner).
           </t>
         </section>
 
         <section title='Refresh Token'>
           <t>
-            Access tokens usually have a shorter lifetime than authorized by the resource owner.
-            When issuing an access token, the authorization server can include a refresh token
-            which is used by the client to obtain a new access token when the current access token
-            expires. When requesting a new access token, the refresh token acts as an access grant.
-            Using a refresh token removes the need to interact with the resource owner again, or to
-            store the original access grant used to obtain the access token and refresh token.
-          </t>
-          <figure title='Refreshing an Access Token' anchor='Figure 4'>
-            <artwork>
-              <![CDATA[
-  +--------+          Access Grant &      +---------------+
-  |        |--(A)-- Client Credentials -->| Authorization |
-  |        |                              |     Server    |
-  |        |<-(B)---- Access Token -------|               |
-  |        |         & Refresh Token      +---------------+
-  |        |
-  |        |                              +---------------+
-  |        |--(C)----- Access Token ----->|               |
-  |        |                              |               |
-  |        |<-(D)-- Protected Resource ---|    Resource   |
-  | Client |                              |     Server    |
-  |        |--(E)----- Access Token ----->|               |
-  |        |                              |               |
-  |        |<-(F)-- Invalid Token Error --|               |
-  |        |                              +---------------+
-  |        |
-  |        |          Refresh Token &     +---------------+
-  |        |--(G)-- Client Credentials -->| Authorization |
-  |        |                              |     Server    |
-  |        |<-(H)----- Access Token ------|               |
-  +--------+     & Optional Refresh Token +---------------+
-]]>
-            </artwork>
-          </figure>
-          <t>
-            The refresh token flow illustrated in <xref target='Figure 4' /> includes the following
-            steps:
-
-            <list style='format (%C)'>
-              <t>
-                The client requests an access token by authenticating with the authorization server
-                using its client credentials, and presenting an access grant.
-              </t>
-              <t>
-                The authorization server validates the client credentials and the access grant, and
-                if valid issues an access token and a refresh token.
-              </t>
-              <t>
-                The client makes a protected resource requests to the resource server by presenting
-                the access token.
-              </t>
-              <t>
-                The resource server validates the access token, and if valid, serves the request.
-              </t>
-              <t>
-                Steps (C) and (D) repeat until the access token expires. If the client does not
-                know the access token expired, it makes another protected resource request.
-                Otherwise, it skips to step (G).
-              </t>
-              <t>
-                Since the access token is invalid (expired), the resource server returns an invalid
-                token error.
-              </t>
-              <t>
-                The client requests a new access token by authenticating with the authorization
-                server using its client credentials, and presenting the refresh token (as the
-                access grant).
-              </t>
-              <t>
-                The authorization server validates the client credentials and the refresh token,
-                and if valid issues a new access token (and optionally, a new refresh token).
-              </t>
-            </list>
+            Access tokens may have a shorter lifetime than authorized by the resource owner.
+            When issuing an access token, the authorization server may include a refresh token
+            which can be used by the client to obtain a new access token when the current access
+            token expires. When requesting a new access token, the refresh token acts as an
+            authorization grant. Using a refresh token removes the need to interact with the
+            resource owner again, or to store the original authorization grant used to obtain the
+            access token.
           </t>
         </section>
 
-        <section title='Assertion'>
+        <section title='Extensions'>
           <t>
-            Assertions provide a bridge between OAuth and other trust frameworks. They enable the
-            client to utilize existing trust relationships in order to obtain an access token. The
-            access grant represented by an assertion depends on the assertion type, its content,
-            and how it was issued, which are beyond the scope of this specification.
-          </t>
-          <t>
-            Assertions are used as part of the protocol extensibility model, providing a way for
-            authorization servers to support additional access grant types.
+            Addition grant types may be defined to provide a bridge between OAuth and other trust
+            frameworks. For example, <xref target='I-D.ietf-oauth-saml2-bearer' /> defines a
+            <xref target='OASIS.saml-core-2.0-os'>SAML 2.0</xref> bearer assertion grant type,
+            which can be used to obtain an access token.
           </t>
         </section>
 
@@ -508,7 +328,7 @@
           user-agent (typically a web browser) and capable of receiving incoming requests (via
           redirection) from the authorization server (capable of acting as an HTTP server).
         </t>
-        <figure title='Web Server Flow' anchor='Figure 6'>
+        <figure title='Web Server Flow' anchor='Figure 5'>
           <artwork>
             <![CDATA[
   +----------+          Client Identifier      +---------------+
@@ -533,7 +353,7 @@
           </artwork>
         </figure>
         <t>
-          The web server flow illustrated in <xref target='Figure 6' /> includes the following
+          The web server flow illustrated in <xref target='Figure 5' /> includes the following
           steps:
 
           <list style='format (%C)'>
@@ -588,7 +408,76 @@
           and exploitable. Because the access token is encoded into the redirection URI, it may
           be exposed to the end-user and other applications residing on the computer or device.
         </t>
-        <figure title='User-Agent Flow' anchor='Figure 7'>
+
+        <figure title='Authorization Code via a User-Agent' anchor='Figure 2'>
+          <artwork>
+            <![CDATA[
+  +----------+
+  |          |
+  | End-User |
+  |          |
+  +----------+
+       ^
+       |
+      (B)      
+  +----|-----+        Client Identifier     +---------------+
+  |         -+--(A)--- & Redirect URI ----->|               |
+  |  User-   |                              | Authorization |
+  |  Agent  -|--(B)-- User authenticates -->|     Server    |
+  |          |                              |               |
+  |         -+--(C)-- Authorization Code --<|               |
+  +-|----|---+                              +---------------+
+   (A)  (C)
+    |    |
+    ^    v
+  +---------+
+  |         |
+  |  Client |
+  |         |
+  +---------+
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The authorization code grant type is suitable when the client is interacting with an
+          end-user via a user-agent, as illustrated in <xref target='Figure 2' />:
+
+          <list style='format (%C)'>
+            <t>
+              The client initiates the flow by directing the end-user's user-agent to the
+              authorization server's end-user authorization endpoint. The client includes its
+              client identifier, requested scope, local state, and a redirection URI (to which
+              the authorization server will send the user-agent back once access is granted or
+              denied).
+            </t>
+            <t>
+              The authorization server authenticates the end-user (via the user-agent) and
+              establishes whether the end-user grants or denies the client's access request.
+            </t>
+            <t>
+              If access is granted, the authorization server directs the user-agent back to the
+              client using the redirection URI provided. The authorization server includes an
+              authorization code for the client to use to obtain an access token.
+            </t>
+          </list>
+        </t>
+        <t>
+          Once the client obtains an authorization code, it requests an access token by
+          authenticating with the authorization server (using its client credentials) and
+          presenting the authorization code.
+        </t>
+        <t>
+          In cases where the client is incapable of maintaining its client credentials secret
+          (such as native applications or an application implemented as a user-agent script), the
+          authorization server issues an access token directly to the client in step (C), instead
+          of issuing an authorization code.
+        </t>
+        <t>
+          Obtaining an authorization code is described in <xref target='user-authorization' />.
+        </t>
+
+
+        <figure title='User-Agent Flow' anchor='Figure 6'>
           <artwork>
             <![CDATA[
          +----------+          Client Identifier     +----------------+
@@ -612,7 +501,7 @@
           </artwork>
         </figure>
         <t>
-          The user-agent flow illustrated in <xref target='Figure 7' /> includes the following
+          The user-agent flow illustrated in <xref target='Figure 6' /> includes the following
           steps:
 
           <list style='format (%C)'>
@@ -650,259 +539,14 @@
         </t>
       </section>
 
-      <section title='Native Application'>
-        <t>
-          Native applications are clients running as native code on the end-user's computer or
-          device (i.e. executing outside a user-agent or as a desktop program). These clients are
-          often capable of interacting with (or embedding) the end-user's user-agent but are
-          limited in how such interaction affects their end-user experience. In many cases,
-          native applications are incapable of receiving direct callback requests from the
-          server (e.g. firewall, operating system restrictions).
-        </t>
-        <t>
-          Native application clients can be implemented in different ways based on their
-          requirements and desired end-user experience. Native application clients can:
-
-          <list style='symbols'>
-            <t>
-              Utilize the end-user authorization endpoint as described in
-              <xref target='user-authorization' /> by launching an external user-agent. The
-              client can capture the response by providing a redirection URI with a custom URI
-              scheme (registered with the operating system to invoke the client application), or
-              by providing a redirection URI pointing to a server-hosted resource under the
-              client's control which makes the response available to the client (e.g. using the
-              window title or other locations accessible from outside the user-agent).
-            </t>
-            <t>
-              Utilize the end-user authorization endpoint as described in
-              <xref target='user-authorization' /> by using an embedded user-agent. The client
-              obtains the response by directly communicating with the embedded user-agent.
-            </t>
-            <t>
-              Prompt end-users for their password and use them directly to obtain an access
-              token. This is generally discouraged, as it hands the end-user's password directly
-              to the third-party client which in turn has to store it in clear-text. It also
-              requires the server to support password-based authentication.
-            </t>
-          </list>
-        </t>
-        <t>
-          When choosing between launching an external browser and an embedded user-agent,
-          developers should consider the following:
-
-          <list style='symbols'>
-            <t>
-              External user-agents may improve completion rate as the end-user may already be
-              logged-in and not have to re-authenticate.
-            </t>
-            <t>
-              Embedded user-agents often offer a better end-user flow, as they remove the need to
-              switch context and open new windows.
-            </t>
-            <t>
-              Embedded user-agents pose a security challenge because users are authenticating in
-              an unidentified window without access to the visual protections offered by many
-              user-agents.
-            </t>
-          </list>
-        </t>
-      </section>
-
-      <section title='Autonomous'>
-        <t>
-          Autonomous clients utilize an existing trust relationship or framework to establish
-          authorization. Autonomous clients can be implemented in different ways based on their
-          requirements and the existing trust framework they rely upon. Autonomous clients can:
-
-          <list style='symbols'>
-            <t>
-              Obtain an access token by authenticating with the authorization server using their
-              client credentials. The scope of the access token is limited to the protected
-              resources under the control of the client, or that of another resource owner
-              previously arranged with the authorization server.
-            </t>
-            <t>
-              Use an existing access grant expressed as an assertion using an assertion format
-              supported by the authorization server. Using assertions requires the client to
-              obtain an assertion (such as a <xref target='OASIS.saml-core-2.0-os'>SAML</xref>
-              assertion) from an assertion issuer or to self-issue an assertion. The assertion
-              format, the process by which the assertion is obtained, and the method of
-              validating the assertion are defined by the assertion issuer and the authorization
-              server, and are beyond the scope of this specification.
-            </t>
-          </list>
-        </t>
-      </section>
-
-    </section>
-
-    <section title='Client Credentials' anchor='client-authentication'>
-      <t>
-        When interacting with the authorization server, the client identifies itself using a set of
-        client credentials which include a client identifier and other properties for client
-        authentication. The means through which the client obtains its credentials are beyond the
-        scope of this specification, but typically involve registration with the authorization
-        server.
-      </t>
-      <t>
-        Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
-        about the confidentiality of client secrets without establishing trust with the client.
-        Authorization servers SHOULD NOT issue client secrets to clients incapable of keeping their
-        secrets confidential.
-      </t>
-      <t>
-        The authorization server MAY authenticate the client using any appropriate set of
-        credentials and authentication schemes. The client MUST NOT include more than one set of
-        credentials or authentication mechanism with each request.
-      </t>
-
-      <section title='Client Password Credentials'>
-        <t>
-          The client password credentials use a shared symmetric secret to authenticate the client.
-          The client identifier and password are included in the request using the
-          HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> by including the
-          client identifier as the username and client password as the password.
-        </t>
-        <figure>
-          <preamble>
-            For example (line breaks are for display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-        <t>
-          Alternatively, the client MAY include the password in the request body using the
-          following parameters:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='client_id'>
-              <vspace />
-              REQUIRED. The client identifier.
-            </t>
-            <t hangText='client_secret'>
-              REQUIRED. The client password.
-            </t>
-          </list>
-        </t>
-        <figure>
-          <preamble>
-            For example (line breaks are for display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&client_id=s6BhdRkqt3&
-  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-        <t>
-          The authorization server MUST accept the client credentials using both the request
-          parameter, and the HTTP Basic authentication scheme. The authorization server MAY
-          support additional authentication schemes suitable for the transmission of password
-          credentials.
-        </t>
-      </section>
-
-      <section title='Client Assertion Credentials'>
-        <t>
-          The client assertion credentials are used in cases where a password (clear-text shared
-          symmetric secret) is unsuitable or does not provide sufficient security for client
-          authentication. In such cases it is common to use other mechanisms such as HMAC or
-          digital signatures that do not require sending clear-text secrets. The client assertion
-          credentials provide an extensible mechanism to use an assertion format supported by the
-          authorization server for authentication the client.
-        </t>
-        <t>
-          Using assertions requires the client to obtain an assertion (such as a
-          <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion) from an assertion issuer or
-          to self-issue an assertion. The assertion format, the process by which the assertion is
-          obtained, and the method of validating the assertion are defined by the assertion issuer
-          and the authorization server, and are beyond the scope of this specification.
-        </t>
-        <t>
-          When using a client assertion, the client includes the following parameters:
-
-          <list style='hanging' hangIndent='6'>
-            <t hangText='client_assertion_type'>
-              REQUIRED. The format of the assertion as defined by the authorization server. The value
-              MUST be an absolute URI.
-            </t>
-            <t hangText='client_assertion'>
-              REQUIRED. The client assertion.
-            </t>
-          </list>
-        </t>
-        <figure>
-          <preamble>
-            For example, the client sends the following access token request using a SAML 2.0
-            assertion to authenticate itself (line breaks are for display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&code=i1WsRn1uB1&
-  client_assertion=PHNhbWxwOl[...omitted for brevity...]ZT4%3D&
-  client_assertion_type=
-  urn%3Aoasis%3Anames%sAtc%3ASAML%3A2.0%3Aassertion&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-        <t>
-          When obtaining an access token using a client assertion together with an authorization code
-          (as described in <xref target='code-grant-type' />), a mechanism is needed to map between the
-          value of <spanx style='verb'>client_id</spanx> parameter used to obtain the authorization code,
-          and the client assertion. Such mechanism is beyond the out of scope for this specification,
-          but MUST be specified for any client assertion type used in combination with an authorization
-          code.
-        </t>
-        <t>
-          The authorization server MUST reject access token requests using client assertion credentials
-          that do not contain HMAC or signed values that:
-
-          <list style='symbols'>
-            <t>
-              State the assertion was specifically issued to be consumed by the receiving endpoint
-              (typically via an audience or recipient value containing the receiving endpoint’s
-              identifier).
-            </t>
-            <t>
-              Identify the entity that issued the assertion (typically via an issuer value).
-            </t>
-            <t>
-              Identify when the assertion expires as an absolute time (typically via an expiration
-              value containing a UTC date/time value). The authorization server MUST reject expired
-              assertions.
-            </t>
-          </list>
-        </t>
-      </section>
-
     </section>
 
     <section title='Obtaining End-User Authorization' anchor='user-authorization'>
       <t>
         Before the client can access a protect resource, it MUST first obtain authorization from
         the end-user. To obtain an end-user authorization, the client sends the end-user to the
-        end-user authorization endpoint. Once obtained, the end-user access grant is expressed as
-        an authorization code which the client uses to obtain an access token.
+        end-user authorization endpoint. Once obtained, the end-user authorization grant is
+        expressed as an authorization code which the client uses to obtain an access token.
       </t>
       <t>
         At the end-user authorization endpoint, the end-user first authenticates with the
@@ -945,8 +589,10 @@
             </t>
             <t hangText='client_id'>
               <vspace />
-              REQUIRED. The client identifier as described in
-              <xref target='client-authentication' />.
+              REQUIRED. The client identifier. The means through which the client obtains its
+              identifier are beyond the scope of this specification, but typically involve
+              registration with the authorization server. The client identifier MUST match the
+              client credentials used later in the process to obtain an access token.
             </t>
             <t hangText='redirect_uri'>
               <vspace />
@@ -1221,8 +867,8 @@
     <section title='Obtaining an Access Token' anchor='obtaining-token'>
       <t>
         The client obtains an access token by authenticating with the authorization server and
-        presenting its access grant (in the form of an authorization code, resource owner
-        credentials, an assertion, or a refresh token).
+        presenting its authorization grant (in the form of an authorization code, resource owner
+        credentials, a refresh token, or an extension grant type).
       </t>
       <t>
         Since requests to the token endpoint result in the transmission of clear-text
@@ -1240,8 +886,7 @@
         The client authenticates with the authorization server by adding its client credentials to
         the request as described in <xref target='client-authentication' />. The authorization
         server MAY allow unauthenticated access token requests when the client identity does not
-        matter (e.g. anonymous client) or when the client identity is established via other means
-        (e.g. using an assertion access grant).
+        matter (e.g. anonymous client) or when the client identity is established via other means.
       </t>
       <t>
         The client constructs the request by including the following parameters using the
@@ -1251,12 +896,12 @@
         <list style='hanging' hangIndent='6'>
           <t hangText='grant_type'>
             <vspace />
-            REQUIRED. The access grant type included in the request. Value MUST be one of
+            REQUIRED. The authorization grant type included in the request. Value MUST be one of
             <spanx style='verb'>authorization_code</spanx>,
             <spanx style='verb'>password</spanx>,
             <spanx style='verb'>refresh_token</spanx>,
             <spanx style='verb'>client_credentials</spanx>, or an absolute URI identifying an
-            assertion format supported by the authorization server.
+            extension grant type supported by the authorization server.
           </t>
           <t hangText='scope'>
             <vspace />
@@ -1264,33 +909,187 @@
             strings. The value of the <spanx style='verb'>scope</spanx> parameter is defined
             by the authorization server. If the value contains multiple space-delimited
             strings, their order does not matter, and each string adds an additional access
-            range to the requested scope. If the access grant being used already represents an
-            approved scope (e.g. authorization code, assertion), the requested scope MUST be equal
-            or lesser than the scope previously granted, and if omitted is treated as equal to the
+            range to the requested scope. If the authorization grant being used already represents
+            an approved scope (e.g. authorization code), the requested scope MUST be equal or
+            lesser than the scope previously granted, and if omitted is treated as equal to the
             previously approved scope.
           </t>
         </list>
       </t>
       <t>
         In addition, the client MUST include the appropriate parameters listed for the selected
-        access grant type as described in <xref target='access-grant-types' />.
+        authorization grant type as described in <xref target='grant-types' />.
       </t>
       <t>
         Parameters sent without a value MUST be treated as if they were omitted from the request.
         The authorization server SHOULD ignore unrecognized request parameters.
       </t>
 
-      <section title='Access Grant Types' anchor='access-grant-types'>
+      <section title='Client Authentication' anchor='client-authentication'>
+        <t>
+          This specification defines two types of client credentials: password and assertion.
+          The authorization server MAY accept any appropriate set of client credentials and
+          authentication schemes to authenticate the client. The client MUST NOT include more than
+          one set of credentials or use more than one authentication mechanism in each request.
+        </t>
+
+        <section title='Client Password Credentials'>
+          <t>
+            The client password credentials use a shared symmetric secret to authenticate the client.
+            The client identifier and password are included in the request using the
+            HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> by including the
+            client identifier as the username and client password as the password.
+          </t>
+          <t>
+            Due to the nature of some clients, authorization servers SHOULD NOT make assumptions
+            about the confidentiality of client secrets without establishing trust with the client.
+            Authorization servers SHOULD NOT issue client secrets to clients incapable of keeping their
+            secrets confidential.
+          </t>
+          <figure>
+            <preamble>
+              For example (line breaks are for display purposes only):
+            </preamble>
+            <artwork>
+              <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+            </artwork>
+          </figure>
+          <t>
+            Alternatively, the client MAY include the password in the request body using the
+            following parameters:
+
+            <list style='hanging' hangIndent='6'>
+              <t hangText='client_id'>
+                <vspace />
+                REQUIRED. The client identifier.
+              </t>
+              <t hangText='client_secret'>
+                REQUIRED. The client password.
+              </t>
+            </list>
+          </t>
+          <figure>
+            <preamble>
+              For example (line breaks are for display purposes only):
+            </preamble>
+            <artwork>
+              <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&client_id=s6BhdRkqt3&
+  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+            </artwork>
+          </figure>
+          <t>
+            The authorization server MUST accept the client credentials using both the request
+            parameter, and the HTTP Basic authentication scheme. The authorization server MAY
+            support additional authentication schemes suitable for the transmission of password
+            credentials.
+          </t>
+        </section>
+
+        <section title='Client Assertion Credentials'>
+          <t>
+            The client assertion credentials are used in cases where a password (clear-text shared
+            symmetric secret) is unsuitable or does not provide sufficient security for client
+            authentication. In such cases it is common to use other mechanisms such as HMAC or
+            digital signatures that do not require sending clear-text secrets. The client assertion
+            credentials provide an extensible mechanism to use an assertion format supported by the
+            authorization server for authentication the client.
+          </t>
+          <t>
+            Using assertions requires the client to obtain an assertion (such as a
+            <xref target='OASIS.saml-core-2.0-os'>SAML</xref> assertion) from an assertion issuer or
+            to self-issue an assertion. The assertion format, the process by which the assertion is
+            obtained, and the method of validating the assertion are defined by the assertion issuer
+            and the authorization server, and are beyond the scope of this specification.
+          </t>
+          <t>
+            When using a client assertion, the client includes the following parameters:
+
+            <list style='hanging' hangIndent='6'>
+              <t hangText='client_assertion_type'>
+                REQUIRED. The format of the assertion as defined by the authorization server. The value
+                MUST be an absolute URI.
+              </t>
+              <t hangText='client_assertion'>
+                REQUIRED. The client assertion.
+              </t>
+            </list>
+          </t>
+          <figure>
+            <preamble>
+              For example, the client sends the following access token request using a SAML 2.0
+              assertion to authenticate itself (line breaks are for display purposes only):
+            </preamble>
+            <artwork>
+              <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&code=i1WsRn1uB1&
+  client_assertion=PHNhbWxwOl[...omitted for brevity...]ZT4%3D&
+  client_assertion_type=
+  urn%3Aoasis%3Anames%sAtc%3ASAML%3A2.0%3Aassertion&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+            </artwork>
+          </figure>
+          <t>
+            When obtaining an access token using a client assertion together with an authorization code
+            (as described in <xref target='code-grant-type' />), a mechanism is needed to map between the
+            value of <spanx style='verb'>client_id</spanx> parameter used to obtain the authorization code,
+            and the client assertion. Such mechanism is beyond the out of scope for this specification,
+            but MUST be specified for any client assertion type used in combination with an authorization
+            code.
+          </t>
+          <t>
+            The authorization server MUST reject access token requests using client assertion credentials
+            that do not contain HMAC or signed values that:
+
+            <list style='symbols'>
+              <t>
+                State the assertion was specifically issued to be consumed by the receiving endpoint
+                (typically via an audience or recipient value containing the receiving endpoint’s
+                identifier).
+              </t>
+              <t>
+                Identify the entity that issued the assertion (typically via an issuer value).
+              </t>
+              <t>
+                Identify when the assertion expires as an absolute time (typically via an expiration
+                value containing a UTC date/time value). The authorization server MUST reject expired
+                assertions.
+              </t>
+            </list>
+          </t>
+        </section>
+
+      </section>
+
+      <section title='Authorization Grant Types' anchor='grant-types'>
         <t>
           The client requests an access token using an authorization code, resource owner password
-          credentials, client credentials, refresh token, or assertion.
+          credentials, client credentials, refresh token, or extension.
         </t>
 
         <section title='Authorization Code' anchor='code-grant-type'>
           <t>
             The client includes the authorization code using the
-            <spanx style='verb'>authorization_code</spanx> access grant type and the following
-            parameters:
+            <spanx style='verb'>authorization_code</spanx> grant type and the following parameters:
 
             <list style='hanging' hangIndent='6'>
               <t hangText='code'>
@@ -1345,8 +1144,8 @@
         <section title='Resource Owner Password Credentials'>
           <t>
             The client includes the resource owner credentials using the
-            <spanx style='verb'>password</spanx> access grant type and the following
-            parameters: [[ add internationalization consideration for username and password ]]
+            <spanx style='verb'>password</spanx> grant type and the following parameters:
+            [[ add internationalization consideration for username and password ]]
 
             <list style='hanging' hangIndent='6'>
               <t hangText='username'>
@@ -1387,8 +1186,8 @@
         <section title='Client Credentials'>
           <t>
             The client can request an access token using only its client credentials using the
-            <spanx style='verb'>client_credentials</spanx> access grant type. When omitting an
-            explicit access grant, the client is requesting access to the protected resources under
+            <spanx style='verb'>client_credentials</spanx> grant type. When omitting an
+            explicit authorization grant, the client is requesting access to the protected resources under
             its control, or those of another resource owner which has been previously arranged with
             the authorization server (the method of which is beyond the scope of this
             specification).
@@ -1398,8 +1197,7 @@
         <section title='Refresh Token' anchor='token-refresh'>
           <t>
             The client includes the refresh token using the
-            <spanx style='verb'>refresh_token</spanx> access grant type and the following
-            parameter:
+            <spanx style='verb'>refresh_token</spanx> grant type and the following parameter:
 
             <list style='hanging' hangIndent='6'>
               <t hangText='refresh_token'>
@@ -1436,47 +1234,32 @@
           </t>
         </section>
 
-        <section title='Assertion'>
+        <section title='Extensions'>
           <t>
-            The client includes an assertion by specifying the assertion format using an absolute
-            URI (as defined by the authorization server) as the value of the
-            <spanx style='verb'>grant_type</spanx> parameter and by adding the following parameter:
-
-            <list style='hanging' hangIndent='6'>
-              <t hangText='assertion'>
-                <vspace />
-                REQUIRED. The assertion.
-              </t>
-            </list>
+            The client includes an extension grant type by specifying the grant type using an
+            absolute URI (as defined by the authorization server) as the value of the
+            <spanx style='verb'>grant_type</spanx> parameter and by adding any additional
+            parameters neccesary.
           </t>
           <figure>
             <preamble>
               For example, the client makes the following HTTP request using transport-layer
-              security, and client authentication is achieved via the assertion (line breaks are
-              for display purposes only):
+              security, and client authentication is achieved via the assertion as defined by
+              <xref target='I-D.ietf-oauth-saml2-bearer' /> (line breaks are for display purposes
+              only):
             </preamble>
             <artwork>
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
-  
-  grant_type=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Aassertion&
-  assertion=PHNhbWxwOl[...omitted for brevity...]ZT4%3D
+
+  grant_type=http%3A%2F%2Foauth.net%2Fgrant_type%2Fassertion%2F
+  saml%2F2.0%2Fbearer&assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ
+  [...omitted for brevity...]V0aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
 ]]>
             </artwork>
           </figure>
-          <t>
-            The authorization server MUST validate the client credentials (if present) and the
-            assertion and if valid issues an access token response as described in
-            <xref target='access-token-response' />. The authorization server SHOULD NOT issue a
-            refresh token (instead, it should require the client to use the same or new assertion).
-          </t>
-          <t>
-            Authorization servers SHOULD issue access tokens with a limited lifetime and require
-            clients to refresh them by requesting a new access token using the same assertion if it
-            is still valid. Otherwise the client MUST obtain a new valid assertion.
-          </t>
         </section>
 
       </section>
@@ -1511,9 +1294,9 @@
             <t hangText='refresh_token'>
               <vspace />
               OPTIONAL. The refresh token used to obtain new access tokens using the same
-              end-user access grant as described in <xref target='token-refresh' />. The
-              authorization server SHOULD NOT issue a refresh token when the access grant type is
-              an assertion or a set of client credentials.
+              end-user authorization grant as described in <xref target='token-refresh' />. The
+              authorization server SHOULD NOT issue a refresh token when the authorization grant
+              type is a set of client credentials.
             </t>
             <t hangText='scope'>
               <vspace />
@@ -1629,17 +1412,18 @@
               </t>
               <t hangText='unauthorized_client'>
                 <vspace />
-                The authenticated client is not authorized to use the access grant type provided.
+                The authenticated client is not authorized to use the authorization grant type
+                provided.
               </t>
               <t hangText='invalid_grant'>
                 <vspace />
-                The provided access grant is invalid, expired, or revoked (e.g. invalid assertion,
-                expired authorization token, bad end-user password credentials, or mismatching
+                The provided authorization grant is invalid, expired, or revoked (e.g. expired
+                authorization token, bad end-user password credentials, or mismatching
                 authorization code and redirection URI).
               </t>
               <t hangText='unsupported_grant_type'>
                 <vspace />
-                The access grant included - its type or another attribute - is not supported by the
+                The authorization grant included - its type or another attribute - is not supported by the
                 authorization server.
               </t>
               <t hangText='invalid_scope'>
@@ -1656,6 +1440,79 @@
 
       </section>
 
+    </section>
+
+    <section title='Refreshing an Access Token'>
+      <t>
+        
+      </t>
+      <figure title='Refreshing an Access Token' anchor='Figure 4'>
+        <artwork>
+          <![CDATA[
+  +--------+          Access Grant &      +---------------+
+  |        |--(A)-- Client Credentials -->| Authorization |
+  |        |                              |     Server    |
+  |        |<-(B)---- Access Token -------|               |
+  |        |         & Refresh Token      +---------------+
+  |        |
+  |        |                              +---------------+
+  |        |--(C)----- Access Token ----->|               |
+  |        |                              |               |
+  |        |<-(D)-- Protected Resource ---|    Resource   |
+  | Client |                              |     Server    |
+  |        |--(E)----- Access Token ----->|               |
+  |        |                              |               |
+  |        |<-(F)-- Invalid Token Error --|               |
+  |        |                              +---------------+
+  |        |
+  |        |          Refresh Token &     +---------------+
+  |        |--(G)-- Client Credentials -->| Authorization |
+  |        |                              |     Server    |
+  |        |<-(H)----- Access Token ------|               |
+  +--------+     & Optional Refresh Token +---------------+
+]]>
+        </artwork>
+      </figure>
+      <t>
+        The refresh token flow illustrated in <xref target='Figure 4' /> includes the following
+        steps:
+
+        <list style='format (%C)'>
+          <t>
+            The client requests an access token by authenticating with the authorization server
+            using its client credentials, and presenting an authorization grant.
+          </t>
+          <t>
+            The authorization server validates the client credentials and the authorization grant,
+            and if valid issues an access token and a refresh token.
+          </t>
+          <t>
+            The client makes a protected resource requests to the resource server by presenting
+            the access token.
+          </t>
+          <t>
+            The resource server validates the access token, and if valid, serves the request.
+          </t>
+          <t>
+            Steps (C) and (D) repeat until the access token expires. If the client does not
+            know the access token expired, it makes another protected resource request.
+            Otherwise, it skips to step (G).
+          </t>
+          <t>
+            Since the access token is invalid (expired), the resource server returns an invalid
+            token error.
+          </t>
+          <t>
+            The client requests a new access token by authenticating with the authorization
+            server using its client credentials, and presenting the refresh token (as the
+            authorization grant).
+          </t>
+          <t>
+            The authorization server validates the client credentials and the refresh token,
+            and if valid issues a new access token (and optionally, a new refresh token).
+          </t>
+        </list>
+      </t>
     </section>
 
     <section title='Accessing a Protected Resource' anchor='access-resource'>
@@ -1867,9 +1724,8 @@
 
       <section title='Defining New Access Grant Types'>
         <t>
-          The assertion access grant type allows the authorization server to accept additional
-          access grants not specified. Applications that wish to define additional access grant
-          types can do so by utilizing a new or existing assertion type and format.
+          New authorization grant types can be defined by assigning them a unique URI for use with
+          the <spanx style='verb'>grant_type</spanx> parameter.
         </t>
       </section>
 
@@ -2022,12 +1878,12 @@
             A short-lived token representing the authorization provided by the end-user. The
             authorization code is used to obtain an access token and a refresh token.
           </t>
-          <t hangText='access grant'>
+          <t hangText='authorization grant'>
             A general term used to describe the intermediate credentials (such as an end-user
-            password or authorization code) representing the resource owner authorization. Access
-            grants are used by the client to obtain an access token. By exchanging access
-            grants of different types for an access token, the resource server is only required
-            to support a single authentication scheme.
+            password or authorization code) representing the resource owner authorization.
+            Authorization grants are used by the client to obtain an access token. By exchanging
+            authorization grants of different types for an access token, the resource server is
+            only required to support a single authentication scheme.
           </t>
           <t hangText='authorization server'>
             <vspace />
@@ -2106,6 +1962,17 @@
           </t>
           <t>
             Moved terminology to an appendix and expanded terms in overview.
+          </t>
+          <t>
+            Changes assertions to extensions and added informative refence to the SAML 2.0
+            extension.
+          </t>
+          <t>
+            Moved Client Authentication (previously Client Credentials) into Obtaining an Access
+            Token.
+          </t>
+          <t>
+            Renamed access grant to authorization grant.
           </t>
         </list>
       </t>
@@ -2492,6 +2359,7 @@
 
     <references title='Informative References'>
 
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
     </references>
