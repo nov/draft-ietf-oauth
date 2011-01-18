@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' docName='draft-hammer-oauth-v2-mac-token-00'>
+<rfc category='std' ipr='trust200902' docName='draft-hammer-oauth-v2-mac-token-01'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -12,7 +12,7 @@
   <?rfc subcompact='no' ?>
 
   <front>
-    <title abbrev='OAuth 2.0 MAC Token'>OAuth 2.0 MAC Token and Authentication</title>
+    <title abbrev='MAC Authentication'>HTTP Authentication: MAC Authentication</title>
 
     <author fullname='Eran Hammer-Lahav' surname='Hammer-Lahav' initials='E'>
       <organization>Yahoo!</organization>
@@ -26,7 +26,8 @@
 
     <abstract>
       <t>
-        This document specifies the OAuth 2.0 MAC token type and authentication scheme.
+        This document specifies the HTTP MAC authentication scheme, as well as its OAuth 2.0
+        binding.
       </t>
     </abstract>
   </front>
@@ -35,32 +36,12 @@
 
     <section title='Introduction'>
       <t>
-        OAuth 2.0 (<xref target='I-D.ietf-oauth-v2' />) defines a token-based authentication
-        framework in which third-party applications (clients) access protected resources using
-        access tokens. Access tokens are obtained via the resource owners' authorization from an
-        authorization server.
+        This specification defines the HTTP MAC authentication scheme and provides a method for
+        making authenticated HTTP requests with partial cryptographic verification of the request -
+        covering the HTTP method, request URI, host, and in some cases the request body.
       </t>
       <t>
-        This specification defines the MAC token type for use with the OAuth 2.0 framework. It
-        defines type-specific token attributes and provides a method for making authenticated HTTP
-        requests with partial cryptographic verification of the request - covering the HTTP
-        method, request URI, host, and in some cases the request body.
-      </t>
-      <t>
-        This specification does not define methods for the client to specifically request a
-        MAC-type token from the authorization server. Additionally, it does not include any
-        discovery facilities for identifying which token types are supported by a resource server
-        or how the client may go about obtaining access tokens. This specification assumes that the
-        authorization server has issued the client a MAC-type token and describes how the client
-        authenticates using that access token.
-      </t>
-      <t>
-        The MAC token type is not compatible with the <spanx style='verb'>HMAC-SHA1</spanx>
-        signature method defined in <xref target='RFC5849'>OAuth 1.0</xref>.
-      </t>
-      <t>
-        This specification is an extension of <xref target='I-D.ietf-oauth-v2' /> and uses its
-        terminology.
+        This specification uses the terminology defined in <xref target='I-D.ietf-oauth-v2' />.
       </t>
       <t>
         Please discuss this draft on the
@@ -88,28 +69,27 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: OAuth2
+  WWW-Authenticate: MAC realm="example"
   Date: Thu, 02 Dec 2010 21:39:45 GMT
 ]]>
           </artwork>
         </figure>
         <t>
           The client has previously obtained a set of token credentials for accessing resources on
-          the <spanx style='verb'>http://example.com/</spanx> resource server. The credentials issued to the
-          client by the authorization server included the following attributes:
+          the <spanx style='verb'>http://example.com/</spanx> resource server. The MAC credentials
+          issued to the client included the following attributes:
 
           <list style='hanging' hangIndent='6'>
-            <t hangText='Access token:'>h480djs93hd8</t>
-            <t hangText='Token type:'>mac</t>
-            <t hangText='MAC algorithm:'>hmac-sha-1</t>
+            <t hangText='Access Token:'>h480djs93hd8</t>
             <t hangText='Token secret:'>489dks293j39</t>
+            <t hangText='MAC algorithm:'>hmac-sha-1</t>
           </list>
         </t>
         <t>
-          The client attempts the HTTP request again, this time using the token credentials
-          issued by the authorization server earlier to authenticate. To construct the
-          authentication header, the client calculates the current timestamp and a nonce. The nonce
-          is unique to the timestamp used, typically a random string:
+          The client attempts the HTTP request again, this time using the token credentials issued
+          earlier to authenticate. To construct the authentication header, the client calculates
+          the current timestamp and a nonce. The nonce is unique to the timestamp used, typically a
+          random string:
 
           <list style='hanging' hangIndent='6'>
             <t hangText='Timestamp:'>137131200</t>
@@ -117,7 +97,7 @@
           </list>
         </t>
         <t>
-          The client normalizes the request and constructs the signature base string (the new line
+          The client normalizes the request and constructs the normalized request string (the new line
           separator character is represented by <spanx style='verb'>\n</spanx> for display purposes
           only):
         </t>
@@ -132,20 +112,20 @@
   80\n
   /resource/1\n
   a=2\n
-  b=1
+  b=1\n
 ]]>
           </artwork>
         </figure>
         <t>
-          The signature base string is signed using the specified MAC token algorithm
-          <spanx style='verb'>hmac-sha-1</spanx> with the signature base string as text and the
+          The normalized request string is signed using the specified MAC algorithm
+          <spanx style='verb'>hmac-sha-1</spanx> with the normalized request string as text and the
           token secret as key. The resulting digest is base64-encoded to produce the request
           signature:
         </t>
         <figure>
           <artwork>
             <![CDATA[
-  IdSrHQHTwCPWGrqzGGIR791ZJXE=
+  kDZvddkndxvhGRXZhvuDjEWhGeE=
 ]]>
           </artwork>
         </figure>
@@ -158,10 +138,10 @@
             <![CDATA[
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: MAC token='h480djs93hd8',
-                     timestamp='137131200',
-                     nonce='dj83hs9s',
-                     signature='IdSrHQHTwCPWGrqzGGIR791ZJXE='
+  Authorization: MAC token="h480djs93hd8",
+                     timestamp="137131200",
+                     nonce="dj83hs9s",
+                     signature="kDZvddkndxvhGRXZhvuDjEWhGeE="
 ]]>
           </artwork>
         </figure>
@@ -180,39 +160,61 @@
         </t>
         <t>
           This document uses the Augmented Backus-Naur Form (ABNF) notation of
-          <xref target='I-D.ietf-httpbis-p1-messaging' />.
+          <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules
+          are included from [RFC2617]: realm, auth-param.
         </t>
       </section>
 
     </section>
 
-    <section title='Issuing MAC-Type Access Tokens' anchor='issue'>
+    <section title='Issuing MAC Credentials' anchor='issue'>
       <t>
-        Authorization servers issuing MAC-type access tokens MUST include the following parameters
-        whenever a response includes the <spanx style='verb'>access_token</spanx> parameter:
+        This specification does not define a general purpose method for requesting or issuing MAC
+        credentials (an <xref target='I-D.ietf-oauth-v2'>OAuth 2.0</xref> binding is provided in
+        <xref target='oauth2' />). It simply assumes that the client is in the possession of a set
+        of MAC credentials with the following REQUIRES attributes:
 
         <list style='hanging' hangIndent='6'>
+          <t hangText='access token'>
+            <vspace />
+            A string representing an access authorization issued to the client. The string is
+            usually opaque to the client. Tokens represent specific scopes and durations of
+            access. The token may denote an identifier used to retrieve the authorization
+            information, or self-contain the authorization information in a verifiable manner (i.e.
+            a token string consisting of some data and a signature).
+          </t>
           <t hangText='secret'>
             <vspace />
-            REQUIRED. The token shared secret used as the MAC algorithm key.
+            A shared symmetric secret used as the MAC algorithm key.
           </t>
           <t hangText='algorithm'>
             <vspace />
-            REQUIRED. The MAC algorithm used to calculate the request signature. Value MUST be one
+            A MAC algorithm used to calculate the request signature. Value MUST be one
             of <spanx style='verb'>hmac-sha-1</spanx>, <spanx style='verb'>hmac-sha-256</spanx>, or
             a registered extension algorithm name as described in <xref target='extensions' />.
           </t>
         </list>
       </t>
+      <figure>
+        <preamble>
+          The access token and secret strings MUST NOT include characters other than:
+        </preamble>
+        <artwork>
+          <![CDATA[
+  DIGIT / ALPHA / %x20-21 / %x23-5B / %x5D-7E
+  ; Any printable ASCII character except for <"> and <\>
+]]>
+        </artwork>
+      </figure>
     </section>
 
     <section title='Making Requests' anchor='requests'>
       <t>
-        To make authenticated requests, the client must be in possession of a valid MAC-type access
-        token, issued by an authorization server accepted by the resource server. The client
-        constructs the request by calculating of a set of attributes, and adding them to the HTTP
-        request using the <xref target='authz_header'>Authorization header field</xref>.
-        Authenticated request can be sent in response to an authentication challenge or directly.
+        To make authenticated requests, the client must be in possession of a valid set of MAC
+        credentials accepted by the resource server. The client constructs the request by
+        calculating of a set of attributes, and adding them to the HTTP request using the
+        <xref target='authz_header'>Authorization header field</xref>. Authenticated request can be
+        sent in response to an authentication challenge or directly.
       </t>
 
       <section title='The Authorization Request Header' anchor='authz_header'>
@@ -230,16 +232,17 @@
                    nonce /
                    signature
 
-  access-token   = 'token' '=' quoted-string
+  access-token   = 'token' '=' <"> plain-string <">
   timestamp      = 'timestamp' '=' <"> 1*DIGIT <">
-  nonce          = 'nonce' '=' quoted-string
-  signature      = 'signature' '=' quoted-string
+  nonce          = 'nonce' '=' <"> plain-string <">
+  signature      = 'signature' '=' <"> plain-string <">
+  
+  plain-string   = 1*( DIGIT / ALPHA / %x20-21 / %x23-5B / %x5D-7E )
 ]]>
           </artwork>
         </figure>
         <t>
-          The <spanx style='verb'>token</spanx> attribute value is set to the access token received
-          from the authorization server.
+          The <spanx style='verb'>token</spanx> attribute value is set to the access token string.
         </t>
         <t>
           The <spanx style='verb'>timestamp</spanx> attribute value is set to the current time
@@ -254,70 +257,57 @@
           access token combination.
         </t>
         <t>
-          To avoid the need to retain an infinite number of nonce values for future checks, servers
-          MAY choose to restrict the time period after which a request with an old timestamp is
-          rejected.  Such a restriction implies a level of synchronization between the client's and
-          server's clocks. The client MAY use the <spanx style='verb'>Date</spanx> response header
-          field to synchronize its clock after a failed request.
+          To avoid the need to retain an infinite number of nonce values for future checks,
+          resource servers MAY choose to restrict the time period after which a request with an old
+          timestamp is rejected.  Such a restriction implies a level of synchronization between the
+          client's and server's clocks. The client MAY use the <spanx style='verb'>Date</spanx>
+          response header field to synchronize its clock after a failed request.
         </t>
         <t>
           The <spanx style='verb'>signature</spanx> attribute value is set as described in
           <xref target='signature' />.
         </t>
         <t>
-          Each of the four attributes MUST appear once, and only once.
+          Each of the four attributes MUST appear once, and only once. Attribute values are limited
+          to a subset of ASCII, which does not require escaping.
         </t>
       </section>
 
       <section title='Signature' anchor='signature'>
         <t>
-          The client uses the MAC token algorithm and the access token secret - both provided by
-          the authorization server - to calculate the request signature. This specification defines
-          two algorithms: <spanx style='verb'>hmac-sha-1</spanx> and
-          <spanx style='verb'>hmac-sha-256</spanx>, and provides an extension registry for
-          additional algorithms.
+          The client uses the MAC algorithm and the token secret to calculate the request
+          signature. This specification defines two algorithms:
+          <spanx style='verb'>hmac-sha-1</spanx> and <spanx style='verb'>hmac-sha-256</spanx>, and
+          provides an extension registry for additional algorithms.
         </t>
 
         <section title='Normalized Request String' anchor='base_string'>
           <t>
             The normalized request string is a consistent, reproducible concatenation of several of
             the HTTP request elements into a single string. By normalizing the request into a
-            reproducible string, the client and resource server can both sign the same string. The
-            string is constructed by concatenating together, in order, the following HTTP request
-            elements:
+            reproducible string, the client and resource server can both sign the same string.
+          </t>
+          <t>
+            The string is constructed by concatenating together, in order, the following HTTP request
+            elements, each followed by a new line character (%x0A):
 
             <list style='numbers'>
               <t>
                 The access token.
               </t>
               <t>
-                A new line character (ASCII code 10).
-              </t>
-              <t>
                 The timestamp value calculated for the request.
               </t>
               <t>
-                A new line character (ASCII code 10).
-              </t>
-              <t>
                 The nonce value generated for the request.
-              </t>
-              <t>
-                A new line character (ASCII code 10).
               </t>
               <t>
                 The HTTP request method in upper case. For example: <spanx style='verb'>HEAD</spanx>,
                 <spanx style='verb'>GET</spanx>, <spanx style='verb'>POST</spanx>, etc.
               </t>
               <t>
-                A new line character (ASCII code 10).
-              </t>
-              <t>
                 The hostname included in the HTTP request using the <spanx style='verb'>Host</spanx>
                 request header field in lower case.
-              </t>
-              <t>
-                A new line character (ASCII code 10).
               </t>
               <t>
                 The port as included in the HTTP request using the
@@ -326,20 +316,17 @@
                 443 for HTTPS).
               </t>
               <t>
-                A new line character (ASCII code 10).
-              </t>
-              <t>
                 The path component of the HTTP request URI as defined by <xref target='RFC3986' />
                 section 3.3.
-              </t>
-              <t>
-                A new line character (ASCII code 10).
               </t>
               <t>
                 The query component of the HTTP request URI as defined by <xref target='RFC3986' />
                 section 3.4, normalized as described in <xref target='parameters' />.
               </t>
             </list>
+          </t>
+          <t>
+            [[ TODO: I18N ]]
           </t>
           <figure>
             <preamble>
@@ -373,7 +360,7 @@
   a3=a\n
   b5=%3D%253D\n
   c%40=\n
-  c2=
+  c2=\n
 ]]>
             </artwork>
           </figure>
@@ -399,17 +386,16 @@
                   MUST be upper case.
                 </t>
                 <t>
-                  The parameters are sorted by name, using ascending byte value ordering. If
-                  two or more parameters share the same name, they are sorted by their value.
-                </t>
-                <t>
                   The name of each parameter is concatenated to its corresponding value using an
                   <spanx style="verb">=</spanx> character (ASCII code 61) as separator, even if the
                   value is empty.
                 </t>
                 <t>
-                  The sorted name/value pairs are concatenated together into a single string by
-                  using an new line character (ASCII code 10) as separator.
+                  The name/value parameter pairs are sorted using ascending byte value ordering.
+                </t>
+                <t>
+                  The sorted parameters are concatenated together into a single string by using an
+                  new line character (ASCII code 10) as separator.
                 </t>
               </list>
             </t>
@@ -432,7 +418,7 @@
 ]]>
               </artwork>
               <postamble>
-                Contains the following (fully decoded) parameters used in the signature base
+                Contains the following (fully decoded) parameters used in the normalized request
                 sting:
               </postamble>
             </figure>
@@ -456,7 +442,7 @@
               Note that the value of <spanx style="verb">b5</spanx> is <spanx style="verb">=%3D</spanx>
               and not <spanx style="verb">==</spanx>. Both <spanx style="verb">c@</spanx> and
               <spanx style="verb">c2</spanx> have empty values. While the encoding rules
-              specified in this specification for the purpose of constructing the signature base
+              specified in this specification for the purpose of constructing the normalized request
               string exclude the use of a <spanx style="verb">+</spanx> character (ASCII code 43)
               to represent an encoded space character (ASCII code 32), this practice is widely
               used in <spanx style="verb">application/x-www-form-urlencoded</spanx> encoded
@@ -469,7 +455,7 @@
             </t>
             <texttable>
               <preamble>
-                Encoded:
+                Escaped:
               </preamble>
               <ttcol align='center'>Name</ttcol>
               <ttcol align='center'>Value</ttcol>
@@ -485,29 +471,22 @@
               <c></c>
               <c>a3</c>
               <c>2%20q</c>
-            </texttable>
-            <texttable>
-              <preamble>
-                Sorted:
-              </preamble>
-              <ttcol align='center'>Name</ttcol>
-              <ttcol align='center'>Value</ttcol>
-              <c>a2</c>
-              <c>r%20b</c>
-              <c>a3</c>
-              <c>2%20q</c>
-              <c>a3</c>
-              <c>a</c>
-              <c>b5</c>
-              <c>%3D%253D</c>
-              <c>c%40</c>
-              <c></c>
-              <c>c2</c>
-              <c></c>
             </texttable>
             <texttable>
               <preamble>
                 Concatenated Pairs:
+              </preamble>
+              <ttcol align='center'>Name=Value</ttcol>
+              <c>b5=%3D%253D</c>
+              <c>a3=a</c>
+              <c>c%40=</c>
+              <c>a2=r%20b</c>
+              <c>c2=</c>
+              <c>a3=2%20q</c>
+            </texttable>
+            <texttable>
+              <preamble>
+                Sorted:
               </preamble>
               <ttcol align='center'>Name=Value</ttcol>
               <c>a2=r%20b</c>
@@ -529,7 +508,7 @@
   a3=a\n
   b5=%3D%253D\n
   c%40=\n
-  c2=
+  c2=\n
 ]]>
               </artwork>
             </figure>
@@ -643,12 +622,159 @@
         further details about why the request was rejected using the
         error attribute.
       </t>
+
+      <section title='The WWW-Authenticate Response Header Field' anchor='authn-header'>
+        <t>
+          If the protected resource request does not include authentication credentials, contains
+          an invalid access token, or is malformed, the resource server MUST include the HTTP
+          <spanx style='verb'>WWW-Authenticate</spanx> response header field. The
+          <spanx style='verb'>WWW-Authenticate</spanx> header field uses the framework defined by
+          <xref target='RFC2617' /> as follows:
+        </t>
+        <figure>
+          <artwork>
+            <![CDATA[
+  challenge       = "MAC" [ RWS 1#param ]
+
+  param           = realm / error / error-desc / error-uri / auth-param
+
+  error           = "error" "=" quoted-string
+  error-desc      = "error_description" "=" quoted-string
+  error-uri       = "error_uri" = <"> URI-reference <">
+]]>
+          </artwork>
+        </figure>
+        <t>
+          Each attribute MUST NOT appear more than once.
+        </t>
+        <t>
+          If the protected resource request included an access token and failed authentication, the
+          resource server SHOULD include the <spanx style='verb'>error</spanx> attribute to provide
+          the client with the reason why the access request was declined. The parameter value is
+          described in <xref target='resource-error-codes' />. In addition, the resource server MAY
+          include the <spanx style='verb'>error_description</spanx> attribute to provide a
+          human-readable explanation, and the <spanx style='verb'>error-uri</spanx> attribute with
+          an absolute URI identifying a human-readable web page explaining the error.
+        </t>
+        <figure>
+          <preamble>
+            For example, in response to a protected resource request without authentication:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: MAC realm="example"
+]]>
+          </artwork>
+        </figure>
+        <figure>
+          <preamble>
+            And in response to a protected resource request with an authentication attempt using an
+            expired access token:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: MAC realm="example"
+                    error="invalid_token",
+                    error_description="The access token expired"
+]]>
+          </artwork>
+        </figure>
+
+        <section title='Error Codes' anchor='resource-error-codes'>
+          <t>
+            When a request fails, the resource server responds using the appropriate HTTP status
+            code (typically, 400, 401, or 403), and includes one of the following error codes in
+            the response:
+
+            <list style='hanging' hangIndent='6'>
+              <t hangText='invalid_request'>
+                <vspace />
+                The request is missing a required parameter, includes an unsupported parameter or
+                parameter value, repeats the same parameter, uses more than one method for
+                including an access token, or is otherwise malformed. The resource server SHOULD
+                respond with the HTTP 400 (Bad Request) status code.
+              </t>
+              <t hangText='invalid_token'>
+                <vspace />
+                The access token provided is expired, revoked, malformed, or invalid for other
+                reasons. The resource SHOULD respond with the HTTP 401 (Unauthorized) status
+                code. The client MAY request a new access token and retry the protected resource
+                request.
+              </t>
+              <t hangText='insufficient_scope'>
+                <vspace />
+                The request requires higher privileges than provided by the access token. The
+                resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
+                include the <spanx style='verb'>scope</spanx> attribute with the scope necessary to
+                access the protected resource.
+              </t>
+            </list>
+          </t>
+          <t>
+            If the request lacks any authentication information (i.e. the client was unaware
+            authentication is necessary or attempted using an unsupported authentication method),
+            the resource server SHOULD not include an error code or other error information.
+          </t>
+          <figure>
+            <preamble>
+              For example:
+            </preamble>
+            <artwork>
+              <![CDATA[
+  HTTP/1.1 401 Unauthorized
+  WWW-Authenticate: MAC realm="example"
+]]>
+            </artwork>
+          </figure>
+        </section>
+
+      </section>
+
     </section>
 
     <section title='Scheme Extensions' anchor='extensions'>
       <t>
         [[ TBD ]]
       </t>
+    </section>
+
+    <section title='Use with OAuth 2.0' anchor='oauth2'>
+      <t>
+        OAuth 2.0 (<xref target='I-D.ietf-oauth-v2' />) defines a token-based authentication
+        framework in which third-party applications (clients) access protected resources using
+        access tokens. Access tokens are obtained via the resource owners' authorization from an
+        authorization server. This specification defines the OAuth 2.0 MAC token type, as well as
+        type-specific token attributes.
+      </t>
+      <t>
+        This specification does not define methods for the client to specifically request a
+        MAC-type token from the authorization server. Additionally, it does not include any
+        discovery facilities for identifying which HMAC algorithms are supported by a resource
+        server, or how the client may go about obtaining MAC access tokens.
+      </t>
+
+      <section title='Issuing MAC-Type Access Tokens'>
+        <t>
+          Authorization servers issuing MAC-type access tokens MUST include the following parameters
+          whenever a response includes the <spanx style='verb'>access_token</spanx> parameter:
+
+          <list style='hanging' hangIndent='6'>
+            <t hangText='secret'>
+              <vspace />
+              REQUIRED. The token shared secret used as the MAC algorithm key.
+            </t>
+            <t hangText='algorithm'>
+              <vspace />
+              REQUIRED. The MAC algorithm used to calculate the request signature. Value MUST be one
+              of <spanx style='verb'>hmac-sha-1</spanx>, <spanx style='verb'>hmac-sha-256</spanx>, or
+              a registered extension algorithm name as described in <xref target='extensions' />.
+            </t>
+          </list>
+        </t>
+      </section>
+
     </section>
 
     <section title='Security Considerations' anchor='Security'>
@@ -782,11 +908,11 @@
         </t>
       </section>
 
-      <section title='The "secret" OAuth Parameter'>
+      <section title='The "algorithm" OAuth Parameter'>
         <t>
           <list style='hanging'>
             <t hangText='Parameter name:'>
-              secret
+              algorithm
             </t>
             <t hangText='Parameter usage location:'>
               The end-user authorization endpoint response and the token endpoint response.
@@ -808,14 +934,35 @@
 
     <section title='Acknowledgments'>
       <t>
-        The author would like to thank [[ some people ]] for their suggestions, feedback, and
-        continued support.
+        The author would like to thank James Manger for his suggestions, feedback, and continued
+        support.
       </t>
     </section>
 
     <appendix title='Document History' anchor='history'>
       <t>
         [[ To be removed by the RFC editor before publication as an RFC. ]]
+      </t>
+      <t>
+        -01
+        
+        <list style='symbols'>
+          <t>
+            Changed parameters sorting to come after name=value string construction.
+          </t>
+          <t>
+            Added new line at the end of the normalized request string.
+          </t>
+          <t>
+            Moved OAuth2 references to separate section.
+          </t>
+          <t>
+            Added 'WWW-Authenticate' header definition.
+          </t>
+          <t>
+            Fixed example header use of single quote.
+          </t>
+        </list>
       </t>
       <t>
         -00
