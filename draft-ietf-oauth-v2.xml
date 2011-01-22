@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-12'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-13'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='2' ?>
@@ -2334,7 +2334,7 @@
       <t>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
         Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
-        Kristoffer Gronowski, Justin Hart, Phil Hunt, Mike Jones, John Kemp, Chasen Le Hara,
+        Kristoffer Gronowski, Justin Hart, Phil Hunt, Michael B. Jones, John Kemp, Chasen Le Hara,
         Torsten Lodderstedt, Alastair Mair, Eve Maler, James Manger, Laurence Miao,
         Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
         Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
@@ -2351,6 +2351,16 @@
     <appendix title='Document History'>
       <t>
         [[ to be removed by RFC editor before publication as an RFC ]]
+      </t>
+      <t>
+        -13
+      </t>
+      <t>
+        <list style='symbols'>
+          <t>
+            Updated MAC token reference.
+          </t>
+        </list>
       </t>
       <t>
         -12
@@ -2791,7 +2801,7 @@
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-01.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-00.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-v2-mac-token-01.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-v2-mac-token-02.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
     </references>

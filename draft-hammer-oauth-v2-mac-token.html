@@ -143,10 +143,10 @@
 <table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
 <tr><td class="header">Network Working Group</td><td class="header">E. Hammer-Lahav</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
-<tr><td class="header">Intended status: Standards Track</td><td class="header">January 18, 2011</td></tr>
-<tr><td class="header">Expires: July 22, 2011</td><td class="header">&nbsp;</td></tr>
+<tr><td class="header">Intended status: Standards Track</td><td class="header">January 22, 2011</td></tr>
+<tr><td class="header">Expires: July 26, 2011</td><td class="header">&nbsp;</td></tr>
 </table></td></tr></table>
-<h1><br />HTTP Authentication: MAC Authentication<br />draft-hammer-oauth-v2-mac-token-01</h1>
+<h1><br />HTTP Authentication: MAC Authentication<br />draft-hammer-oauth-v2-mac-token-02</h1>
 
 <h3>Abstract</h3>
 
@@ -170,7 +170,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on July 22, 2011.</p>
+This Internet-Draft will expire on July 26, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -200,21 +200,21 @@ Issuing MAC Credentials<br />
 <a href="#requests">3.</a>&nbsp;
 Making Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authz_header">3.1.</a>&nbsp;
-The Authorization Request Header<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#signature">3.2.</a>&nbsp;
+The "Authorization" Request Header<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#body-hash">3.2.</a>&nbsp;
+Body Hash<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#signature">3.3.</a>&nbsp;
 Signature<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#base_string">3.2.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#base_string">3.3.1.</a>&nbsp;
 Normalized Request String<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">3.2.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">3.3.2.</a>&nbsp;
 hmac-sha-1<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">3.2.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">3.3.3.</a>&nbsp;
 hmac-sha-256<br />
 <a href="#verify_request">4.</a>&nbsp;
 Verifying Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#authn-header">4.1.</a>&nbsp;
-The WWW-Authenticate Response Header Field<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#resource-error-codes">4.1.1.</a>&nbsp;
-Error Codes<br />
+The "WWW-Authenticate" Response Header Field<br />
 <a href="#extensions">5.</a>&nbsp;
 Scheme Extensions<br />
 <a href="#oauth2">6.</a>&nbsp;
@@ -240,10 +240,16 @@ Coverage Limitations<br />
 <a href="#IANA">8.</a>&nbsp;
 IANA Considerations<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor14">8.1.</a>&nbsp;
+OAuth Access Token Type Registration<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">8.1.1.</a>&nbsp;
+The "mac" OAuth Access Token Type<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor16">8.2.</a>&nbsp;
+OAuth Parameters Registration<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor17">8.2.1.</a>&nbsp;
 The "secret" OAuth Parameter<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor15">8.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor18">8.2.2.</a>&nbsp;
 The "algorithm" OAuth Parameter<br />
-<a href="#anchor16">9.</a>&nbsp;
+<a href="#anchor19">9.</a>&nbsp;
 Acknowledgments<br />
 <a href="#history">Appendix&nbsp;A.</a>&nbsp;
 Document History<br />
@@ -270,7 +276,7 @@ Introduction</h3>
       
 </p>
 <p>
-        This specification uses the terminology defined in <a class='info' href='#I-D.ietf-oauth-v2'>[I&#8209;D.ietf&#8209;oauth&#8209;v2]<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Protocol Framework,&rdquo; November&nbsp;2010.</span><span>)</span></a>.
+        This specification uses the terminology defined in <a class='info' href='#I-D.ietf-oauth-v2'>[I&#8209;D.ietf&#8209;oauth&#8209;v2]<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Authorization Protocol,&rdquo; January&nbsp;2011.</span><span>)</span></a>.
       
 </p>
 <p>
@@ -308,7 +314,9 @@ Example</h3>
           The client has previously obtained a set of token credentials for accessing resources on
           the <tt>http://example.com/</tt> resource server. The MAC credentials
           issued to the client included the following attributes:
-
+        
+</p>
+<p>
           </p>
 <blockquote class="text"><dl>
 <dt>Access Token:</dt>
@@ -326,9 +334,11 @@ Example</h3>
 <p>
           The client attempts the HTTP request again, this time using the token credentials issued
           earlier to authenticate. To construct the authentication header, the client calculates
-          the current timestamp and a nonce. The nonce is unique to the timestamp used, typically a
-          random string:
-
+          the current timestamp and generates a nonce. The nonce is unique to the timestamp used,
+          typically a random string:
+        
+</p>
+<p>
           </p>
 <blockquote class="text"><dl>
 <dt>Timestamp:</dt>
@@ -350,6 +360,7 @@ Example</h3>
   h480djs93hd8\n
   137131200\n
   dj83hs9s\n
+  \n
   GET\n
   example.com\n
   80\n
@@ -366,7 +377,7 @@ Example</h3>
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-  kDZvddkndxvhGRXZhvuDjEWhGeE=
+  YTVjyNSujYs1WsDurFnvFi4JK6o=
 
 </pre></div>
 <p>
@@ -380,7 +391,7 @@ Example</h3>
   Authorization: MAC token="h480djs93hd8",
                      timestamp="137131200",
                      nonce="dj83hs9s",
-                     signature="kDZvddkndxvhGRXZhvuDjEWhGeE="
+                     signature="YTVjyNSujYs1WsDurFnvFi4JK6o="
 
 </pre></div>
 <p>
@@ -395,13 +406,13 @@ Example</h3>
 Notational Conventions</h3>
 
 <p>
-          The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD NOT',
-          'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as described in
-          <a class='info' href='#RFC2119'>[RFC2119]<span> (</span><span class='info'>Bradner, S., &ldquo;Key words for use in RFCs to Indicate Requirement Levels,&rdquo; March&nbsp;1997.</span><span>)</span></a>.
+          The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD',
+          'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this specification are to be
+          interpreted as described in <a class='info' href='#RFC2119'>[RFC2119]<span> (</span><span class='info'>Bradner, S., &ldquo;Key words for use in RFCs to Indicate Requirement Levels,&rdquo; March&nbsp;1997.</span><span>)</span></a>.
         
 </p>
 <p>
-          This document uses the Augmented Backus-Naur Form (ABNF) notation of
+          This specification uses the Augmented Backus-Naur Form (ABNF) notation of
           <a class='info' href='#I-D.ietf-httpbis-p1-messaging'>[I&#8209;D.ietf&#8209;httpbis&#8209;p1&#8209;messaging]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;HTTP/1.1, part 1: URIs, Connections, and Message Parsing,&rdquo; October&nbsp;2009.</span><span>)</span></a>. Additionally, the following rules
           are included from [RFC2617]: realm, auth-param.
         
@@ -413,10 +424,12 @@ Issuing MAC Credentials</h3>
 
 <p>
         This specification does not define a general purpose method for requesting or issuing MAC
-        credentials (an <a class='info' href='#I-D.ietf-oauth-v2'>OAuth 2.0<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Protocol Framework,&rdquo; November&nbsp;2010.</span><span>)</span></a> [I&#8209;D.ietf&#8209;oauth&#8209;v2] binding is provided in
+        credentials (an <a class='info' href='#I-D.ietf-oauth-v2'>OAuth 2.0<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Authorization Protocol,&rdquo; January&nbsp;2011.</span><span>)</span></a> [I&#8209;D.ietf&#8209;oauth&#8209;v2] binding is provided in
         <a class='info' href='#oauth2'>Section&nbsp;6<span> (</span><span class='info'>Use with OAuth 2.0</span><span>)</span></a>). It simply assumes that the client is in the possession of a set
         of MAC credentials with the following REQUIRES attributes:
-
+      
+</p>
+<p>
         </p>
 <blockquote class="text"><dl>
 <dt>access token</dt>
@@ -464,14 +477,14 @@ Making Requests</h3>
         To make authenticated requests, the client must be in possession of a valid set of MAC
         credentials accepted by the resource server. The client constructs the request by
         calculating of a set of attributes, and adding them to the HTTP request using the
-        <a class='info' href='#authz_header'>Authorization header field<span> (</span><span class='info'>The Authorization Request Header</span><span>)</span></a>. Authenticated request can be
-        sent in response to an authentication challenge or directly.
+        <a class='info' href='#authz_header'>Authorization header field<span> (</span><span class='info'>The &quot;Authorization&quot; Request Header</span><span>)</span></a>. Authenticated requests can
+        be sent in response to an authentication challenge or directly.
       
 </p>
 <a name="authz_header"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
-The Authorization Request Header</h3>
+The "Authorization" Request Header</h3>
 
 <p>
           The <tt>Authorization</tt> request header field uses the framework
@@ -484,55 +497,188 @@ The Authorization Request Header</h3>
   param          = access-token /
                    timestamp /
                    nonce /
+                   body-hash /
                    signature
 
   access-token   = 'token' '=' &lt;"&gt; plain-string &lt;"&gt;
   timestamp      = 'timestamp' '=' &lt;"&gt; 1*DIGIT &lt;"&gt;
   nonce          = 'nonce' '=' &lt;"&gt; plain-string &lt;"&gt;
+  body-hash      = 'bodyhash' '=' &lt;"&gt; plain-string &lt;"&gt;
   signature      = 'signature' '=' &lt;"&gt; plain-string &lt;"&gt;
 
   plain-string   = 1*( DIGIT / ALPHA / %x20-21 / %x23-5B / %x5D-7E )
 
 </pre></div>
 <p>
-          The <tt>token</tt> attribute value is set to the access token string.
+          The header attributes are defined as follows:
         
 </p>
 <p>
-          The <tt>timestamp</tt> attribute value is set to the current time
-          expressed in the number of seconds since January 1, 1970 00:00:00 GMT, and MUST be a
-          positive integer.
+          </p>
+<blockquote class="text"><dl>
+<dt>token</dt>
+<dd>
+              
+              REQUIRED. The access token string.
+            
+</dd>
+<dt>timestamp</dt>
+<dd>
+              
+              REQUIRED. The current time expressed in the number of seconds since January 1, 1970
+              00:00:00 GMT, and MUST be a positive integer.
+            
+</dd>
+<dt>nonce</dt>
+<dd>
+              
+              REQUIRED. A random string, uniquely generated by the client to allow the resource
+              server to verify that a request has never been made before and helps prevent replay
+              attacks when requests are made over an insecure channel. The nonce value MUST be
+              unique across all requests with the same timestamp and access token combination.
+              <br />
+
+              To avoid the need to retain an infinite number of nonce values for future checks,
+              resource servers MAY choose to restrict the time period after which a request with an
+              old timestamp is rejected.  Such a restriction implies a level of synchronization
+              between the client's and server's clocks. The client MAY use the
+              <tt>Date</tt> response header field to synchronize its clock after
+              a failed request.
+            
+</dd>
+<dt>bodyhash</dt>
+<dd>
+              
+              OPTIONAL. The HTTP request entity-body hash as described in
+              <a class='info' href='#body-hash'>Section&nbsp;3.2<span> (</span><span class='info'>Body Hash</span><span>)</span></a>.
+            
+</dd>
+<dt>signature</dt>
+<dd>
+              
+              REQUIRED. The HTTP request signature as described in <a class='info' href='#signature'>Section&nbsp;3.3<span> (</span><span class='info'>Signature</span><span>)</span></a>.
+            
+</dd>
+</dl></blockquote><p>
         
 </p>
 <p>
-          The <tt>nonce</tt> attribute value is set to a random string, uniquely
-          generated by the client to allow the resource server to verify that a request has never
-          been made before and helps prevent replay attacks when requests are made over an insecure
-          channel.  The nonce value MUST be unique across all requests with the same timestamp and
-          access token combination.
+          Attributes MUST NOT appear more than once. Attribute values are limited to a subset of
+          ASCII, which does not require escaping, as defined by the plain-string ABNF.
         
 </p>
-<p>
-          To avoid the need to retain an infinite number of nonce values for future checks,
-          resource servers MAY choose to restrict the time period after which a request with an old
-          timestamp is rejected.  Such a restriction implies a level of synchronization between the
-          client's and server's clocks. The client MAY use the <tt>Date</tt>
-          response header field to synchronize its clock after a failed request.
-        
-</p>
-<p>
-          The <tt>signature</tt> attribute value is set as described in
-          <a class='info' href='#signature'>Section&nbsp;3.2<span> (</span><span class='info'>Signature</span><span>)</span></a>.
-        
-</p>
-<p>
-          Each of the four attributes MUST appear once, and only once. Attribute values are limited
-          to a subset of ASCII, which does not require escaping.
-        
-</p>
-<a name="signature"></a><br /><hr />
+<a name="body-hash"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.2"></a><h3>3.2.&nbsp;
+Body Hash</h3>
+
+<p>
+          The body hash is used to provide integrity verification of the HTTP request entity-body.
+          The hash value is calculated using a hash algorithm over the entire HTTP request
+          entity-body as included in the request.
+        
+</p>
+<p>
+          The client MAY include the body hash with any request. The server SHOULD require the
+          calculation and inclusion of the body hash with any request containing an entity-body, or
+          when the presence (or lack of) of an entity-body matters.
+        
+</p>
+<p>
+          The body hash algorithm is determined by the access token algorithm provided with the
+          access token. The SHA-1 hash algorithm as defined by <a class='info' href='#NIST FIPS-180-3'>[NIST FIPS&#8209;180&#8209;3]<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008,&rdquo; .</span><span>)</span></a> is
+          used with the <tt>hmac-sha-1</tt> access token algorithm. The SHA-256
+          hash algorithm as defined by <a class='info' href='#NIST FIPS-180-3'>[NIST FIPS&#8209;180&#8209;3]<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008,&rdquo; .</span><span>)</span></a> is used with the
+          <tt>hmac-sha-256</tt> access token algorithm. Additional access token
+          algorithms MUST specify the body hash algorithm.
+        
+</p>
+<p>
+          The body hash is calculated as follows:
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  bodyhash = BASE64 ( HASH (text) )
+
+</pre></div>
+<p>
+          Where:
+        
+</p>
+<p>
+          </p>
+<blockquote class="text"><dl>
+<dt>HASH</dt>
+<dd>
+              
+              is the hash algorithm function,
+            
+</dd>
+<dt>text</dt>
+<dd>
+              
+              is the HTTP request entity-body,
+            
+</dd>
+<dt>BASE64</dt>
+<dd>
+              
+              is the base64-encoding function per <a class='info' href='#RFC2045'>[RFC2045]<span> (</span><span class='info'>Freed, N. and N. Borenstein, &ldquo;Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies,&rdquo; November&nbsp;1996.</span><span>)</span></a> section 6.8, applied to
+              the hash digest result octet string, and
+            
+</dd>
+<dt>bodyhash</dt>
+<dd>
+              
+              is the value used in the normalized request string and to set the
+              <tt>bodyhash</tt> attribute of the
+              <tt>Authorization</tt> header field.
+            
+</dd>
+</dl></blockquote><p>
+        
+</p>
+<p>
+          The body hash is calculated before the normalized request string is constructed and the
+          signature is calculated.
+        
+</p>
+<p>
+            For example, the HTTP request:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  POST /request HTTP/1.1
+  Host: example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  hello=world%21
+
+</pre></div>
+<p>
+            using access token <tt>j92fsdjf094gjfdi</tt>, timestamp
+            <tt>137131206</tt>, nonce <tt>f403hksd</tt>,
+            access token algorithm <tt>hmac-sha-1</tt>, and secret
+            <tt>8yfrufh348h</tt>, is transmitted as (line
+            breaks are for display purposes only):
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  POST /request HTTP/1.1
+  Host: example.com
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: MAC token="h480djs93hd8",
+                     timestamp="137131200",
+                     nonce="dj83hs9s",
+                     bodyhash="k9kbtCIy0CkI3/FEfpS/oIDjk6k=",
+                     signature="FR1UCL6Ny6bsx8EkKkiveFYv5VU="
+
+  hello=world%21
+
+</pre></div>
+<a name="signature"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.3"></a><h3>3.3.&nbsp;
 Signature</h3>
 
 <p>
@@ -544,7 +690,7 @@ Signature</h3>
 </p>
 <a name="base_string"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.2.1"></a><h3>3.2.1.&nbsp;
+<a name="rfc.section.3.3.1"></a><h3>3.3.1.&nbsp;
 Normalized Request String</h3>
 
 <p>
@@ -556,7 +702,9 @@ Normalized Request String</h3>
 <p>
             The string is constructed by concatenating together, in order, the following HTTP request
             elements, each followed by a new line character (%x0A):
-
+          
+</p>
+<p>
             </p>
 <ol class="text">
 <li>
@@ -569,6 +717,12 @@ Normalized Request String</h3>
 </li>
 <li>
                 The nonce value generated for the request.
+              
+</li>
+<li>
+                The request entity-body hash as described in <a class='info' href='#body-hash'>Section&nbsp;3.2<span> (</span><span class='info'>Body Hash</span><span>)</span></a> if
+                one was calculated and included in the request, otherwise, an empty string. Note
+                that the body hash of an empty entity-body is typically not an empty string.
               
 </li>
 <li>
@@ -595,7 +749,7 @@ Normalized Request String</h3>
 </li>
 <li>
                 The query component of the HTTP request URI as defined by <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
-                section 3.4, normalized as described in <a class='info' href='#parameters'>Section&nbsp;3.2.1.1<span> (</span><span class='info'>Parameters Normalization</span><span>)</span></a>.
+                section 3.4, normalized as described in <a class='info' href='#parameters'>Section&nbsp;3.3.1.1<span> (</span><span class='info'>Parameters Normalization</span><span>)</span></a>.
               
 </li>
 </ol><p>
@@ -610,14 +764,17 @@ Normalized Request String</h3>
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-    GET /request?b5=%3D%253D&amp;a3=a&amp;c%40=&amp;a2=r%20b&amp;c2&amp;a3=2+q HTTP/1.1
-    Host: example.com
+  POST /request?b5=%3D%253D&amp;a3=a&amp;c%40=&amp;a2=r%20b&amp;c2&amp;a3=2+q HTTP/1.1
+  Host: example.com
+
+  Hello World!
 
 </pre></div>
 <p>
               using access token <tt>kkk9d7dh3k39sjv7</tt>, timestamp
-              <tt>137131201</tt>, and nonce <tt>7d8f3e4a</tt>
-              is normalized into the following string (the new line Separator character is
+              <tt>137131201</tt>, nonce <tt>7d8f3e4a</tt>,
+              and body hash <tt>Lve95gjOVATpfV8EL5X4nxwjKHE=</tt>
+              is normalized into the following string (the new line separator character is
               represented by <tt>\n</tt> for display purposes only):
             
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -625,7 +782,8 @@ Normalized Request String</h3>
   kkk9d7dh3k39sjv7\n
   137131201\n
   7d8f3e4a\n
-  GET\n
+  Lve95gjOVATpfV8EL5X4nxwjKHE=\n
+  POST\n
   example.com\n
   80\n
   /request\n
@@ -639,20 +797,23 @@ Normalized Request String</h3>
 </pre></div>
 <a name="parameters"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.2.1.1"></a><h3>3.2.1.1.&nbsp;
+<a name="rfc.section.3.3.1.1"></a><h3>3.3.1.1.&nbsp;
 Parameters Normalization</h3>
 
 <p>
               The query component is parsed into a list of name/value parameter pairs by
               treating it as an <tt>application/x-www-form-urlencoded</tt>
               string, separating the names and values and decoding them as defined by
-              <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a> section 17.13.4.
+              <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a> section 17.13.4. Form-encoded parameters
+              present in the entity-body are not included.
             
 </p>
 <p>
               Once separated and decoded, the parameters are concatenated back together as
               follows:
-
+            
+</p>
+<p>
               </p>
 <ol class="text">
 <li>
@@ -854,38 +1015,36 @@ Parameters Normalization</h3>
 </pre></div>
 <a name="anchor4"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.2.2"></a><h3>3.2.2.&nbsp;
+<a name="rfc.section.3.3.2"></a><h3>3.3.2.&nbsp;
 hmac-sha-1</h3>
 
 <p>
             <tt>hmac-sha-1</tt> uses the HMAC-SHA1 algorithm as defined in
             <a class='info' href='#RFC2104'>[RFC2104]<span> (</span><span class='info'>Krawczyk, H., Bellare, M., and R. Canetti, &ldquo;HMAC: Keyed-Hashing for Message Authentication,&rdquo; February&nbsp;1997.</span><span>)</span></a>:
-
-            </p>
-<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   digest = HMAC-SHA1 (key, text)
 
-</pre></div><p>
-
+</pre></div>
+<p>
+            Where:
           
 </p>
 <p>
-            Where:
-
             </p>
 <blockquote class="text"><dl>
 <dt>text</dt>
 <dd>
                 
                 is set to the value of the normalize request string as described in
-                <a class='info' href='#base_string'>Section&nbsp;3.2.1<span> (</span><span class='info'>Normalized Request String</span><span>)</span></a>.
+                <a class='info' href='#base_string'>Section&nbsp;3.3.1<span> (</span><span class='info'>Normalized Request String</span><span>)</span></a>,
               
 </dd>
 <dt>key</dt>
 <dd>
                 
-                is set to the access token shared-secret provided by the authorization server.
+                is set to the access token shared-secret provided by the authorization server, and
               
 </dd>
 <dt>digest</dt>
@@ -901,39 +1060,37 @@ hmac-sha-1</h3>
 </p>
 <a name="anchor5"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.2.3"></a><h3>3.2.3.&nbsp;
+<a name="rfc.section.3.3.3"></a><h3>3.3.3.&nbsp;
 hmac-sha-256</h3>
 
 <p>
             <tt>hmac-sha-1</tt> uses the HMAC algorithm as defined in
             <a class='info' href='#RFC2104'>[RFC2104]<span> (</span><span class='info'>Krawczyk, H., Bellare, M., and R. Canetti, &ldquo;HMAC: Keyed-Hashing for Message Authentication,&rdquo; February&nbsp;1997.</span><span>)</span></a> together with the SHA-256 hash function defined in
             <a class='info' href='#NIST FIPS-180-3'>[NIST FIPS&#8209;180&#8209;3]<span> (</span><span class='info'>National Institute of Standards and Technology, &ldquo;Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008,&rdquo; .</span><span>)</span></a>:
-
-            </p>
-<div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   digest = HMAC-SHA256 (key, text)
 
-</pre></div><p>
-
+</pre></div>
+<p>
+            Where:
           
 </p>
 <p>
-            Where:
-
             </p>
 <blockquote class="text"><dl>
 <dt>text</dt>
 <dd>
                 
                 is set to the value of the normalize request string as described in
-                <a class='info' href='#base_string'>Section&nbsp;3.2.1<span> (</span><span class='info'>Normalized Request String</span><span>)</span></a>.
+                <a class='info' href='#base_string'>Section&nbsp;3.3.1<span> (</span><span class='info'>Normalized Request String</span><span>)</span></a>,
               
 </dd>
 <dt>key</dt>
 <dd>
                 
-                is set to the access token shared-secret provided by the authorization server.
+                is set to the access token shared-secret provided by the authorization server, and
               
 </dd>
 <dt>digest</dt>
@@ -955,12 +1112,15 @@ Verifying Requests</h3>
 <p>
         A servers receiving an authenticated request validates it by performing the following
         REQUIRED steps:
-
+      
+</p>
+<p>
         </p>
 <ol class="text">
 <li>
-            Recalculate the request signature as described in <a class='info' href='#signature'>Section&nbsp;3.2<span> (</span><span class='info'>Signature</span><span>)</span></a> and
-            compare it to the value received from the client via the
+            Recalculate the request body hash (if included in the request) as described in
+            <a class='info' href='#body-hash'>Section&nbsp;3.2<span> (</span><span class='info'>Body Hash</span><span>)</span></a> and signature as described in <a class='info' href='#signature'>Section&nbsp;3.3<span> (</span><span class='info'>Signature</span><span>)</span></a>
+            and compare the signature to the value received from the client via the
             <tt>signature</tt> attribute.
           
 </li>
@@ -989,7 +1149,7 @@ Verifying Requests</h3>
 <a name="authn-header"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
-The WWW-Authenticate Response Header Field</h3>
+The "WWW-Authenticate" Response Header Field</h3>
 
 <p>
           If the protected resource request does not include authentication credentials, contains
@@ -1000,13 +1160,11 @@ The WWW-Authenticate Response Header Field</h3>
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
-  challenge       = "MAC" [ RWS 1#param ]
+  challenge   = "MAC" [ RWS 1#param ]
 
-  param           = realm / error / error-desc / error-uri / auth-param
+  param       = realm / error / auth-param
 
-  error           = "error" "=" quoted-string
-  error-desc      = "error_description" "=" quoted-string
-  error-uri       = "error_uri" = &lt;"&gt; URI-reference &lt;"&gt;
+  error       = "error" "=" quoted-string
 
 </pre></div>
 <p>
@@ -1014,13 +1172,10 @@ The WWW-Authenticate Response Header Field</h3>
         
 </p>
 <p>
-          If the protected resource request included an access token and failed authentication, the
-          resource server SHOULD include the <tt>error</tt> attribute to provide
-          the client with the reason why the access request was declined. The parameter value is
-          described in <a class='info' href='#resource-error-codes'>Section&nbsp;4.1.1<span> (</span><span class='info'>Error Codes</span><span>)</span></a>. In addition, the resource server MAY
-          include the <tt>error_description</tt> attribute to provide a
-          human-readable explanation, and the <tt>error-uri</tt> attribute with
-          an absolute URI identifying a human-readable web page explaining the error.
+          If the protected resource request included a MAC
+          <tt>Authorization</tt> header field and failed authentication, the
+          resource server MAY include the <tt>error</tt> attribute to provide
+          the client with a human-readable explanation why the access request was declined.
         
 </p>
 <p>
@@ -1040,67 +1195,40 @@ The WWW-Authenticate Response Header Field</h3>
 
   HTTP/1.1 401 Unauthorized
   WWW-Authenticate: MAC realm="example"
-                    error="invalid_token",
-                    error_description="The access token expired"
+                        error="The access token expired"
 
 </pre></div>
-<a name="resource-error-codes"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.1.1"></a><h3>4.1.1.&nbsp;
-Error Codes</h3>
-
 <p>
-            When a request fails, the resource server responds using the appropriate HTTP status
-            code (typically, 400, 401, or 403), and includes one of the following error codes in
-            the response:
-
-            </p>
+          The resource server response SHOULD use the appropriate HTTP status code as follows:
+        
+</p>
+<p>
+          </p>
 <blockquote class="text"><dl>
-<dt>invalid_request</dt>
+<dt>400 (Bad Request)</dt>
 <dd>
-                
-                The request is missing a required parameter, includes an unsupported parameter or
-                parameter value, repeats the same parameter, uses more than one method for
-                including an access token, or is otherwise malformed. The resource server SHOULD
-                respond with the HTTP 400 (Bad Request) status code.
               
+              The request is missing a required parameter, includes an unsupported parameter or
+              parameter value, repeats the same parameter, uses more than one method for
+              including an access token, or is otherwise malformed.
+            
 </dd>
-<dt>invalid_token</dt>
+<dt>401 (Unauthorized)</dt>
 <dd>
-                
-                The access token provided is expired, revoked, malformed, or invalid for other
-                reasons. The resource SHOULD respond with the HTTP 401 (Unauthorized) status
-                code. The client MAY request a new access token and retry the protected resource
-                request.
               
+              The access token provided is expired, revoked, malformed, or invalid. The body hash
+              or signature provided do not match the values calculated by the server.
+            
 </dd>
-<dt>insufficient_scope</dt>
+<dt>403 (Forbidden)</dt>
 <dd>
-                
-                The request requires higher privileges than provided by the access token. The
-                resource server SHOULD respond with the HTTP 403 (Forbidden) status code and MAY
-                include the <tt>scope</tt> attribute with the scope necessary to
-                access the protected resource.
               
+              The request requires higher privileges than provided by the access token.
+            
 </dd>
 </dl></blockquote><p>
-          
+        
 </p>
-<p>
-            If the request lacks any authentication information (i.e. the client was unaware
-            authentication is necessary or attempted using an unsupported authentication method),
-            the resource server SHOULD not include an error code or other error information.
-          
-</p>
-<p>
-              For example:
-            
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-
-  HTTP/1.1 401 Unauthorized
-  WWW-Authenticate: MAC realm="example"
-
-</pre></div>
 <a name="extensions"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
@@ -1116,7 +1244,7 @@ Scheme Extensions</h3>
 Use with OAuth 2.0</h3>
 
 <p>
-        OAuth 2.0 (<a class='info' href='#I-D.ietf-oauth-v2'>[I&#8209;D.ietf&#8209;oauth&#8209;v2]<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Protocol Framework,&rdquo; November&nbsp;2010.</span><span>)</span></a>) defines a token-based authentication
+        OAuth 2.0 (<a class='info' href='#I-D.ietf-oauth-v2'>[I&#8209;D.ietf&#8209;oauth&#8209;v2]<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Authorization Protocol,&rdquo; January&nbsp;2011.</span><span>)</span></a>) defines a token-based authentication
         framework in which third-party applications (clients) access protected resources using
         access tokens. Access tokens are obtained via the resource owners' authorization from an
         authorization server. This specification defines the OAuth 2.0 MAC token type, as well as
@@ -1138,7 +1266,9 @@ Issuing MAC-Type Access Tokens</h3>
 <p>
           Authorization servers issuing MAC-type access tokens MUST include the following parameters
           whenever a response includes the <tt>access_token</tt> parameter:
-
+        
+</p>
+<p>
           </p>
 <blockquote class="text"><dl>
 <dt>secret</dt>
@@ -1292,6 +1422,14 @@ Coverage Limitations</h3>
           should employ additional mechanisms to protect such elements.
         
 </p>
+<p>
+          The signature does not cover entity-header fields which can often affect how the request
+          body is interpreted by the server (i.e. Content-Type). If the server behavior is
+          influenced by the presence or value of such header fields, an attacker can manipulate the
+          request header without being detected. This will alter the request even when using the
+          body hash attribute.
+        
+</p>
 <a name="IANA"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
@@ -1300,76 +1438,137 @@ IANA Considerations</h3>
 <a name="anchor14"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.1"></a><h3>8.1.&nbsp;
-The "secret" OAuth Parameter</h3>
+OAuth Access Token Type Registration</h3>
 
 <p>
-          </p>
-<blockquote class="text"><dl>
-<dt>Parameter name:</dt>
-<dd>
-              secret
-            
-</dd>
-<dt>Parameter usage location:</dt>
-<dd>
-              The end-user authorization endpoint response and the token endpoint response.
-            
-</dd>
-<dt>Change controller:</dt>
-<dd>
-              IETF
-            
-</dd>
-<dt>Specification document(s):</dt>
-<dd>
-              [[ this document ]]
-            
-</dd>
-<dt>Related information:</dt>
-<dd>
-              None
-            
-</dd>
-</dl></blockquote><p>
+          This specification registers the following access token type in the OAuth Access Token
+          Type Registry.
         
 </p>
 <a name="anchor15"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.8.2"></a><h3>8.2.&nbsp;
-The "algorithm" OAuth Parameter</h3>
+<a name="rfc.section.8.1.1"></a><h3>8.1.1.&nbsp;
+The "mac" OAuth Access Token Type</h3>
 
 <p>
-          </p>
+            </p>
 <blockquote class="text"><dl>
-<dt>Parameter name:</dt>
+<dt>Type name:</dt>
 <dd>
-              algorithm
-            
+                
+                mac
+              
 </dd>
-<dt>Parameter usage location:</dt>
+<dt>Additional Token Endpoint Response Parameters:</dt>
 <dd>
-              The end-user authorization endpoint response and the token endpoint response.
-            
+                
+                secret, algorithm
+              
+</dd>
+<dt>HTTP Authentication Scheme(s):</dt>
+<dd>
+                
+                MAC
+              
 </dd>
 <dt>Change controller:</dt>
 <dd>
-              IETF
-            
+                
+                IETF
+              
 </dd>
 <dt>Specification document(s):</dt>
 <dd>
-              [[ this document ]]
-            
+                
+                [[ this document ]]
+              
+</dd>
+</dl></blockquote><p>
+          
+</p>
+<a name="anchor16"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8.2"></a><h3>8.2.&nbsp;
+OAuth Parameters Registration</h3>
+
+<p>
+          This specification registers the following parameters in the OAuth Parameters Registry
+          established by <a class='info' href='#I-D.ietf-oauth-v2'>[I&#8209;D.ietf&#8209;oauth&#8209;v2]<span> (</span><span class='info'>Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;The OAuth 2.0 Authorization Protocol,&rdquo; January&nbsp;2011.</span><span>)</span></a>.
+        
+</p>
+<a name="anchor17"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8.2.1"></a><h3>8.2.1.&nbsp;
+The "secret" OAuth Parameter</h3>
+
+<p>
+            </p>
+<blockquote class="text"><dl>
+<dt>Parameter name:</dt>
+<dd>
+                secret
+              
+</dd>
+<dt>Parameter usage location:</dt>
+<dd>
+                authorization response, token response
+              
+</dd>
+<dt>Change controller:</dt>
+<dd>
+                IETF
+              
+</dd>
+<dt>Specification document(s):</dt>
+<dd>
+                [[ this document ]]
+              
 </dd>
 <dt>Related information:</dt>
 <dd>
-              None
-            
+                None
+              
 </dd>
 </dl></blockquote><p>
-        
+          
 </p>
-<a name="anchor16"></a><br /><hr />
+<a name="anchor18"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8.2.2"></a><h3>8.2.2.&nbsp;
+The "algorithm" OAuth Parameter</h3>
+
+<p>
+            </p>
+<blockquote class="text"><dl>
+<dt>Parameter name:</dt>
+<dd>
+                algorithm
+              
+</dd>
+<dt>Parameter usage location:</dt>
+<dd>
+                authorization response, token response
+              
+</dd>
+<dt>Change controller:</dt>
+<dd>
+                IETF
+              
+</dd>
+<dt>Specification document(s):</dt>
+<dd>
+                [[ this document ]]
+              
+</dd>
+<dt>Related information:</dt>
+<dd>
+                None
+              
+</dd>
+</dl></blockquote><p>
+          
+</p>
+<a name="anchor19"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Acknowledgments</h3>
@@ -1389,8 +1588,32 @@ Document History</h3>
       
 </p>
 <p>
+        -02
+      
+</p>
+<p>
+        </p>
+<ul class="text">
+<li>
+            Added body-hash support.
+          
+</li>
+<li>
+            Updated OAuth 2.0 reference and added token type registration template.
+          
+</li>
+<li>
+            Removed error codes and error URI.
+          
+</li>
+</ul><p>
+      
+</p>
+<p>
         -01
-        
+      
+</p>
+<p>
         </p>
 <ul class="text">
 <li>
@@ -1413,12 +1636,18 @@ Document History</h3>
             Fixed example header use of single quote.
           
 </li>
+<li>
+            Restricted strings to ASCII subset (printable, no double-quotes or back-slash).
+          
+</li>
 </ul><p>
       
 </p>
 <p>
         -00
-
+      
+</p>
+<p>
         </p>
 <ul class="text">
 <li>
@@ -1440,9 +1669,9 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-httpbis-p1-messaging">[I-D.ietf-httpbis-p1-messaging]</a></td>
 <td class="author-text">Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-p1-messaging-08.txt">HTTP/1.1, part 1: URIs, Connections, and Message Parsing</a>,&rdquo; draft-ietf-httpbis-p1-messaging-08 (work in progress), October&nbsp;2009 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-p1-messaging-08.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2">[I-D.ietf-oauth-v2]</a></td>
-<td class="author-text">Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-11.txt">The OAuth 2.0 Protocol Framework</a>,&rdquo; draft-ietf-oauth-v2-11 (work in progress), November&nbsp;2010 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-11.txt">TXT</a>).</td></tr>
+<td class="author-text">Hammer-Lahav, E., Recordon, D., and D. Hardt, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-12.txt">The OAuth 2.0 Authorization Protocol</a>,&rdquo; draft-ietf-oauth-v2-12 (work in progress), January&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-12.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="NIST FIPS-180-3">[NIST FIPS-180-3]</a></td>
-<td class="author-text">National Institute of Standards and Technology, &ldquo;<a href="http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf">Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008</a>.&rdquo;</td></tr>
+<td class="author-text">National Institute of Standards and Technology, &ldquo;<a href="http://www.nist.gov/itl/upload/fips180-3_final.pdf">Secure Hash Standard (SHS). FIPS PUB 180-3, October 2008</a>.&rdquo;</td></tr>
 <tr><td class="author-text" valign="top"><a name="RFC2045">[RFC2045]</a></td>
 <td class="author-text"><a href="mailto:ned@innosoft.com">Freed, N.</a> and <a href="mailto:nsb@nsb.fv.com">N. Borenstein</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2045">Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</a>,&rdquo; RFC&nbsp;2045, November&nbsp;1996 (<a href="http://www.rfc-editor.org/rfc/rfc2045.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="RFC2104">[RFC2104]</a></td>
@@ -1454,7 +1683,7 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC3986">[RFC3986]</a></td>
 <td class="author-text"><a href="mailto:timbl@w3.org">Berners-Lee, T.</a>, <a href="mailto:fielding@gbiv.com">Fielding, R.</a>, and <a href="mailto:LMM@acm.org">L. Masinter</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>,&rdquo; STD&nbsp;66, RFC&nbsp;3986, January&nbsp;2005 (<a href="http://www.rfc-editor.org/rfc/rfc3986.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc3986.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc3986.xml">XML</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html401-19991224">[W3C.REC-html401-19991224]</a></td>
-<td class="author-text">Hors, A., Jacobs, I., and D. Raggett, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
+<td class="author-text">Hors, A., Raggett, D., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />

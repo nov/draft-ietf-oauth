@@ -3,12 +3,12 @@
 
 Network Working Group                                    E. Hammer-Lahav
 Internet-Draft                                                    Yahoo!
-Intended status: Standards Track                        January 18, 2011
-Expires: July 22, 2011
+Intended status: Standards Track                        January 22, 2011
+Expires: July 26, 2011
 
 
                 HTTP Authentication: MAC Authentication
-                   draft-hammer-oauth-v2-mac-token-01
+                   draft-hammer-oauth-v2-mac-token-02
 
 Abstract
 
@@ -30,7 +30,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 22, 2011.
+   This Internet-Draft will expire on July 26, 2011.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Hammer-Lahav              Expires July 22, 2011                 [Page 1]
+Hammer-Lahav              Expires July 26, 2011                 [Page 1]
 
 Internet-Draft             MAC Authentication               January 2011
 
@@ -63,35 +63,38 @@ Table of Contents
      1.1.  Example  . . . . . . . . . . . . . . . . . . . . . . . . .  3
      1.2.  Notational Conventions . . . . . . . . . . . . . . . . . .  5
    2.  Issuing MAC Credentials  . . . . . . . . . . . . . . . . . . .  5
-   3.  Making Requests  . . . . . . . . . . . . . . . . . . . . . . .  6
-     3.1.  The Authorization Request Header . . . . . . . . . . . . .  6
-     3.2.  Signature  . . . . . . . . . . . . . . . . . . . . . . . .  7
-       3.2.1.  Normalized Request String  . . . . . . . . . . . . . .  7
-       3.2.2.  hmac-sha-1 . . . . . . . . . . . . . . . . . . . . . . 11
-       3.2.3.  hmac-sha-256 . . . . . . . . . . . . . . . . . . . . . 11
-   4.  Verifying Requests . . . . . . . . . . . . . . . . . . . . . . 12
-     4.1.  The WWW-Authenticate Response Header Field . . . . . . . . 12
-       4.1.1.  Error Codes  . . . . . . . . . . . . . . . . . . . . . 13
-   5.  Scheme Extensions  . . . . . . . . . . . . . . . . . . . . . . 14
-   6.  Use with OAuth 2.0 . . . . . . . . . . . . . . . . . . . . . . 14
+   3.  Making Requests  . . . . . . . . . . . . . . . . . . . . . . .  5
+     3.1.  The "Authorization" Request Header . . . . . . . . . . . .  6
+     3.2.  Body Hash  . . . . . . . . . . . . . . . . . . . . . . . .  7
+     3.3.  Signature  . . . . . . . . . . . . . . . . . . . . . . . .  8
+       3.3.1.  Normalized Request String  . . . . . . . . . . . . . .  9
+       3.3.2.  hmac-sha-1 . . . . . . . . . . . . . . . . . . . . . . 12
+       3.3.3.  hmac-sha-256 . . . . . . . . . . . . . . . . . . . . . 13
+   4.  Verifying Requests . . . . . . . . . . . . . . . . . . . . . . 13
+     4.1.  The "WWW-Authenticate" Response Header Field . . . . . . . 14
+   5.  Scheme Extensions  . . . . . . . . . . . . . . . . . . . . . . 15
+   6.  Use with OAuth 2.0 . . . . . . . . . . . . . . . . . . . . . . 15
      6.1.  Issuing MAC-Type Access Tokens . . . . . . . . . . . . . . 15
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 15
-     7.1.  Secrets Transmission . . . . . . . . . . . . . . . . . . . 15
-     7.2.  Confidentiality of Requests  . . . . . . . . . . . . . . . 15
-     7.3.  Spoofing by Counterfeit Servers  . . . . . . . . . . . . . 15
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 16
+     7.1.  Secrets Transmission . . . . . . . . . . . . . . . . . . . 16
+     7.2.  Confidentiality of Requests  . . . . . . . . . . . . . . . 16
+     7.3.  Spoofing by Counterfeit Servers  . . . . . . . . . . . . . 16
      7.4.  Plaintext Storage of Credentials . . . . . . . . . . . . . 16
-     7.5.  Entropy of Secrets . . . . . . . . . . . . . . . . . . . . 16
-     7.6.  Denial of Service / Resource Exhaustion Attacks  . . . . . 16
-     7.7.  Coverage Limitations . . . . . . . . . . . . . . . . . . . 17
-   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 17
-     8.1.  The "secret" OAuth Parameter . . . . . . . . . . . . . . . 17
-     8.2.  The "algorithm" OAuth Parameter  . . . . . . . . . . . . . 18
-   9.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 18
-   Appendix A.  Document History  . . . . . . . . . . . . . . . . . . 18
-   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 18
-     10.1. Normative References . . . . . . . . . . . . . . . . . . . 18
-     10.2. Informative References . . . . . . . . . . . . . . . . . . 19
-   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     7.5.  Entropy of Secrets . . . . . . . . . . . . . . . . . . . . 17
+     7.6.  Denial of Service / Resource Exhaustion Attacks  . . . . . 17
+     7.7.  Coverage Limitations . . . . . . . . . . . . . . . . . . . 18
+   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 18
+     8.1.  OAuth Access Token Type Registration . . . . . . . . . . . 18
+       8.1.1.  The "mac" OAuth Access Token Type  . . . . . . . . . . 18
+     8.2.  OAuth Parameters Registration  . . . . . . . . . . . . . . 18
+       8.2.1.  The "secret" OAuth Parameter . . . . . . . . . . . . . 19
+       8.2.2.  The "algorithm" OAuth Parameter  . . . . . . . . . . . 19
+   9.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 19
+   Appendix A.  Document History  . . . . . . . . . . . . . . . . . . 19
+   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+     10.1. Normative References . . . . . . . . . . . . . . . . . . . 20
+     10.2. Informative References . . . . . . . . . . . . . . . . . . 21
+   Author's Address . . . . . . . . . . . . . . . . . . . . . . . . . 21
 
 
 
@@ -105,10 +108,7 @@ Table of Contents
 
 
 
-
-
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 2]
+Hammer-Lahav              Expires July 26, 2011                 [Page 2]
 
 Internet-Draft             MAC Authentication               January 2011
 
@@ -150,27 +150,26 @@ Internet-Draft             MAC Authentication               January 2011
    attributes:
 
    Access Token:  h480djs93hd8
-
    Token secret:  489dks293j39
-
    MAC algorithm:  hmac-sha-1
 
    The client attempts the HTTP request again, this time using the token
    credentials issued earlier to authenticate.  To construct the
    authentication header, the client calculates the current timestamp
-   and a nonce.  The nonce is unique to the timestamp used, typically a
-   random string:
+   and generates a nonce.  The nonce is unique to the timestamp used,
+   typically a random string:
 
 
 
 
-Hammer-Lahav              Expires July 22, 2011                 [Page 3]
+
+
+Hammer-Lahav              Expires July 26, 2011                 [Page 3]
 
 Internet-Draft             MAC Authentication               January 2011
 
 
    Timestamp:  137131200
-
    Nonce:  dj83hs9s
 
    The client normalizes the request and constructs the normalized
@@ -181,6 +180,7 @@ Internet-Draft             MAC Authentication               January 2011
      h480djs93hd8\n
      137131200\n
      dj83hs9s\n
+     \n
      GET\n
      example.com\n
      80\n
@@ -195,7 +195,7 @@ Internet-Draft             MAC Authentication               January 2011
    produce the request signature:
 
 
-     kDZvddkndxvhGRXZhvuDjEWhGeE=
+     YTVjyNSujYs1WsDurFnvFi4JK6o=
 
 
    The client includes the access token, timestamp, nonce, and signature
@@ -207,7 +207,7 @@ Internet-Draft             MAC Authentication               January 2011
      Authorization: MAC token="h480djs93hd8",
                         timestamp="137131200",
                         nonce="dj83hs9s",
-                        signature="kDZvddkndxvhGRXZhvuDjEWhGeE="
+                        signature="YTVjyNSujYs1WsDurFnvFi4JK6o="
 
 
    The resource server validates the request by calculating the
@@ -220,7 +220,7 @@ Internet-Draft             MAC Authentication               January 2011
 
 
 
-Hammer-Lahav              Expires July 22, 2011                 [Page 4]
+Hammer-Lahav              Expires July 26, 2011                 [Page 4]
 
 Internet-Draft             MAC Authentication               January 2011
 
@@ -229,11 +229,11 @@ Internet-Draft             MAC Authentication               January 2011
 
    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT',
    'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this
-   document are to be interpreted as described in [RFC2119].
+   specification are to be interpreted as described in [RFC2119].
 
-   This document uses the Augmented Backus-Naur Form (ABNF) notation of
-   [I-D.ietf-httpbis-p1-messaging].  Additionally, the following rules
-   are included from [RFC2617]: realm, auth-param.
+   This specification uses the Augmented Backus-Naur Form (ABNF)
+   notation of [I-D.ietf-httpbis-p1-messaging].  Additionally, the
+   following rules are included from [RFC2617]: realm, auth-param.
 
 
 2.  Issuing MAC Credentials
@@ -252,10 +252,8 @@ Internet-Draft             MAC Authentication               January 2011
          information, or self-contain the authorization information in a
          verifiable manner (i.e. a token string consisting of some data
          and a signature).
-
    secret
          A shared symmetric secret used as the MAC algorithm key.
-
    algorithm
          A MAC algorithm used to calculate the request signature.  Value
          MUST be one of "hmac-sha-1", "hmac-sha-256", or a registered
@@ -270,27 +268,24 @@ Internet-Draft             MAC Authentication               January 2011
 
 
 
-
-
-
-
-
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 5]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
 3.  Making Requests
 
    To make authenticated requests, the client must be in possession of a
    valid set of MAC credentials accepted by the resource server.  The
    client constructs the request by calculating of a set of attributes,
+
+
+
+Hammer-Lahav              Expires July 26, 2011                 [Page 5]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
    and adding them to the HTTP request using the Authorization header
-   field (Section 3.1).  Authenticated request can be sent in response
+   field (Section 3.1).  Authenticated requests can be sent in response
    to an authentication challenge or directly.
 
-3.1.  The Authorization Request Header
+3.1.  The "Authorization" Request Header
 
    The "Authorization" request header field uses the framework defined
    by [RFC2617] as follows:
@@ -301,58 +296,160 @@ Internet-Draft             MAC Authentication               January 2011
      param          = access-token /
                       timestamp /
                       nonce /
+                      body-hash /
                       signature
 
      access-token   = 'token' '=' <"> plain-string <">
      timestamp      = 'timestamp' '=' <"> 1*DIGIT <">
      nonce          = 'nonce' '=' <"> plain-string <">
+     body-hash      = 'bodyhash' '=' <"> plain-string <">
      signature      = 'signature' '=' <"> plain-string <">
 
      plain-string   = 1*( DIGIT / ALPHA / %x20-21 / %x23-5B / %x5D-7E )
 
 
-   The "token" attribute value is set to the access token string.
+   The header attributes are defined as follows:
 
-   The "timestamp" attribute value is set to the current time expressed
-   in the number of seconds since January 1, 1970 00:00:00 GMT, and MUST
-   be a positive integer.
+   token
+         REQUIRED.  The access token string.
+   timestamp
+         REQUIRED.  The current time expressed in the number of seconds
+         since January 1, 1970 00:00:00 GMT, and MUST be a positive
+         integer.
+   nonce
+         REQUIRED.  A random string, uniquely generated by the client to
+         allow the resource server to verify that a request has never
+         been made before and helps prevent replay attacks when requests
+         are made over an insecure channel.  The nonce value MUST be
+         unique across all requests with the same timestamp and access
+         token combination.
+         To avoid the need to retain an infinite number of nonce values
+         for future checks, resource servers MAY choose to restrict the
+         time period after which a request with an old timestamp is
+         rejected.  Such a restriction implies a level of
+         synchronization between the client's and server's clocks.  The
+         client MAY use the "Date" response header field to synchronize
 
-   The "nonce" attribute value is set to a random string, uniquely
-   generated by the client to allow the resource server to verify that a
-   request has never been made before and helps prevent replay attacks
-   when requests are made over an insecure channel.  The nonce value
-   MUST be unique across all requests with the same timestamp and access
-   token combination.
-
-   To avoid the need to retain an infinite number of nonce values for
-   future checks, resource servers MAY choose to restrict the time
-   period after which a request with an old timestamp is rejected.  Such
-   a restriction implies a level of synchronization between the client's
-   and server's clocks.  The client MAY use the "Date" response header
 
 
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 6]
+Hammer-Lahav              Expires July 26, 2011                 [Page 6]
 
 Internet-Draft             MAC Authentication               January 2011
 
 
-   field to synchronize its clock after a failed request.
+         its clock after a failed request.
+   bodyhash
+         OPTIONAL.  The HTTP request entity-body hash as described in
+         Section 3.2.
+   signature
+         REQUIRED.  The HTTP request signature as described in
+         Section 3.3.
 
-   The "signature" attribute value is set as described in Section 3.2.
+   Attributes MUST NOT appear more than once.  Attribute values are
+   limited to a subset of ASCII, which does not require escaping, as
+   defined by the plain-string ABNF.
 
-   Each of the four attributes MUST appear once, and only once.
-   Attribute values are limited to a subset of ASCII, which does not
-   require escaping.
+3.2.  Body Hash
 
-3.2.  Signature
+   The body hash is used to provide integrity verification of the HTTP
+   request entity-body.  The hash value is calculated using a hash
+   algorithm over the entire HTTP request entity-body as included in the
+   request.
+
+   The client MAY include the body hash with any request.  The server
+   SHOULD require the calculation and inclusion of the body hash with
+   any request containing an entity-body, or when the presence (or lack
+   of) of an entity-body matters.
+
+   The body hash algorithm is determined by the access token algorithm
+   provided with the access token.  The SHA-1 hash algorithm as defined
+   by [NIST FIPS-180-3] is used with the "hmac-sha-1" access token
+   algorithm.  The SHA-256 hash algorithm as defined by [NIST
+   FIPS-180-3] is used with the "hmac-sha-256" access token algorithm.
+   Additional access token algorithms MUST specify the body hash
+   algorithm.
+
+   The body hash is calculated as follows:
+
+
+     bodyhash = BASE64 ( HASH (text) )
+
+
+   Where:
+
+   HASH
+         is the hash algorithm function,
+   text
+         is the HTTP request entity-body,
+
+
+
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                 [Page 7]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
+   BASE64
+         is the base64-encoding function per [RFC2045] section 6.8,
+         applied to the hash digest result octet string, and
+   bodyhash
+         is the value used in the normalized request string and to set
+         the "bodyhash" attribute of the "Authorization" header field.
+
+   The body hash is calculated before the normalized request string is
+   constructed and the signature is calculated.
+
+   For example, the HTTP request:
+
+
+     POST /request HTTP/1.1
+     Host: example.com
+     Content-Type: application/x-www-form-urlencoded
+
+     hello=world%21
+
+
+   using access token "j92fsdjf094gjfdi", timestamp "137131206", nonce
+   "f403hksd", access token algorithm "hmac-sha-1", and secret
+   "8yfrufh348h", is transmitted as (line breaks are for display
+   purposes only):
+
+
+     POST /request HTTP/1.1
+     Host: example.com
+     Content-Type: application/x-www-form-urlencoded
+     Authorization: MAC token="h480djs93hd8",
+                        timestamp="137131200",
+                        nonce="dj83hs9s",
+                        bodyhash="k9kbtCIy0CkI3/FEfpS/oIDjk6k=",
+                        signature="FR1UCL6Ny6bsx8EkKkiveFYv5VU="
+
+     hello=world%21
+
+
+3.3.  Signature
 
    The client uses the MAC algorithm and the token secret to calculate
    the request signature.  This specification defines two algorithms:
    "hmac-sha-1" and "hmac-sha-256", and provides an extension registry
    for additional algorithms.
 
-3.2.1.  Normalized Request String
+
+
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                 [Page 8]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
+3.3.1.  Normalized Request String
 
    The normalized request string is a consistent, reproducible
    concatenation of several of the HTTP request elements into a single
@@ -364,56 +461,55 @@ Internet-Draft             MAC Authentication               January 2011
    character (%x0A):
 
    1.  The access token.
-
    2.  The timestamp value calculated for the request.
-
    3.  The nonce value generated for the request.
-
-   4.  The HTTP request method in upper case.  For example: "HEAD",
+   4.  The request entity-body hash as described in Section 3.2 if one
+       was calculated and included in the request, otherwise, an empty
+       string.  Note that the body hash of an empty entity-body is
+       typically not an empty string.
+   5.  The HTTP request method in upper case.  For example: "HEAD",
        "GET", "POST", etc.
-
-   5.  The hostname included in the HTTP request using the "Host"
+   6.  The hostname included in the HTTP request using the "Host"
        request header field in lower case.
-
-   6.  The port as included in the HTTP request using the "Host" request
+   7.  The port as included in the HTTP request using the "Host" request
        header field.  If the header field does not include a port, the
        default value for the scheme MUST be used (e.g. 80 for HTTP and
        443 for HTTPS).
-
-   7.  The path component of the HTTP request URI as defined by
+   8.  The path component of the HTTP request URI as defined by
        [RFC3986] section 3.3.
-
-   8.  The query component of the HTTP request URI as defined by
+   9.  The query component of the HTTP request URI as defined by
        [RFC3986] section 3.4, normalized as described in
-
-
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 7]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
-       Section 3.2.1.1.
+       Section 3.3.1.1.
 
    [[ TODO: I18N ]]
 
    For example, the HTTP request:
 
 
-       GET /request?b5=%3D%253D&a3=a&c%40=&a2=r%20b&c2&a3=2+q HTTP/1.1
-       Host: example.com
+     POST /request?b5=%3D%253D&a3=a&c%40=&a2=r%20b&c2&a3=2+q HTTP/1.1
+     Host: example.com
+
+     Hello World!
 
 
-   using access token "kkk9d7dh3k39sjv7", timestamp "137131201", and
-   nonce "7d8f3e4a" is normalized into the following string (the new
-   line Separator character is represented by "\n" for display purposes
-   only):
+   using access token "kkk9d7dh3k39sjv7", timestamp "137131201", nonce
+   "7d8f3e4a", and body hash "Lve95gjOVATpfV8EL5X4nxwjKHE=" is
+   normalized into the following string (the new line separator
+   character is represented by "\n" for display purposes only):
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                 [Page 9]
+
+Internet-Draft             MAC Authentication               January 2011
 
 
      kkk9d7dh3k39sjv7\n
      137131201\n
      7d8f3e4a\n
-     GET\n
+     Lve95gjOVATpfV8EL5X4nxwjKHE=\n
+     POST\n
      example.com\n
      80\n
      /request\n
@@ -425,12 +521,13 @@ Internet-Draft             MAC Authentication               January 2011
      c2=\n
 
 
-3.2.1.1.  Parameters Normalization
+3.3.1.1.  Parameters Normalization
 
    The query component is parsed into a list of name/value parameter
    pairs by treating it as an "application/x-www-form-urlencoded"
    string, separating the names and values and decoding them as defined
-   by [W3C.REC-html401-19991224] section 17.13.4.
+   by [W3C.REC-html401-19991224] section 17.13.4.  Form-encoded
+   parameters present in the entity-body are not included.
 
    Once separated and decoded, the parameters are concatenated back
    together as follows:
@@ -441,21 +538,11 @@ Internet-Draft             MAC Authentication               January 2011
        (ALPHA, DIGIT, "-", ".", "_", "~") MUST NOT be encoded.  All
        other characters MUST be encoded.  The two hexadecimal characters
        used to represent encoded characters MUST be upper case.
-
-
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 8]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    2.  The name of each parameter is concatenated to its corresponding
        value using an "=" character (ASCII code 61) as separator, even
        if the value is empty.
-
    3.  The name/value parameter pairs are sorted using ascending byte
        value ordering.
-
    4.  The sorted parameters are concatenated together into a single
        string by using an new line character (ASCII code 10) as
        separator.
@@ -466,6 +553,13 @@ Internet-Draft             MAC Authentication               January 2011
    instead of the "+" character).  It MAY be different from the percent-
    encoding functions provided by web development frameworks (e.g.
    encode different characters, use lower case hexadecimal characters).
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 10]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
    For example, the HTTP request URI:
 
@@ -497,14 +591,6 @@ Internet-Draft             MAC Authentication               January 2011
    parameter instances (the "a3" parameter is used twice in this
    request).
 
-
-
-
-Hammer-Lahav              Expires July 22, 2011                 [Page 9]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    The parsed parameters are normalized as follows:
 
                                  Escaped:
@@ -519,6 +605,17 @@ Internet-Draft             MAC Authentication               January 2011
                             |  c2  |          |
                             |  a3  |   2%20q  |
                             +------+----------+
+
+
+
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 11]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
                             Concatenated Pairs:
 
@@ -546,21 +643,6 @@ Internet-Draft             MAC Authentication               January 2011
                               |     c2=     |
                               +-------------+
 
-
-
-
-
-
-
-
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 10]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    And concatenated together into a single string (the new line
    separator character is represented by "\n" for display purposes
    only):
@@ -574,7 +656,7 @@ Internet-Draft             MAC Authentication               January 2011
      c2=\n
 
 
-3.2.2.  hmac-sha-1
+3.3.2.  hmac-sha-1
 
    "hmac-sha-1" uses the HMAC-SHA1 algorithm as defined in [RFC2104]:
 
@@ -584,20 +666,25 @@ Internet-Draft             MAC Authentication               January 2011
 
    Where:
 
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 12]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
    text
          is set to the value of the normalize request string as
-         described in Section 3.2.1.
-
+         described in Section 3.3.1,
    key
          is set to the access token shared-secret provided by the
-         authorization server.
-
+         authorization server, and
    digest
          is used to set the value of the "signature" attribute, after
          the result octet string is base64-encoded per [RFC2045] section
          6.8.
 
-3.2.3.  hmac-sha-256
+3.3.3.  hmac-sha-256
 
    "hmac-sha-1" uses the HMAC algorithm as defined in [RFC2104] together
    with the SHA-256 hash function defined in [NIST FIPS-180-3]:
@@ -608,23 +695,12 @@ Internet-Draft             MAC Authentication               January 2011
 
    Where:
 
-
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 11]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    text
          is set to the value of the normalize request string as
-         described in Section 3.2.1.
-
+         described in Section 3.3.1,
    key
          is set to the access token shared-secret provided by the
-         authorization server.
-
+         authorization server, and
    digest
          is used to set the value of the "signature" attribute, after
          the result octet string is base64-encoded per [RFC2045] section
@@ -636,15 +712,22 @@ Internet-Draft             MAC Authentication               January 2011
    A servers receiving an authenticated request validates it by
    performing the following REQUIRED steps:
 
-   1.  Recalculate the request signature as described in Section 3.2 and
-       compare it to the value received from the client via the
-       "signature" attribute.
-
+   1.  Recalculate the request body hash (if included in the request) as
+       described in Section 3.2 and signature as described in
+       Section 3.3 and compare the signature to the value received from
+       the client via the "signature" attribute.
    2.  Ensure that the combination of nonce, timestamp, and access token
        received from the client has not been used before in a previous
        request (the server MAY reject requests with stale timestamps;
        the determination of staleness is left up to the server to
        define).
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 13]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
    3.  Verify the scope and status of the access token.
 
@@ -654,7 +737,7 @@ Internet-Draft             MAC Authentication               January 2011
    field.  The server MAY include further details about why the request
    was rejected using the error attribute.
 
-4.1.  The WWW-Authenticate Response Header Field
+4.1.  The "WWW-Authenticate" Response Header Field
 
    If the protected resource request does not include authentication
    credentials, contains an invalid access token, or is malformed, the
@@ -663,35 +746,19 @@ Internet-Draft             MAC Authentication               January 2011
    defined by [RFC2617] as follows:
 
 
+     challenge   = "MAC" [ RWS 1#param ]
 
+     param       = realm / error / auth-param
 
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 12]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
-   challenge       = "MAC" [ RWS 1#param ]
-
-   param           = realm / error / error-desc / error-uri / auth-param
-
-   error           = "error" "=" quoted-string
-   error-desc      = "error_description" "=" quoted-string
-   error-uri       = "error_uri" = <"> URI-reference <">
+     error       = "error" "=" quoted-string
 
 
    Each attribute MUST NOT appear more than once.
 
-   If the protected resource request included an access token and failed
-   authentication, the resource server SHOULD include the "error"
-   attribute to provide the client with the reason why the access
-   request was declined.  The parameter value is described in
-   Section 4.1.1.  In addition, the resource server MAY include the
-   "error_description" attribute to provide a human-readable
-   explanation, and the "error-uri" attribute with an absolute URI
-   identifying a human-readable web page explaining the error.
+   If the protected resource request included a MAC "Authorization"
+   header field and failed authentication, the resource server MAY
+   include the "error" attribute to provide the client with a human-
+   readable explanation why the access request was declined.
 
    For example, in response to a protected resource request without
    authentication:
@@ -707,56 +774,32 @@ Internet-Draft             MAC Authentication               January 2011
 
      HTTP/1.1 401 Unauthorized
      WWW-Authenticate: MAC realm="example"
-                       error="invalid_token",
-                       error_description="The access token expired"
-
-
-4.1.1.  Error Codes
-
-   When a request fails, the resource server responds using the
-   appropriate HTTP status code (typically, 400, 401, or 403), and
-   includes one of the following error codes in the response:
-
-   invalid_request
-         The request is missing a required parameter, includes an
-         unsupported parameter or parameter value, repeats the same
-         parameter, uses more than one method for including an access
+                           error="The access token expired"
 
 
 
-Hammer-Lahav              Expires July 22, 2011                [Page 13]
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 14]
 
 Internet-Draft             MAC Authentication               January 2011
 
 
-         token, or is otherwise malformed.  The resource server SHOULD
-         respond with the HTTP 400 (Bad Request) status code.
+   The resource server response SHOULD use the appropriate HTTP status
+   code as follows:
 
-   invalid_token
+   400 (Bad Request)
+         The request is missing a required parameter, includes an
+         unsupported parameter or parameter value, repeats the same
+         parameter, uses more than one method for including an access
+         token, or is otherwise malformed.
+   401 (Unauthorized)
          The access token provided is expired, revoked, malformed, or
-         invalid for other reasons.  The resource SHOULD respond with
-         the HTTP 401 (Unauthorized) status code.  The client MAY
-         request a new access token and retry the protected resource
-         request.
-
-   insufficient_scope
+         invalid.  The body hash or signature provided do not match the
+         values calculated by the server.
+   403 (Forbidden)
          The request requires higher privileges than provided by the
-         access token.  The resource server SHOULD respond with the HTTP
-         403 (Forbidden) status code and MAY include the "scope"
-         attribute with the scope necessary to access the protected
-         resource.
-
-   If the request lacks any authentication information (i.e. the client
-   was unaware authentication is necessary or attempted using an
-   unsupported authentication method), the resource server SHOULD not
-   include an error code or other error information.
-
-   For example:
-
-
-     HTTP/1.1 401 Unauthorized
-     WWW-Authenticate: MAC realm="example"
-
+         access token.
 
 
 5.  Scheme Extensions
@@ -777,14 +820,6 @@ Internet-Draft             MAC Authentication               January 2011
    specifically request a MAC-type token from the authorization server.
    Additionally, it does not include any discovery facilities for
    identifying which HMAC algorithms are supported by a resource server,
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 14]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    or how the client may go about obtaining MAC access tokens.
 
 6.1.  Issuing MAC-Type Access Tokens
@@ -796,6 +831,15 @@ Internet-Draft             MAC Authentication               January 2011
    secret
          REQUIRED.  The token shared secret used as the MAC algorithm
          key.
+
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 15]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
    algorithm
          REQUIRED.  The MAC algorithm used to calculate the request
@@ -833,14 +877,6 @@ Internet-Draft             MAC Authentication               January 2011
    This protocol makes no attempt to verify the authenticity of the
    resource server.  A hostile party could take advantage of this by
    intercepting the client's requests and returning misleading or
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 15]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    otherwise incorrect responses.  Service providers should consider
    such attacks when developing services using this protocol, and should
    require transport-layer security for any requests where the
@@ -853,6 +889,14 @@ Internet-Draft             MAC Authentication               January 2011
    traditional authentication systems.  In order to compute the
    signature, the server must have access to the secret in plaintext
    form.  This is in contrast, for example, to modern operating systems,
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 16]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
    which store only a one-way hash of user credentials.
 
    If an attacker were to gain access to these secrets - or worse, to
@@ -889,14 +933,6 @@ Internet-Draft             MAC Authentication               January 2011
 
    This specification includes a number of features which may make
    resource exhaustion attacks against servers possible.  For example,
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 16]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
    this protocol requires servers to track used nonces.  If an attacker
    is able to use many nonces quickly, the resources required to track
    them may exhaust available capacity.  And again, this protocol can
@@ -909,6 +945,14 @@ Internet-Draft             MAC Authentication               January 2011
    specification.  However, implementers should be careful to consider
    the additional avenues of attack that this protocol exposes, and
    design their implementations accordingly.  For example, entropy
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 17]
+
+Internet-Draft             MAC Authentication               January 2011
+
+
    starvation typically results in either a complete denial of service
    while the system waits for new entropy or else in weak (easily
    guessable) secrets.  When implementing this protocol, servers should
@@ -925,45 +969,60 @@ Internet-Draft             MAC Authentication               January 2011
    request, servers should employ additional mechanisms to protect such
    elements.
 
+   The signature does not cover entity-header fields which can often
+   affect how the request body is interpreted by the server (i.e.
+   Content-Type).  If the server behavior is influenced by the presence
+   or value of such header fields, an attacker can manipulate the
+   request header without being detected.  This will alter the request
+   even when using the body hash attribute.
+
 
 8.  IANA Considerations
 
-8.1.  The "secret" OAuth Parameter
+8.1.  OAuth Access Token Type Registration
 
-   Parameter name:  secret
+   This specification registers the following access token type in the
+   OAuth Access Token Type Registry.
 
-   Parameter usage location:  The end-user authorization endpoint
-      response and the token endpoint response.
+8.1.1.  The "mac" OAuth Access Token Type
 
-   Change controller:  IETF
+   Type name:
+      mac
+   Additional Token Endpoint Response Parameters:
+      secret, algorithm
+   HTTP Authentication Scheme(s):
+      MAC
+   Change controller:
+      IETF
+   Specification document(s):
+      [[ this document ]]
 
-   Specification document(s):  [[ this document ]]
+8.2.  OAuth Parameters Registration
 
-   Related information:  None
-
-
-
+   This specification registers the following parameters in the OAuth
+   Parameters Registry established by [I-D.ietf-oauth-v2].
 
 
 
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 17]
+Hammer-Lahav              Expires July 26, 2011                [Page 18]
 
 Internet-Draft             MAC Authentication               January 2011
 
 
-8.2.  The "algorithm" OAuth Parameter
+8.2.1.  The "secret" OAuth Parameter
+
+   Parameter name:  secret
+   Parameter usage location:  authorization response, token response
+   Change controller:  IETF
+   Specification document(s):  [[ this document ]]
+   Related information:  None
+
+8.2.2.  The "algorithm" OAuth Parameter
 
    Parameter name:  algorithm
-
-   Parameter usage location:  The end-user authorization endpoint
-      response and the token endpoint response.
-
+   Parameter usage location:  authorization response, token response
    Change controller:  IETF
-
    Specification document(s):  [[ this document ]]
-
    Related information:  None
 
 
@@ -977,20 +1036,34 @@ Appendix A.  Document History
 
    [[ To be removed by the RFC editor before publication as an RFC. ]]
 
+   -02
+
+   o  Added body-hash support.
+   o  Updated OAuth 2.0 reference and added token type registration
+      template.
+   o  Removed error codes and error URI.
+
    -01
 
    o  Changed parameters sorting to come after name=value string
       construction.
-
    o  Added new line at the end of the normalized request string.
-
    o  Moved OAuth2 references to separate section.
-
    o  Added 'WWW-Authenticate' header definition.
-
    o  Fixed example header use of single quote.
+   o  Restricted strings to ASCII subset (printable, no double-quotes or
+      back-slash).
 
    -00
+
+
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 19]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
    o  Initial draft.
 
@@ -1001,14 +1074,6 @@ Appendix A.  Document History
 
    [I-D.ietf-httpbis-p1-messaging]
               Fielding, R., Gettys, J., Mogul, J., Nielsen, H.,
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 18]
-
-Internet-Draft             MAC Authentication               January 2011
-
-
               Masinter, L., Leach, P., Berners-Lee, T., and J. Reschke,
               "HTTP/1.1, part 1: URIs, Connections, and Message
               Parsing", draft-ietf-httpbis-p1-messaging-08 (work in
@@ -1016,8 +1081,8 @@ Internet-Draft             MAC Authentication               January 2011
 
    [I-D.ietf-oauth-v2]
               Hammer-Lahav, E., Recordon, D., and D. Hardt, "The OAuth
-              2.0 Protocol Framework", draft-ietf-oauth-v2-11 (work in
-              progress), November 2010.
+              2.0 Authorization Protocol", draft-ietf-oauth-v2-12 (work
+              in progress), January 2011.
 
    [NIST FIPS-180-3]
               National Institute of Standards and Technology, "Secure
@@ -1044,10 +1109,17 @@ Internet-Draft             MAC Authentication               January 2011
               RFC 3986, January 2005.
 
    [W3C.REC-html401-19991224]
-              Hors, A., Jacobs, I., and D. Raggett, "HTML 4.01
+              Hors, A., Raggett, D., and I. Jacobs, "HTML 4.01
               Specification", World Wide Web Consortium
               Recommendation REC-html401-19991224, December 1999,
               <http://www.w3.org/TR/1999/REC-html401-19991224>.
+
+
+
+Hammer-Lahav              Expires July 26, 2011                [Page 20]
+
+Internet-Draft             MAC Authentication               January 2011
+
 
 10.2.  Informative References
 
@@ -1057,12 +1129,6 @@ Internet-Draft             MAC Authentication               January 2011
 URIs
 
    [1]  <https://www.ietf.org/mailman/listinfo/oauth>
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 19]
-
-Internet-Draft             MAC Authentication               January 2011
 
 
 Author's Address
@@ -1106,16 +1172,6 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-Hammer-Lahav              Expires July 22, 2011                [Page 20]
+Hammer-Lahav              Expires July 26, 2011                [Page 21]
 
 
