@@ -132,6 +132,9 @@
           server or a separate entity. A single authorization server may issue access tokens
           accepted by multiple resource servers.
         </t>
+      </section>
+      
+      <section title='Protocol Flow'>
         <t>
           When interacting with the authorization server, the client identifies itself using a set
           of client credentials which include a client identifier and other authentication
@@ -208,8 +211,8 @@
         <t>
           The token may denote an identifier used to retrieve the authorization information, or
           self-contain the authorization information in a verifiable manner (i.e. a token string
-          consisting of some data and a signature). Tokens may be pure capabilities. Additional
-          authentication credentials may be required in order for the client to use a token.
+          consisting of some data and a signature). Additional authentication credentials may be
+          required in order for the client to use a token.
         </t>
         <t>
           The access token provides an abstraction layer, replacing different authorization
@@ -270,7 +273,7 @@
           <t>
             Implicit grants improve the responsiveness and efficiency of some clients (such as a
             client implemented as an in-browser application) since it reduces the number of round
-            trip required to obtain an access token.
+            trips required to obtain an access token.
           </t>
         </section>
 
@@ -334,7 +337,7 @@
         <figure title='Refreshing an Expired Access Token' anchor='Figure 2'>
           <artwork>
             <![CDATA[
-  +--------+                Access Grant &             +---------------+
+  +--------+            Authorization Grant &          +---------------+
   |        |--(A)-------- Client Credentials --------->|               |
   |        |                                           |               |
   |        |<-(B)----------- Access Token -------------|               |
@@ -399,6 +402,45 @@
         </t>
       </section>
 
+      <section title='Document Structure'>
+        <t>
+          This specification is organized into the following sections:
+        </t>
+        <t>
+          <list style='symbols'>
+            <t>
+              Section 2 - describes the two endpoints used to obtain and utilize the various
+              authorization grant types.
+            </t>
+            <t>
+              Section 3 - describes client identification and authentication in general, and
+              provides one such method for client authentication using password credentials.
+            </t>
+            <t>
+              Section 4 - describes the complete flow for each authorization grant type, including
+              requesting authorization, authorization response, and requesting an access token.
+            </t>
+            <t>
+              Section 5 - describes the common access token response used for all non-implicit
+              authorization grant types.
+            </t>
+            <t>
+              Section 6 - describes the use of a refresh token to obtain additional access tokens
+              using the same resource owner authorization.
+            </t>
+            <t>
+              Section 7 - describes how access tokens are used to access protected resources.
+            </t>
+            <t>
+              Section 8 - describes how to extend certain elements of the protocol.
+            </t>
+            <t>
+              Section 9 - provides a security analysis of the protocol.
+            </t>
+          </list>
+        </t>
+      </section>
+
       <section title='Notational Conventions'>
         <t>
           The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
@@ -407,99 +449,10 @@
         </t>
         <t>
           This specification uses the Augmented Backus-Naur Form (ABNF) notation of
-          <xref target='I-D.ietf-httpbis-p1-messaging' />. Additionally, the following rules are
-          included from <xref target='RFC3986' />: URI-reference; and from
-          <xref target='I-D.ietf-httpbis-p1-messaging' />: OWS, RWS, and quoted-string.
+          <xref target='RFC5234' />.
         </t>
         <t>
           Unless otherwise noted, all the protocol parameter names and values are case sensitive.
-        </t>
-      </section>
-
-    </section>
-
-    <section title='Client Authentication' anchor='client-authentication'>
-      <t>
-        Client credentials are used to identify and authenticate the client. The client
-        credentials include a client identified - a unique string issued to the client to
-        identify itself to the authorization server. The methods through which the client
-        obtains its client credentials are beyond the scope of this specification.
-      </t>
-      <t>
-        Due to the nature of some clients, the authorization server SHOULD NOT make assumptions
-        about the confidentiality of client credentials without establishing trust with the
-        client. The authorization server SHOULD NOT issue client credentials to clients incapable
-        of keeping their secrets confidential.
-      </t>
-
-      <section title='Client Password Authentication'>
-        <t>
-          The client password authentication uses a shared symmetric secret to authenticate the
-          client. The client identifier and password are included in the request using the
-          following parameters:
-        </t>
-        <t>
-          <list style='hanging' hangIndent='6'>
-            <t hangText='client_id'>
-              <vspace />
-              REQUIRED. The client identifier.
-            </t>
-            <t hangText='client_secret'>
-              <vspace />
-              REQUIRED. The client password.
-            </t>
-          </list>
-        </t>
-        <figure>
-          <preamble>
-            For example (line breaks are for display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&client_id=s6BhdRkqt3&
-  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-      </section>
-
-      <section title='Other Client Authentication Methods'>
-        <t>
-          In cases where client password authentication is not suitable or sufficient, the
-          authorization server MAY support other existing HTTP authentication schemes or define
-          new methods. In addition, the authorization server MAY allow unauthenticated access
-          token requests when the client identity does not matter (e.g. anonymous client) or
-          when the client identity is established via other means.
-        </t>
-        <figure>
-          <preamble>
-            For example, the authorization server MAY support using the HTTP Basic
-            authentication scheme as defined in <xref target='RFC2617' /> to include the client
-            identifier as the username and client password as the password (line breaks are for
-            display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-        <t>
-          When using a method other than client password authentication to exchange an
-          authorization code grant type, the authorization server MUST define a method for
-          mapping the client credentials to the client identifier used to obtain the
-          authorization code.
         </t>
       </section>
 
@@ -522,7 +475,7 @@
         </list>
       </t>
       <t>
-        Not every authorization grant flow utilizes both endpoints. Extension grant types MAY
+        Not every authorization grant type utilizes both endpoints. Extension grant types MAY
         define additional endpoints as needed.
       </t>
 
@@ -609,7 +562,7 @@
         </t>
         <t>
           The token endpoint requires client authentication as described in
-          <xref target='client-authentication' /> . The authorization server MAY accept any form of
+          <xref target='client-authentication' />. The authorization server MAY accept any form of
           client authentication meeting its security requirements. The client MUST NOT use more
           than one authentication method in each request.
         </t>
@@ -625,20 +578,107 @@
 
     </section>
 
-    <section title='Requesting an Access Token'>
+    <section title='Client Authentication' anchor='client-authentication'>
       <t>
-        The client obtains an access token by requesting authorization from the resource owner. The
-        authorization is expressed in the form of an authorization grant which the client exchanges
-        for an access token. OAuth defines four grant types: authorization code, implicit, resource
-        owner password credentials, and client credentials, as well as an extension mechanism for
-        defining additional grant types.
+        Client credentials are used to identify and authenticate the client. The client
+        credentials include a client identifier - a unique string issued to the client to
+        identify itself to the authorization server. The methods through which the client
+        obtains its client credentials are beyond the scope of this specification.
+      </t>
+      <t>
+        Due to the nature of some clients, the authorization server should not make assumptions
+        about the confidentiality of client credentials without establishing trust with the
+        client. The authorization server SHOULD NOT issue client credentials to clients incapable
+        of keeping their secrets confidential.
+      </t>
+
+      <section title='Client Password Authentication'>
+        <t>
+          The client password authentication uses a shared symmetric secret to authenticate the
+          client. The client identifier and password are included in the request using the
+          following parameters:
+        </t>
+        <t>
+          <list style='hanging' hangIndent='6'>
+            <t hangText='client_id'>
+              <vspace />
+              REQUIRED. The client identifier.
+            </t>
+            <t hangText='client_secret'>
+              <vspace />
+              REQUIRED. The client password.
+            </t>
+          </list>
+        </t>
+        <figure>
+          <preamble>
+            For example (line breaks are for display purposes only):
+          </preamble>
+          <artwork>
+            <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&client_id=s6BhdRkqt3&
+  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+          </artwork>
+        </figure>
+      </section>
+
+      <section title='Other Client Authentication Methods'>
+        <t>
+          In cases where client password authentication is not suitable or sufficient, the
+          authorization server MAY support other existing HTTP authentication schemes or define
+          new methods. In addition, the authorization server MAY allow unauthenticated access
+          token requests when the client identity does not matter (e.g. anonymous client) or
+          when the client identity is established via other means.
+        </t>
+        <figure>
+          <preamble>
+            For example, the authorization server MAY support using the HTTP Basic
+            authentication scheme as defined in <xref target='RFC2617' /> to include the client
+            identifier as the username and client password as the password (line breaks are for
+            display purposes only):
+          </preamble>
+          <artwork>
+            <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+          </artwork>
+        </figure>
+        <t>
+          When using a method other than client password authentication to exchange an
+          authorization code grant type, the authorization server MUST define a method for
+          mapping the client credentials to the client identifier used to obtain the
+          authorization code.
+        </t>
+      </section>
+
+    </section>
+
+    <section title='Obtaining Authorization'>
+      <t>
+        To request an access token, the client obtains authorization from the resource owner. The
+        authorization is expressed in the form of an authorization grant which the client uses to
+        requesting the access token. OAuth defines four grant types: authorization code, implicit,
+        resource owner password credentials, and client credentials. It also provides an extension
+        mechanism for defining additional grant types.
       </t>
 
       <section title='Authorization Code'>
         <t>
-          The authorization code flow is suitable for clients capable of maintaining their
+          The authorization code grant type is suitable for clients capable of maintaining their
           client credentials confidential (for authenticating with the authorization server) such
-          as a client implemented on a secure server. As a redirection-based profile, the client
+          as a client implemented on a secure server. As a redirection-based flow, the client
           must be capable of interacting with the resource owner's user-agent (typically a web
           browser) and capable of receiving incoming requests (via redirection) from the
           authorization server.
@@ -816,14 +856,15 @@
             The client SHOULD ignore unrecognized response parameters. The authorization code
             string size is left undefined by this specification. The clients should avoid making
             assumptions about code value sizes. The authorization server should document the size
-            of any value is issues.
+            of any value it issues.
           </t>
 
           <section title='Error Response'>
             <t>
-              If the request fails due to a missing, invalid, or mismatching redirection URI, the
-              authorization server SHOULD inform the resource owner of the error, and MUST NOT
-              redirect the user-agent to the invalid redirection URI.
+              If the request fails due to a missing, invalid, or mismatching redirection URI, or if
+              the client identifier provided is invalid, the authorization server SHOULD inform the
+              resource owner of the error, and MUST NOT redirect the user-agent to the invalid
+              redirection URI.
             </t>
             <t>
               If the resource owner denies the access request or if the request fails for reasons
@@ -842,10 +883,6 @@
                       <vspace />
                       The request is missing a required parameter, includes an unsupported
                       parameter or parameter value, or is otherwise malformed.
-                    </t>
-                    <t hangText='invalid_client'>
-                      <vspace />
-                      The client identifier provided is invalid.
                     </t>
                     <t hangText='unauthorized_client'>
                       <vspace />
@@ -919,7 +956,8 @@
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
-                REQUIRED. The redirection URI used in the initial request.
+                REQUIRED. The redirection URI used by the authorization server to return the
+                authorization response in the previous step.
               </t>
             </list>
           </t>
@@ -955,23 +993,48 @@
                 Validate the client credentials and ensure they match the authorization code.
               </t>
               <t>
-                Verify that the authorization code and redirection URI are valid and match its
-                stored association.
+                Verify that the authorization code is valid, and that the redirection URI matches
+                the redirection URI used by the authorization server to deliver the authorization
+                code.
               </t>
             </list>
           </t>
+        </section>
+
+        <section title='Access Token Response'>
           <t>
-            If the request is valid and authorized, the authorization server issues an access token
-            and optional refresh token, and responds as described in
-            <xref target='token-issue' />.
+            If the access token request is valid and authorized, the authorization server issues an
+            access token and optional refresh token as described in <xref target='token-response' />.
+            If the request failed client authentication or is invalid, the authorization server return
+            an error response as described in <xref target='token-errors' />.
           </t>
+          <figure>
+            <preamble>
+              An example successful response:
+            </preamble>
+            <artwork>
+              <![CDATA[
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+    "access_token":"SlAV32hkKG",
+    "token_type":"example",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8",
+    "example_parameter":"example-value"
+  }
+]]>
+            </artwork>
+          </figure>
         </section>
 
       </section>
 
       <section title='Implicit Grant'>
         <t>
-          The implicit grant flow is suitable for clients incapable of maintaining their
+          The implicit grant type is suitable for clients incapable of maintaining their
           client credentials confidential (for authenticating with the authorization server) such
           as client applications residing in a user-agent, typically implemented in a browser using
           a scripting language such as JavaScript, or native applications. These clients cannot
@@ -979,21 +1042,21 @@
           user-agent's same-origin policy.
         </t>
         <t>
-          As a redirection-based profile, the client must be capable of interacting with the
+          As a redirection-based flow, the client must be capable of interacting with the
           resource owner's user-agent (typically a web browser) and capable of receiving incoming
           requests (via redirection) from the authorization server.
         </t>
         <t>
-          Unlike the authorization code flow in which the client makes separate requests for
+          Unlike the authorization code grant type in which the client makes separate requests for
           authorization and access token, the client receives the access token as the result of the
           authorization request.
         </t>
         <t>
-          The implicit grant flow does not utilize the client credentials since the client is
-          unable to maintain their confidentiality (the client resides on the resource owner's
-          computer or device which makes the client credentials accessible and exploitable).
-          Because the access token is encoded into the redirection URI, it may be exposed to the
-          resource owner and other applications residing on its computer or device.
+          Using the implicit grant type does not include client authentication since the client is
+          unable to maintain their credential confidentiality (the client resides on the resource
+          owner's computer or device which makes the client credentials accessible and
+          exploitable). Because the access token is encoded into the redirection URI, it may be
+          exposed to the resource owner and other applications residing on its computer or device.
         </t>
         <figure title='Implicit Grant Flow' anchor='Figure 4'>
           <artwork>
@@ -1201,9 +1264,10 @@
 
           <section title='Error Response'>
             <t>
-              If the request fails due to a missing, invalid, or mismatching redirection URI, the
-              authorization server SHOULD inform the resource owner of the error, and MUST NOT
-              redirect the user-agent to the invalid redirection URI.
+              If the request fails due to a missing, invalid, or mismatching redirection URI, or if
+              the client identifier provided is invalid, the authorization server SHOULD inform the
+              resource owner of the error, and MUST NOT redirect the user-agent to the invalid
+              redirection URI.
             </t>
             <t>
               If the resource owner denies the access request or if the request fails for reasons
@@ -1223,10 +1287,6 @@
                       <vspace />
                       The request is missing a required parameter, includes an unsupported
                       parameter or parameter value, or is otherwise malformed.
-                    </t>
-                    <t hangText='invalid_client'>
-                      <vspace />
-                      The client identifier provided is invalid.
                     </t>
                     <t hangText='unauthorized_client'>
                       <vspace />
@@ -1285,21 +1345,16 @@
 
       <section title="Resource Owner Password Credentials">
         <t>
-          The resource owner password credentials flow is suitable in cases where the resource
-          owner has a trust relationship with the client, such as its computer operating system or
-          a highly privileged application. The authorization server should take special care when
-          enabling the flow, and only when other flows are not viable.
+          The resource owner password credentials grant type is suitable in cases where the
+          resource owner has a trust relationship with the client, such as its computer operating
+          system or a highly privileged application. The authorization server should take special
+          care when enabling the grant type, and only when other flows are not viable.
         </t>
         <t>
-          The flow is suitable for clients capable of obtaining the resource owner credentials
+          The grant type is suitable for clients capable of obtaining the resource owner credentials
           (username and password, typically using an interactive form). It is also used to migrate
           existing clients using direct authentication schemes such as HTTP Basic or Digest
           authentication to OAuth by converting the stored credentials with an access token.
-        </t>
-        <t>
-          The method through which the client obtains the resource owner credentials is beyond
-          the scope of this specification. The client MUST discard the credentials once an access
-          token has been obtained.
         </t>
         <figure title="Resource Owner Password Credentials Flow" anchor='Figure 5'>
           <artwork>
@@ -1344,6 +1399,14 @@
             </t>
           </list>
         </t>
+
+        <section title='Authorization Request and Response'>
+          <t>
+            The method through which the client obtains the resource owner credentials is beyond
+            the scope of this specification. The client MUST discard the credentials once an access
+            token has been obtained.
+          </t>
+        </section>
 
         <section title='Access Token Request'>
           <t>
@@ -1412,11 +1475,35 @@
               </t>
             </list>
           </t>
+        </section>
+
+        <section title='Access Token Response'>
           <t>
-            If the request is valid and authorized, the authorization server issues an access token
-            and optional refresh token, and responds as described in
-            <xref target='token-issue' />.
+            If the access token request is valid and authorized, the authorization server issues an
+            access token and optional refresh token as described in <xref target='token-response' />.
+            If the request failed client authentication or is invalid, the authorization server return
+            an error response as described in <xref target='token-errors' />.
           </t>
+          <figure>
+            <preamble>
+              An example successful response:
+            </preamble>
+            <artwork>
+              <![CDATA[
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+    "access_token":"SlAV32hkKG",
+    "token_type":"example",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8",
+    "example_parameter":"example-value"
+  }
+]]>
+            </artwork>
+          </figure>
         </section>
 
       </section>
@@ -1455,6 +1542,14 @@
             </t>
           </list>
         </t>
+
+        <section title='Authorization Request and Response'>
+          <t>
+            Since the client credentials are used as the authorization grant, no additional
+            authorization request is needed as the client is already in the possession of its
+            client credentials.
+          </t>
+        </section>
 
         <section title='Access Token Request'>
           <t>
@@ -1502,11 +1597,35 @@
           <t>
             The authorization server MUST validate the client credentials.
           </t>
+        </section>
+
+        <section title='Access Token Response'>
           <t>
-            If the request is valid and authorized, the authorization server issues an access token
-            and optional refresh token, and responds as described in
-            <xref target='token-issue' />.
+            If the access token request is valid and authorized, the authorization server issues an
+            access token and optional refresh token as described in <xref target='token-response' />.
+            If the request failed client authentication or is invalid, the authorization server return
+            an error response as described in <xref target='token-errors' />.
           </t>
+          <figure>
+            <preamble>
+              An example successful response:
+            </preamble>
+            <artwork>
+              <![CDATA[
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+    "access_token":"SlAV32hkKG",
+    "token_type":"example",
+    "expires_in":3600,
+    "refresh_token":"8xLOxBtZp8",
+    "example_parameter":"example-value"
+  }
+]]>
+            </artwork>
+          </figure>
         </section>
 
       </section>
@@ -1520,9 +1639,10 @@
         </t>
         <figure>
           <preamble>
-            For example, to request an access token using a SAML 2.0 assertion grant type, the
-            client makes the following HTTP request using transport-layer security (line breaks are
-            for display purposes only):
+            For example, to request an access token using a SAML 2.0 assertion grant type as
+            defined by <xref target='I-D.ietf-oauth-saml2-bearer' />, the client makes the
+            following HTTP request using transport-layer security (line breaks are for display
+            purposes only):
           </preamble>
           <artwork>
             <![CDATA[
@@ -1535,10 +1655,6 @@
   [...omitted for brevity...]V0aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
 ]]>
           </artwork>
-          <postamble>
-            Client authentication and the scope of the grant are obtained via the assertion as
-            defined by <xref target='I-D.ietf-oauth-saml2-bearer' />.
-          </postamble>
         </figure>
       </section>
 
@@ -1592,7 +1708,7 @@
           </list>
         </t>
         <t>
-          The parameters are including in the entity body of the HTTP response using the
+          The parameters are included in the entity body of the HTTP response using the
           <spanx style='verb'>application/json</spanx> media type as defined by
           <xref target='RFC4627' />. The parameters are serialized into a JSON structure by
           adding each parameter at the highest structure level. Parameter names and string values
@@ -1634,16 +1750,8 @@
 
       <section title='Error Response' anchor='token-errors'>
         <t>
-          If the client provided invalid credentials using an HTTP authentication scheme via
-          the <spanx style='verb'>Authorization</spanx> request header field, the authorization
-          server MUST respond with a HTTP 401 (Unauthorized) status code, and include the
-          <spanx style='verb'>WWW-Authenticate</spanx> response header field matching the
-          authentication scheme used by the client. Otherwise, the authorization server MUST
-          respond with the HTTP 400 (Bad Request) status code.
-        </t>
-        <t>
-          The authorization server constructs the response by adding the following parameter to the
-          response:
+          The authorization server responds with an HTTP 400 (Bad Request) status code and includes
+          the following parameters with the response:
         </t>
         <t>
           <list style='hanging' hangIndent='6'>
@@ -1663,7 +1771,13 @@
                   <vspace />
                   Client authentication failed (e.g. unknown client, no client credentials
                   included, multiple client credentials included, or unsupported credentials
-                  type).
+                  type). The authorization server MAY return an HTTP 401 (Unauthorized) status code
+                  to indicate which HTTP authentication schemes are supported. If the client
+                  attempted to authenticate via the <spanx style='verb'>Authorization</spanx>
+                  request header field, the authorization server MUST respond with an HTTP 401
+                  (Unauthorized) status code, and include the
+                  <spanx style='verb'>WWW-Authenticate</spanx> response header field matching the
+                  authentication scheme used by the client.
                 </t>
                 <t hangText='invalid_grant'>
                   <vspace />
@@ -1699,7 +1813,7 @@
           </list>
         </t>
         <t>
-          The parameters are including in the entity body of the HTTP response using the
+          The parameters are included in the entity body of the HTTP response using the
           <spanx style='verb'>application/json</spanx> media type as defined by
           <xref target='RFC4627' />. The parameters are serialized into a JSON structure by
           adding each parameter at the highest structure level. Parameter names and string values
@@ -1776,8 +1890,11 @@
       </figure>
       <t>
         The authorization server MUST validate the client credentials, the refresh token, and
-        verify that the resource owner's authorization is still valid. If valid, the authorization
-        server issues an access token response as described in <xref target='token-issue' />.
+        verify that the resource owner's authorization is still valid. If valid and authorized, the
+        authorization server issues an access token as described in
+        <xref target='token-response' />. If the request failed verification or is invalid, the
+        authorization server return an error response as described in
+        <xref target='token-errors' />.
       </t>
       <t>
         The authorization server MAY issue a new refresh token, in which case, the client MUST
@@ -1854,21 +1971,18 @@
       <section title='Defining Access Token Types' anchor='new-types'>
         <t>
           Access token types can be defined in one of two ways: registered in the access token type
-          registry (following the procedures in <xref target='type-registry' />), or use the
-          <spanx style='verb'>x_</spanx> type name prefix.
+          registry (following the procedures in <xref target='type-registry' />), or use a unique
+          absolute URI as its name.
         </t>
         <t>
-          Types utilizing the <spanx style='verb'>x_</spanx> name prefix MUST be limited to
-          vendor-specific implementations that are not commonly applicable, and are specific
-          to the implementation details of the resource server where they are used. If a
-          vendor-specific type requires additional vendor-specific token response parameters, they
-          MUST also use the <spanx style='verb'>x_</spanx> name prefix.
+          Types utilizing a URI name SHOULD be limited to vendor-specific implementations that are
+          not commonly applicable, and are specific to the implementation details of the resource
+          server where they are used.
         </t>
         <t>
-          All other types MUST be registered, and MUST NOT use the <spanx style='verb'>x_</spanx>
-          type name prefix. Type names MUST conform to the type-name ABNF. If the type definition
-          includes a new HTTP authentication scheme, the type name SHOULD be identical to the
-          authentication scheme name (as defined by <xref target='RFC2617' />).
+          All other types MUST be registered. Type names MUST conform to the type-name ABNF. If the
+          type definition includes a new HTTP authentication scheme, the type name SHOULD be
+          identical to the HTTP authentication scheme name (as defined by <xref target='RFC2617' />).
         </t>
         <figure>
           <artwork>
@@ -1883,19 +1997,12 @@
       <section title='Defining New Endpoint Parameters'>
         <t>
           New request or response parameters for use with the authorization endpoint or the token
-          endpoint can be added in one of two ways: registered in the parameters registry
-          (following the procedures in <xref target='parameters-registry' />), or use the
-          <spanx style='verb'>x_</spanx> parameter name prefix.
+          endpoint are defined and registered in the parameters registry following the procedure in
+          <xref target='parameters-registry' />.
         </t>
         <t>
-          Parameters utilizing the <spanx style='verb'>x_</spanx> parameter name prefix MUST be
-          limited to vendor-specific extensions that are not commonly applicable, and are specific
-          to the implementation details of the authorization server where they are used. All other
-          new parameters MUST be registered, and MUST NOT use the <spanx style='verb'>x_</spanx>
-          parameter name prefix.
-        </t>
-        <t>
-          Parameter names MUST conform to the param-name ABNF, and parameter values syntax MUST be
+          Parameter names MUST conform to the param-name ABNF, MUST NOT use the
+          <spanx style='verb'>x_</spanx> parameter name prefix, and parameter values syntax MUST be
           well-defined (e.g., using ABNF, or a reference to the syntax of an existing parameter).
         </t>
         <figure>
@@ -1906,13 +2013,19 @@
 ]]>
           </artwork>
         </figure>
+        <t>
+          Vendor-specific parameter extensions that are not commonly applicable, and are specific
+          to the implementation details of the authorization server where they are used SHOULD
+          utilize the <spanx style='verb'>x_</spanx> parameter name prefix if they are not
+          registered.
+        </t>
       </section>
 
       <section title='Defining New Authorization Grant Types'>
         <t>
-          New authorization grant types can be defined by assigning them a unique URI for use with
-          the <spanx style='verb'>grant_type</spanx> parameter. If the extension grant type
-          requires additional token endpoint parameters, they MUST be registered in the OAuth
+          New authorization grant types can be defined by assigning them a unique absolute URI for
+          use with the <spanx style='verb'>grant_type</spanx> parameter. If the extension grant
+          type requires additional token endpoint parameters, they MUST be registered in the OAuth
           parameters registry as described by <xref target='parameters-registry' />.
         </t>
       </section>
@@ -2313,12 +2426,6 @@
 
     </section>
 
-    <appendix title='Examples'>
-      <t>
-        [[ TBD ]]
-      </t>
-    </appendix>
-
     <appendix title='Contributors'>
       <t>
         The following people contributed to preliminary versions of this document:
@@ -2334,11 +2441,11 @@
       <t>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
         Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
-        Kristoffer Gronowski, Justin Hart, Phil Hunt, Michael B. Jones, John Kemp, Chasen Le Hara,
-        Torsten Lodderstedt, Alastair Mair, Eve Maler, James Manger, Laurence Miao,
-        Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
-        Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
-        Franklin Tse, and Nick Walker.
+        Kristoffer Gronowski, Justin Hart, Phil Hunt, Michael B. Jones, John Kemp, Mark Kent,
+        Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Alastair Mair, Eve Maler,
+        James Manger, Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre,
+        Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel,
+        Christian Stübner, Paul Tarjan, Franklin Tse, Nick Walker, Skylar Woodward.
       </t>
     </appendix>
 
@@ -2358,414 +2465,29 @@
       <t>
         <list style='symbols'>
           <t>
-            Updated MAC token reference.
+            Small editorial changes.
           </t>
-        </list>
-      </t>
-      <t>
-        -12
-      </t>
-      <t>
-        <list style='symbols'>
           <t>
-            Complete restructure with lots of new prose.
+            Split introduction 'Roles' into 'Roles' and 'Protocol Flow'.
           </t>
           <t>
-            Removed terminology and expanded terms in overview.
+            Changes section name 'Requesting an Access Token' to 'Obtaining Authorization'.
           </t>
           <t>
-            Changed assertions to extensions and added informative reference to the SAML 2.0 extension.
+            Added explicit authorization request and access token response sub-sections for each
+            grant type.
           </t>
           <t>
-            Renamed access grant to authorization grant.
+            Added document overview in the introduction.
           </t>
           <t>
-            Clarified 'token_type' as case insensitive.
+            Reduced the use of 'x_' prefix to SHOULD.
           </t>
           <t>
-            Authorization endpoint requires TLS when an access token is issued.
+            Removed unused references and updated others.
           </t>
           <t>
-            Removed client assertion credentials, mandatory HTTP Basic authentication support for
-            client credentials, WWW-Authenticate header, and the OAuth2 authentication scheme.
-          </t>
-          <t>
-            Changed implicit grant (aka user-agent flow) error response from query to fragment.
-          </t>
-          <t>
-            Removed the 'redirect_uri_mismatch' error code since in such a case, the authorization
-            server must not send the error back to the client.
-          </t>
-          <t>
-            Added parameter registration for all parameters in this specification.
-          </t>
-          <t>
-            Defined access token type registry.
-          </t>
-        </list>
-      </t>
-      <t>
-        -11
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Many editorial changes. Fixed user authorization section structure.
-            Removed unused normative references. Adjusted language regarding single use of
-            authorization codes.
-          </t>
-          <t>
-            Fixed header ABNF.
-          </t>
-          <t>
-            Change access token description from shared symmetric secret to password.
-          </t>
-          <t>
-            Moved access grant 'none' to a separate section, renamed to 'client_credentials'.
-          </t>
-          <t>
-            Demoted the HTTP status code requirement from MUST to SHOULD in protected resource
-            response error.
-          </t>
-          <t>
-            Removed 'expired_token' error code.
-          </t>
-          <t>
-            Moved all the 'code_and_token' parameter to the fragment (from code being in the
-            query).
-          </t>
-          <t>
-            Removed 'assertion_type' parameter (moved to 'grant_type').
-          </t>
-          <t>
-            Added note about redirecting to invalid redirection URIs (open redirectors).
-          </t>
-          <t>
-            Removed bearer token section, added new required 'token_type' parameter with
-            extensibility.
-          </t>
-          <t>
-            'error-uri' parameter value changed to absolute URI.
-          </t>
-          <t>
-            OAuth 2.0 HTTP authentication scheme name changed to 'OAuth2'.
-          </t>
-          <t>
-            Dropped the 'WWW-Authenticate' header field 'realm' parameter.
-          </t>
-          <t>
-            Removed definition of access token characters.
-          </t>
-          <t>
-            Added instructions for dealing with error and an invalid redirection URI.
-          </t>
-        </list>
-      </t>
-      <t>
-        -10
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Fixed typos. Many editorial changes. Rewrote introduction. removed terminology
-            grouping.
-          </t>
-          <t>
-            Allowed POST for resource owner authorization endpoint.
-          </t>
-          <t>
-            Fixed token endpoint to not require client authentication.
-          </t>
-          <t>
-            Made URI query and POST body 'oauth_token' parameter optional.
-          </t>
-          <t>
-            Moved all parameter names and values to use underscores.
-          </t>
-          <t>
-            Changed 'basic_credentials' to 'password', 'invalid_client_credentials' and
-            'invalid_client_id' to 'invalid_client'.
-          </t>
-          <t>
-            Added note that access token requests without an access grant should not include
-            a refresh token.
-          </t>
-          <t>
-            Changed scheme name from 'Token' to 'OAuth', simplified request format to simple
-            string for token instead of key=value pair (still supported for extensions).
-          </t>
-          <t>
-            Defined permitted access token string characters (suitable for inclusion in an HTTP
-            header).
-          </t>
-          <t>
-            Added a note about conflicts with previous versions.
-          </t>
-          <t>
-            Moved 'client_id' definition from client authentication to access token endpoint.
-          </t>
-          <t>
-            Added definition for 'access grant'.
-          </t>
-        </list>
-      </t>
-      <t>
-        -09
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Fixed typos, editorial changes.
-          </t>
-          <t>
-            Added token expiration example.
-          </t>
-          <t>
-            Added scope parameter to resource owner authorization endpoint response.
-          </t>
-          <t>
-            Added note about parameters with empty values (same as omitted).
-          </t>
-          <t>
-            Changed parameter values to use '-' instead of '_'. Parameter names still use '_'.
-          </t>
-          <t>
-            Changed authorization endpoint client type to response type with values: code, token,
-            and both.
-          </t>
-          <t>
-            Complete cleanup of error codes. Added support for error description and URI.
-          </t>
-          <t>
-            Add initial extensibility support.
-          </t>
-        </list>
-      </t>
-      <t>
-        -08
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Renamed verification code to authorization code.
-          </t>
-          <t>
-            Revised terminology, structured section, added new terms.
-          </t>
-          <t>
-            Changed flows to profiles and moved to introduction.
-          </t>
-          <t>
-            Added support for access token rescoping.
-          </t>
-          <t>
-            Cleaned up client credentials section.
-          </t>
-          <t>
-            New introduction overview.
-          </t>
-          <t>
-            Added error code for invalid username and password, and renamed error code to be more
-            consistent.
-          </t>
-          <t>
-            Added access grant type parameter to token endpoint.
-          </t>
-        </list>
-      </t>
-      <t>
-        -07
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Major rewrite of entire document structure.
-          </t>
-          <t>
-            Removed device profile.
-          </t>
-          <t>
-            Added verification code support to user-agent flow.
-          </t>
-          <t>
-            Removed multiple formats support, leaving JSON as the only format.
-          </t>
-          <t>
-            Changed assertion <spanx style='verb'>assertion_format</spanx> parameter to
-            <spanx style='verb'>assertion_type</spanx>.
-          </t>
-          <t>
-            Removed <spanx style='verb'>type</spanx> parameter from token endpoint.
-          </t>
-        </list>
-      </t>
-      <t>
-        -06
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Editorial changes, corrections, clarifications, etc.
-          </t>
-          <t>
-            Removed conformance section.
-          </t>
-          <t>
-            Moved authors section to contributors appendix.
-          </t>
-          <t>
-            Added section on native applications.
-          </t>
-          <t>
-            Changed error response to use the requested format. Added support for HTTP
-            <spanx style='verb'>Accept</spanx> header.
-          </t>
-          <t>
-            Flipped the order of the web server and user-agent flows.
-          </t>
-          <t>
-            Renamed assertion flow <spanx style='verb'>format</spanx> parameter name to
-            <spanx style='verb'>assertion_format</spanx> to resolve conflict.
-          </t>
-          <t>
-            Removed the term identifier from token definitions. Added a cryptographic token
-            definition.
-          </t>
-          <t>
-            Added figure titles.
-          </t>
-          <t>
-            Added server response 401 when client tried to authenticate using multiple credentials.
-          </t>
-          <t>
-            Clarified support for TLS alternatives, and added requirement for TLS 1.2 support for
-            token endpoint.
-          </t>
-          <t>
-            Removed all signature and cryptography.
-          </t>
-          <t>
-            Removed all discovery.
-          </t>
-          <t>
-            Updated HTML4 reference.
-          </t>
-        </list>
-      </t>
-      <t>
-        -05
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Corrected device example.
-          </t>
-          <t>
-            Added client credentials parameters to the assertion flow as OPTIONAL.
-          </t>
-          <t>
-            Added the ability to send client credentials using an HTTP authentication scheme.
-          </t>
-          <t>
-            Initial text for the <spanx style='verb'>WWW-Authenticate</spanx> header (also added
-            scope support).
-          </t>
-          <t>
-            Change authorization endpoint to resource owner endpoint.
-          </t>
-          <t>
-            In the device flow, change the <spanx style='verb'>user_uri</spanx> parameter to
-            <spanx style='verb'>verification_uri</spanx> to avoid confusion with the resource owner
-            endpoint.
-          </t>
-          <t>
-            Add <spanx style='verb'>format</spanx> request parameter and support for XML and
-            form-encoded responses.
-          </t>
-        </list>
-      </t>
-      <t>
-        -04
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Changed all token endpoints to use <spanx style='verb'>POST</spanx>
-          </t>
-          <t>
-            Clarified the authorization server's ability to issue a new refresh token when
-            refreshing a token.
-          </t>
-          <t>
-            Changed the flow categories to clarify the autonomous group.
-          </t>
-          <t>
-            Changed client credentials language not to always be server-issued.
-          </t>
-          <t>
-            Added a <spanx style='verb'>scope</spanx> response parameter.
-          </t>
-          <t>
-            Fixed typos.
-          </t>
-          <t>
-            Fixed broken document structure.
-          </t>
-        </list>
-      </t>
-      <t>
-        -03
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Fixed typo in JSON error examples.
-          </t>
-          <t>
-            Fixed general typos.
-          </t>
-          <t>
-            Moved all flows sections up one level.
-          </t>
-        </list>
-      </t>
-      <t>
-        -02
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Removed restriction on <spanx style='verb'>redirect_uri</spanx> including a query.
-          </t>
-          <t>
-            Added <spanx style='verb'>scope</spanx> parameter.
-          </t>
-          <t>
-            Initial proposal for a JSON-based token response format.
-          </t>
-        </list>
-      </t>
-      <t>
-        -01
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Editorial changes based on feedback from Brian Eaton, Bill Keenan, and Chuck Mortimore.
-          </t>
-          <t>
-            Changed device flow <spanx style='verb'>type</spanx> parameter values and switch to use
-            only the token endpoint.
-          </t>
-        </list>
-      </t>
-      <t>
-        -00
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Initial draft based on a combination of WRAP and OAuth 1.0a.
+            Dropped 'invalid_client' error from authorization endpoint responses.
           </t>
         </list>
       </t>
@@ -2778,29 +2500,21 @@
 
     <references title='Normative References'>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2045.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2828.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3023.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3447.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3629.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-html401-19991224.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-09.xml'?>
 
     </references>
 
     <references title='Informative References'>
 
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-01.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-00.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-02.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-03.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-v2-mac-token-02.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
