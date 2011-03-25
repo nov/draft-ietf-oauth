@@ -787,7 +787,8 @@
             </t>
             <t>
               The authorization server validates the client credentials, the authorization code,
-              and redirection URI, and if valid, responds back with an access token.
+              and ensures the redirection URI received matches the URI used to redirect the client
+              in step (C). If valid, responds back with an access token.
             </t>
           </list>
         </t>
@@ -818,7 +819,7 @@
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-                case insensitive strings. The value is defined by the authorization server. If the
+                case sensitive strings. The value is defined by the authorization server. If the
                 value contains multiple space-delimited strings, their order does not matter, and
                 each string adds an additional access range to the requested scope.
               </t>
@@ -1203,7 +1204,7 @@
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-                case insensitive strings. The value is defined by the authorization server. If the
+                case sensitive strings. The value is defined by the authorization server. If the
                 value contains multiple space-delimited strings, their order does not matter, and
                 each string adds an additional access range to the requested scope.
               </t>
@@ -1272,7 +1273,7 @@
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-                case insensitive strings. The value is defined by the authorization server. If the
+                case sensitive strings. The value is defined by the authorization server. If the
                 value contains multiple space-delimited strings, their order does not matter, and
                 each string adds an additional access range to the requested scope. The
                 authorization server SHOULD include the parameter if the requested scope is
@@ -1474,7 +1475,7 @@
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-                case insensitive strings. The value is defined by the authorization server. If the
+                case sensitive strings. The value is defined by the authorization server. If the
                 value contains multiple space-delimited strings, their order does not matter, and
                 each string adds an additional access range to the requested scope.
               </t>
@@ -1606,7 +1607,7 @@
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-                case insensitive strings. The value is defined by the authorization server. If the
+                case sensitive strings. The value is defined by the authorization server. If the
                 value contains multiple space-delimited strings, their order does not matter, and
                 each string adds an additional access range to the requested scope.
               </t>
@@ -1739,7 +1740,7 @@
             <t hangText='scope'>
               <vspace />
               OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-              case insensitive strings. The value is defined by the authorization server. If the
+              case sensitive strings. The value is defined by the authorization server. If the
               value contains multiple space-delimited strings, their order does not matter, and
               each string adds an additional access range to the requested scope. The authorization
               server SHOULD include the parameter if the requested scope is different from the one
@@ -1898,7 +1899,7 @@
           <t hangText='scope'>
             <vspace />
             OPTIONAL. The scope of the access request expressed as a list of space-delimited,
-            case insensitive strings. The value is defined by the authorization server. If the
+            case sensitive strings. The value is defined by the authorization server. If the
             value contains multiple space-delimited strings, their order does not matter, and
             each string adds an additional access range to the requested scope. The requested
             scope MUST be equal or lesser than the scope originally granted by the resource

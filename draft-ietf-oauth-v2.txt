@@ -903,8 +903,9 @@ Internet-Draft                  OAuth 2.0                     March 2011
         previous step.  The client includes the redirection URI used to
         obtain the authorization code for verification.
    (E)  The authorization server validates the client credentials, the
-        authorization code, and redirection URI, and if valid, responds
-        back with an access token.
+        authorization code, and ensures the redirection URI received
+        matches the URI used to redirect the client in step (C).  If
+        valid, responds back with an access token.
 
 4.1.1.  Authorization Request
 
@@ -923,7 +924,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          in Section 2.1.1.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -944,7 +945,6 @@ Internet-Draft                  OAuth 2.0                     March 2011
 
 
      GET /authorize?response_type=code&client_id=s6BhdRkqt3&
-         redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
 
 
 
@@ -953,6 +953,7 @@ Hammer-Lahav, et al.   Expires September 26, 2011              [Page 17]
 Internet-Draft                  OAuth 2.0                     March 2011
 
 
+         redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
      Host: server.example.com
 
 
@@ -1000,7 +1001,6 @@ Internet-Draft                  OAuth 2.0                     March 2011
    authorization code string size is left undefined by this
    specification.  The client should avoid making assumptions about code
    value sizes.  The authorization server should document the size of
-   any value it issues.
 
 
 
@@ -1008,6 +1008,8 @@ Hammer-Lahav, et al.   Expires September 26, 2011              [Page 18]
 
 Internet-Draft                  OAuth 2.0                     March 2011
 
+
+   any value it issues.
 
 4.1.2.1.  Error Response
 
@@ -1052,11 +1054,9 @@ Internet-Draft                  OAuth 2.0                     March 2011
          authorization request.  Set to the exact value received from
          the client.
 
-   For example, the authorization server redirects the user-agent by
-   sending the following HTTP response:
 
 
-     HTTP/1.1 302 Found
+
 
 
 
@@ -1065,6 +1065,11 @@ Hammer-Lahav, et al.   Expires September 26, 2011              [Page 19]
 Internet-Draft                  OAuth 2.0                     March 2011
 
 
+   For example, the authorization server redirects the user-agent by
+   sending the following HTTP response:
+
+
+     HTTP/1.1 302 Found
      Location: https://client.example.com/cb?error=access_denied
 
 
@@ -1109,11 +1114,6 @@ Internet-Draft                  OAuth 2.0                     March 2011
       redirection URI matches the redirection URI used by the
       authorization server to deliver the authorization code.
 
-4.1.4.  Access Token Response
-
-   If the access token request is valid and authorized, the
-   authorization server issues an access token and optional refresh
-
 
 
 Hammer-Lahav, et al.   Expires September 26, 2011              [Page 20]
@@ -1121,6 +1121,10 @@ Hammer-Lahav, et al.   Expires September 26, 2011              [Page 20]
 Internet-Draft                  OAuth 2.0                     March 2011
 
 
+4.1.4.  Access Token Response
+
+   If the access token request is valid and authorized, the
+   authorization server issues an access token and optional refresh
    token as described in Section 5.1.  If the request client
    authentication failed or is invalid, the authorization server returns
    an error response as described in Section 5.2.
@@ -1165,10 +1169,6 @@ Internet-Draft                  OAuth 2.0                     March 2011
    exploitable).  Because the access token is encoded into the
    redirection URI, it may be exposed to the resource owner and other
    applications residing on its computer or device.
-
-
-
-
 
 
 
@@ -1265,7 +1265,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          in Section 2.1.1.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -1329,7 +1329,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          was generated.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -1521,7 +1521,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          REQUIRED.  The resource owner password.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -1635,7 +1635,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          REQUIRED.  Value MUST be set to "client_credentials".
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -1759,7 +1759,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          in Section 6.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
@@ -1911,7 +1911,7 @@ Internet-Draft                  OAuth 2.0                     March 2011
          REQUIRED.  The refresh token issued to the client.
    scope
          OPTIONAL.  The scope of the access request expressed as a list
-         of space-delimited, case insensitive strings.  The value is
+         of space-delimited, case sensitive strings.  The value is
          defined by the authorization server.  If the value contains
          multiple space-delimited strings, their order does not matter,
          and each string adds an additional access range to the
