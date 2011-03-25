@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-13'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-14'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='2' ?>
@@ -40,7 +40,9 @@
 
     <abstract>
       <t>
-        This specification describes the OAuth 2.0 authorization protocol.
+        The OAuth 2.0 authorization protocol enables granting third-party applications limited
+        access to HTTP service on behalf of an end-user by orchestrating an approval interaction
+        between the end-user and the HTTP service.
       </t>
     </abstract>
   </front>
@@ -90,11 +92,15 @@
         protected resources hosted by the resource server.
       </t>
       <t>
-        For example, a web user (resource owner) can grant a printing service (client) access to
-        her protected photos stored at a photo sharing service (resource server), without sharing
-        her username and password with the printing service. Instead, she authenticates directly
-        with a server trusted by the photo sharing service (authorization server) which issues the
-        printing service delegation-specific credentials (access token).
+        For example, a web end-user (resource owner) can grant a printing service (client) access
+        to her protected photos stored at a photo sharing service (resource server), without
+        sharing her username and password with the printing service. Instead, she authenticates
+        directly with a server trusted by the photo sharing service (authorization server) which
+        issues the printing service delegation-specific credentials (access token).
+      </t>
+      <t>
+        This specification is designed for use with HTTP <xref target='RFC2616' />. The use of
+        OAuth with any transport protocol other than HTTP is undefined.
       </t>
 
       <section title='Roles'>
@@ -232,8 +238,14 @@
       <section title='Authorization Grant'>
         <t>
           An authorization grant is a general term used to describe the intermediate credentials
-          representing the resource owner authorization, and serves as an abstraction layer. An
-          authorization grant is used by the client to obtain an access token.
+          representing the resource owner authorization (to access its protected resources), and
+          serves as an abstraction layer. An authorization grant is used by the client to obtain
+          an access token.
+        </t>
+        <t>
+          This specification defines four grant types: authorization code, implicit, resource owner
+          password credentials, and client credentials, as well as an extensibility mechanism for
+          defining additional types.
         </t>
 
         <section title='Authorization Code'>
@@ -241,8 +253,8 @@
             The authorization code is obtained by using an authorization server as an intermediary
             between the client and resource owner. Instead of requesting authorization directly
             from the resource owner, the client directs the resource owner to an authorization
-            server (via its user-agent), which in turns directs the resource owner back to the
-            client with the authorization code.
+            server (via its user-agent as defined in <xref target='RFC2616' />), which in turns
+            directs the resource owner back to the client with the authorization code.
           </t>
           <t>
             Before directing the resource owner back to the client with the authorization code, the
@@ -259,11 +271,9 @@
 
         <section title='Implicit'>
           <t>
-            An implicit grant is issued when the resource owner's authorization is expressed
-            directly as an access token, without using an intermediate credential. The implicit
-            grant is issued in a similar manner as an authorization code, but instead of the
-            resource owner being redirected back to the client with the authorization code, it is
-            redirected back with an access token and its related attributes.
+            When an access token is issued to the client directly as the result of the resource
+            owner authorization, without an intermediary authorization grant (such as an
+            authorization code), the grant is considered implicit.
           </t>
           <t>
             When issuing an implicit grant, the authorization server cannot verify the identity of
@@ -289,8 +299,9 @@
             Even though this grant type requires direct client access to the resource owner
             credentials, the resource owner credentials are used for a single request and are
             exchanged for an access token. Unlike the HTTP Basic authentication scheme defined in
-            <xref target='RFC2617' />, this grant type eliminates the need for the client to store
-            the resource-owner credentials for future use.
+            <xref target='RFC2617' />, this grant type (when combined with a refresh token)
+            eliminates the need for the client to store the resource-owner credentials for future
+            use.
           </t>
         </section>
 
@@ -306,8 +317,8 @@
 
         <section title='Extensions'>
           <t>
-            Additional grant types may be defined to provide a bridge between OAuth and other trust
-            frameworks. For example, <xref target='I-D.ietf-oauth-saml2-bearer' /> defines a
+            Additional grant types may be defined to provide a bridge between OAuth and other
+            protocols. For example, <xref target='I-D.ietf-oauth-saml2-bearer' /> defines a
             <xref target='OASIS.saml-core-2.0-os'>SAML 2.0</xref> bearer assertion grant type,
             which can be used to obtain an access token.
           </t>
@@ -327,12 +338,14 @@
           A refresh token is a string representing the authorization granted to the client by the
           resource owner. The string is usually opaque to the client. The token may denote an
           identifier used to retrieve the authorization information, or self-contain the
-          authorization information in a verifiable manner.
+          authorization information in a verifiable manner. The refresh token is bound to the
+          client it was issued to, and its usage requires client authentication.
         </t>
         <t>
           The refresh token can be used to obtain a new access token when the current access token
           expires (access tokens may have a shorter lifetime than authorized by the resource
-          owner), or to obtain additional access tokens with identical or narrower scope.
+          owner), no longer valid, or to obtain additional access tokens with identical or narrower
+          scope.
         </t>
         <figure title='Refreshing an Expired Access Token' anchor='Figure 2'>
           <artwork>
@@ -387,8 +400,8 @@
               resource request.
             </t>
             <t>
-              Since the access token is invalid (expired), the resource server returns an invalid
-              token error.
+              Since the access token is invalid, the resource server returns an invalid token
+              error.
             </t>
             <t>
               The client requests a new access token by authenticating with the authorization
@@ -460,7 +473,7 @@
 
     <section title='Protocol Endpoints'>
       <t>
-        The authorization process utilizes two endpoints:
+        The authorization process utilizes two endpoints (HTTP resources):
       </t>
       <t>
         <list style='symbols'>
@@ -491,26 +504,39 @@
           password login, session cookies) is beyond the scope of this specification.
         </t>
         <t>
-          The location of the authorization endpoint can be found in the service documentation. The
-          endpoint URI MAY include a query component as defined by <xref target='RFC3986' />
-          section 3, which MUST be retained when adding additional query parameters.
+          The means through which the client obtains the location of the authorization endpoint are
+          beyond the scope of this specification but is typically provided in the service
+          documentation. The endpoint URI MAY include a query component as defined by
+          <xref target='RFC3986' /> section 3, which MUST be retained when adding additional query
+          parameters.
         </t>
         <t>
-          Requests to the authorization endpoint result in user authentication and the transmission
-          of sensitive information. If the response includes an access token, the authorization
-          server MUST require TLS 1.2 as defined in <xref target='RFC5246' /> and MAY support
-          additional transport-layer mechanisms meeting its security requirements. If the response
-          does not include an access token, the authorization server SHOULD require TLS 1.2 and any
-          additional transport-layer mechanism meeting its security requirements.
+          Requests to the authorization endpoint result in resource owner authentication and the
+          transmission of sensitive information. If the response includes an access token, the
+          authorization server MUST require TLS 1.2 as defined in <xref target='RFC5246' /> and MAY
+          support additional transport-layer mechanisms meeting its security requirements. If the
+          response does not include an access token, the authorization server SHOULD require TLS
+          1.2 and any additional transport-layer mechanism meeting its security requirements.
         </t>
         <t>
           The authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
-          method for the authorization endpoint, and MAY support the use of the
-          <spanx style='verb'>POST</spanx> method as well.
+          method <xref target='RFC2616' /> for the authorization endpoint, and MAY support the use
+          of the <spanx style='verb'>POST</spanx> method as well.
+        </t>
+        <t>
+          The REQUIRED <spanx style='verb'>response_type</spanx> request parameter is used to
+          identify which grant type the client is requesting: authorization code or implicit,
+          described in <xref target='code_authz_req' /> and <xref target='implicit_authz_req' />
+          respectively. If the request is missing the <spanx style='verb'>response_type</spanx>
+          parameter, the authorization server SHOULD return an error response as described in
+          <xref target='code_authz_error' />.
         </t>
         <t>
           Parameters sent without a value MUST be treated as if they were omitted from the
           request. The authorization server SHOULD ignore unrecognized request parameters.
+        </t>
+        <t>
+          Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
         </t>
 
         <section title='Redirection URI' anchor='redirect_uri'>
@@ -544,14 +570,15 @@
       <section title='Token Endpoint'>
         <t>
           The token endpoint is used by the client to obtain an access token by authenticating with
-          the authorization server and presenting its authorization grant. The token endpoint is
-          used with every authorization grant except for the implicit grant type (since an access
-          token is issued directly).
+          the authorization server and presenting its authorization grant or refresh token. The
+          token endpoint is used with every authorization grant except for the implicit grant type
+          (since an access token is issued directly).
         </t>
         <t>
-          The location of the token endpoint can be found in the service documentation. The
-          endpoint URI MAY include a query component, which MUST be retained when adding additional
-          query parameters.
+          The means through which the client obtains the location of the token endpoint are
+          beyond the scope of this specification but is typically provided in the service
+          documentation. The endpoint URI MAY include a query component, which MUST be retained
+          when adding additional query parameters.
         </t>
         <t>
           Since requests to the token endpoint result in the transmission of clear-text credentials
@@ -574,6 +601,9 @@
           Parameters sent without a value MUST be treated as if they were omitted from the
           request. The authorization server SHOULD ignore unrecognized request parameters.
         </t>
+        <t>
+          Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
+        </t>
       </section>
 
     </section>
@@ -582,14 +612,29 @@
       <t>
         Client credentials are used to identify and authenticate the client. The client
         credentials include a client identifier - a unique string issued to the client to
-        identify itself to the authorization server. The methods through which the client
-        obtains its client credentials are beyond the scope of this specification.
+        identify itself to the authorization server. The client identifier is not a secret, it is
+        exposed to the resource owner, and MUST NOT be used alone for client authentication. Client
+        authentication is accomplished via additional means such as a matching client password.
+      </t>
+      <t>
+        The methods through which the client obtains its client credentials are beyond the scope of
+        this specification. However, the client registration process typically includes gathering
+        relevant information used to inform the resource owner about the client when requesting
+        authorization.
       </t>
       <t>
         Due to the nature of some clients, the authorization server should not make assumptions
         about the confidentiality of client credentials without establishing trust with the
         client. The authorization server SHOULD NOT issue client credentials to clients incapable
-        of keeping their secrets confidential.
+        of keeping their credentials confidential.
+      </t>
+      <t>
+        In addition, the authorization server MAY allow unauthenticated access token requests
+        when the client identity does not matter (e.g. anonymous client) or when the client
+        identity is established via other means. For readability purposes only, this specification
+        is written under the assumption that the authorization server requires some form of client
+        authentication. However, such language does not affect the authorization server's discretion
+        in allowing unauthenticated client requests.
       </t>
 
       <section title='Client Password Authentication'>
@@ -632,9 +677,7 @@
         <t>
           In cases where client password authentication is not suitable or sufficient, the
           authorization server MAY support other existing HTTP authentication schemes or define
-          new methods. In addition, the authorization server MAY allow unauthenticated access
-          token requests when the client identity does not matter (e.g. anonymous client) or
-          when the client identity is established via other means.
+          new methods.
         </t>
         <figure>
           <preamble>
@@ -669,7 +712,7 @@
       <t>
         To request an access token, the client obtains authorization from the resource owner. The
         authorization is expressed in the form of an authorization grant which the client uses to
-        requesting the access token. OAuth defines four grant types: authorization code, implicit,
+        request the access token. OAuth defines four grant types: authorization code, implicit,
         resource owner password credentials, and client credentials. It also provides an extension
         mechanism for defining additional grant types.
       </t>
@@ -733,21 +776,23 @@
             <t>
               Assuming the resource owner grants access, the authorization server redirects the
               user-agent back to the client using the redirection URI provided earlier. The
-              redirection URI includes an authorization code.
+              redirection URI includes an authorization code and any local state provided by the
+              client earlier.
             </t>
             <t>
               The client requests an access token from the authorization server's token endpoint
               by authenticating using its client credentials, and includes the authorization code
-              received in the previous step.
+              received in the previous step. The client includes the redirection URI used to obtain
+              the authorization code for verification.
             </t>
             <t>
-              The authorization server validates the client credentials and the authorization
-              code and if valid, responds back with an access token.
+              The authorization server validates the client credentials, the authorization code,
+              and redirection URI, and if valid, responds back with an access token.
             </t>
           </list>
         </t>
 
-        <section title='Authorization Request'>
+        <section title='Authorization Request' anchor='code_authz_req'>
           <t>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
@@ -772,10 +817,10 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request expressed as a list of space-delimited
-                strings. The value is defined by the authorization server. If the value contains
-                multiple space-delimited strings, their order does not matter, and each string adds
-                an additional access range to the requested scope.
+                OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+                case insensitive strings. The value is defined by the authorization server. If the
+                value contains multiple space-delimited strings, their order does not matter, and
+                each string adds an additional access range to the requested scope.
               </t>
               <t hangText='state'>
                 <vspace />
@@ -854,12 +899,12 @@
           </figure>
           <t>
             The client SHOULD ignore unrecognized response parameters. The authorization code
-            string size is left undefined by this specification. The clients should avoid making
+            string size is left undefined by this specification. The client should avoid making
             assumptions about code value sizes. The authorization server should document the size
             of any value it issues.
           </t>
 
-          <section title='Error Response'>
+          <section title='Error Response' anchor='code_authz_error'>
             <t>
               If the request fails due to a missing, invalid, or mismatching redirection URI, or if
               the client identifier provided is invalid, the authorization server SHOULD inform the
@@ -917,7 +962,7 @@
                 </t>
                 <t hangText='state'>
                   <vspace />
-                  REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
+                  REQUIRED if a valid <spanx style='verb'>state</spanx> parameter was present in the
                   client authorization request. Set to the exact value received from the client.
                 </t>
               </list>
@@ -990,7 +1035,8 @@
           <t>
             <list style='symbols'>
               <t>
-                Validate the client credentials and ensure they match the authorization code.
+                Validate the client credentials and ensure that the authorization code was issued
+                to that client.
               </t>
               <t>
                 Verify that the authorization code is valid, and that the redirection URI matches
@@ -1005,7 +1051,7 @@
           <t>
             If the access token request is valid and authorized, the authorization server issues an
             access token and optional refresh token as described in <xref target='token-response' />.
-            If the request failed client authentication or is invalid, the authorization server return
+            If the request client authentication failed or is invalid, the authorization server returns
             an error response as described in <xref target='token-errors' />.
           </t>
           <figure>
@@ -1023,7 +1069,7 @@
     "token_type":"example",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8",
-    "example_parameter":"example-value"
+    "example_parameter":"example_value"
   }
 ]]>
             </artwork>
@@ -1037,9 +1083,7 @@
           The implicit grant type is suitable for clients incapable of maintaining their
           client credentials confidential (for authenticating with the authorization server) such
           as client applications residing in a user-agent, typically implemented in a browser using
-          a scripting language such as JavaScript, or native applications. These clients cannot
-          keep client secrets confidential and the authentication of the client is based on the
-          user-agent's same-origin policy.
+          a scripting language such as JavaScript.
         </t>
         <t>
           As a redirection-based flow, the client must be capable of interacting with the
@@ -1134,7 +1178,7 @@
           </list>
         </t>
 
-        <section title='Authorization Request'>
+        <section title='Authorization Request' anchor='implicit_authz_req'>
           <t>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
@@ -1149,8 +1193,7 @@
               <t hangText='client_id'>
                 <vspace />
                 REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />. Due to lack of client authentication, the
-                client identifier alone MUST NOT be relied upon for client identification.
+                <xref target='client-authentication' />.
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
@@ -1159,10 +1202,10 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request expressed as a list of space-delimited
-                strings. The value is defined by the authorization server. If the value contains
-                multiple space-delimited strings, their order does not matter, and each string adds
-                an additional access range to the requested scope.
+                OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+                case insensitive strings. The value is defined by the authorization server. If the
+                value contains multiple space-delimited strings, their order does not matter, and
+                each string adds an additional access range to the requested scope.
               </t>
               <t hangText='state'>
                 <vspace />
@@ -1228,12 +1271,12 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request expressed as a list of space-delimited
-                strings. The value is defined by the authorization server. If the value contains
-                multiple space-delimited strings, their order does not matter, and each string adds
-                an additional access range to the requested scope. The authorization server SHOULD
-                include the parameter if the requested scope is different from the one requested by
-                the client.
+                OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+                case insensitive strings. The value is defined by the authorization server. If the
+                value contains multiple space-delimited strings, their order does not matter, and
+                each string adds an additional access range to the requested scope. The
+                authorization server SHOULD include the parameter if the requested scope is
+                different from the one requested by the client.
               </t>
               <t hangText='state'>
                 <vspace />
@@ -1320,7 +1363,7 @@
                 </t>
                 <t hangText='state'>
                   <vspace />
-                  REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
+                  REQUIRED if a valid <spanx style='verb'>state</spanx> parameter was present in the
                   client authorization request. Set to the exact value received from the client.
                 </t>
               </list>
@@ -1430,19 +1473,16 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request expressed as a list of space-delimited
-                strings. The value is defined by the authorization server. If the value contains
-                multiple space-delimited strings, their order does not matter, and each string adds
-                an additional access range to the requested scope.
+                OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+                case insensitive strings. The value is defined by the authorization server. If the
+                value contains multiple space-delimited strings, their order does not matter, and
+                each string adds an additional access range to the requested scope.
               </t>
             </list>
           </t>
           <t>
             The client includes its authentication credentials as described in
             <xref target='client-authentication' />
-          </t>
-          <t>
-            [[ add internationalization consideration for username and password ]]
           </t>
           <figure>
             <preamble>
@@ -1481,7 +1521,7 @@
           <t>
             If the access token request is valid and authorized, the authorization server issues an
             access token and optional refresh token as described in <xref target='token-response' />.
-            If the request failed client authentication or is invalid, the authorization server return
+            If the request failed client authentication or is invalid, the authorization server returns
             an error response as described in <xref target='token-errors' />.
           </t>
           <figure>
@@ -1499,7 +1539,7 @@
     "token_type":"example",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8",
-    "example_parameter":"example-value"
+    "example_parameter":"example_value"
   }
 ]]>
             </artwork>
@@ -1565,10 +1605,10 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request expressed as a list of space-delimited
-                strings. The value is defined by the authorization server. If the value contains
-                multiple space-delimited strings, their order does not matter, and each string adds
-                an additional access range to the requested scope.
+                OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+                case insensitive strings. The value is defined by the authorization server. If the
+                value contains multiple space-delimited strings, their order does not matter, and
+                each string adds an additional access range to the requested scope.
               </t>
             </list>
           </t>
@@ -1603,7 +1643,7 @@
           <t>
             If the access token request is valid and authorized, the authorization server issues an
             access token and optional refresh token as described in <xref target='token-response' />.
-            If the request failed client authentication or is invalid, the authorization server return
+            If the request failed client authentication or is invalid, the authorization server returns
             an error response as described in <xref target='token-errors' />.
           </t>
           <figure>
@@ -1621,7 +1661,7 @@
     "token_type":"example",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8",
-    "example_parameter":"example-value"
+    "example_parameter":"example_value"
   }
 ]]>
             </artwork>
@@ -1664,7 +1704,7 @@
       <t>
         If the access token request is valid and authorized, the authorization server issues an
         access token and optional refresh token as described in <xref target='token-response' />.
-        If the request failed client authentication or is invalid, the authorization server return
+        If the request failed client authentication or is invalid, the authorization server returns
         an error response as described in <xref target='token-errors' />.
       </t>
 
@@ -1698,12 +1738,12 @@
             </t>
             <t hangText='scope'>
               <vspace />
-              OPTIONAL. The scope of the access request expressed as a list of space-delimited
-              strings. The value is defined by the authorization server. If the value contains
-              multiple space-delimited strings, their order does not matter, and each string adds
-              an additional access range to the requested scope. The authorization server SHOULD
-              include the parameter if the requested scope is different from the one requested by
-              the client.
+              OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+              case insensitive strings. The value is defined by the authorization server. If the
+              value contains multiple space-delimited strings, their order does not matter, and
+              each string adds an additional access range to the requested scope. The authorization
+              server SHOULD include the parameter if the requested scope is different from the one
+              requested by the client.
             </t>
           </list>
         </t>
@@ -1716,9 +1756,9 @@
         </t>
         <t>
           The authorization server MUST include the HTTP
-          <spanx style='verb'>Cache-Control</spanx> response header field with a value of
-          <spanx style='verb'>no-store</spanx> in any response containing tokens, secrets, or
-          other sensitive information.
+          <spanx style='verb'>Cache-Control</spanx> response header field <xref target='RFC2616' />
+          with a value of <spanx style='verb'>no-store</spanx> in any response containing tokens,
+          secrets, or other sensitive information.
         </t>
         <figure>
           <preamble>
@@ -1735,7 +1775,7 @@
     "token_type":"example",
     "expires_in":3600,
     "refresh_token":"8xLOxBtZp8",
-    "example_parameter":"example-value"
+    "example_parameter":"example_value"
   }
 ]]>
           </artwork>
@@ -1781,8 +1821,8 @@
                 </t>
                 <t hangText='invalid_grant'>
                   <vspace />
-                  The provided authorization grant is invalid, expired, revoked, or does not
-                  match the redirection URI used in the authorization request.
+                  The provided authorization grant is invalid, expired, revoked, does not match the
+                  redirection URI used in the authorization request, or was issued to another client.
                 </t>
                 <t hangText='unauthorized_client'>
                   <vspace />
@@ -1853,22 +1893,22 @@
           </t>
           <t hangText='refresh_token'>
             <vspace />
-            REQUIRED. The refresh token issued along the access token being refreshed.
+            REQUIRED. The refresh token issued to the client.
           </t>
           <t hangText='scope'>
             <vspace />
-            OPTIONAL. The scope of the access request expressed as a list of space-delimited
-            strings. The value is defined by the authorization server. If the value contains
-            multiple space-delimited strings, their order does not matter, and each string adds
-            an additional access range to the requested scope. The requested scope MUST be equal or
-            lesser than the scope originally granted by the resource owner, and if omitted is
-            treated as equal to the previously approved scope.
+            OPTIONAL. The scope of the access request expressed as a list of space-delimited,
+            case insensitive strings. The value is defined by the authorization server. If the
+            value contains multiple space-delimited strings, their order does not matter, and
+            each string adds an additional access range to the requested scope. The requested
+            scope MUST be equal or lesser than the scope originally granted by the resource
+            owner, and if omitted is treated as equal to the previously approved scope.
           </t>
         </list>
       </t>
       <t>
         The client includes its authentication credentials as described in
-        <xref target='client-authentication' />
+        <xref target='client-authentication' />.
       </t>
       <figure>
         <preamble>
@@ -1889,11 +1929,12 @@
         </artwork>
       </figure>
       <t>
-        The authorization server MUST validate the client credentials, the refresh token, and
+        The authorization server MUST validate the client credentials, ensure that the refresh
+        token was issued to the authenticated client, validate the refresh token, and
         verify that the resource owner's authorization is still valid. If valid and authorized, the
         authorization server issues an access token as described in
         <xref target='token-response' />. If the request failed verification or is invalid, the
-        authorization server return an error response as described in
+        authorization server returns an error response as described in
         <xref target='token-errors' />.
       </t>
       <t>
@@ -1907,15 +1948,16 @@
         The client accesses protected resources by presenting the access token to the resource
         server. The resource server MUST validate the access token and ensure it has not expired
         and that its scope covers the requested resource. The methods used by the resource server
-        to validate the access token are beyond the scope of this specification, but generally
-        involve an interaction or coordination between the resource server and the authorization
-        server.
+        to validate the access token (as well as any error responses) are beyond the scope of this
+        specification, but generally involve an interaction or coordination between the resource
+        server and the authorization server.
       </t>
       <t>
         The method in which the client utilized the access token to authenticate with the resource
         server depends on the type of access token issued by the authorization server. Typically,
         it involves using the HTTP <spanx style='verb'>Authorization</spanx> request header field
-        with an authentication scheme defined by the access token type specification.
+        <xref target='RFC2617' /> with an authentication scheme defined by the access token type
+        specification.
       </t>
 
       <section title='Access Token Types' anchor='token-types'>
@@ -2058,12 +2100,21 @@
           with the IESG and IANA. Suggested name: oauth-ext-review. ]]
         </t>
         <t>
-          Before a period of 14 days has passed, the Designated Expert(s) will either approve or
-          deny the registration request, communicating this decision both to the review list and to
-          IANA. Denials should include an explanation and, if applicable, suggestions as to how to
-          make the request successful. Registration requests that are undetermined for a period
-          longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org
-          mailing list) for resolution.
+          Within at most 14 days of the request, the Designated Expert(s) will either approve or
+          deny the registration request, communicating this decision to the review list and IANA.
+          Denials should include an explanation and, if applicable, suggestions as to how to make
+          the request successful.
+        </t>
+        <t>
+          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Application Area Directors (contactable using app-ads@tools.ietf.org email address or
+          directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
+          appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
+          mailing list).
+        </t>
+        <t>
+          IANA should only accept registry updates from the Designated Expert(s), and should direct
+          all requests for registration to the review mailing list.
         </t>
 
         <section title='Registration Template'>
@@ -2123,12 +2174,21 @@
           with the IESG and IANA. Suggested name: oauth-ext-review. ]]
         </t>
         <t>
-          Before a period of 14 days has passed, the Designated Expert(s) will either approve or
-          deny the registration request, communicating this decision both to the review list and to
-          IANA. Denials should include an explanation and, if applicable, suggestions as to how to
-          make the request successful. Registration requests that are undetermined for a period
-          longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org
-          mailing list) for resolution.
+          Within at most 14 days of the request, the Designated Expert(s) will either approve or
+          deny the registration request, communicating this decision to the review list and IANA.
+          Denials should include an explanation and, if applicable, suggestions as to how to make
+          the request successful.
+        </t>
+        <t>
+          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Application Area Directors (contactable using app-ads@tools.ietf.org email address or
+          directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
+          appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
+          mailing list).
+        </t>
+        <t>
+          IANA should only accept registry updates from the Designated Expert(s), and should direct
+          all requests for registration to the review mailing list.
         </t>
 
         <section title='Registration Template'>
@@ -2441,11 +2501,11 @@
       <t>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
         Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
-        Kristoffer Gronowski, Justin Hart, Phil Hunt, Michael B. Jones, John Kemp, Mark Kent,
-        Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Alastair Mair, Eve Maler,
-        James Manger, Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre,
-        Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Justin Smith, Jeremy Suriel,
-        Christian Stübner, Paul Tarjan, Franklin Tse, Nick Walker, Skylar Woodward.
+        Kristoffer Gronowski, Justin Hart, Craig Heath, Phil Hunt, Michael B. Jones, John Kemp,
+        Mark Kent, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen,
+        Alastair Mair, Eve Maler, James Manger, Laurence Miao, Chuck Mortimore, Justin Richer,
+        Peter Saint-Andre, Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Justin Smith,
+        Jeremy Suriel, Christian Stübner, Paul Tarjan, Franklin Tse, Nick Walker, Skylar Woodward.
       </t>
     </appendix>
 
@@ -2455,45 +2515,6 @@
       </t>
     </appendix>
 
-    <appendix title='Document History'>
-      <t>
-        [[ to be removed by RFC editor before publication as an RFC ]]
-      </t>
-      <t>
-        -13
-      </t>
-      <t>
-        <list style='symbols'>
-          <t>
-            Small editorial changes.
-          </t>
-          <t>
-            Split introduction 'Roles' into 'Roles' and 'Protocol Flow'.
-          </t>
-          <t>
-            Changes section name 'Requesting an Access Token' to 'Obtaining Authorization'.
-          </t>
-          <t>
-            Added explicit authorization request and access token response sub-sections for each
-            grant type.
-          </t>
-          <t>
-            Added document overview in the introduction.
-          </t>
-          <t>
-            Reduced the use of 'x_' prefix to SHOULD.
-          </t>
-          <t>
-            Removed unused references and updated others.
-          </t>
-          <t>
-            Dropped 'invalid_client' error from authorization endpoint responses.
-          </t>
-        </list>
-      </t>
-    </appendix>
-
-
   </middle>
 
   <back>
@@ -2501,6 +2522,7 @@
     <references title='Normative References'>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml' ?>
