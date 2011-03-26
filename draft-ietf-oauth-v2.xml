@@ -626,7 +626,8 @@
         Due to the nature of some clients, the authorization server should not make assumptions
         about the confidentiality of client credentials without establishing trust with the
         client. The authorization server SHOULD NOT issue client credentials to clients incapable
-        of keeping their credentials confidential.
+        of keeping their credentials confidential (typically determined during the client
+        registertion process).
       </t>
       <t>
         In addition, the authorization server MAY allow unauthenticated access token requests
@@ -1977,7 +1978,7 @@
             <![CDATA[
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: BEARER h480djs93hd8
+  Authorization: Bearer h480djs93hd8
 ]]>
           </artwork>
         </figure>

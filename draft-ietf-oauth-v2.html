@@ -2,7 +2,7 @@
 <html lang="en"><head><title>The OAuth 2.0 Authorization Protocol</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="The OAuth 2.0 Authorization Protocol">
-<meta name="generator" content="xml2rfc v1.35 (http://xml.resource.org/)">
+<meta name="generator" content="xml2rfc v1.36pre1-dev (http://xml.resource.org/)">
 <style type='text/css'><!--
         body {
                 font-family: verdana, charcoal, helvetica, arial, sans-serif;
@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: September 26, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: September 27, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">March 25, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">March 26, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-14</h1>
 
@@ -174,7 +174,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on September 26, 2011.</p>
+This Internet-Draft will expire on September 27, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -1005,7 +1005,8 @@ Client Authentication</h3>
         Due to the nature of some clients, the authorization server should not make assumptions
         about the confidentiality of client credentials without establishing trust with the
         client. The authorization server SHOULD NOT issue client credentials to clients incapable
-        of keeping their credentials confidential.
+        of keeping their credentials confidential (typically determined during the client
+        registertion process).
       
 </p>
 <p>
@@ -2633,7 +2634,7 @@ Access Token Types</h3>
 
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: BEARER h480djs93hd8
+  Authorization: Bearer h480djs93hd8
 
 </pre></div>
 <p>
@@ -3401,4 +3402,3 @@ References</h3>
 <td class="author-text"><a href="http://dickhardt.org/">http://dickhardt.org/</a></td></tr>
 </table>
 </body></html>
-
