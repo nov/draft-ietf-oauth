@@ -2488,32 +2488,67 @@
 
     </section>
 
-    <appendix title='Contributors'>
+    <section title='Contributors'>
       <t>
-        The following people contributed to preliminary versions of this document:
-        Blaine Cook (BT), Brian Eaton (Google), Yaron Goland (Microsoft), Brent Goldman (Facebook),
-        Raffi Krikorian (Twitter), Luke Shepard (Facebook), and Allen Tom (Yahoo!). The content and
-        concepts within are a product of the OAuth community, WRAP community, and the OAuth Working
-        Group.
+        This specification is the work of the OAuth Working Group which includes dozens of active
+        and dedicated participants. In particular, the following individuals contributed ideas,
+        feedback, and wording which shaped and formed the final specification:
       </t>
       <t>
-        The OAuth Working Group has dozens of very active contributors who proposed ideas and
-        wording for this document, including:
+        Michael Adams, Andrew Arnott, Dirk Balfanz, Blaine Cook, Brian Campbell, Leah Culver,
+        Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman,
+        Evan Gilbert, Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart, Craig Heath,
+        Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara,
+        Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen, Alastair Mair, Eve Maler,
+        James Manger, Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre,
+        Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Luke Shepard, Justin Smith,
+        Jeremy Suriel, Christian Stübner, Paul Tarjan, Allen Tom, Franklin Tse, Nick Walker,
+        Skylar Woodward.
       </t>
       <t>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
-        Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
-        Kristoffer Gronowski, Justin Hart, Craig Heath, Phil Hunt, Michael B. Jones, John Kemp,
-        Mark Kent, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen,
-        Alastair Mair, Eve Maler, James Manger, Laurence Miao, Chuck Mortimore, Justin Richer,
-        Peter Saint-Andre, Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Justin Smith,
-        Jeremy Suriel, Christian Stübner, Paul Tarjan, Franklin Tse, Nick Walker, Skylar Woodward.
+        The initial OAuth 2.0 protocol specification was edited by David Recordon, based on two
+        previous publications: the OAuth 1.0 community specification <xref target='RFC5849' />, and
+        OAuth WRAP (OAuth Web Resource Authorization Profiles)
+        <xref target='I-D.draft-hardt-oauth-01' />.
       </t>
-    </appendix>
+      <t>
+        The OAuth 1.0 community specification was edited by Eran Hammer-Lahav and authored by
+        Mark Atwood, Dirk Balfanz, Darren Bounds, Richard M. Conlan, Blaine Cook, Leah Culver,
+        Breno de Medeiros, Brian Eaton, Kellan Elliott-McCrea, Larry Halff, Eran Hammer-Lahav,
+        Ben Laurie, Chris Messina, John Panzer, Sam Quigley, David Recordon, Eran Sandler,
+        Jonathan Sergent, Todd Sieling, Brian Slesinsky, and Andy Smith.
+      </t>
+      <t>
+        The OAuth WRAP specification was edited by Dick Hardt and authored by Brian Eaton,
+        Yaron Goland, Dick Hardt, and Allen Tom.
+      </t>
+    </section>
 
     <appendix title='Acknowledgements'>
       <t>
-        [[ Add OAuth 1.0a authors + WG contributors ]]
+        While many people contributed to this specification throughout its long journey, the editor
+        would like to acknowledge and thank a few individuals for their outstanding and invaluable
+        efforts leading up to the publication of this specification. It is these individuals without
+        whom this work would not have existed, or reached its successful conclusion.
+      </t>
+      <t>
+        David Recordon for continuously being one of OAuth’s most valuable assets, bringing
+        pragmatism and urgency to the work, and helping shape it from its very beginning, as well
+        as being one of the best collaborators I had the pleasure of working with.
+      </t>
+      <t>
+        Mark Nottingham for introducing OAuth to the IETF and setting the community on this course.
+        Lisa Dusseault for her support and guidance as the Application area director. Blaine Cook,
+        Peter Saint-Andre, and Hannes Tschofenig for their work as working group chairs.
+      </t>
+      <t>
+        James Manger for his creative ideas and always insightful feedback. Brian Campbell,
+        Torsten Lodderstedt, Chuck Mortimore, Justin Richer, Marius Scurtescu, and Luke Shepard for
+        their continued participation and valuable feedback.
+      </t>
+      <t>
+        Special thanks goes to Mike Curtis and Yahoo! for their unconditional support of this work
+        for over three years.
       </t>
     </appendix>
 
@@ -2537,11 +2572,24 @@
 
     <references title='Informative References'>
 
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-02.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-03.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-v2-mac-token-02.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
+      <reference anchor="I-D.draft-hardt-oauth-01">
+        <front>
+          <title>OAuth Web Resource Authorization Profiles</title>
+          <author initials="D" surname="Hardt" fullname="Dick Hardt" role="editor" />
+          <author initials="A" surname="Tom" fullname="Allen Tom" />
+          <author initials="B" surname="Eaton" fullname="Brian Eaton" />
+          <author initials="Y" surname="Goland" fullname="Yaron Goland" />
+          <date month="January" day="15" year="2010" />
+        </front>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-hardt-oauth-01.txt" />
+      </reference>
+      
     </references>
 
   </back>
