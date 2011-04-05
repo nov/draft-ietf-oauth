@@ -2,7 +2,7 @@
 <html lang="en"><head><title>The OAuth 2.0 Authorization Protocol</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="The OAuth 2.0 Authorization Protocol">
-<meta name="generator" content="xml2rfc v1.36pre1-dev (http://xml.resource.org/)">
+<meta name="generator" content="xml2rfc v1.36 (http://xml.resource.org/)">
 <style type='text/css'><!--
         body {
                 font-family: verdana, charcoal, helvetica, arial, sans-serif;
@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: September 27, 2011</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: October 8, 2011</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">March 26, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">April 6, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-14</h1>
 
@@ -174,7 +174,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on September 27, 2011.</p>
+This Internet-Draft will expire on October 8, 2011.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -227,11 +227,11 @@ Obtaining Authorization<br />
 Authorization Code<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor24">4.2.</a>&nbsp;
 Implicit Grant<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor27">4.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor26">4.3.</a>&nbsp;
 Resource Owner Password Credentials<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor31">4.4.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor30">4.4.</a>&nbsp;
 Client Credentials<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor35">4.5.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor34">4.5.</a>&nbsp;
 Extensions<br />
 <a href="#token-issue">5.</a>&nbsp;
 Issuing an Access Token<br />
@@ -245,31 +245,35 @@ Refreshing an Access Token<br />
 Accessing Protected Resources<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#token-types">7.1.</a>&nbsp;
 Access Token Types<br />
-<a href="#anchor36">8.</a>&nbsp;
+<a href="#extensions">8.</a>&nbsp;
 Extensibility<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#new-types">8.1.</a>&nbsp;
 Defining Access Token Types<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor37">8.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor35">8.2.</a>&nbsp;
 Defining New Endpoint Parameters<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor38">8.3.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor36">8.3.</a>&nbsp;
 Defining New Authorization Grant Types<br />
-<a href="#anchor39">9.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#new-errors">8.4.</a>&nbsp;
+Defining Additional Error Codes<br />
+<a href="#anchor37">9.</a>&nbsp;
 Security Considerations<br />
-<a href="#anchor40">10.</a>&nbsp;
+<a href="#anchor38">10.</a>&nbsp;
 IANA Considerations<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#type-registry">10.1.</a>&nbsp;
 The OAuth Access Token Type Registry<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#parameters-registry">10.2.</a>&nbsp;
 The OAuth Parameters Registry<br />
-<a href="#anchor44">Appendix&nbsp;A.</a>&nbsp;
-Contributors<br />
-<a href="#anchor45">Appendix&nbsp;B.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#error-registry">10.3.</a>&nbsp;
+The OAuth Extensions Error Registry<br />
+<a href="#anchor43">11.</a>&nbsp;
 Acknowledgements<br />
-<a href="#rfc.references1">11.</a>&nbsp;
+<a href="#anchor44">Appendix&nbsp;A.</a>&nbsp;
+Editor's Notes<br />
+<a href="#rfc.references1">12.</a>&nbsp;
 References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">11.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">12.1.</a>&nbsp;
 Normative References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">11.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">12.2.</a>&nbsp;
 Informative References<br />
 <a href="#rfc.authors">&#167;</a>&nbsp;
 Authors' Addresses<br />
@@ -408,7 +412,7 @@ Protocol Flow</h3>
           server.
         
 </p><br /><hr class="insert" />
-<a name="Figure 1"></a>
+<a name="Figure-1"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+                               +---------------+
@@ -432,7 +436,7 @@ Protocol Flow</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;1: Abstract Protocol Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The abstract flow illustrated in <a class='info' href='#Figure 1'>Figure&nbsp;1<span> (</span><span class='info'>Abstract Protocol Flow</span><span>)</span></a> describes the interaction
+          The abstract flow illustrated in <a class='info' href='#Figure-1'>Figure&nbsp;1<span> (</span><span class='info'>Abstract Protocol Flow</span><span>)</span></a> describes the interaction
           between the four roles and includes the following steps:
         
 </p>
@@ -656,7 +660,7 @@ Refresh Token</h3>
           scope.
         
 </p><br /><hr class="insert" />
-<a name="Figure 2"></a>
+<a name="Figure-2"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +--------+            Authorization Grant &amp;          +---------------+
@@ -684,7 +688,7 @@ Refresh Token</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;2: Refreshing an Expired Access Token&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The flow illustrated in <a class='info' href='#Figure 2'>Figure&nbsp;2<span> (</span><span class='info'>Refreshing an Expired Access Token</span><span>)</span></a> includes the following steps:
+          The flow illustrated in <a class='info' href='#Figure-2'>Figure&nbsp;2<span> (</span><span class='info'>Refreshing an Expired Access Token</span><span>)</span></a> includes the following steps:
         
 </p>
 <p>
@@ -886,10 +890,10 @@ Authorization Endpoint</h3>
 <p>
           The REQUIRED <tt>response_type</tt> request parameter is used to
           identify which grant type the client is requesting: authorization code or implicit,
-          described in <a class='info' href='#code_authz_req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a> and <a class='info' href='#implicit_authz_req'>Section&nbsp;4.2.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>
+          described in <a class='info' href='#code-authz-req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a> and <a class='info' href='#implicit-authz-req'>Section&nbsp;4.2.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>
           respectively. If the request is missing the <tt>response_type</tt>
           parameter, the authorization server SHOULD return an error response as described in
-          <a class='info' href='#code_authz_error'>Section&nbsp;4.1.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>.
+          <a class='info' href='#code-authz-error'>Section&nbsp;4.1.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>.
         
 </p>
 <p>
@@ -901,7 +905,7 @@ Authorization Endpoint</h3>
           Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
         
 </p>
-<a name="redirect_uri"></a><br /><hr />
+<a name="redirect-uri"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.2.1.1"></a><h3>2.1.1.&nbsp;
 Redirection URI</h3>
@@ -1006,7 +1010,7 @@ Client Authentication</h3>
         about the confidentiality of client credentials without establishing trust with the
         client. The authorization server SHOULD NOT issue client credentials to clients incapable
         of keeping their credentials confidential (typically determined during the client
-        registertion process).
+        registration process).
       
 </p>
 <p>
@@ -1123,7 +1127,7 @@ Authorization Code</h3>
           authorization server.
         
 </p><br /><hr class="insert" />
-<a name="Figure 3"></a>
+<a name="Figure-3"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +----------+
@@ -1156,7 +1160,7 @@ Authorization Code</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;3: Authorization Code Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The flow illustrated in <a class='info' href='#Figure 3'>Figure&nbsp;3<span> (</span><span class='info'>Authorization Code Flow</span><span>)</span></a> includes the following steps:
+          The flow illustrated in <a class='info' href='#Figure-3'>Figure&nbsp;3<span> (</span><span class='info'>Authorization Code Flow</span><span>)</span></a> includes the following steps:
         
 </p>
 <p>
@@ -1202,7 +1206,7 @@ Authorization Code</h3>
 </dl></blockquote><p>
         
 </p>
-<a name="code_authz_req"></a><br /><hr />
+<a name="code-authz-req"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.1"></a><h3>4.1.1.&nbsp;
 Authorization Request</h3>
@@ -1211,7 +1215,7 @@ Authorization Request</h3>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
             <tt>application/x-www-form-urlencoded</tt> format as defined by
-            <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Jacobs, I., and D. Raggett, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+            <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
           
 </p>
 <p>
@@ -1234,7 +1238,7 @@ Authorization Request</h3>
 <dd>
                 
                 REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <a class='info' href='#redirect_uri'>Section&nbsp;2.1.1<span> (</span><span class='info'>Redirection URI</span><span>)</span></a>.
+                authorization server via other means. Described in <a class='info' href='#redirect-uri'>Section&nbsp;2.1.1<span> (</span><span class='info'>Redirection URI</span><span>)</span></a>.
               
 </dd>
 <dt>scope</dt>
@@ -1339,7 +1343,7 @@ Authorization Response</h3>
             of any value it issues.
           
 </p>
-<a name="code_authz_error"></a><br /><hr />
+<a name="code-authz-error"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.1.2.1"></a><h3>4.1.2.1.&nbsp;
 Error Response</h3>
@@ -1399,6 +1403,18 @@ Error Response</h3>
 <dd>
                       
                       The requested scope is invalid, unknown, or malformed.
+                    
+</dd>
+<dt>a 4xx or 5xx HTTP status code (except for 400 and 401)</dt>
+<dd>
+                      
+                      [[ Pending Consensus ]]
+                      The authorization server MAY set the <tt>error</tt>
+                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
+                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
+                      For example, if the service is temporarily unavailable, the authorization
+                      server MAY return an error response with <tt>error</tt>
+                      set to <tt>503</tt>.
                     
 </dd>
 </dl></blockquote>
@@ -1580,7 +1596,7 @@ Implicit Grant</h3>
           exposed to the resource owner and other applications residing on its computer or device.
         
 </p><br /><hr class="insert" />
-<a name="Figure 4"></a>
+<a name="Figure-4"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +----------+
@@ -1619,7 +1635,7 @@ Implicit Grant</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;4: Implicit Grant Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The flow illustrated in <a class='info' href='#Figure 4'>Figure&nbsp;4<span> (</span><span class='info'>Implicit Grant Flow</span><span>)</span></a> includes the following steps:
+          The flow illustrated in <a class='info' href='#Figure-4'>Figure&nbsp;4<span> (</span><span class='info'>Implicit Grant Flow</span><span>)</span></a> includes the following steps:
         
 </p>
 <p>
@@ -1670,7 +1686,7 @@ Implicit Grant</h3>
 </dl></blockquote><p>
         
 </p>
-<a name="implicit_authz_req"></a><br /><hr />
+<a name="implicit-authz-req"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.1"></a><h3>4.2.1.&nbsp;
 Authorization Request</h3>
@@ -1701,7 +1717,7 @@ Authorization Request</h3>
 <dd>
                 
                 REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <a class='info' href='#redirect_uri'>Section&nbsp;2.1.1<span> (</span><span class='info'>Redirection URI</span><span>)</span></a>.
+                authorization server via other means. Described in <a class='info' href='#redirect-uri'>Section&nbsp;2.1.1<span> (</span><span class='info'>Redirection URI</span><span>)</span></a>.
               
 </dd>
 <dt>scope</dt>
@@ -1828,7 +1844,7 @@ Access Token Response</h3>
             issues.
           
 </p>
-<a name="anchor26"></a><br /><hr />
+<a name="implicit-authz-error"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.2.2.1"></a><h3>4.2.2.1.&nbsp;
 Error Response</h3>
@@ -1890,6 +1906,18 @@ Error Response</h3>
                       The requested scope is invalid, unknown, or malformed.
                     
 </dd>
+<dt>a 4xx or 5xx HTTP status code (except for 400 and 401)</dt>
+<dd>
+                      
+                      [[ Pending Consensus ]]
+                      The authorization server MAY set the <tt>error</tt>
+                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
+                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
+                      For example, if the service is temporarily unavailable, the authorization
+                      server MAY return an error response with <tt>error</tt>
+                      set to <tt>503</tt>.
+                    
+</dd>
 </dl></blockquote>
                 
 </dd>
@@ -1928,7 +1956,7 @@ Error Response</h3>
   Location: https://client.example.com/cb#error=access_denied
 
 </pre></div>
-<a name="anchor27"></a><br /><hr />
+<a name="anchor26"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
 Resource Owner Password Credentials</h3>
@@ -1947,7 +1975,7 @@ Resource Owner Password Credentials</h3>
           authentication to OAuth by converting the stored credentials with an access token.
         
 </p><br /><hr class="insert" />
-<a name="Figure 5"></a>
+<a name="Figure-5"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +----------+
@@ -1972,7 +2000,7 @@ Resource Owner Password Credentials</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;5: Resource Owner Password Credentials Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The flow illustrated in <a class='info' href='#Figure 5'>Figure&nbsp;5<span> (</span><span class='info'>Resource Owner Password Credentials Flow</span><span>)</span></a> includes the following steps:
+          The flow illustrated in <a class='info' href='#Figure-5'>Figure&nbsp;5<span> (</span><span class='info'>Resource Owner Password Credentials Flow</span><span>)</span></a> includes the following steps:
         
 </p>
 <p>
@@ -1999,7 +2027,7 @@ Resource Owner Password Credentials</h3>
 </dl></blockquote><p>
         
 </p>
-<a name="anchor28"></a><br /><hr />
+<a name="anchor27"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.1"></a><h3>4.3.1.&nbsp;
 Authorization Request and Response</h3>
@@ -2010,7 +2038,7 @@ Authorization Request and Response</h3>
             token has been obtained.
           
 </p>
-<a name="anchor29"></a><br /><hr />
+<a name="anchor28"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.2"></a><h3>4.3.2.&nbsp;
 Access Token Request</h3>
@@ -2093,7 +2121,7 @@ Access Token Request</h3>
 </ul><p>
           
 </p>
-<a name="anchor30"></a><br /><hr />
+<a name="anchor29"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.3.3"></a><h3>4.3.3.&nbsp;
 Access Token Response</h3>
@@ -2123,7 +2151,7 @@ Access Token Response</h3>
   }
 
 </pre></div>
-<a name="anchor31"></a><br /><hr />
+<a name="anchor30"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
 Client Credentials</h3>
@@ -2135,7 +2163,7 @@ Client Credentials</h3>
           method of which is beyond the scope of this specification).
         
 </p><br /><hr class="insert" />
-<a name="Figure 6"></a>
+<a name="Figure-6"></a>
 <div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
 
   +---------+                                  +---------------+
@@ -2149,7 +2177,7 @@ Client Credentials</h3>
 </pre></div><table border="0" cellpadding="0" cellspacing="2" align="center"><tr><td align="center"><font face="monaco, MS Sans Serif" size="1"><b>&nbsp;Figure&nbsp;6: Client Credentials Flow&nbsp;</b></font><br /></td></tr></table><hr class="insert" />
 
 <p>
-          The flow illustrated in <a class='info' href='#Figure 6'>Figure&nbsp;6<span> (</span><span class='info'>Client Credentials Flow</span><span>)</span></a> includes the following steps:
+          The flow illustrated in <a class='info' href='#Figure-6'>Figure&nbsp;6<span> (</span><span class='info'>Client Credentials Flow</span><span>)</span></a> includes the following steps:
         
 </p>
 <p>
@@ -2169,7 +2197,7 @@ Client Credentials</h3>
 </dl></blockquote><p>
         
 </p>
-<a name="anchor32"></a><br /><hr />
+<a name="anchor31"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4.1"></a><h3>4.4.1.&nbsp;
 Authorization Request and Response</h3>
@@ -2180,7 +2208,7 @@ Authorization Request and Response</h3>
             client credentials.
           
 </p>
-<a name="anchor33"></a><br /><hr />
+<a name="anchor32"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4.2"></a><h3>4.4.2.&nbsp;
 Access Token Request</h3>
@@ -2237,7 +2265,7 @@ Access Token Request</h3>
             The authorization server MUST validate the client credentials.
           
 </p>
-<a name="anchor34"></a><br /><hr />
+<a name="anchor33"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4.3"></a><h3>4.4.3.&nbsp;
 Access Token Response</h3>
@@ -2267,7 +2295,7 @@ Access Token Response</h3>
   }
 
 </pre></div>
-<a name="anchor35"></a><br /><hr />
+<a name="anchor34"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.5"></a><h3>4.5.&nbsp;
 Extensions</h3>
@@ -2469,8 +2497,8 @@ Error Response</h3>
 <dt>invalid_scope</dt>
 <dd>
                   
-                  The requested scope is invalid, unknown, malformed, or exceeds the previously
-                  granted scope.
+                  The requested scope is invalid, unknown, malformed, or exceeds the scope granted
+                  by the resource owner.
                 
 </dd>
 </dl></blockquote>
@@ -2516,6 +2544,28 @@ Error Response</h3>
   }
 
 </pre></div>
+<p>
+          [[ Pending Consensus ]]
+          If the authorization server encounters an error condition other than the 400 (Bad
+          Request) and 401 (Unauthorized) responses described above (e.g. the service is
+          temporarily unavailable), the authorization server SHOULD include an error response in
+          the entity body, and set the <tt>error</tt> parameter value to the
+          numerical HTTP status code returned.
+        
+</p>
+<p>
+            For example:
+          
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  HTTP/1.1 503 Service Unavailable
+  Content-Type: application/json
+
+  {
+    "error":"503"
+  }
+
+</pre></div>
 <a name="token-refresh"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.6"></a><h3>6.&nbsp;
@@ -2550,7 +2600,8 @@ Refreshing an Access Token</h3>
             value contains multiple space-delimited strings, their order does not matter, and
             each string adds an additional access range to the requested scope. The requested
             scope MUST be equal or lesser than the scope originally granted by the resource
-            owner, and if omitted is treated as equal to the previously approved scope.
+            owner, and if omitted is treated as equal to the scope originally granted by the
+            resource owner.
           
 </dd>
 </dl></blockquote><p>
@@ -2660,7 +2711,7 @@ Access Token Types</h3>
           making a protected resource request.
         
 </p>
-<a name="anchor36"></a><br /><hr />
+<a name="extensions"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8"></a><h3>8.&nbsp;
 Extensibility</h3>
@@ -2693,7 +2744,7 @@ Defining Access Token Types</h3>
   name-char   = "-" / "." / "_" / DIGIT / ALPHA
 
 </pre></div>
-<a name="anchor37"></a><br /><hr />
+<a name="anchor35"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.2"></a><h3>8.2.&nbsp;
 Defining New Endpoint Parameters</h3>
@@ -2705,8 +2756,7 @@ Defining New Endpoint Parameters</h3>
         
 </p>
 <p>
-          Parameter names MUST conform to the param-name ABNF, MUST NOT use the
-          <tt>x_</tt> parameter name prefix, and parameter values syntax MUST be
+          Parameter names MUST conform to the param-name ABNF and parameter values syntax MUST be
           well-defined (e.g., using ABNF, or a reference to the syntax of an existing parameter).
         
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -2716,13 +2766,13 @@ Defining New Endpoint Parameters</h3>
 
 </pre></div>
 <p>
-          Vendor-specific parameter extensions that are not commonly applicable, and are specific
-          to the implementation details of the authorization server where they are used SHOULD
-          utilize the <tt>x_</tt> parameter name prefix if they are not
-          registered.
+          Unregistered vendor-specific parameter extensions that are not commonly applicable, and
+          are specific to the implementation details of the authorization server where they are
+          used SHOULD utilize a vendor-specific prefix that is not likely to conflict with other
+          registered values (e.g. begin with 'companyname_').
         
 </p>
-<a name="anchor38"></a><br /><hr />
+<a name="anchor36"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.8.3"></a><h3>8.3.&nbsp;
 Defining New Authorization Grant Types</h3>
@@ -2734,7 +2784,42 @@ Defining New Authorization Grant Types</h3>
           parameters registry as described by <a class='info' href='#parameters-registry'>Section&nbsp;10.2<span> (</span><span class='info'>The OAuth Parameters Registry</span><span>)</span></a>.
         
 </p>
-<a name="anchor39"></a><br /><hr />
+<a name="new-errors"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8.4"></a><h3>8.4.&nbsp;
+Defining Additional Error Codes</h3>
+
+<p>
+          [[ Pending Consensus ]]
+        
+</p>
+<p>
+          In cases where protocol extensions (i.e. access token types, extension parameters, or
+          extension grant types) require additional error codes to be used with the authorization
+          code grant error response (<a class='info' href='#code-authz-error'>Section&nbsp;4.1.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>), the implicit grant error
+          response (<a class='info' href='#implicit-authz-error'>Section&nbsp;4.2.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>), or the token error response
+          (<a class='info' href='#token-errors'>Section&nbsp;5.2<span> (</span><span class='info'>Error Response</span><span>)</span></a>), such error codes MAY be defined.
+        
+</p>
+<p>
+          Extension error codes MUST be registered (following the procedures in
+          <a class='info' href='#error-registry'>Section&nbsp;10.3<span> (</span><span class='info'>The OAuth Extensions Error Registry</span><span>)</span></a>) if the extension they are used in conjunction with is
+          registered. Additional error codes used with unregistered extensions MAY be registered.
+        
+</p>
+<p>
+          Error codes MUST conform to the error-code ABNF, and SHOULD be prefixed by an identifying
+          name when possible. For example, an error identifying an invalid value set to the
+          extension parameter <tt>example</tt> should be named
+          <tt>example_invalid</tt>.
+        
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+
+  error-code   = ALPHA *error-char
+  error-char   = "-" / "." / "_" / DIGIT / ALPHA
+
+</pre></div>
+<a name="anchor37"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.9"></a><h3>9.&nbsp;
 Security Considerations</h3>
@@ -2743,7 +2828,7 @@ Security Considerations</h3>
         [[ TBD ]]
       
 </p>
-<a name="anchor40"></a><br /><hr />
+<a name="anchor38"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10"></a><h3>10.&nbsp;
 IANA Considerations</h3>
@@ -2792,7 +2877,7 @@ The OAuth Access Token Type Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor41"></a><br /><hr />
+<a name="anchor39"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10.1.1"></a><h3>10.1.1.&nbsp;
 Registration Template</h3>
@@ -2887,7 +2972,7 @@ The OAuth Parameters Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor42"></a><br /><hr />
+<a name="anchor40"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10.2.1"></a><h3>10.2.1.&nbsp;
 Registration Template</h3>
@@ -2927,7 +3012,7 @@ Registration Template</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor43"></a><br /><hr />
+<a name="anchor41"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10.2.2"></a><h3>10.2.2.&nbsp;
 Initial Registry Contents</h3>
@@ -3289,51 +3374,190 @@ Initial Registry Contents</h3>
 </ul><p>
           
 </p>
-<a name="anchor44"></a><br /><hr />
+<a name="error-registry"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
-Contributors</h3>
+<a name="rfc.section.10.3"></a><h3>10.3.&nbsp;
+The OAuth Extensions Error Registry</h3>
 
 <p>
-        The following people contributed to preliminary versions of this document:
-        Blaine Cook (BT), Brian Eaton (Google), Yaron Goland (Microsoft), Brent Goldman (Facebook),
-        Raffi Krikorian (Twitter), Luke Shepard (Facebook), and Allen Tom (Yahoo!). The content and
-        concepts within are a product of the OAuth community, WRAP community, and the OAuth Working
-        Group.
-      
+          [[ Pending Consensus ]]
+        
 </p>
 <p>
-        The OAuth Working Group has dozens of very active contributors who proposed ideas and
-        wording for this document, including:
-      
+          This specification establishes the OAuth extensions error registry.
+        
 </p>
 <p>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Brian Campbell, Leah Culver, Bill de hÓra,
-        Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
-        Kristoffer Gronowski, Justin Hart, Craig Heath, Phil Hunt, Michael B. Jones, John Kemp,
-        Mark Kent, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen,
-        Alastair Mair, Eve Maler, James Manger, Laurence Miao, Chuck Mortimore, Justin Richer,
-        Peter Saint-Andre, Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Justin Smith,
-        Jeremy Suriel, Christian Stübner, Paul Tarjan, Franklin Tse, Nick Walker, Skylar Woodward.
-      
+          Additional error codes used together with other protocol extensions (i.e. extension grant
+          types, access token types, or extension parameters) are registered on the advice of one
+          or more Designated Experts (appointed by the IESG or their delegate), with a
+          Specification Required (using terminology from <a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>). However, to
+          allow for the allocation of values prior to publication, the Designated Expert(s) may
+          approve registration once they are satisfied that such a specification will be published.
+        
 </p>
-<a name="anchor45"></a><br /><hr />
+<p>
+          Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
+          comment, with an appropriate subject (e.g., "Request for error code: example").
+          [[ Note to RFC-EDITOR: The name of the mailing list should be determined in consultation
+          with the IESG and IANA. Suggested name: oauth-ext-review. ]]
+        
+</p>
+<p>
+          Within at most 14 days of the request, the Designated Expert(s) will either approve or
+          deny the registration request, communicating this decision to the review list and IANA.
+          Denials should include an explanation and, if applicable, suggestions as to how to make
+          the request successful.
+        
+</p>
+<p>
+          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Application Area Directors (contactable using app-ads@tools.ietf.org email address or
+          directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
+          appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
+          mailing list).
+        
+</p>
+<p>
+          IANA should only accept registry updates from the Designated Expert(s), and should direct
+          all requests for registration to the review mailing list.
+        
+</p>
+<a name="anchor42"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
+<a name="rfc.section.10.3.1"></a><h3>10.3.1.&nbsp;
+Registration Template</h3>
+
+<p>
+            </p>
+<blockquote class="text"><dl>
+<dt>Error name:</dt>
+<dd>
+                
+                The name requested (e.g., "example").
+              
+</dd>
+<dt>Error usage location:</dt>
+<dd>
+                
+                The location(s) where the error can be used. The possible locations are:
+                authorization code grant error response (<a class='info' href='#code-authz-error'>Section&nbsp;4.1.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>),
+                implicit grant error response (<a class='info' href='#implicit-authz-error'>Section&nbsp;4.2.2.1<span> (</span><span class='info'>Error Response</span><span>)</span></a>), or token
+                error response (<a class='info' href='#token-errors'>Section&nbsp;5.2<span> (</span><span class='info'>Error Response</span><span>)</span></a>).
+              
+</dd>
+<dt>Related protocol extension:</dt>
+<dd>
+                
+                The name of the extension grant type, access token type, or extension parameter,
+                the error code is used in conjunction with.
+              
+</dd>
+<dt>Change controller:</dt>
+<dd>
+                
+                For standards-track RFCs, state "IETF". For others, give the name of the
+                responsible party. Other details (e.g., postal address, e-mail address, home page
+                URI) may also be included.
+              
+</dd>
+<dt>Specification document(s):</dt>
+<dd>
+                
+                Reference to document that specifies the error code, preferably including a URI
+                that can be used to retrieve a copy of the document. An indication of the relevant
+                sections may also be included, but is not required.
+              
+</dd>
+</dl></blockquote><p>
+          
+</p>
+<a name="anchor43"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.11"></a><h3>11.&nbsp;
 Acknowledgements</h3>
 
 <p>
-        [[ Add OAuth 1.0a authors + WG contributors ]]
+        This specification is the work of the OAuth Working Group which includes dozens of active
+        and dedicated participants. In particular, the following individuals contributed ideas,
+        feedback, and wording which shaped and formed the final specification:
+      
+</p>
+<p>
+        Michael Adams, Andrew Arnott, Dirk Balfanz, Blaine Cook, Brian Campbell, Leah Culver,
+        Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman,
+        Evan Gilbert, Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart, Craig Heath,
+        Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara,
+        Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen, Alastair Mair, Eve Maler,
+        James Manger, Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre,
+        Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Luke Shepard, Justin Smith,
+        Jeremy Suriel, Christian Stübner, Paul Tarjan, Allen Tom, Franklin Tse, Nick Walker,
+        Skylar Woodward.
+      
+</p>
+<p>
+        The initial OAuth 2.0 protocol specification was edited by David Recordon, based on two
+        previous publications: the OAuth 1.0 community specification <a class='info' href='#RFC5849'>[RFC5849]<span> (</span><span class='info'>Hammer-Lahav, E., &ldquo;The OAuth 1.0 Protocol,&rdquo; April&nbsp;2010.</span><span>)</span></a>, and
+        OAuth WRAP (OAuth Web Resource Authorization Profiles)
+        <a class='info' href='#I-D.draft-hardt-oauth-01'>[I&#8209;D.draft&#8209;hardt&#8209;oauth&#8209;01]<span> (</span><span class='info'>Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, &ldquo;OAuth Web Resource Authorization Profiles,&rdquo; January&nbsp;2010.</span><span>)</span></a>.
+      
+</p>
+<p>
+        The OAuth 1.0 community specification was edited by Eran Hammer-Lahav and authored by
+        Mark Atwood, Dirk Balfanz, Darren Bounds, Richard M. Conlan, Blaine Cook, Leah Culver,
+        Breno de Medeiros, Brian Eaton, Kellan Elliott-McCrea, Larry Halff, Eran Hammer-Lahav,
+        Ben Laurie, Chris Messina, John Panzer, Sam Quigley, David Recordon, Eran Sandler,
+        Jonathan Sergent, Todd Sieling, Brian Slesinsky, and Andy Smith.
+      
+</p>
+<p>
+        The OAuth WRAP specification was edited by Dick Hardt and authored by Brian Eaton,
+        Yaron Goland, Dick Hardt, and Allen Tom.
+      
+</p>
+<a name="anchor44"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
+Editor's Notes</h3>
+
+<p>
+        While many people contributed to this specification throughout its long journey, the editor
+        would like to acknowledge and thank a few individuals for their outstanding and invaluable
+        efforts leading up to the publication of this specification. It is these individuals without
+        whom this work would not have existed, or reached its successful conclusion.
+      
+</p>
+<p>
+        David Recordon for continuously being one of OAuth’s most valuable assets, bringing
+        pragmatism and urgency to the work, and helping shape it from its very beginning, as well
+        as being one of the best collaborators I had the pleasure of working with.
+      
+</p>
+<p>
+        Mark Nottingham for introducing OAuth to the IETF and setting the community on this course.
+        Lisa Dusseault for her support and guidance as the Application area director. Blaine Cook,
+        Peter Saint-Andre, and Hannes Tschofenig for their work as working group chairs.
+      
+</p>
+<p>
+        James Manger for his creative ideas and always insightful feedback. Brian Campbell,
+        Torsten Lodderstedt, Chuck Mortimore, Justin Richer, Marius Scurtescu, and Luke Shepard for
+        their continued participation and valuable feedback.
+      
+</p>
+<p>
+        Special thanks goes to Mike Curtis and Yahoo! for their unconditional support of this work
+        for over three years.
       
 </p>
 <a name="rfc.references"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.11"></a><h3>11.&nbsp;
+<a name="rfc.section.12"></a><h3>12.&nbsp;
 References</h3>
 
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>11.1.&nbsp;Normative References</h3>
+<h3>12.1.&nbsp;Normative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="RFC2119">[RFC2119]</a></td>
 <td class="author-text"><a href="mailto:sob@harvard.edu">Bradner, S.</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>,&rdquo; BCP&nbsp;14, RFC&nbsp;2119, March&nbsp;1997 (<a href="http://www.rfc-editor.org/rfc/rfc2119.txt">TXT</a>, <a href="http://xml.resource.org/public/rfc/html/rfc2119.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc2119.xml">XML</a>).</td></tr>
@@ -3352,22 +3576,26 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC5246">[RFC5246]</a></td>
 <td class="author-text">Dierks, T. and E. Rescorla, &ldquo;<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>,&rdquo; RFC&nbsp;5246, August&nbsp;2008 (<a href="http://www.rfc-editor.org/rfc/rfc5246.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html401-19991224">[W3C.REC-html401-19991224]</a></td>
-<td class="author-text">Hors, A., Jacobs, I., and D. Raggett, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
+<td class="author-text">Raggett, D., Hors, A., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>11.2.&nbsp;Informative References</h3>
+<h3>12.2.&nbsp;Informative References</h3>
 <table width="99%" border="0">
+<tr><td class="author-text" valign="top"><a name="I-D.draft-hardt-oauth-01">[I-D.draft-hardt-oauth-01]</a></td>
+<td class="author-text">Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-hardt-oauth-01.txt">OAuth Web Resource Authorization Profiles</a>,&rdquo; January&nbsp;2010.</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.hammer-oauth-v2-mac-token">[I-D.hammer-oauth-v2-mac-token]</a></td>
-<td class="author-text">Hammer-Lahav, E., &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-hammer-oauth-v2-mac-token-02.txt">HTTP Authentication: MAC Authentication</a>,&rdquo; draft-hammer-oauth-v2-mac-token-02 (work in progress), January&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-hammer-oauth-v2-mac-token-02.txt">TXT</a>).</td></tr>
+<td class="author-text">Hammer-Lahav, E., &ldquo;<a href="http://tools.ietf.org/html/draft-hammer-oauth-v2-mac-token-02">HTTP Authentication: MAC Authentication</a>,&rdquo; draft-hammer-oauth-v2-mac-token-02 (work in progress), January&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-hammer-oauth-v2-mac-token-02.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-saml2-bearer">[I-D.ietf-oauth-saml2-bearer]</a></td>
-<td class="author-text">Campbell, B. and C. Mortimore, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-03.txt">SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-03 (work in progress), February&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-03.txt">TXT</a>).</td></tr>
+<td class="author-text">Campbell, B. and C. Mortimore, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-03">SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-03 (work in progress), February&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-03.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</a></td>
-<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-02.txt">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-02 (work in progress), January&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-02.txt">TXT</a>).</td></tr>
+<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-02">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-02 (work in progress), January&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-02.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="OASIS.saml-core-2.0-os">[OASIS.saml-core-2.0-os]</a></td>
 <td class="author-text"><a href="mailto:cantor.2@osu.edu">Cantor, S.</a>, <a href="mailto:John.Kemp@nokia.com">Kemp, J.</a>, <a href="mailto:rphilpott@rsasecurity.com">Philpott, R.</a>, and <a href="mailto:eve.maler@sun.com">E. Maler</a>, &ldquo;<a href="http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf">Assertions and Protocol for the OASIS Security Assertion Markup Language
             (SAML) V2.0</a>,&rdquo; OASIS Standard&nbsp;saml-core-2.0-os, March&nbsp;2005.</td></tr>
+<tr><td class="author-text" valign="top"><a name="RFC5849">[RFC5849]</a></td>
+<td class="author-text">Hammer-Lahav, E., &ldquo;<a href="http://tools.ietf.org/html/rfc5849">The OAuth 1.0 Protocol</a>,&rdquo; RFC&nbsp;5849, April&nbsp;2010 (<a href="http://www.rfc-editor.org/rfc/rfc5849.txt">TXT</a>).</td></tr>
 </table>
 
 <a name="rfc.authors"></a><br /><hr />

@@ -148,7 +148,7 @@
           scope of this specification, but typically involve registration with the authorization
           server.
         </t>
-        <figure title='Abstract Protocol Flow' anchor='Figure 1'>
+        <figure title='Abstract Protocol Flow' anchor='Figure-1'>
           <artwork>
             <![CDATA[
   +--------+                               +---------------+
@@ -172,7 +172,7 @@
           </artwork>
         </figure>
         <t>
-          The abstract flow illustrated in <xref target='Figure 1' /> describes the interaction
+          The abstract flow illustrated in <xref target='Figure-1' /> describes the interaction
           between the four roles and includes the following steps:
         </t>
         <t>
@@ -347,7 +347,7 @@
           owner), no longer valid, or to obtain additional access tokens with identical or narrower
           scope.
         </t>
-        <figure title='Refreshing an Expired Access Token' anchor='Figure 2'>
+        <figure title='Refreshing an Expired Access Token' anchor='Figure-2'>
           <artwork>
             <![CDATA[
   +--------+            Authorization Grant &          +---------------+
@@ -375,7 +375,7 @@
           </artwork>
         </figure>
         <t>
-          The flow illustrated in <xref target='Figure 2' /> includes the following steps:
+          The flow illustrated in <xref target='Figure-2' /> includes the following steps:
         </t>
         <t>
           <list style='format (%C)'>
@@ -526,10 +526,10 @@
         <t>
           The REQUIRED <spanx style='verb'>response_type</spanx> request parameter is used to
           identify which grant type the client is requesting: authorization code or implicit,
-          described in <xref target='code_authz_req' /> and <xref target='implicit_authz_req' />
+          described in <xref target='code-authz-req' /> and <xref target='implicit-authz-req' />
           respectively. If the request is missing the <spanx style='verb'>response_type</spanx>
           parameter, the authorization server SHOULD return an error response as described in
-          <xref target='code_authz_error' />.
+          <xref target='code-authz-error' />.
         </t>
         <t>
           Parameters sent without a value MUST be treated as if they were omitted from the
@@ -539,7 +539,7 @@
           Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
         </t>
 
-        <section title='Redirection URI' anchor='redirect_uri'>
+        <section title='Redirection URI' anchor='redirect-uri'>
           <t>
             The client directs the resource owner's user-agent to the authorization endpoint and
             includes a redirection URI to which the authorization server will redirect the
@@ -627,7 +627,7 @@
         about the confidentiality of client credentials without establishing trust with the
         client. The authorization server SHOULD NOT issue client credentials to clients incapable
         of keeping their credentials confidential (typically determined during the client
-        registertion process).
+        registration process).
       </t>
       <t>
         In addition, the authorization server MAY allow unauthenticated access token requests
@@ -727,7 +727,7 @@
           browser) and capable of receiving incoming requests (via redirection) from the
           authorization server.
         </t>
-        <figure title='Authorization Code Flow' anchor='Figure 3'>
+        <figure title='Authorization Code Flow' anchor='Figure-3'>
           <artwork>
             <![CDATA[
   +----------+
@@ -760,7 +760,7 @@
           </artwork>
         </figure>
         <t>
-          The flow illustrated in <xref target='Figure 3' /> includes the following steps:
+          The flow illustrated in <xref target='Figure-3' /> includes the following steps:
         </t>
         <t>
           <list style='format (%C)'>
@@ -794,7 +794,7 @@
           </list>
         </t>
 
-        <section title='Authorization Request' anchor='code_authz_req'>
+        <section title='Authorization Request' anchor='code-authz-req'>
           <t>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
@@ -815,7 +815,7 @@
               <t hangText='redirect_uri'>
                 <vspace />
                 REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <xref target='redirect_uri' />.
+                authorization server via other means. Described in <xref target='redirect-uri' />.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -906,7 +906,7 @@
             of any value it issues.
           </t>
 
-          <section title='Error Response' anchor='code_authz_error'>
+          <section title='Error Response' anchor='code-authz-error'>
             <t>
               If the request fails due to a missing, invalid, or mismatching redirection URI, or if
               the client identifier provided is invalid, the authorization server SHOULD inform the
@@ -948,6 +948,16 @@
                     <t hangText='invalid_scope'>
                       <vspace />
                       The requested scope is invalid, unknown, or malformed.
+                    </t>
+                    <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
+                      <vspace />
+                      [[ Pending Consensus ]]
+                      The authorization server MAY set the <spanx style='verb'>error</spanx>
+                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
+                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
+                      For example, if the service is temporarily unavailable, the authorization
+                      server MAY return an error response with <spanx style='verb'>error</spanx>
+                      set to <spanx style='verb'>503</spanx>.
                     </t>
                   </list>
                 </t>
@@ -1104,7 +1114,7 @@
           exploitable). Because the access token is encoded into the redirection URI, it may be
           exposed to the resource owner and other applications residing on its computer or device.
         </t>
-        <figure title='Implicit Grant Flow' anchor='Figure 4'>
+        <figure title='Implicit Grant Flow' anchor='Figure-4'>
           <artwork>
             <![CDATA[
   +----------+
@@ -1143,7 +1153,7 @@
           </artwork>
         </figure>
         <t>
-          The flow illustrated in <xref target='Figure 4' /> includes the following steps:
+          The flow illustrated in <xref target='Figure-4' /> includes the following steps:
         </t>
         <t>
           <list style='format (%C)'>
@@ -1180,7 +1190,7 @@
           </list>
         </t>
 
-        <section title='Authorization Request' anchor='implicit_authz_req'>
+        <section title='Authorization Request' anchor='implicit-authz-req'>
           <t>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
@@ -1200,7 +1210,7 @@
               <t hangText='redirect_uri'>
                 <vspace />
                 REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <xref target='redirect_uri' />.
+                authorization server via other means. Described in <xref target='redirect-uri' />.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -1307,7 +1317,7 @@
             issues.
           </t>
 
-          <section title='Error Response'>
+          <section title='Error Response' anchor='implicit-authz-error'>
             <t>
               If the request fails due to a missing, invalid, or mismatching redirection URI, or if
               the client identifier provided is invalid, the authorization server SHOULD inform the
@@ -1349,6 +1359,16 @@
                     <t hangText='invalid_scope'>
                       <vspace />
                       The requested scope is invalid, unknown, or malformed.
+                    </t>
+                    <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
+                      <vspace />
+                      [[ Pending Consensus ]]
+                      The authorization server MAY set the <spanx style='verb'>error</spanx>
+                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
+                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
+                      For example, if the service is temporarily unavailable, the authorization
+                      server MAY return an error response with <spanx style='verb'>error</spanx>
+                      set to <spanx style='verb'>503</spanx>.
                     </t>
                   </list>
                 </t>
@@ -1401,7 +1421,7 @@
           existing clients using direct authentication schemes such as HTTP Basic or Digest
           authentication to OAuth by converting the stored credentials with an access token.
         </t>
-        <figure title="Resource Owner Password Credentials Flow" anchor='Figure 5'>
+        <figure title="Resource Owner Password Credentials Flow" anchor='Figure-5'>
           <artwork>
             <![CDATA[
   +----------+
@@ -1426,7 +1446,7 @@
           </artwork>
         </figure>
         <t>
-          The flow illustrated in <xref target='Figure 5' /> includes the following steps:
+          The flow illustrated in <xref target='Figure-5' /> includes the following steps:
         </t>
         <t>
           <list style='format (%C)'>
@@ -1557,7 +1577,7 @@
           resource owner which has been previously arranged with the authorization server (the
           method of which is beyond the scope of this specification).
         </t>
-        <figure title="Client Credentials Flow" anchor='Figure 6'>
+        <figure title="Client Credentials Flow" anchor='Figure-6'>
           <artwork>
             <![CDATA[
   +---------+                                  +---------------+
@@ -1571,7 +1591,7 @@
           </artwork>
         </figure>
         <t>
-          The flow illustrated in <xref target='Figure 6' /> includes the following steps:
+          The flow illustrated in <xref target='Figure-6' /> includes the following steps:
         </t>
         <t>
           <list style='format (%C)'>
@@ -1836,8 +1856,8 @@
                 </t>
                 <t hangText='invalid_scope'>
                   <vspace />
-                  The requested scope is invalid, unknown, malformed, or exceeds the previously
-                  granted scope.
+                  The requested scope is invalid, unknown, malformed, or exceeds the scope granted
+                  by the resource owner.
                 </t>
               </list>
             </t>
@@ -1877,6 +1897,29 @@
 ]]>
           </artwork>
         </figure>
+        <t>
+          [[ Pending Consensus ]]
+          If the authorization server encounters an error condition other than the 400 (Bad
+          Request) and 401 (Unauthorized) responses described above (e.g. the service is
+          temporarily unavailable), the authorization server SHOULD include an error response in
+          the entity body, and set the <spanx style='verb'>error</spanx> parameter value to the
+          numerical HTTP status code returned.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
+          <artwork>
+            <![CDATA[
+  HTTP/1.1 503 Service Unavailable
+  Content-Type: application/json
+
+  {
+    "error":"503"
+  }
+]]>
+          </artwork>
+        </figure>
       </section>
 
     </section>
@@ -1904,7 +1947,8 @@
             value contains multiple space-delimited strings, their order does not matter, and
             each string adds an additional access range to the requested scope. The requested
             scope MUST be equal or lesser than the scope originally granted by the resource
-            owner, and if omitted is treated as equal to the previously approved scope.
+            owner, and if omitted is treated as equal to the scope originally granted by the
+            resource owner.
           </t>
         </list>
       </t>
@@ -2010,7 +2054,7 @@
       
     </section>
 
-    <section title='Extensibility'>
+    <section title='Extensibility' anchor='extensions'>
 
       <section title='Defining Access Token Types' anchor='new-types'>
         <t>
@@ -2045,8 +2089,7 @@
           <xref target='parameters-registry' />.
         </t>
         <t>
-          Parameter names MUST conform to the param-name ABNF, MUST NOT use the
-          <spanx style='verb'>x_</spanx> parameter name prefix, and parameter values syntax MUST be
+          Parameter names MUST conform to the param-name ABNF and parameter values syntax MUST be
           well-defined (e.g., using ABNF, or a reference to the syntax of an existing parameter).
         </t>
         <figure>
@@ -2058,10 +2101,10 @@
           </artwork>
         </figure>
         <t>
-          Vendor-specific parameter extensions that are not commonly applicable, and are specific
-          to the implementation details of the authorization server where they are used SHOULD
-          utilize the <spanx style='verb'>x_</spanx> parameter name prefix if they are not
-          registered.
+          Unregistered vendor-specific parameter extensions that are not commonly applicable, and
+          are specific to the implementation details of the authorization server where they are
+          used SHOULD utilize a vendor-specific prefix that is not likely to conflict with other
+          registered values (e.g. begin with 'companyname_').
         </t>
       </section>
 
@@ -2072,6 +2115,38 @@
           type requires additional token endpoint parameters, they MUST be registered in the OAuth
           parameters registry as described by <xref target='parameters-registry' />.
         </t>
+      </section>
+      
+      <section title='Defining Additional Error Codes' anchor='new-errors'>
+        <t>
+          [[ Pending Consensus ]]
+        </t>
+        <t>
+          In cases where protocol extensions (i.e. access token types, extension parameters, or
+          extension grant types) require additional error codes to be used with the authorization
+          code grant error response (<xref target='code-authz-error' />), the implicit grant error
+          response (<xref target='implicit-authz-error' />), or the token error response
+          (<xref target='token-errors' />), such error codes MAY be defined.
+        </t>
+        <t>
+          Extension error codes MUST be registered (following the procedures in
+          <xref target='error-registry' />) if the extension they are used in conjunction with is
+          registered. Additional error codes used with unregistered extensions MAY be registered.
+        </t>
+        <t>
+          Error codes MUST conform to the error-code ABNF, and SHOULD be prefixed by an identifying
+          name when possible. For example, an error identifying an invalid value set to the
+          extension parameter <spanx style='verb'>example</spanx> should be named
+          <spanx style='verb'>example_invalid</spanx>.
+        </t>
+        <figure>
+          <artwork>
+            <![CDATA[
+  error-code   = ALPHA *error-char
+  error-char   = "-" / "." / "_" / DIGIT / ALPHA
+]]>
+          </artwork>
+        </figure>
       </section>
 
     </section>
@@ -2485,10 +2560,86 @@
         </section>
 
       </section>
+      
+      <section title='The OAuth Extensions Error Registry' anchor='error-registry'>
+        <t>
+          [[ Pending Consensus ]]
+        </t>
+        <t>
+          This specification establishes the OAuth extensions error registry.
+        </t>
+        <t>
+          Additional error codes used together with other protocol extensions (i.e. extension grant
+          types, access token types, or extension parameters) are registered on the advice of one
+          or more Designated Experts (appointed by the IESG or their delegate), with a
+          Specification Required (using terminology from <xref target='RFC5226' />). However, to
+          allow for the allocation of values prior to publication, the Designated Expert(s) may
+          approve registration once they are satisfied that such a specification will be published.
+        </t>
+        <t>
+          Registration requests should be sent to the [TBD]@ietf.org mailing list for review and
+          comment, with an appropriate subject (e.g., "Request for error code: example").
+          [[ Note to RFC-EDITOR: The name of the mailing list should be determined in consultation
+          with the IESG and IANA. Suggested name: oauth-ext-review. ]]
+        </t>
+        <t>
+          Within at most 14 days of the request, the Designated Expert(s) will either approve or
+          deny the registration request, communicating this decision to the review list and IANA.
+          Denials should include an explanation and, if applicable, suggestions as to how to make
+          the request successful.
+        </t>
+        <t>
+          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Application Area Directors (contactable using app-ads@tools.ietf.org email address or
+          directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
+          appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
+          mailing list).
+        </t>
+        <t>
+          IANA should only accept registry updates from the Designated Expert(s), and should direct
+          all requests for registration to the review mailing list.
+        </t>
+
+        <section title='Registration Template'>
+          <t>
+            <list style='hanging'>
+              <t hangText='Error name:'>
+                <vspace />
+                The name requested (e.g., "example").
+              </t>
+              <t hangText='Error usage location:'>
+                <vspace />
+                The location(s) where the error can be used. The possible locations are:
+                authorization code grant error response (<xref target='code-authz-error' />),
+                implicit grant error response (<xref target='implicit-authz-error' />), or token
+                error response (<xref target='token-errors' />).
+              </t>
+              <t hangText='Related protocol extension:'>
+                <vspace />
+                The name of the extension grant type, access token type, or extension parameter,
+                the error code is used in conjunction with.
+              </t>
+              <t hangText='Change controller:'>
+                <vspace />
+                For standards-track RFCs, state "IETF". For others, give the name of the
+                responsible party. Other details (e.g., postal address, e-mail address, home page
+                URI) may also be included.
+              </t>
+              <t hangText='Specification document(s):'>
+                <vspace />
+                Reference to document that specifies the error code, preferably including a URI
+                that can be used to retrieve a copy of the document. An indication of the relevant
+                sections may also be included, but is not required.
+              </t>
+            </list>
+          </t>
+        </section>
+
+      </section>
 
     </section>
 
-    <section title='Contributors'>
+    <section title='Acknowledgements'>
       <t>
         This specification is the work of the OAuth Working Group which includes dozens of active
         and dedicated participants. In particular, the following individuals contributed ideas,
@@ -2524,7 +2675,7 @@
       </t>
     </section>
 
-    <appendix title='Acknowledgements'>
+    <appendix title="Editor's Notes">
       <t>
         While many people contributed to this specification throughout its long journey, the editor
         would like to acknowledge and thank a few individuals for their outstanding and invaluable
