@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-14'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-15'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='2' ?>
@@ -511,12 +511,12 @@
           parameters.
         </t>
         <t>
-          Requests to the authorization endpoint result in resource owner authentication and the
-          transmission of sensitive information. If the response includes an access token, the
-          authorization server MUST require TLS 1.2 as defined in <xref target='RFC5246' /> and MAY
-          support additional transport-layer mechanisms meeting its security requirements. If the
-          response does not include an access token, the authorization server SHOULD require TLS
-          1.2 and any additional transport-layer mechanism meeting its security requirements.
+          Since requests to the authorization endpoint result in user authentication and the
+          transmission of clear-text credentials (in the HTTP response), the authorization server
+          MUST require the use of a transport-layer security mechanism when sending requests to the
+          token endpoints. The authorization server MUST support TLS 1.2 as defined in
+          <xref target='RFC5246' />, and MAY support additional transport-layer mechanisms meeting
+          its security requirements.
         </t>
         <t>
           The authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>

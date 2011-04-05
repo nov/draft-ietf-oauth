@@ -149,7 +149,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">April 6, 2011</td></tr>
 </table></td></tr></table>
-<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-14</h1>
+<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-15</h1>
 
 <h3>Abstract</h3>
 
@@ -873,12 +873,12 @@ Authorization Endpoint</h3>
         
 </p>
 <p>
-          Requests to the authorization endpoint result in resource owner authentication and the
-          transmission of sensitive information. If the response includes an access token, the
-          authorization server MUST require TLS 1.2 as defined in <a class='info' href='#RFC5246'>[RFC5246]<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a> and MAY
-          support additional transport-layer mechanisms meeting its security requirements. If the
-          response does not include an access token, the authorization server SHOULD require TLS
-          1.2 and any additional transport-layer mechanism meeting its security requirements.
+          Since requests to the authorization endpoint result in user authentication and the
+          transmission of clear-text credentials (in the HTTP response), the authorization server
+          MUST require the use of a transport-layer security mechanism when sending requests to the
+          token endpoints. The authorization server MUST support TLS 1.2 as defined in
+          <a class='info' href='#RFC5246'>[RFC5246]<span> (</span><span class='info'>Dierks, T. and E. Rescorla, &ldquo;The Transport Layer Security (TLS) Protocol Version 1.2,&rdquo; August&nbsp;2008.</span><span>)</span></a>, and MAY support additional transport-layer mechanisms meeting
+          its security requirements.
         
 </p>
 <p>
