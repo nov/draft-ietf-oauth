@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-15'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-16'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='2' ?>
@@ -40,8 +40,8 @@
 
     <abstract>
       <t>
-        The OAuth 2.0 authorization protocol enables granting third-party applications limited
-        access to HTTP service on behalf of an end-user by orchestrating an approval interaction
+        The OAuth 2.0 authorization protocol enables a third-party application to obtain limited
+        access to an HTTP service on behalf of an end-user by orchestrating an approval interaction
         between the end-user and the HTTP service.
       </t>
     </abstract>
@@ -253,7 +253,7 @@
             The authorization code is obtained by using an authorization server as an intermediary
             between the client and resource owner. Instead of requesting authorization directly
             from the resource owner, the client directs the resource owner to an authorization
-            server (via its user-agent as defined in <xref target='RFC2616' />), which in turns
+            server (via its user-agent as defined in <xref target='RFC2616' />), which in turn
             directs the resource owner back to the client with the authorization code.
           </t>
           <t>
@@ -514,7 +514,7 @@
           Since requests to the authorization endpoint result in user authentication and the
           transmission of clear-text credentials (in the HTTP response), the authorization server
           MUST require the use of a transport-layer security mechanism when sending requests to the
-          token endpoints. The authorization server MUST support TLS 1.2 as defined in
+          authorization endpoint. The authorization server MUST support TLS 1.2 as defined in
           <xref target='RFC5246' />, and MAY support additional transport-layer mechanisms meeting
           its security requirements.
         </t>
@@ -583,7 +583,7 @@
         <t>
           Since requests to the token endpoint result in the transmission of clear-text credentials
           (in the HTTP request and response), the authorization server MUST require the use of a
-          transport-layer security mechanism when sending requests to the token endpoints. The
+          transport-layer security mechanism when sending requests to the token endpoint. The
           authorization server MUST support TLS 1.2 as defined in <xref target='RFC5246' />, and
           MAY support additional transport-layer mechanisms meeting its security requirements.
         </t>
@@ -2010,7 +2010,8 @@
         <t>
           The access token type provides the client with the information required to successfully
           utilize the access token to make a protected resource request (along with type-specific
-          attributes).
+          attributes). The client MUST NOT use an access token if it does not understand the token
+          type.
         </t>
         <figure>
           <preamble>
@@ -2022,7 +2023,7 @@
             <![CDATA[
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: Bearer h480djs93hd8
+  Authorization: Bearer 7Fjfp0ZBr1KtDRbnfVdmIw
 ]]>
           </artwork>
         </figure>
@@ -2131,7 +2132,8 @@
         <t>
           Extension error codes MUST be registered (following the procedures in
           <xref target='error-registry' />) if the extension they are used in conjunction with is
-          registered. Additional error codes used with unregistered extensions MAY be registered.
+          a registered access token type, a registered endpoint parameter, or an extension grant
+          type. Error codes used with unregistered extensions MAY be registered.
         </t>
         <t>
           Error codes MUST conform to the error-code ABNF, and SHOULD be prefixed by an identifying
