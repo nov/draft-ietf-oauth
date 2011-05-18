@@ -5,9 +5,9 @@ Network Working Group                               E. Hammer-Lahav, Ed.
 Internet-Draft                                                    Yahoo!
 Obsoletes: 5849 (if approved)                                D. Recordon
 Intended status: Standards Track                                Facebook
-Expires: November 19, 2011                                      D. Hardt
+Expires: November 20, 2011                                      D. Hardt
                                                                Microsoft
-                                                            May 18, 2011
+                                                            May 19, 2011
 
 
                   The OAuth 2.0 Authorization Protocol
@@ -36,7 +36,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 19, 2011.
+   This Internet-Draft will expire on November 20, 2011.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 1]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 1]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -65,67 +65,69 @@ Internet-Draft                  OAuth 2.0                       May 2011
 Table of Contents
 
    1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  4
-     1.1.  Roles  . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-     1.2.  Protocol Flow  . . . . . . . . . . . . . . . . . . . . . .  5
-     1.3.  Access Token . . . . . . . . . . . . . . . . . . . . . . .  6
-     1.4.  Authorization Grant  . . . . . . . . . . . . . . . . . . .  7
-     1.5.  Refresh Token  . . . . . . . . . . . . . . . . . . . . . .  9
-     1.6.  Document Structure . . . . . . . . . . . . . . . . . . . . 11
-     1.7.  Notational Conventions . . . . . . . . . . . . . . . . . . 11
+     1.1.   Roles . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+     1.2.   Protocol Flow . . . . . . . . . . . . . . . . . . . . . .  5
+     1.3.   Access Token  . . . . . . . . . . . . . . . . . . . . . .  6
+     1.4.   Authorization Grant . . . . . . . . . . . . . . . . . . .  7
+     1.5.   Refresh Token . . . . . . . . . . . . . . . . . . . . . .  9
+     1.6.   Document Structure  . . . . . . . . . . . . . . . . . . . 11
+     1.7.   Notational Conventions  . . . . . . . . . . . . . . . . . 11
    2.  Protocol Endpoints . . . . . . . . . . . . . . . . . . . . . . 11
-     2.1.  Authorization Endpoint . . . . . . . . . . . . . . . . . . 12
-     2.2.  Token Endpoint . . . . . . . . . . . . . . . . . . . . . . 13
+     2.1.   Authorization Endpoint  . . . . . . . . . . . . . . . . . 12
+     2.2.   Token Endpoint  . . . . . . . . . . . . . . . . . . . . . 13
    3.  Client Authentication  . . . . . . . . . . . . . . . . . . . . 14
-     3.1.  Client Password Authentication . . . . . . . . . . . . . . 15
-     3.2.  Other Client Authentication Methods  . . . . . . . . . . . 16
+     3.1.   Client Password Authentication  . . . . . . . . . . . . . 15
+     3.2.   Other Client Authentication Methods . . . . . . . . . . . 16
    4.  Obtaining Authorization  . . . . . . . . . . . . . . . . . . . 16
-     4.1.  Authorization Code . . . . . . . . . . . . . . . . . . . . 16
-     4.2.  Implicit Grant . . . . . . . . . . . . . . . . . . . . . . 22
-     4.3.  Resource Owner Password Credentials  . . . . . . . . . . . 28
-     4.4.  Client Credentials . . . . . . . . . . . . . . . . . . . . 30
-     4.5.  Extensions . . . . . . . . . . . . . . . . . . . . . . . . 32
+     4.1.   Authorization Code  . . . . . . . . . . . . . . . . . . . 16
+     4.2.   Implicit Grant  . . . . . . . . . . . . . . . . . . . . . 22
+     4.3.   Resource Owner Password Credentials . . . . . . . . . . . 28
+     4.4.   Client Credentials  . . . . . . . . . . . . . . . . . . . 30
+     4.5.   Extensions  . . . . . . . . . . . . . . . . . . . . . . . 32
    5.  Issuing an Access Token  . . . . . . . . . . . . . . . . . . . 33
-     5.1.  Successful Response  . . . . . . . . . . . . . . . . . . . 33
-     5.2.  Error Response . . . . . . . . . . . . . . . . . . . . . . 34
+     5.1.   Successful Response . . . . . . . . . . . . . . . . . . . 33
+     5.2.   Error Response  . . . . . . . . . . . . . . . . . . . . . 34
    6.  Refreshing an Access Token . . . . . . . . . . . . . . . . . . 36
    7.  Accessing Protected Resources  . . . . . . . . . . . . . . . . 37
-     7.1.  Access Token Types . . . . . . . . . . . . . . . . . . . . 38
+     7.1.   Access Token Types  . . . . . . . . . . . . . . . . . . . 38
    8.  Extensibility  . . . . . . . . . . . . . . . . . . . . . . . . 38
-     8.1.  Defining Access Token Types  . . . . . . . . . . . . . . . 38
-     8.2.  Defining New Endpoint Parameters . . . . . . . . . . . . . 39
-     8.3.  Defining New Authorization Grant Types . . . . . . . . . . 39
-     8.4.  Defining Additional Error Codes  . . . . . . . . . . . . . 39
-   9.  Security Considerations  . . . . . . . . . . . . . . . . . . . 40
-     9.1.  Client Authentication  . . . . . . . . . . . . . . . . . . 41
-     9.2.  Client Impersonation . . . . . . . . . . . . . . . . . . . 41
-     9.3.  Access Token Credentials . . . . . . . . . . . . . . . . . 42
-     9.4.  Refresh Tokens . . . . . . . . . . . . . . . . . . . . . . 42
-     9.5.  Request Confidentiality  . . . . . . . . . . . . . . . . . 43
-     9.6.  Endpoints Authenticity . . . . . . . . . . . . . . . . . . 43
-     9.7.  Credentials Guessing Attacks . . . . . . . . . . . . . . . 43
-     9.8.  Phishing Attacks . . . . . . . . . . . . . . . . . . . . . 43
-     9.9.  Authorization Codes  . . . . . . . . . . . . . . . . . . . 43
+     8.1.   Defining Access Token Types . . . . . . . . . . . . . . . 38
+     8.2.   Defining New Endpoint Parameters  . . . . . . . . . . . . 39
+     8.3.   Defining New Authorization Grant Types  . . . . . . . . . 39
+     8.4.   Defining Additional Error Codes . . . . . . . . . . . . . 39
+   9.  Native Applications  . . . . . . . . . . . . . . . . . . . . . 40
+   10. Security Considerations  . . . . . . . . . . . . . . . . . . . 41
+     10.1.  Client Authentication . . . . . . . . . . . . . . . . . . 42
+     10.2.  Client Impersonation  . . . . . . . . . . . . . . . . . . 42
+     10.3.  Access Token Credentials  . . . . . . . . . . . . . . . . 43
+     10.4.  Refresh Tokens  . . . . . . . . . . . . . . . . . . . . . 43
+     10.5.  Request Confidentiality . . . . . . . . . . . . . . . . . 44
+     10.6.  Endpoints Authenticity  . . . . . . . . . . . . . . . . . 44
+     10.7.  Credentials Guessing Attacks  . . . . . . . . . . . . . . 44
+     10.8.  Phishing Attacks  . . . . . . . . . . . . . . . . . . . . 44
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 2]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 2]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
 
-     9.10. Session Fixation . . . . . . . . . . . . . . . . . . . . . 44
-     9.11. Redirection URI Validation . . . . . . . . . . . . . . . . 44
-     9.12. Resource Owner Password Credentials  . . . . . . . . . . . 45
-   10. IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 45
-     10.1. The OAuth Access Token Type Registry . . . . . . . . . . . 45
-     10.2. The OAuth Parameters Registry  . . . . . . . . . . . . . . 46
-     10.3. The OAuth Extensions Error Registry  . . . . . . . . . . . 49
-   11. Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 50
-   Appendix A.  Editor's Notes  . . . . . . . . . . . . . . . . . . . 51
-   12. References . . . . . . . . . . . . . . . . . . . . . . . . . . 52
-     12.1. Normative References . . . . . . . . . . . . . . . . . . . 52
-     12.2. Informative References . . . . . . . . . . . . . . . . . . 53
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 53
+     10.9.  Authorization Codes . . . . . . . . . . . . . . . . . . . 45
+     10.10. Session Fixation  . . . . . . . . . . . . . . . . . . . . 45
+     10.11. Redirection URI Validation  . . . . . . . . . . . . . . . 46
+     10.12. Resource Owner Password Credentials . . . . . . . . . . . 46
+     10.13. XSRF/CSRF Prevention  . . . . . . . . . . . . . . . . . . 46
+   11. IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 46
+     11.1.  The OAuth Access Token Type Registry  . . . . . . . . . . 46
+     11.2.  The OAuth Parameters Registry . . . . . . . . . . . . . . 48
+     11.3.  The OAuth Extensions Error Registry . . . . . . . . . . . 51
+   12. Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 52
+   Appendix A.  Editor's Notes  . . . . . . . . . . . . . . . . . . . 53
+   13. References . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+     13.1.  Normative References  . . . . . . . . . . . . . . . . . . 53
+     13.2.  Informative References  . . . . . . . . . . . . . . . . . 54
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 55
 
 
 
@@ -162,9 +164,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 3]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 3]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -220,7 +220,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 4]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 4]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -276,7 +276,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 5]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 5]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -332,7 +332,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 6]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 6]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -388,7 +388,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 7]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 7]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -444,7 +444,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 8]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 8]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -500,7 +500,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011               [Page 9]
+Hammer-Lahav, et al.    Expires November 20, 2011               [Page 9]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -556,7 +556,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 10]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 10]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -612,7 +612,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 11]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 11]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -668,7 +668,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 12]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 12]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -724,7 +724,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 13]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 13]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -780,7 +780,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 14]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 14]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -791,10 +791,11 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
    [[ Pending Consensus ]]
 
-   The HTTP Basic authentication scheme as defined in [RFC2617] MAY be
-   used to authenticate clients issued with a shared symmetric secret
-   together with the client identifier.  The client identifier is used
-   as the username, and the secret is used as the password.
+   Clients in possession of client password credentials (the client
+   identifier together with a shared symmetric secret) MAY use the HTTP
+   Basic authentication scheme as defined in [RFC2617] to authenticate
+   with the authorization server.  The client identifier is used as the
+   username, and the secret is used as the password.
 
    When using the HTTP Basic authentication scheme, the client
    identifier is included twice in the request (in the "Authorization"
@@ -824,6 +825,22 @@ Internet-Draft                  OAuth 2.0                       May 2011
    should be limited to clients unable to directly utilize the HTTP
    Basic authentication scheme.
 
+
+
+
+
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 15]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    For example (extra line breaks are for display purposes only):
 
 
@@ -833,14 +850,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
      grant_type=authorization_code&client_id=s6BhdRkqt3&
      client_secret=gX1fBat3bV&code=i1WsRn1uB1&
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 15]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
      redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 
 
@@ -883,16 +892,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-
-
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 16]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 16]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -948,7 +948,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 17]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 17]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1004,7 +1004,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 18]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 18]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1060,7 +1060,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 19]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 19]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1116,7 +1116,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 20]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 20]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1172,7 +1172,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 21]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 21]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1228,7 +1228,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 22]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 22]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1284,7 +1284,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 23]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 23]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1340,7 +1340,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 24]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 24]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1396,7 +1396,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 25]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 25]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1452,7 +1452,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 26]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 26]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1508,7 +1508,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 27]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 27]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1564,7 +1564,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 28]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 28]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1620,7 +1620,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 29]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 29]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1676,7 +1676,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 30]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 30]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1732,7 +1732,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 31]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 31]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1788,7 +1788,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 32]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 32]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1844,7 +1844,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 33]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 33]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1900,7 +1900,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 34]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 34]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -1956,7 +1956,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 35]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 35]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -2012,7 +2012,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 36]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 36]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -2068,7 +2068,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 37]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 37]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -2119,12 +2119,12 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
    Access token types can be defined in one of two ways: registered in
    the access token type registry (following the procedures in
-   Section 10.1), or use a unique absolute URI as its name.
+   Section 11.1), or use a unique absolute URI as its name.
 
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 38]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 38]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -2148,7 +2148,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
    New request or response parameters for use with the authorization
    endpoint or the token endpoint are defined and registered in the
-   parameters registry following the procedure in Section 10.2.
+   parameters registry following the procedure in Section 11.2.
 
    Parameter names MUST conform to the param-name ABNF and parameter
    values syntax MUST be well-defined (e.g., using ABNF, or a reference
@@ -2171,7 +2171,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    unique absolute URI for use with the "grant_type" parameter.  If the
    extension grant type requires additional token endpoint parameters,
    they MUST be registered in the OAuth parameters registry as described
-   by Section 10.2.
+   by Section 11.2.
 
 8.4.  Defining Additional Error Codes
 
@@ -2180,7 +2180,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 39]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 39]
 
 Internet-Draft                  OAuth 2.0                       May 2011
 
@@ -2191,7 +2191,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    error codes MAY be defined.
 
    Extension error codes MUST be registered (following the procedures in
-   Section 10.3) if the extension they are used in conjunction with is a
+   Section 11.3) if the extension they are used in conjunction with is a
    registered access token type, a registered endpoint parameter, or an
    extension grant type.  Error codes used with unregistered extensions
    MAY be registered.
@@ -2207,7 +2207,74 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
 
 
-9.  Security Considerations
+9.  Native Applications
+
+   [[ Pending consensus ]]
+
+   A native application is a client which is installed and executes on
+   the end-user's device (i.e. desktop application, native mobile
+   application).  Native applications are often capable of interacting
+   with (or embedding) a user-agent but are limited in how such
+   interactions affects their overall end-user experience.  In many
+   cases, native applications are incapable of receiving redirection
+   requests from the authorization server (e.g. due to firewall rules,
+   operating system restrictions).
+
+   Native applications can utilize OAuth in different ways, based on
+   their requirements and desired end-user experience:
+
+   o  Use the authorization code grant type flow described in
+      Section 4.1 by launching an external user-agent.  The native
+      application can capture the response by providing a redirection
+      URI identifying a local (non-network) resource (registered with
+      the operating system to invoke the native application as handler),
+      or by providing a redirection URI identifying a server-hosted
+      resource under the native application's control, which in turn
+      makes the response available to the native application (e.g. using
+      the user-agent window title or other locations accessible from
+      outside the user-agent).
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 40]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
+   o  Use the authorization code grant type flow described in
+      Section 4.1 by embedding a user-agent.  The native application
+      obtains the response by directly communicating with the embedded
+      user-agent.  Embedded user-agents are discouraged as they
+      typically provide a less consistent user experience and do not
+      enable the end-user to verify the authorization server's
+      authenticity.
+
+   Native applications SHOULD use the authorization code grant type flow
+   without client password credentials (due to their inability to keep
+   the credentials confidential) to obtain short-lived access tokens,
+   and use refresh tokens to maintain access.
+
+   When choosing between launching an external user-agent and an
+   embedding a user-agent, native application developers should consider
+   the following:
+
+   o  External user-agents may improve completion rate as the end-user
+      may already have an active session with the authorization server
+      removing the need to re-authenticate, and provide a familiar user-
+      agent user experience.  The end-user may also rely on extensions
+      or add-ons to assist with authentication (e.g. password managers
+      or 2-factor device reader).
+   o  Embedded user-agents often offer a better end-user flow, as they
+      remove the need to switch context and open new windows but also
+      may provide less familiar features than the external user-agent.
+   o  Embedded user-agents pose a security challenge because end-users
+      are authenticating in an unidentified window without access to the
+      visual protections offered by many user-agents.  Embedded user-
+      agents educate end-user to trust unidentified requests for
+      authentication (making phishing attacks easier to execute).
+
+
+10.  Security Considerations
 
    As a flexible and extensible framework, OAuth's security
    considerations depend on many factors.  The following sections
@@ -2220,6 +2287,16 @@ Internet-Draft                  OAuth 2.0                       May 2011
       agent on the end-user's device.  The client credentials as well as
       any access token issued to the client are stored on the web server
       and are not exposed to or accessible by the end-user.
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 41]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    User-Agent-based Application
       A user-agent-based application is a client in which the client
       code is downloaded from a web server and executes within a user-
@@ -2233,14 +2310,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
       on the end-user's device.  The OAuth protocol data and credentials
       are accessible to the end-user.  It is assumed that such an
       application can protect dynamically issued credentials, such as
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 40]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
       refresh tokens, from eavesdropping by other applications residing
       on the same device.
 
@@ -2248,7 +2317,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    background for the protocol design is provided in
    [I-D.lodderstedt-oauth-security].
 
-9.1.  Client Authentication
+10.1.  Client Authentication
 
    The authorization server issues client credentials to web
    applications for the purpose of authenticating them.  The
@@ -2263,7 +2332,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    a client password or other credentials for a specific installation of
    a native application on a specific device.
 
-9.2.  Client Impersonation
+10.2.  Client Impersonation
 
    Given the inability of some clients to keep their client credentials
    confidential, a malicious client can impersonate another client and
@@ -2276,6 +2345,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
    client and its source.
 
    The authorization server SHOULD enforce explicit end-user
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 42]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    authentication, or prompt the end-user to authorize access again,
    providing the end-user with information about the client, scope, and
    duration of the authorization.  It is up to the end-user to review
@@ -2289,14 +2366,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
    The authorization server SHOULD require the client to pre-register
    its redirection URI and validate the value of the "redirect_uri"
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 41]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    against the pre-registered value.  The client MUST NOT serve an open
    redirector resource which can be used by an attacker to construct an
    URI that will pass the authorization server's redirection URI
@@ -2306,13 +2375,12 @@ Internet-Draft                  OAuth 2.0                       May 2011
    The authorization server SHOULD issue access tokens with limited
    scope and duration to clients incapable of authenticating.
 
-9.3.  Access Token Credentials
+10.3.  Access Token Credentials
 
    Access token credentials MUST be kept confidential in transit and
    storage, and shared only among the authorization server, the resource
    servers the credentials are valid for, and the client to whom the
-   credentials were issued.  Application developers MUST NOT store
-   access token credentials in non-transient memory.
+   credentials were issued.
 
    When using the implicit grant type, the access token credentials are
    transmitted in the URI fragment, which can expose the credentials to
@@ -2327,12 +2395,20 @@ Internet-Draft                  OAuth 2.0                       May 2011
    the client identity into account when choosing to honor the requested
    scope, and MAY issue credentials with a lesser scope than requested.
 
-9.4.  Refresh Tokens
+10.4.  Refresh Tokens
 
    Authorization servers MAY issue refresh tokens to web and native
    applications.
 
    Refresh tokens MUST be kept confidential in transit and storage, and
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 43]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    shared only among the authorization server and the client to whom the
    refresh tokens were issued.  The authorization server MUST maintain
    the link between a refresh token and the client to whom it was
@@ -2345,31 +2421,23 @@ Internet-Draft                  OAuth 2.0                       May 2011
    token abuse.
 
    The authorization server MUST ensure that refresh tokens cannot be
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 42]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    generated, modified, or guessed to produce valid refresh tokens.
 
-9.5.  Request Confidentiality
+10.5.  Request Confidentiality
 
    Access token credentials, refresh tokens, resource owner passwords,
    and client secrets MUST NOT be transmitted in the clear.
    Authorization codes SHOULD NOT be transmitted in the clear.
 
-9.6.  Endpoints Authenticity
+10.6.  Endpoints Authenticity
 
    In order to prevent man-in-the-middle and phishing attacks, the
    authorization server MUST implement and require TLS with server-side
    authentication in all exchanges.  The client MUST verify the
-   authorization server TLS certificate, as well as the certificate
-   chain.
+   authorization server's TLS certificate, as well as the respective
+   certificate chain.
 
-9.7.  Credentials Guessing Attacks
+10.7.  Credentials Guessing Attacks
 
    The authorization server MUST prevent attackers from guessing access
    tokens, authorization codes, refresh tokens, resource owner
@@ -2381,7 +2449,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    When creating secrets intended for human usage, the authorization
    server MUST utilize other means to protect those secrets.
 
-9.8.  Phishing Attacks
+10.8.  Phishing Attacks
 
    Native applications SHOULD use external browsers instead of embedding
    browsers within the application when requesting end-user
@@ -2389,28 +2457,36 @@ Internet-Draft                  OAuth 2.0                       May 2011
    and a trusted environment in which end-users can confirm the
    authenticity of the authorization server.
 
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 44]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    To reduce the risk of phishing attacks, the authorization servers
    MUST utilize TLS to allow user-agents to validate the authorization
    server's identity.  Service providers should educate their end-users
    about the risks of phishing attacks and how they can verify the
    authorization server's identity.
 
-9.9.  Authorization Codes
+10.9.  Authorization Codes
 
    The transmission of authorization codes SHOULD be made over a secure
    channel, and the client SHOULD implement TLS for use with its
-   redirection URI.  Authorization codes MUST be kept confidential.
-   Since authorization codes are transmitted via user-agent
+   redirection URI if the URI identifies a network resource.
+   Authorization codes MUST be kept confidential.  Since authorization
+   codes are transmitted via user-agent redirections, they could
+   potentially be disclosed through user-agent history and HTTP referrer
+   headers.
 
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 43]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
-   redirections, they could potentially be disclosed through user-agent
-   history and HTTP referrer headers.
+   Authorization codes operate as plaintext bearer credentials, used to
+   verify that the end-user who granted authorization at the
+   authorization server, is the same end-user returning to the client to
+   complete the process.  Therefore, if the client relies on the
+   authorization code for its own end-user authentication, the client
+   redirection endpoint MUST require TLS.
 
    Authorization codes SHOULD be short lived and MUST be single use.  If
    the authorization server observes multiple attempts to exchange an
@@ -2422,14 +2498,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    authenticate the client and ensure that the authorization code was
    issued to the same client.
 
-   Authorization codes operate as plaintext bearer credentials, used to
-   verify that the end-user who granted authorization at the
-   authorization server, is the same end-user returning to the client to
-   complete the process.  Therefore, if the client relies on the
-   authorization code for its own end-user authentication, the client
-   redirection endpoint MUST require TLS.
-
-9.10.  Session Fixation
+10.10.  Session Fixation
 
    Session fixation attacks leverage the authorization code grant type,
    by tricking an end-user to authorize access to a legitimate client,
@@ -2444,28 +2513,25 @@ Internet-Draft                  OAuth 2.0                       May 2011
    In order to prevent such an attack, authorization servers MUST ensure
    that the redirection URI used to obtain the authorization code, is
    the same as the redirection URI provided when exchanging the
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 45]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    authorization code for an access token.  The authorization server
    SHOULD require the client to pre-register their redirection URI and
    if provided, MUST validate the redirection URI received in the
    authorization request against the pre-registered value.
 
-9.11.  Redirection URI Validation
+10.11.  Redirection URI Validation
 
    [[ Add specific recommendations about redirection validation and
    matching ]]
 
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 44]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
-9.12.  Resource Owner Password Credentials
+10.12.  Resource Owner Password Credentials
 
    The resource owner password credentials grant type is often used for
    legacy or migration reasons.  It reduces the overall risk of storing
@@ -2488,10 +2554,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
    The authorization server and client SHOULD minimize use of this grant
    type and utilize other grant types whenever possible.
 
+10.13.  XSRF/CSRF Prevention
 
-10.  IANA Considerations
+   [[ Add text with reference to the 'state' parameter ]]
 
-10.1.  The OAuth Access Token Type Registry
+
+11.  IANA Considerations
+
+11.1.  The OAuth Access Token Type Registry
 
    This specification establishes the OAuth access token type registry.
 
@@ -2499,6 +2569,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
    Designated Experts (appointed by the IESG or their delegate), with a
    Specification Required (using terminology from [RFC5226]).  However,
    to allow for the allocation of values prior to publication, the
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 46]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    Designated Expert(s) may approve registration once they are satisfied
    that such a specification will be published.
 
@@ -2514,13 +2592,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
    explanation and, if applicable, suggestions as to how to make the
    request successful.
 
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 45]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    Decisions (or lack thereof) made by the Designated Expert can be
    first appealed to Application Area Directors (contactable using
    app-ads@tools.ietf.org email address or directly by looking up their
@@ -2532,7 +2603,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    Expert(s), and should direct all requests for registration to the
    review mailing list.
 
-10.1.1.  Registration Template
+11.1.1.  Registration Template
 
    Type name:
       The name requested (e.g., "example").
@@ -2540,7 +2611,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
       Additional response parameters returned together with the
       "access_token" parameter.  New parameters MUST be separately
       registered in the OAuth parameters registry as described by
-      Section 10.2.
+      Section 11.2.
    HTTP Authentication Scheme(s):
       The HTTP authentication scheme name(s), if any, used to
       authenticate protected resources requests using access token of
@@ -2555,7 +2626,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
       document.  An indication of the relevant sections may also be
       included, but is not required.
 
-10.2.  The OAuth Parameters Registry
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 47]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
+11.2.  The OAuth Parameters Registry
 
    This specification establishes the OAuth parameters registry.
 
@@ -2569,14 +2647,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
    they are satisfied that such a specification will be published.
 
    Registration requests should be sent to the [TBD]@ietf.org mailing
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 46]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    list for review and comment, with an appropriate subject (e.g.,
    "Request for parameter: example"). [[ Note to RFC-EDITOR: The name of
    the mailing list should be determined in consultation with the IESG
@@ -2599,7 +2669,7 @@ Internet-Draft                  OAuth 2.0                       May 2011
    Expert(s), and should direct all requests for registration to the
    review mailing list.
 
-10.2.1.  Registration Template
+11.2.1.  Registration Template
 
    Parameter name:
       The name requested (e.g., "example").
@@ -2607,6 +2677,18 @@ Internet-Draft                  OAuth 2.0                       May 2011
       The location(s) where parameter can be used.  The possible
       locations are: authorization request, authorization response,
       token request, or token response.
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 48]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    Change controller:
       For standards-track RFCs, state "IETF".  For others, give the name
       of the responsible party.  Other details (e.g., postal address,
@@ -2617,22 +2699,12 @@ Internet-Draft                  OAuth 2.0                       May 2011
       document.  An indication of the relevant sections may also be
       included, but is not required.
 
-10.2.2.  Initial Registry Contents
+11.2.2.  Initial Registry Contents
 
    The OAuth Parameters Registry's initial contents are:
 
    o  Parameter name: client_id
    o  Parameter usage location: authorization request, token request
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 47]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    o  Change controller: IETF
    o  Specification document(s): [[ this document ]]
 
@@ -2663,6 +2735,16 @@ Internet-Draft                  OAuth 2.0                       May 2011
    o  Change controller: IETF
    o  Specification document(s): [[ this document ]]
 
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 49]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    o  Parameter name: code
    o  Parameter usage location: authorization response, token request
    o  Change controller: IETF
@@ -2679,16 +2761,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
    o  Specification document(s): [[ this document ]]
 
    o  Parameter name: grant_type
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 48]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    o  Parameter usage location: token request
    o  Change controller: IETF
    o  Specification document(s): [[ this document ]]
@@ -2719,11 +2791,21 @@ Internet-Draft                  OAuth 2.0                       May 2011
    o  Specification document(s): [[ this document ]]
 
    o  Parameter name: refresh_token
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 50]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    o  Parameter usage location: token request, token response
    o  Change controller: IETF
    o  Specification document(s): [[ this document ]]
 
-10.3.  The OAuth Extensions Error Registry
+11.3.  The OAuth Extensions Error Registry
 
    This specification establishes the OAuth extensions error registry.
 
@@ -2737,14 +2819,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
    that such a specification will be published.
 
    Registration requests should be sent to the [TBD]@ietf.org mailing
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 49]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    list for review and comment, with an appropriate subject (e.g.,
    "Request for error code: example"). [[ Note to RFC-EDITOR: The name
    of the mailing list should be determined in consultation with the
@@ -2767,14 +2841,26 @@ Internet-Draft                  OAuth 2.0                       May 2011
    Expert(s), and should direct all requests for registration to the
    review mailing list.
 
-10.3.1.  Registration Template
+11.3.1.  Registration Template
 
    Error name:
       The name requested (e.g., "example").
+
+
+
+
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 51]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    Error usage location:
-      [[ Pending Consensus ]] The location(s) where the error can be
-      used.  The possible locations are: authorization code grant error
-      response (Section 4.1.2.1), implicit grant error response
+      The location(s) where the error can be used.  The possible
+      locations are: authorization code grant error response
+      (Section 4.1.2.1), implicit grant error response
       (Section 4.2.2.1), or token error response (Section 5.2).
    Related protocol extension:
       The name of the extension grant type, access token type, or
@@ -2790,17 +2876,9 @@ Internet-Draft                  OAuth 2.0                       May 2011
       included, but is not required.
 
 
-11.  Acknowledgements
+12.  Acknowledgements
 
    The initial OAuth 2.0 protocol specification was edited by David
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 50]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    Recordon, based on two previous publications: the OAuth 1.0 community
    specification [RFC5849], and OAuth WRAP (OAuth Web Resource
    Authorization Profiles) [I-D.draft-hardt-oauth-01].  The Security
@@ -2827,6 +2905,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
    Cook, Brian Campbell, Leah Culver, Bill de hOra, Brian Eaton, Brian
    Ellin, Igor Faynberg, George Fletcher, Tim Freeman, Evan Gilbert,
    Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart, Craig
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 52]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
    Heath, Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi
    Krikorian, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-
    Lan Lu, Paul Madsen, Alastair Mair, Eve Maler, James Manger, Mark
@@ -2849,14 +2935,6 @@ Appendix A.  Editor's Notes
    David Recordon for continuously being one of OAuth's most valuable
    assets, bringing pragmatism and urgency to the work, and helping
    shape it from its very beginning, as well as being one of the best
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 51]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    collaborators I had the pleasure of working with.
 
    Mark Nottingham for introducing OAuth to the IETF and setting the
@@ -2873,9 +2951,9 @@ Internet-Draft                  OAuth 2.0                       May 2011
    support of this work for over three years.
 
 
-12.  References
+13.  References
 
-12.1.  Normative References
+13.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -2883,6 +2961,13 @@ Internet-Draft                  OAuth 2.0                       May 2011
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 53]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
 
    [RFC2617]  Franks, J., Hallam-Baker, P., Hostetler, J., Lawrence, S.,
               Leach, P., Luotonen, A., and L. Stewart, "HTTP
@@ -2906,20 +2991,13 @@ Internet-Draft                  OAuth 2.0                       May 2011
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246, August 2008.
 
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 52]
-
-Internet-Draft                  OAuth 2.0                       May 2011
-
-
    [W3C.REC-html401-19991224]
               Hors, A., Jacobs, I., and D. Raggett, "HTML 4.01
               Specification", World Wide Web Consortium
               Recommendation REC-html401-19991224, December 1999,
               <http://www.w3.org/TR/1999/REC-html401-19991224>.
 
-12.2.  Informative References
+13.2.  Informative References
 
    [I-D.draft-hardt-oauth-01]
               Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, "OAuth
@@ -2939,6 +3017,14 @@ Internet-Draft                  OAuth 2.0                       May 2011
    [I-D.ietf-oauth-v2-http-mac]
               Hammer-Lahav, E., Barth, A., and B. Adida, "HTTP
               Authentication: MAC Access Authentication",
+
+
+
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 54]
+
+Internet-Draft                  OAuth 2.0                       May 2011
+
+
               draft-ietf-oauth-v2-http-mac-00 (work in progress),
               May 2011.
 
@@ -2956,17 +3042,6 @@ Internet-Draft                  OAuth 2.0                       May 2011
 
    [RFC5849]  Hammer-Lahav, E., "The OAuth 1.0 Protocol", RFC 5849,
               April 2010.
-
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 53]
-
-Internet-Draft                  OAuth 2.0                       May 2011
 
 
 Authors' Addresses
@@ -3001,24 +3076,5 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hammer-Lahav, et al.    Expires November 19, 2011              [Page 54]
+Hammer-Lahav, et al.    Expires November 20, 2011              [Page 55]
 

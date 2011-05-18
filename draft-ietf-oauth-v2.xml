@@ -644,10 +644,10 @@
           [[ Pending Consensus ]]
         </t>
         <t>
-          The HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> MAY be used
-          to authenticate clients issued with a shared symmetric secret together with the client
-          identifier. The client identifier is used as the username, and the secret is used as the
-          password.
+          Clients in possession of client password credentials (the client identifier together with
+          a shared symmetric secret) MAY use the HTTP Basic authentication scheme as defined in
+          <xref target='RFC2617' /> to authenticate with the authorization server. The client
+          identifier is used as the username, and the secret is used as the password.
         </t>
         <t>
           When using the HTTP Basic authentication scheme, the client identifier is included twice
@@ -732,7 +732,7 @@
         mechanism for defining additional grant types.
       </t>
 
-      <section title='Authorization Code'>
+      <section title='Authorization Code' anchor='grant-code'>
         <t>
           The authorization code grant type is suitable for clients capable of maintaining their
           client credentials confidential (for authenticating with the authorization server) such
@@ -1108,7 +1108,7 @@
 
       </section>
 
-      <section title='Implicit Grant'>
+      <section title='Implicit Grant' anchor='grant-implicit'>
         <t>
           The implicit grant type is suitable for clients incapable of maintaining their
           client credentials confidential (for authenticating with the authorization server) such
@@ -1426,7 +1426,7 @@
 
       </section>
 
-      <section title="Resource Owner Password Credentials">
+      <section title='Resource Owner Password Credentials' anchor='grant-password'>
         <t>
           The resource owner password credentials grant type is suitable in cases where the
           resource owner has a trust relationship with the client, such as its computer operating
@@ -1439,7 +1439,7 @@
           existing clients using direct authentication schemes such as HTTP Basic or Digest
           authentication to OAuth by converting the stored credentials with an access token.
         </t>
-        <figure title="Resource Owner Password Credentials Flow" anchor='Figure-5'>
+        <figure title='Resource Owner Password Credentials Flow' anchor='Figure-5'>
           <artwork>
             <![CDATA[
   +----------+
@@ -1592,14 +1592,14 @@
 
       </section>
 
-      <section title="Client Credentials">
+      <section title='Client Credentials' anchor='grant-client'>
         <t>
           The client can request an access token using only its client credentials when the client
           is requesting access to the protected resources under its control, or those of another
           resource owner which has been previously arranged with the authorization server (the
           method of which is beyond the scope of this specification).
         </t>
-        <figure title="Client Credentials Flow" anchor='Figure-6'>
+        <figure title='Client Credentials Flow' anchor='Figure-6'>
           <artwork>
             <![CDATA[
   +---------+                                  +---------------+
@@ -2190,6 +2190,76 @@
 
     </section>
 
+    <section title='Native Applications'>
+      <t>
+        [[ Pending consensus ]]
+      </t>
+      <t>
+        A native application is a client which is installed and executes on the end-user's device
+        (i.e. desktop application, native mobile application). Native applications are often
+        capable of interacting with (or embedding) a user-agent but are limited in how such
+        interactions affects their overall end-user experience. In many cases, native applications
+        are incapable of receiving redirection requests from the authorization server (e.g. due to
+        firewall rules, operating system restrictions).
+      </t>
+      <t>
+        Native applications can utilize OAuth in different ways, based on their requirements and
+        desired end-user experience:
+      </t>
+      <t>
+        <list style='symbols'>
+          <t>
+            Use the authorization code grant type flow described in <xref target='grant-code' /> by
+            launching an external user-agent. The native application can capture the response by
+            providing a redirection URI identifying a local (non-network) resource (registered
+            with the operating system to invoke the native application as handler), or by providing
+            a redirection URI identifying a server-hosted resource under the native application's
+            control, which in turn makes the response available to the native application (e.g.
+            using the user-agent window title or other locations accessible from outside the
+            user-agent).
+          </t>
+          <t>
+            Use the authorization code grant type flow described in <xref target='grant-code' /> by
+            embedding a user-agent. The native application obtains the response by directly
+            communicating with the embedded user-agent. Embedded user-agents are discouraged as
+            they typically provide a less consistent user experience and do not enable the end-user
+            to verify the authorization server's authenticity.
+          </t>
+        </list>
+      </t>
+      <t>
+        Native applications SHOULD use the authorization code grant type flow without client
+        password credentials (due to their inability to keep the credentials confidential) to
+        obtain short-lived access tokens, and use refresh tokens to maintain access.
+      </t>
+      <t>
+        When choosing between launching an external user-agent and an embedding a user-agent,
+        native application developers should consider the following:
+      </t>
+      <t>
+        <list style='symbols'>
+          <t>
+            External user-agents may improve completion rate as the end-user may already have
+            an active session with the authorization server removing the need to re-authenticate,
+            and provide a familiar user-agent user experience. The end-user may also rely on
+            extensions or add-ons to assist with authentication (e.g. password managers or 2-factor
+            device reader).
+          </t>
+          <t>
+            Embedded user-agents often offer a better end-user flow, as they remove the need to
+            switch context and open new windows but also may provide less familiar features than
+            the external user-agent.
+          </t>
+          <t>
+            Embedded user-agents pose a security challenge because end-users are authenticating in
+            an unidentified window without access to the visual protections offered by many
+            user-agents. Embedded user-agents educate end-user to trust unidentified requests for
+            authentication (making phishing attacks easier to execute).
+          </t>
+        </list>
+      </t>
+    </section>
+
     <section title='Security Considerations'>
       <t>
         As a flexible and extensible framework, OAuth's security considerations depend on many
@@ -2282,8 +2352,7 @@
         <t>
           Access token credentials MUST be kept confidential in transit and storage, and shared
           only among the authorization server, the resource servers the credentials are valid for,
-          and the client to whom the credentials were issued. Application developers MUST NOT store
-          access token credentials in non-transient memory.
+          and the client to whom the credentials were issued.
         </t>
         <t>
           When using the implicit grant type, the access token credentials are transmitted in the
@@ -2335,8 +2404,8 @@
         <t>
           In order to prevent man-in-the-middle and phishing attacks, the authorization server
           MUST implement and require TLS with server-side authentication in all exchanges. The
-          client MUST verify the authorization server TLS certificate, as well as the certificate
-          chain.
+          client MUST verify the authorization server's TLS certificate, as well as the respective
+          certificate chain.
         </t>
       </section>
 
@@ -2371,9 +2440,17 @@
       <section title='Authorization Codes'>
         <t>
           The transmission of authorization codes SHOULD be made over a secure channel, and the
-          client SHOULD implement TLS for use with its redirection URI. Authorization codes MUST be
-          kept confidential. Since authorization codes are transmitted via user-agent redirections,
-          they could potentially be disclosed through user-agent history and HTTP referrer headers.
+          client SHOULD implement TLS for use with its redirection URI if the URI identifies a
+          network resource. Authorization codes MUST be kept confidential. Since authorization
+          codes are transmitted via user-agent redirections, they could potentially be disclosed
+          through user-agent history and HTTP referrer headers.
+        </t>
+        <t>
+          Authorization codes operate as plaintext bearer credentials, used to verify that the
+          end-user who granted authorization at the authorization server, is the same end-user
+          returning to the client to complete the process. Therefore, if the client relies on the
+          authorization code for its own end-user authentication, the client redirection endpoint
+          MUST require TLS.
         </t>
         <t>
           Authorization codes SHOULD be short lived and MUST be single use. If the authorization
@@ -2384,13 +2461,6 @@
         <t>
           If the client can be authenticated, the authorization servers MUST authenticate the
           client and ensure that the authorization code was issued to the same client.
-        </t>
-        <t>
-          Authorization codes operate as plaintext bearer credentials, used to verify that the
-          end-user who granted authorization at the authorization server, is the same end-user
-          returning to the client to complete the process. Therefore, if the client relies on the
-          authorization code for its own end-user authentication, the client redirection endpoint
-          MUST require TLS.
         </t>
       </section>
 
@@ -2416,7 +2486,7 @@
 
       <section title='Redirection URI Validation'>
         <t>
-          [[ Add specific recommendations about redirection validation and matching ]]    
+          [[ Add specific recommendations about redirection validation and matching ]]
         </t>
       </section>
 
@@ -2444,7 +2514,13 @@
           other grant types whenever possible.
         </t>
       </section>
-      
+
+      <section title='XSRF/CSRF Prevention'>
+        <t>
+          [[ Add text with reference to the 'state' parameter ]]
+        </t>
+      </section>
+
     </section>
 
     <section title='IANA Considerations'>
@@ -2896,7 +2972,6 @@
               </t>
               <t hangText='Error usage location:'>
                 <vspace />
-                [[ Pending Consensus ]]
                 The location(s) where the error can be used. The possible locations are:
                 authorization code grant error response (<xref target='code-authz-error' />),
                 implicit grant error response (<xref target='implicit-authz-error' />), or token
