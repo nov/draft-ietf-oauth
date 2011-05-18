@@ -41,8 +41,9 @@
     <abstract>
       <t>
         The OAuth 2.0 authorization protocol enables a third-party application to obtain limited
-        access to an HTTP service on behalf of an end-user by orchestrating an approval interaction
-        between the end-user and the HTTP service.
+        access to an HTTP service, either on behalf of an end-user by orchestrating an approval
+        interaction between the end-user and the HTTP service, or by allowing the third-party
+        application to obtain access on its own behalf.
       </t>
     </abstract>
   </front>
@@ -139,7 +140,7 @@
           accepted by multiple resource servers.
         </t>
       </section>
-      
+
       <section title='Protocol Flow'>
         <t>
           When interacting with the authorization server, the client identifies itself using a set
@@ -619,8 +620,8 @@
       <t>
         The methods through which the client obtains its client credentials are beyond the scope of
         this specification. However, the client registration process typically includes gathering
-        relevant information used to inform the resource owner about the client when requesting
-        authorization.
+        relevant information which is used to educate the resource owner about the client when
+        requesting authorization.
       </t>
       <t>
         Due to the nature of some clients, the authorization server should not make assumptions
@@ -640,25 +641,57 @@
 
       <section title='Client Password Authentication'>
         <t>
-          The client password authentication uses a shared symmetric secret to authenticate the
-          client. The client identifier and password are included in the request using the
-          following parameters:
+          [[ Pending Consensus ]]
         </t>
         <t>
-          <list style='hanging' hangIndent='6'>
-            <t hangText='client_id'>
-              <vspace />
-              REQUIRED. The client identifier.
-            </t>
-            <t hangText='client_secret'>
-              <vspace />
-              REQUIRED. The client password.
-            </t>
-          </list>
+          The HTTP Basic authentication scheme as defined in <xref target='RFC2617' /> MAY be used
+          to authenticate clients issued with a shared symmetric secret together with the client
+          identifier. The client identifier is used as the username, and the secret is used as the
+          password.
+        </t>
+        <t>
+          When using the HTTP Basic authentication scheme, the client identifier is included twice
+          in the request (in the <spanx style='verb'>Authorization</spanx> header and in the
+          <spanx style='verb'>client_id</spanx> parameter). The authorization server MUST ensure
+          the two identifiers belong to the same client.
         </t>
         <figure>
           <preamble>
-            For example (line breaks are for display purposes only):
+            For example (extra line breaks are for display purposes only):
+          </preamble>
+          <artwork>
+            <![CDATA[
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=authorization_code&client_id=s6BhdRkqt3&
+  code=i1WsRn1uB1&
+  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+]]>
+          </artwork>
+        </figure>
+        <t>
+          Alternatively, the authorization server MAY allow including the client secret in the
+          request body using the following parameter:
+        </t>
+        <t>
+          <list style='hanging' hangIndent='6'>
+            <t hangText='client_secret'>
+              <vspace />
+              REQUIRED. The client secret.
+            </t>
+          </list>
+        </t>
+        <t>
+          The use of the <spanx style='verb'>client_secret</spanx> parameter is NOT RECOMMENDED,
+          and should be limited to clients unable to directly utilize the HTTP Basic authentication
+          scheme.
+        </t>
+        <figure>
+          <preamble>
+            For example (extra line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
@@ -672,38 +705,19 @@
 ]]>
           </artwork>
         </figure>
+        <t>
+          Since requests using this authentication method result in the transmission of clear-text
+          credentials, the authorization server MUST require the use of a transport-layer security
+          mechanism when sending requests to the token endpoint.
+        </t>
       </section>
 
       <section title='Other Client Authentication Methods'>
         <t>
-          In cases where client password authentication is not suitable or sufficient, the
-          authorization server MAY support other existing HTTP authentication schemes or define
-          new methods.
-        </t>
-        <figure>
-          <preamble>
-            For example, the authorization server MAY support using the HTTP Basic
-            authentication scheme as defined in <xref target='RFC2617' /> to include the client
-            identifier as the username and client password as the password (line breaks are for
-            display purposes only):
-          </preamble>
-          <artwork>
-            <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
-
-  grant_type=authorization_code&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
-]]>
-          </artwork>
-        </figure>
-        <t>
-          When using a method other than client password authentication to exchange an
-          authorization code grant type, the authorization server MUST define a method for
-          mapping the client credentials to the client identifier used to obtain the
-          authorization code.
+          The authorization server MAY support any suitable HTTP authentication scheme matching its
+          security requirements. When using other authentication methods, the authorization server
+          MUST define a mapping between the client identifier and the credentials used to
+          authenticate.
         </t>
       </section>
 
@@ -839,7 +853,7 @@
           <figure>
             <preamble>
               For example, the client directs the user-agent to make the following HTTP request
-              using transport-layer security (line breaks are for display purposes only):
+              using transport-layer security (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
@@ -951,7 +965,6 @@
                     </t>
                     <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
                       <vspace />
-                      [[ Pending Consensus ]]
                       The authorization server MAY set the <spanx style='verb'>error</spanx>
                       parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
                       the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
@@ -964,7 +977,8 @@
                 <t hangText='error_description'>
                   <vspace />
                   OPTIONAL. A human-readable text providing additional information, used to assist
-                  in the understanding and resolution of the error occurred.
+                  in the understanding and resolution of the error occurred. [[ add language and
+                  encoding information ]]
                 </t>
                 <t hangText='error_uri'>
                   <vspace />
@@ -997,7 +1011,7 @@
 
         <section title='Access Token Request'>
           <t>
-            The client makes a request to the token endpoint by adding the following parameter
+            The client makes a request to the token endpoint by adding the following parameters
             using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the
             HTTP request entity-body:
           </t>
@@ -1006,6 +1020,11 @@
               <t hangText='grant_type'>
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>authorization_code</spanx>.
+              </t>
+              <t hangText='client_id'>
+                <vspace />
+                REQUIRED. The client identifier as described in
+                <xref target='client-authentication' />.
               </t>
               <t hangText='code'>
                 <vspace />
@@ -1024,19 +1043,18 @@
           </t>
           <figure>
             <preamble>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters, and using transport-layer
-              security (line breaks are for display purposes only):
+              For example, the client makes the following HTTP using transport-layer security
+              (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded
 
   grant_type=authorization_code&client_id=s6BhdRkqt3&
-  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
+  code=i1WsRn1uB1&
   redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
             </artwork>
@@ -1234,7 +1252,7 @@
           <figure>
             <preamble>
               For example, the client directs the user-agent to make the following HTTP request
-              using transport-layer security (line breaks are for display purposes only):
+              using transport-layer security (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
@@ -1300,7 +1318,7 @@
           <figure>
             <preamble>
               For example, the authorization server redirects the user-agent by sending the
-              following HTTP response (URI line breaks are for display purposes only):
+              following HTTP response (URI extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
@@ -1362,7 +1380,6 @@
                     </t>
                     <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
                       <vspace />
-                      [[ Pending Consensus ]]
                       The authorization server MAY set the <spanx style='verb'>error</spanx>
                       parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
                       the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
@@ -1375,7 +1392,8 @@
                 <t hangText='error_description'>
                   <vspace />
                   OPTIONAL. A human-readable text providing additional information, used to assist
-                  in the understanding and resolution of the error occurred.
+                  in the understanding and resolution of the error occurred. [[ add language and
+                  encoding information ]]
                 </t>
                 <t hangText='error_uri'>
                   <vspace />
@@ -1475,7 +1493,7 @@
 
         <section title='Access Token Request'>
           <t>
-            The client makes a request to the token endpoint by adding the following parameter
+            The client makes a request to the token endpoint by adding the following parameters
             using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the
             HTTP request entity-body:
           </t>
@@ -1485,13 +1503,18 @@
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>password</spanx>.
               </t>
+              <t hangText='client_id'>
+                <vspace />
+                REQUIRED. The client identifier as described in
+                <xref target='client-authentication' />.
+              </t>
               <t hangText='username'>
                 <vspace />
-                REQUIRED. The resource owner username.
+                REQUIRED. The resource owner username, encoded as UTF-8.
               </t>
               <t hangText='password'>
                 <vspace />
-                REQUIRED. The resource owner password.
+                REQUIRED. The resource owner password, encoded as UTF-8.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -1508,19 +1531,18 @@
           </t>
           <figure>
             <preamble>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters, and using transport-layer
-              security (line breaks are for display purposes only):
+              For example, the client makes the following HTTP request using transport-layer
+              security (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded
   
   grant_type=password&client_id=s6BhdRkqt3&
-  client_secret=47HDu8s&username=johndoe&password=A3ddj3w
+  username=johndoe&password=A3ddj3w
 ]]>
             </artwork>
           </figure>
@@ -1615,7 +1637,7 @@
 
         <section title='Access Token Request'>
           <t>
-            The client makes a request to the token endpoint by adding the following parameter
+            The client makes a request to the token endpoint by adding the following parameters
             using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the
             HTTP request entity-body:
           </t>
@@ -1624,6 +1646,11 @@
               <t hangText='grant_type'>
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>client_credentials</spanx>.
+              </t>
+              <t hangText='client_id'>
+                <vspace />
+                REQUIRED. The client identifier as described in
+                <xref target='client-authentication' />.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -1640,19 +1667,17 @@
           </t>
           <figure>
             <preamble>
-              For example, the client makes the following HTTP request by including its client
-              credentials via the <spanx style='verb'>client_id</spanx> and
-              <spanx style='verb'>client_secret</spanx> parameters, and using transport-layer
-              security (line breaks are for display purposes only):
+              For example, the client makes the following HTTP request using transport-layer
+              security (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
               <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded
   
-  grant_type=client_credentials&client_id=s6BhdRkqt3&
-  client_secret=47HDu8s
+  grant_type=client_credentials&client_id=s6BhdRkqt3
 ]]>
             </artwork>
           </figure>
@@ -1718,6 +1743,12 @@
 ]]>
           </artwork>
         </figure>
+        <t>
+          If the access token request is valid and authorized, the authorization server issues an
+          access token and optional refresh token as described in <xref target='token-response' />.
+          If the request failed client authentication or is invalid, the authorization server returns
+          an error response as described in <xref target='token-errors' />.
+        </t>
       </section>
 
     </section>
@@ -1864,7 +1895,8 @@
             <t hangText='error_description'>
               <vspace />
               OPTIONAL. A human-readable text providing additional information, used to assist
-              in the understanding and resolution of the error occurred.
+              in the understanding and resolution of the error occurred. [[ add language and
+              encoding information ]]
             </t>
             <t hangText='error_uri'>
               <vspace />
@@ -1898,7 +1930,6 @@
           </artwork>
         </figure>
         <t>
-          [[ Pending Consensus ]]
           If the authorization server encounters an error condition other than the 400 (Bad
           Request) and 401 (Unauthorized) responses described above (e.g. the service is
           temporarily unavailable), the authorization server SHOULD include an error response in
@@ -1926,15 +1957,21 @@
 
     <section title='Refreshing an Access Token' anchor='token-refresh'>
       <t>
-        The client makes a request to the token endpoint by adding the following parameter
-        using the <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the
-        HTTP request entity-body:
+        If the authorization server issued a refresh token to the client, the client makes a
+        refresh request to the token endpoint by adding the following parameters using the
+        <spanx style='verb'>application/x-www-form-urlencoded</spanx> format in the HTTP request
+        entity-body:
       </t>
       <t>
         <list style='hanging' hangIndent='6'>
           <t hangText='grant_type'>
             <vspace />
             REQUIRED. Value MUST be set to <spanx style='verb'>refresh_token</spanx>.
+          </t>
+          <t hangText='client_id'>
+            <vspace />
+            REQUIRED. The client identifier as described in
+            <xref target='client-authentication' />.
           </t>
           <t hangText='refresh_token'>
             <vspace />
@@ -1958,19 +1995,18 @@
       </t>
       <figure>
         <preamble>
-          For example, the client makes the following HTTP request by including its client
-          credentials via the <spanx style='verb'>client_id</spanx> and
-          <spanx style='verb'>client_secret</spanx> parameters, and using transport-layer
-          security (line breaks are for display purposes only):
+          For example, the client makes the following HTTP request using transport-layer
+          security (extra line breaks are for display purposes only):
         </preamble>
         <artwork>
           <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded
   
   grant_type=refresh_token&client_id=s6BhdRkqt3&
-  client_secret=8eSEIpnqmM&refresh_token=n4E9O119d
+  refresh_token=n4E9O119d
 ]]>
         </artwork>
       </figure>
@@ -2030,7 +2066,7 @@
         <figure>
           <preamble>
             while the <spanx style='verb'>mac</spanx> token type defined in
-            <xref target='I-D.hammer-oauth-v2-mac-token' /> is utilized by issuing a token secret
+            <xref target='I-D.ietf-oauth-v2-http-mac' /> is utilized by issuing a MAC key
             together with the access token which is used to sign certain components of the HTTP
             requests:
           </preamble>
@@ -2038,13 +2074,17 @@
             <![CDATA[
   GET /resource/1 HTTP/1.1
   Host: example.com
-  Authorization: MAC token="h480djs93hd8",
-                     timestamp="137131200",
-                     nonce="dj83hs9s",
-                     signature="kDZvddkndxvhGRXZhvuDjEWhGeE="
+  Authorization: MAC id="h480djs93hd8",
+                     nonce="274312:dj83hs9s",
+                     mac="kDZvddkndxvhGRXZhvuDjEWhGeE="
 ]]>
           </artwork>
         </figure>
+        <t>
+          The above examples are provided for illustration purposes only. Developers are advised to
+          consult the <xref target='I-D.ietf-oauth-v2-bearer' /> and
+          <xref target='I-D.ietf-oauth-v2-http-mac' /> specifications before use.
+        </t>
         <t>
           Each access token type definition specifies the additional attributes (if any) sent to
           the client together with the <spanx style='verb'>access_token</spanx> response parameter.
@@ -2052,7 +2092,7 @@
           making a protected resource request.
         </t>
       </section>
-      
+
     </section>
 
     <section title='Extensibility' anchor='extensions'>
@@ -2117,11 +2157,8 @@
           parameters registry as described by <xref target='parameters-registry' />.
         </t>
       </section>
-      
+
       <section title='Defining Additional Error Codes' anchor='new-errors'>
-        <t>
-          [[ Pending Consensus ]]
-        </t>
         <t>
           In cases where protocol extensions (i.e. access token types, extension parameters, or
           extension grant types) require additional error codes to be used with the authorization
@@ -2155,12 +2192,263 @@
 
     <section title='Security Considerations'>
       <t>
-        [[ TBD ]]
+        As a flexible and extensible framework, OAuth's security considerations depend on many
+        factors. The following sections provide implementers with security guidelines focused on
+        three common client types:
       </t>
+      <t>
+        <list style='hanging'>
+          <t hangText='Web Application'>
+            <vspace />
+            A web application is a client running on a web server. End-users access the client via
+            an HTML user interface rendered in a user-agent on the end-user's device. The client
+            credentials as well as any access token issued to the client are stored on the web
+            server and are not exposed to or accessible by the end-user.
+          </t>
+          <t hangText='User-Agent-based Application'>
+            <vspace />
+            A user-agent-based application is a client in which the client code is downloaded from
+            a web server and executes within a user-agent on the end-user's device. The OAuth
+            protocol data and credentials are accessible to the end-user. Since such applications
+            directly reside within the user-agent, they can make seamless use of the user-agent
+            capabilities in the end-user authorization process.
+          </t>
+          <t hangText='Native Application'>
+            <vspace />
+            A native application is a client which is installed and executes on the end-user's
+            device. The OAuth protocol data and credentials are accessible to the end-user. It is
+            assumed that such an application can protect dynamically issued credentials, such as
+            refresh tokens, from eavesdropping by other applications residing on the same device.
+          </t>
+        </list>
+      </t>
+      <t>
+        A comprehensive OAuth security model and analysis, as well as background for the protocol
+        design is provided in <xref target='I-D.lodderstedt-oauth-security' />.
+      </t>
+
+      <section title='Client Authentication'>
+        <t>
+          The authorization server issues client credentials to web applications for the purpose of
+          authenticating them. The authorization server is encouraged to consider using stronger
+          client authentication means than a client password. Application developers MUST ensure
+          confidentiality of client passwords and other credentials.
+        </t>
+        <t>
+          The authorization server MUST NOT issue client passwords or other credentials to native
+          or user-agent-based applications for the purpose of client authentication. The
+          authorization server MAY issue a client password or other credentials for a specific
+          installation of a native application on a specific device.
+        </t>
+      </section>
+
+      <section title='Client Impersonation'>
+        <t>
+          Given the inability of some clients to keep their client credentials confidential, a
+          malicious client can impersonate another client and obtain access to protected resources.
+          The authorization server MUST authenticate the client whenever possible. If the
+          authorization server cannot authenticate the a client due to the client's limitations,
+          the authorization server should utilize other means to protect resource owners from such
+          malicious clients, including but not limited to engaging the end-user to assist in
+          identifying the client and its source.
+        </t>
+        <t>
+          The authorization server SHOULD enforce explicit end-user authentication, or prompt the
+          end-user to authorize access again, providing the end-user with information about the
+          client, scope, and duration of the authorization. It is up to the end-user to review the
+          information in the context of the current client, and authorize the request.
+        </t>
+        <t>
+          The authorization server SHOULD NOT automatically, without active end-user interaction,
+          process repeated authorization requests without authenticating the client or relying on
+          other measures to ensure the repeated request comes from a valid client and not an
+          impersonator.
+        </t>
+        <t>
+          The authorization server SHOULD require the client to pre-register its redirection URI
+          and validate the value of the <spanx style='verb'>redirect_uri</spanx> against the
+          pre-registered value. The client MUST NOT serve an open redirector resource which can be
+          used by an attacker to construct an URI that will pass the authorization server's
+          redirection URI matching rules, and will redirect the end-user's user-agent to the
+          attacker's server.
+        </t>
+        <t>
+          The authorization server SHOULD issue access tokens with limited scope and duration to
+          clients incapable of authenticating.
+        </t>
+      </section>
+
+      <section title='Access Token Credentials'>
+        <t>
+          Access token credentials MUST be kept confidential in transit and storage, and shared
+          only among the authorization server, the resource servers the credentials are valid for,
+          and the client to whom the credentials were issued. Application developers MUST NOT store
+          access token credentials in non-transient memory.
+        </t>
+        <t>
+          When using the implicit grant type, the access token credentials are transmitted in the
+          URI fragment, which can expose the credentials to unauthorized parties.
+        </t>
+        <t>
+          The authorization server MUST ensure that access token credentials cannot be generated,
+          modified, or guessed to produce valid access token credentials.
+        </t>
+        <t>
+          The client SHOULD request access token credentials with the minimal scope and duration
+          necessary. The authorization server SHOULD take the client identity into account when
+          choosing to honor the requested scope, and MAY issue credentials with a lesser scope than
+          requested.
+        </t>
+      </section>
+
+      <section title='Refresh Tokens'>
+        <t>
+          Authorization servers MAY issue refresh tokens to web and native applications.
+        </t>
+        <t>
+          Refresh tokens MUST be kept confidential in transit and storage, and shared only among
+          the authorization server and the client to whom the refresh tokens were issued.
+          The authorization server MUST maintain the link between a refresh token and the client to
+          whom it was issued.
+        </t>
+        <t>
+          The authorization server MUST verify the link between the refresh token and client
+          identity whenever the client's identity can be authenticated. When client authentication is
+          not possible, the authorization server SHOULD deploy other means to detect refresh token
+          abuse.
+        </t>
+        <t>
+          The authorization server MUST ensure that refresh tokens cannot be generated, modified,
+          or guessed to produce valid refresh tokens.
+        </t>
+      </section>
+
+      <section title='Request Confidentiality'>
+        <t>
+          Access token credentials, refresh tokens, resource owner passwords, and client secrets
+          MUST NOT be transmitted in the clear. Authorization codes SHOULD NOT be transmitted in
+          the clear.
+        </t>
+      </section>
+
+      <section title='Endpoints Authenticity'>
+        <t>
+          In order to prevent man-in-the-middle and phishing attacks, the authorization server
+          MUST implement and require TLS with server-side authentication in all exchanges. The
+          client MUST verify the authorization server TLS certificate, as well as the certificate
+          chain.
+        </t>
+      </section>
+
+      <section title='Credentials Guessing Attacks'>
+        <t>
+          The authorization server MUST prevent attackers from guessing access tokens,
+          authorization codes, refresh tokens, resource owner passwords, and client secrets.
+        </t>
+        <t>
+          When generating tokens and other secrets not intended for direct human utilization, the
+          authorization server MUST use a reasonable level of entropy in order to mitigate the risk
+          of guessing attacks. When creating secrets intended for human usage, the authorization
+          server MUST utilize other means to protect those secrets.
+        </t>
+      </section>
+
+      <section title='Phishing Attacks'>
+        <t>
+          Native applications SHOULD use external browsers instead of embedding browsers within the
+          application when requesting end-user authorization. External browsers offer a familiar
+          user experience and a trusted environment in which end-users can confirm the
+          authenticity of the authorization server.
+        </t>
+        <t>
+          To reduce the risk of phishing attacks, the authorization servers MUST utilize TLS to
+          allow user-agents to validate the authorization server's identity. Service providers
+          should educate their end-users about the risks of phishing attacks and how they can
+          verify the authorization server's identity.
+        </t>
+      </section>
+
+      <section title='Authorization Codes'>
+        <t>
+          The transmission of authorization codes SHOULD be made over a secure channel, and the
+          client SHOULD implement TLS for use with its redirection URI. Authorization codes MUST be
+          kept confidential. Since authorization codes are transmitted via user-agent redirections,
+          they could potentially be disclosed through user-agent history and HTTP referrer headers.
+        </t>
+        <t>
+          Authorization codes SHOULD be short lived and MUST be single use. If the authorization
+          server observes multiple attempts to exchange an authorization code for an access token,
+          the authorization server SHOULD revoke all access tokens already granted based on the
+          compromised authorization code.
+        </t>
+        <t>
+          If the client can be authenticated, the authorization servers MUST authenticate the
+          client and ensure that the authorization code was issued to the same client.
+        </t>
+        <t>
+          Authorization codes operate as plaintext bearer credentials, used to verify that the
+          end-user who granted authorization at the authorization server, is the same end-user
+          returning to the client to complete the process. Therefore, if the client relies on the
+          authorization code for its own end-user authentication, the client redirection endpoint
+          MUST require TLS.
+        </t>
+      </section>
+
+      <section title='Session Fixation'>
+        <t>
+          Session fixation attacks leverage the authorization code grant type, by tricking an
+          end-user to authorize access to a legitimate client, but to a client account under the
+          control of the attacker. The only difference between a valid flow and the attack flow is
+          in how the victim reached the authorization server to grant access. Once at the
+          authorization server, the victim is prompted with a normal, valid request on behalf of a
+          legitimate and familiar client. The attacker then uses the victim's authorization to gain
+          access to the information authorized by the victim.
+        </t>
+        <t>
+          In order to prevent such an attack, authorization servers MUST ensure that the
+          redirection URI used to obtain the authorization code, is the same as the redirection URI
+          provided when exchanging the authorization code for an access token. The authorization
+          server SHOULD require the client to pre-register their redirection URI and if provided,
+          MUST validate the redirection URI received in the authorization request against the
+          pre-registered value.
+        </t>
+      </section>
+
+      <section title='Redirection URI Validation'>
+        <t>
+          [[ Add specific recommendations about redirection validation and matching ]]    
+        </t>
+      </section>
+
+      <section title='Resource Owner Password Credentials'>
+        <t>
+          The resource owner password credentials grant type is often used for legacy or migration
+          reasons. It reduces the overall risk of storing username and password in the client, but
+          does not eliminate the need to expose highly privileged credentials to the client.
+        </t>
+        <t>
+          This grant type carries a higher risk than the other grant types because it maintains the
+          password anti-pattern OAuth seeks to avoid. The client could abuse the password or the
+          password could unintentionally be disclosed to an attacker (e.g. via log files or other
+          records kept by the client).
+        </t>
+        <t>
+          Additionally, because the resource owner does not have control over the authorization
+          process (the resource owner involvement ends when it hands over its credentials to the
+          client), the client can obtain access tokens with a broader scope and longer duration
+          than desired by the resource owner. The authorization server SHOULD restrict the scope
+          and duration of access tokens issued via this grant type.
+        </t>
+        <t>
+          The authorization server and client SHOULD minimize use of this grant type and utilize
+          other grant types whenever possible.
+        </t>
+      </section>
+      
     </section>
 
     <section title='IANA Considerations'>
-      
+
       <section title='The OAuth Access Token Type Registry' anchor='type-registry'>
         <t>
           This specification establishes the OAuth access token type registry.
@@ -2230,7 +2518,7 @@
             </list>
           </t>
         </section>
-        
+
       </section>
 
       <section title='The OAuth Parameters Registry' anchor='parameters-registry'>
@@ -2562,11 +2850,8 @@
         </section>
 
       </section>
-      
+
       <section title='The OAuth Extensions Error Registry' anchor='error-registry'>
-        <t>
-          [[ Pending Consensus ]]
-        </t>
         <t>
           This specification establishes the OAuth extensions error registry.
         </t>
@@ -2611,6 +2896,7 @@
               </t>
               <t hangText='Error usage location:'>
                 <vspace />
+                [[ Pending Consensus ]]
                 The location(s) where the error can be used. The possible locations are:
                 authorization code grant error response (<xref target='code-authz-error' />),
                 implicit grant error response (<xref target='implicit-authz-error' />), or token
@@ -2643,26 +2929,11 @@
 
     <section title='Acknowledgements'>
       <t>
-        This specification is the work of the OAuth Working Group which includes dozens of active
-        and dedicated participants. In particular, the following individuals contributed ideas,
-        feedback, and wording which shaped and formed the final specification:
-      </t>
-      <t>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Blaine Cook, Brian Campbell, Leah Culver,
-        Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg, George Fletcher, Tim Freeman,
-        Evan Gilbert, Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart, Craig Heath,
-        Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara,
-        Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen, Alastair Mair, Eve Maler,
-        James Manger, Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre,
-        Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Luke Shepard, Justin Smith,
-        Jeremy Suriel, Christian Stübner, Paul Tarjan, Allen Tom, Franklin Tse, Nick Walker,
-        Skylar Woodward.
-      </t>
-      <t>
         The initial OAuth 2.0 protocol specification was edited by David Recordon, based on two
         previous publications: the OAuth 1.0 community specification <xref target='RFC5849' />, and
         OAuth WRAP (OAuth Web Resource Authorization Profiles)
-        <xref target='I-D.draft-hardt-oauth-01' />.
+        <xref target='I-D.draft-hardt-oauth-01' />. The Security Considerations section was drafted
+        by Torsten Lodderstedt, Mark McGloin, Phil Hunt, and Anthony Nadalin.
       </t>
       <t>
         The OAuth 1.0 community specification was edited by Eran Hammer-Lahav and authored by
@@ -2674,6 +2945,22 @@
       <t>
         The OAuth WRAP specification was edited by Dick Hardt and authored by Brian Eaton,
         Yaron Goland, Dick Hardt, and Allen Tom.
+      </t>
+      <t>
+        This specification is the work of the OAuth Working Group which includes dozens of active
+        and dedicated participants. In particular, the following individuals contributed ideas,
+        feedback, and wording which shaped and formed the final specification:
+      </t>
+      <t>
+        Michael Adams, Andrew Arnott, Dirk Balfanz, Scott Cantor, Blaine Cook, Brian Campbell,
+        Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg, George Fletcher,
+        Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart,
+        Craig Heath, Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi Krikorian,
+        Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen,
+        Alastair Mair, Eve Maler, James Manger, Mark McGloin, Laurence Miao, Chuck Mortimore,
+        Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah,
+        Luke Shepard, Vlad Skvortsov, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
+        Allen Tom, Franklin Tse, Nick Walker, Skylar Woodward.
       </t>
     </section>
 
@@ -2726,9 +3013,10 @@
     <references title='Informative References'>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-02.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-04.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-03.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-hammer-oauth-v2-mac-token-02.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-00.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-lodderstedt-oauth-security-01.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
       <reference anchor="I-D.draft-hardt-oauth-01">
@@ -2742,7 +3030,7 @@
         </front>
         <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-hardt-oauth-01.txt" />
       </reference>
-      
+
     </references>
 
   </back>
