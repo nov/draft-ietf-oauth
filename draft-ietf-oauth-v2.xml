@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-16'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-17'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='2' ?>
@@ -61,7 +61,7 @@
       <t>
         <list style='symbols'>
           <t>
-            Third-party applications are required to store the resource-owner's credentials
+            Third-party applications are required to store the resource owner's credentials
             for future use, typically a password in clear-text.
           </t>
           <t>
@@ -69,7 +69,7 @@
             weaknesses created by passwords.
           </t>
           <t>
-            Third-party applications gain overly broad access to the resource-owner's protected
+            Third-party applications gain overly broad access to the resource owner's protected
             resources, leaving resource owners without any ability to restrict duration or access
             to a limited subset of resources.
           </t>
@@ -77,6 +77,10 @@
             Resource owners cannot revoke access to an individual third-party without revoking
             access to all third-parties, and must do so by changing their password.
           </t>
+          <t>
+			Compromise of any third-party application results in compromise of the end-user’s
+			password and all of the data protected by that password.
+		  </t>
         </list>
       </t>
       <t>
@@ -93,7 +97,7 @@
         protected resources hosted by the resource server.
       </t>
       <t>
-        For example, a web end-user (resource owner) can grant a printing service (client) access
+        For example, an end-user (resource owner) can grant a printing service (client) access
         to her protected photos stored at a photo sharing service (resource server), without
         sharing her username and password with the printing service. Instead, she authenticates
         directly with a server trusted by the photo sharing service (authorization server) which
@@ -107,7 +111,7 @@
       <section title='Roles'>
         <t>
           OAuth includes four roles working together to grant and provide access to protected
-          resources - access restricted resources which require authentication to access:
+          resources - access restricted resources requiring authentication:
         </t>
         <t>
           <list style='hanging'>
@@ -139,16 +143,54 @@
           server or a separate entity. A single authorization server may issue access tokens
           accepted by multiple resource servers.
         </t>
+        
+        <section title='Client Types'>
+          <t>
+            OAuth defines two client types, based on their ability to maintain the confidentiality
+            of their client credential, used to authentication with the authorization server:
+          </t>
+          <t>
+            <list style='hanging'>
+              <t hangText='private'>
+                <vspace />
+                Clients capable of maintaining the confidentiality of their credentials (e.g.
+                client implemented on a secure server with restricted access to the client
+                credentials).
+              </t>
+              <t hangText='public'>
+                <vspace />
+                Clients incapable of maintaining the confidentiality of their credentials (e.g.
+                clients executing on the resource owner's device such as an installed native
+                application or a user-agent-based application).
+              </t>
+            </list>
+          </t>
+        </section>
+        
+      </section>
+      
+      <section title='Client Registration'>
+        <t>
+          Before initiating the protocol, the client registers with with the authorization server.
+          The means through which the client registers with the authorization server are beyond the
+          scope of this specification, but typically involve human interaction with an HTML
+          registration form.
+        </t>
+        <t>
+          When registering a client, the client developer specifies the client type (private or
+          public), the client redirection URI (used when obtaining authorization), and any other
+          information required by the authorization server (e.g. application name, website,
+          description, logo image, the acceptance of legal terms).
+        </t>
+        <t>
+          The authorization server issues the registered client a client identifier - a unique
+          string representing the registration information provided by the client. In addition, the
+          client and authorization server establish a client authentication method suitable for the
+          client type and security requirements of the authorization server.
+        </t>
       </section>
 
       <section title='Protocol Flow'>
-        <t>
-          When interacting with the authorization server, the client identifies itself using a set
-          of client credentials which include a client identifier and other authentication
-          attributes. The means through which the client obtains its credentials are beyond the
-          scope of this specification, but typically involve registration with the authorization
-          server.
-        </t>
         <figure title='Abstract Protocol Flow' anchor='Figure-1'>
           <artwork>
             <![CDATA[
@@ -273,7 +315,7 @@
         <section title='Implicit'>
           <t>
             When an access token is issued to the client directly as the result of the resource
-            owner authorization, without an intermediary authorization grant (such as an
+            owner authorization, without an intermediate authorization grant (such as an
             authorization code), the grant is considered implicit.
           </t>
           <t>
@@ -301,7 +343,7 @@
             credentials, the resource owner credentials are used for a single request and are
             exchanged for an access token. Unlike the HTTP Basic authentication scheme defined in
             <xref target='RFC2617' />, this grant type (when combined with a refresh token)
-            eliminates the need for the client to store the resource-owner credentials for future
+            eliminates the need for the client to store the resource owner credentials for future
             use.
           </t>
         </section>
@@ -330,23 +372,18 @@
       <section title='Refresh Token'>
         <t>
           A refresh token is optionally issued by the authorization server to the client together
-          with an access token. The client can use the refresh token to request another access
-          token based on the same authorization, without having to involve the resource owner
-          again, or having to retain the original authorization grant used to obtain the initial
-          access token.
+          with an access token. The refresh token can be used to obtain a new access token when the
+	      current access token becomes invalid or expires, or to obtain additional access tokens
+	      with identical or narrower scope (access tokens may have a shorter lifetime and fewer
+	      permissions than authorized by the resource owner).
         </t>
         <t>
           A refresh token is a string representing the authorization granted to the client by the
-          resource owner. The string is usually opaque to the client. The token may denote an
-          identifier used to retrieve the authorization information, or self-contain the
-          authorization information in a verifiable manner. The refresh token is bound to the
-          client it was issued to, and its usage requires client authentication.
-        </t>
-        <t>
-          The refresh token can be used to obtain a new access token when the current access token
-          expires (access tokens may have a shorter lifetime than authorized by the resource
-          owner), no longer valid, or to obtain additional access tokens with identical or narrower
-          scope.
+          resource owner. The string is usually opaque to the client. The token denote an
+          identifier used to retrieve the authorization information. The refresh token is bound to
+          the client it was issued to, and its usage requires client authentication. Unlike access
+          tokens, refresh tokens are intended for use only with authorization servers and are never
+          sent to resource servers.
         </t>
         <figure title='Refreshing an Expired Access Token' anchor='Figure-2'>
           <artwork>
@@ -416,45 +453,6 @@
         </t>
       </section>
 
-      <section title='Document Structure'>
-        <t>
-          This specification is organized into the following sections:
-        </t>
-        <t>
-          <list style='symbols'>
-            <t>
-              Section 2 - describes the two endpoints used to obtain and utilize the various
-              authorization grant types.
-            </t>
-            <t>
-              Section 3 - describes client identification and authentication in general, and
-              provides one such method for client authentication using password credentials.
-            </t>
-            <t>
-              Section 4 - describes the complete flow for each authorization grant type, including
-              requesting authorization, authorization response, and requesting an access token.
-            </t>
-            <t>
-              Section 5 - describes the common access token response used for all non-implicit
-              authorization grant types.
-            </t>
-            <t>
-              Section 6 - describes the use of a refresh token to obtain additional access tokens
-              using the same resource owner authorization.
-            </t>
-            <t>
-              Section 7 - describes how access tokens are used to access protected resources.
-            </t>
-            <t>
-              Section 8 - describes how to extend certain elements of the protocol.
-            </t>
-            <t>
-              Section 9 - provides a security analysis of the protocol.
-            </t>
-          </list>
-        </t>
-      </section>
-
       <section title='Notational Conventions'>
         <t>
           The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD
@@ -496,8 +494,8 @@
       <section title='Authorization Endpoint'>
         <t>
           The authorization endpoint is used to interact with the resource owner and obtain
-          authorization which is expressed explicitly as an authorization code (exchanged for an
-          access token), or implicitly by direct issuance of an access token.
+          authorization which is expressed explicitly as an authorization code (later exchanged for
+          an access token), or implicitly by direct issuance of an access token.
         </t>
         <t>
           The authorization server MUST first verify the identity of the resource owner. The way in
@@ -506,10 +504,10 @@
         </t>
         <t>
           The means through which the client obtains the location of the authorization endpoint are
-          beyond the scope of this specification but is typically provided in the service
-          documentation. The endpoint URI MAY include a query component as defined by
+          beyond the scope of this specification but the location is typically provided in the
+          service documentation. The endpoint URI MAY include a query component as defined by
           <xref target='RFC3986' /> section 3, which MUST be retained when adding additional query
-          parameters.
+          parameters. The endpoint URI MUST NOT include a fragment component.
         </t>
         <t>
           Since requests to the authorization endpoint result in user authentication and the
@@ -526,43 +524,66 @@
         </t>
         <t>
           The REQUIRED <spanx style='verb'>response_type</spanx> request parameter is used to
-          identify which grant type the client is requesting: authorization code or implicit,
-          described in <xref target='code-authz-req' /> and <xref target='implicit-authz-req' />
-          respectively. If the request is missing the <spanx style='verb'>response_type</spanx>
-          parameter, the authorization server SHOULD return an error response as described in
-          <xref target='code-authz-error' />.
+          identify which grant type the client is requesting: authorization code as described in
+          described in <xref target='code-authz-req' />, or implicit as described in
+          <xref target='implicit-authz-req' />. If the request is missing the
+          <spanx style='verb'>response_type</spanx> parameter, the authorization server SHOULD
+          return an error response as described in <xref target='code-authz-error' />.
         </t>
         <t>
-          Parameters sent without a value MUST be treated as if they were omitted from the
-          request. The authorization server SHOULD ignore unrecognized request parameters.
-        </t>
-        <t>
-          Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
+          Parameters sent without a value MUST be treated as if they were omitted from the request.
+          The authorization server SHOULD ignore unrecognized request parameters. Request and
+          response parameters MUST NOT repeat more than once.
         </t>
 
         <section title='Redirection URI' anchor='redirect-uri'>
           <t>
-            The client directs the resource owner's user-agent to the authorization endpoint and
-            includes a redirection URI to which the authorization server will redirect the
-            user-agent back once authorization has been obtained (or denied). The client MAY omit
-            the redirection URI if one has been established between the client and authorization
-            server via other means, such as during the client registration process.
+            After completing its interaction with the resource owner, the authorization server
+            directs the resource owner's user-agent back to the client. The authorization server
+            redirects the user-agent to the client's redirection URI previously established with
+            the authorization server during the client registration process.
           </t>
           <t>
-            The redirection URI MUST be an absolute URI and MAY include a query component, which
-            MUST be retained by the authorization server when adding additional query parameters.
+            The redirection URI MUST be an absolute URI as defined by <xref target='RFC3986' />
+            section 4.3, MAY include a query component which MUST be retained by the authorization
+            server when adding additional query parameters, and MUST NOT include a fragment
+            component.
           </t>
           <t>
-            The authorization server SHOULD require the client to pre-register their redirection
-            URI or at least certain components such as the scheme, host, port and path. If a
-            redirection URI was registered, the authorization server MUST compare any redirection
-            URI received at the authorization endpoint with the registered URI.
+            The authorization server MUST require public clients to register their redirection URI
+            as well as any client prior to utilizing the implicit grant type. The authorization
+            server SHOULD require registration prior to utilizing the authorization code grant
+            type.
+          </t>
+          <t>
+            The authorization server SHOULD require the client to provide the complete redirection
+            URI (the client MAY use the <spanx style='verb'>state</spanx> request parameter to
+            achieve per-request customization). The authorization server MAY allow the client to
+            register multiple redirection URIs. If requiring the registration of the complete
+            redirection URI is not possible, the authorization server SHOULD require the
+            registration of the URI scheme, authority, and path.
+          </t>
+          <t>
+            If the authorization server allows the client to dynamically change the query component
+            of the redirection URI, the client MUST ensure that manipulation of the query component
+            by an attacker cannot lead to an abuse of the redirection endpoint as an open
+            redirector.
+          </t>
+          <t>
+            If multiple redirection URIs have been registered, if only part of the redirection URI
+            has been registered, or if no redirection URI has been registered, the client MUST
+            includes a redirection URI with the authorization request using the
+            <spanx style='verb'>redirect_uri</spanx> request parameter. When a redirection URI is
+            included in an authorization request, the authorization server MUST compare and match
+            the value received against at least one of the registered redirection URIs (or URI
+            components) as defined in <xref target='RFC3986' /> section 6, if any redirection URIs
+            were registered.
           </t>
           <t>
             The authorization server SHOULD NOT redirect the user-agent to unregistered or
-            untrusted URIs to prevent the endpoint from being used as an open redirector. If no
-            valid redirection URI is available, the authorization server SHOULD inform the
-            resource owner directly of the error.
+            untrusted URIs to prevent the authorization endpoint from being used as an open
+            redirector. If no valid and trusted redirection URI is available, the authorization
+            server SHOULD inform the resource owner directly of the error.
           </t>
         </section>
 
@@ -603,7 +624,7 @@
           request. The authorization server SHOULD ignore unrecognized request parameters.
         </t>
         <t>
-          Request and response parameters MUST NOT repeat more than once, unless noted otherwise.
+          Request and response parameters MUST NOT repeat more than once.
         </t>
       </section>
 
@@ -626,9 +647,8 @@
       <t>
         Due to the nature of some clients, the authorization server should not make assumptions
         about the confidentiality of client credentials without establishing trust with the
-        client. The authorization server SHOULD NOT issue client credentials to clients incapable
-        of keeping their credentials confidential (typically determined during the client
-        registration process).
+        client. The authorization server SHOULD NOT rely on client credentials issued to public
+        clients.
       </t>
       <t>
         In addition, the authorization server MAY allow unauthenticated access token requests
@@ -644,10 +664,10 @@
           [[ Pending Consensus ]]
         </t>
         <t>
-          Clients in possession of client password credentials (the client identifier together with
-          a shared symmetric secret) MAY use the HTTP Basic authentication scheme as defined in
-          <xref target='RFC2617' /> to authenticate with the authorization server. The client
-          identifier is used as the username, and the secret is used as the password.
+          Clients in possession of a client password MAY use the HTTP Basic authentication scheme
+          as defined in <xref target='RFC2617' /> to authenticate with the authorization server.
+          The client identifier is used as the username, and the client password is used as the
+          password.
         </t>
         <t>
           When using the HTTP Basic authentication scheme, the client identifier is included twice
@@ -664,7 +684,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
   grant_type=authorization_code&client_id=s6BhdRkqt3&
   code=i1WsRn1uB1&
@@ -697,7 +717,7 @@
             <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
   grant_type=authorization_code&client_id=s6BhdRkqt3&
   client_secret=gX1fBat3bV&code=i1WsRn1uB1&
@@ -706,9 +726,9 @@
           </artwork>
         </figure>
         <t>
-          Since requests using this authentication method result in the transmission of clear-text
-          credentials, the authorization server MUST require the use of a transport-layer security
-          mechanism when sending requests to the token endpoint.
+          The authorization server MUST require the use of a transport-layer security mechanism
+          when sending requests to the token endpoint, as requests using this authentication method
+          result in the transmission of clear-text credentials.
         </t>
       </section>
 
@@ -734,12 +754,10 @@
 
       <section title='Authorization Code' anchor='grant-code'>
         <t>
-          The authorization code grant type is suitable for clients capable of maintaining their
-          client credentials confidential (for authenticating with the authorization server) such
-          as a client implemented on a secure server. As a redirection-based flow, the client
-          must be capable of interacting with the resource owner's user-agent (typically a web
-          browser) and capable of receiving incoming requests (via redirection) from the
-          authorization server.
+          The authorization code grant type is suitable for private clients. As a redirection-based
+          flow, the client must be capable of interacting with the resource owner's user-agent
+          (typically a web browser) and capable of receiving incoming requests (via redirection)
+          from the authorization server.
         </t>
         <figure title='Authorization Code Flow' anchor='Figure-3'>
           <artwork>
@@ -753,7 +771,7 @@
        |
       (B)      
   +----|-----+          Client Identifier      +---------------+
-  |         -+----(A)--- & Redirect URI ------>|               |
+  |         -+----(A)-- & Redirection URI ---->|               |
   |  User-   |                                 | Authorization |
   |  Agent  -+----(B)-- User authenticates --->|     Server    |
   |          |                                 |               |
@@ -766,7 +784,7 @@
   +---------+                                      |      |
   |         |>---(D)-- Client Credentials, --------'      |
   |         |          Authorization Code,                |
-  | Client  |            & Redirect URI                   |
+  | Client  |           & Redirection URI                 |
   |         |                                             |
   |         |<---(E)----- Access Token -------------------'
   +---------+       (w/ Optional Refresh Token)
@@ -828,8 +846,7 @@
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
-                REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <xref target='redirect-uri' />.
+                OPTIONAL, as described in <xref target='redirect-uri' />.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -857,7 +874,7 @@
             </preamble>
             <artwork>
               <![CDATA[
-  GET /authorize?response_type=code&client_id=s6BhdRkqt3&
+  GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz&
       redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
@@ -888,11 +905,12 @@
               <t hangText='code'>
                 <vspace />
                 REQUIRED. The authorization code generated by the authorization server. The
-                authorization code SHOULD expire shortly after it is issued to minimize the risk of
-                leaks. The client MUST NOT reuse the authorization code. If an authorization code
-                is used more than once, the authorization server MAY revoke all tokens previously
-                issued based on that authorization code. The authorization code is bound to the
-                client identifier and redirection URI.
+                authorization code MUST expire shortly after it is issued to mitigate the risk of
+                leaks. A maximum authorization code lifetime of 10 minutes is RECOMMENDED. The
+                client MUST NOT reuse the authorization code. If an authorization code is used more
+                than once, the authorization server MAY revoke all tokens previously issued based
+                on that authorization code. The authorization code is bound to the client
+                identifier and redirection URI.
               </t>
               <t hangText='state'>
                 <vspace />
@@ -909,7 +927,7 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?code=i1WsRn1uB1
+  Location: https://client.example.com/cb?code=i1WsRn1uB1&state=xyz
 ]]>
             </artwork>
           </figure>
@@ -924,8 +942,8 @@
             <t>
               If the request fails due to a missing, invalid, or mismatching redirection URI, or if
               the client identifier provided is invalid, the authorization server SHOULD inform the
-              resource owner of the error, and MUST NOT redirect the user-agent to the invalid
-              redirection URI.
+              resource owner of the error, and MUST NOT automatically redirect the user-agent to
+              the invalid redirection URI.
             </t>
             <t>
               If the resource owner denies the access request or if the request fails for reasons
@@ -963,27 +981,27 @@
                       <vspace />
                       The requested scope is invalid, unknown, or malformed.
                     </t>
-                    <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
+                    <t hangText='server_error'>
                       <vspace />
-                      The authorization server MAY set the <spanx style='verb'>error</spanx>
-                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
-                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
-                      For example, if the service is temporarily unavailable, the authorization
-                      server MAY return an error response with <spanx style='verb'>error</spanx>
-                      set to <spanx style='verb'>503</spanx>.
+                      The authorization server encountered an unexpected condition which prevented
+                      it from fulfilling the request.
+                    </t>
+                    <t hangText='temporarily_unavailable'>
+                      <vspace />
+                      The authorization server is currently unable to handle the request due to a
+                      temporary overloading or maintenance of the server.
                     </t>
                   </list>
                 </t>
                 <t hangText='error_description'>
                   <vspace />
-                  OPTIONAL. A human-readable text providing additional information, used to assist
-                  in the understanding and resolution of the error occurred. [[ add language and
-                  encoding information ]]
+                  OPTIONAL. A human-readable UTF-8 encoded text providing additional information,
+                  used to assist the client developer in understanding the error that occurred.
                 </t>
                 <t hangText='error_uri'>
                   <vspace />
                   OPTIONAL. A URI identifying a human-readable web page with information about the
-                  error, used to provide the resource owner with additional information about the
+                  error, used to provide the client developer with additional information about the
                   error.
                 </t>
                 <t hangText='state'>
@@ -1001,7 +1019,7 @@
               <artwork>
                 <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb?error=access_denied
+  Location: https://client.example.com/cb?error=access_denied&state=xyz
 ]]>
               </artwork>
             </figure>
@@ -1032,8 +1050,9 @@
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
-                REQUIRED. The redirection URI used by the authorization server to return the
-                authorization response in the previous step.
+                REQUIRED, if the <spanx style='verb'>redirect_uri</spanx> parameter was included in
+                the authorization request described in <xref target='code-authz-req' />, and their
+                values MUST be identical.
               </t>
             </list>
           </t>
@@ -1051,7 +1070,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
   grant_type=authorization_code&client_id=s6BhdRkqt3&
   code=i1WsRn1uB1&
@@ -1065,13 +1084,17 @@
           <t>
             <list style='symbols'>
               <t>
-                Validate the client credentials and ensure that the authorization code was issued
-                to that client.
+                validate the client credentials and ensure that the authorization code was issued
+                to that client,
               </t>
               <t>
-                Verify that the authorization code is valid, and that the redirection URI matches
-                the redirection URI used by the authorization server to deliver the authorization
-                code.
+                verify that the authorization code is valid, and
+              </t>
+              <t>
+                ensure that the <spanx style='verb'>redirect_uri</spanx> parameter is present if
+                the <spanx style='verb'>redirect_uri</spanx> parameter was included in the
+                authorization request described in <xref target='code-authz-req' />, and that their
+                values are identical.
               </t>
             </list>
           </t>
@@ -1091,8 +1114,9 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 200 OK
-  Content-Type: application/json
+  Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
+  Pragma: no-cache
 
   {
     "access_token":"SlAV32hkKG",
@@ -1110,10 +1134,9 @@
 
       <section title='Implicit Grant' anchor='grant-implicit'>
         <t>
-          The implicit grant type is suitable for clients incapable of maintaining their
-          client credentials confidential (for authenticating with the authorization server) such
-          as client applications residing in a user-agent, typically implemented in a browser using
-          a scripting language such as JavaScript.
+          The implicit grant type is suitable for public clients which can be known to operate a
+          particular redirection URI. These clients are typically implemented in a browser using a
+          scripting language such as JavaScript.
         </t>
         <t>
           As a redirection-based flow, the client must be capable of interacting with the
@@ -1144,15 +1167,15 @@
        |
       (B)      
   +----|-----+          Client Identifier     +---------------+
-  |         -+----(A)--- & Redirect URI ----->|               |
+  |         -+----(A)-- & Redirection URI --->|               |
   |  User-   |                                | Authorization |
   |  Agent  -|----(B)-- User authenticates -->|     Server    |
   |          |                                |               |
-  |          |<---(C)---- Redirect URI ------<|               |
+  |          |<---(C)--- Redirection URI ----<|               |
   |          |          with Access Token     +---------------+
   |          |            in Fragment
   |          |                                +---------------+
-  |          |----(D)---- Redirect URI ------>|   Web Server  |
+  |          |----(D)--- Redirection URI ---->|   Web Server  |
   |          |          without Fragment      |  with Client  |
   |          |                                |   Resource    |
   |     (F)  |<---(E)------- Script ---------<|               |
@@ -1192,7 +1215,7 @@
             </t>
             <t>
               The user-agent follows the redirection instructions by making a request to the web
-              server (does not include the fragment). The user-agent retains the fragment
+              server (which does not include the fragment). The user-agent retains the fragment
               information locally.
             </t>
             <t>
@@ -1227,8 +1250,7 @@
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
-                REQUIRED, unless a redirection URI has been established between the client and
-                authorization server via other means. Described in <xref target='redirect-uri' />.
+                OPTIONAL, as described in <xref target='redirect-uri' />.
               </t>
               <t hangText='scope'>
                 <vspace />
@@ -1256,19 +1278,24 @@
             </preamble>
             <artwork>
               <![CDATA[
-  GET /authorize?response_type=token&client_id=s6BhdRkqt3&
+  GET /authorize?response_type=token&client_id=s6BhdRkqt3&state=xyz&
       redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
   Host: server.example.com
 ]]>
             </artwork>
           </figure>
           <t>
-            The authorization server validates the request to ensure all required parameters are
-            present and valid. If the request is valid, the authorization server authenticates the
-            resource owner and obtains an authorization decision (by asking the resource owner or
-            by establishing approval via other means).
-          </t>
-          <t>
+			The authorization server validates the request to ensure all required parameters are
+            present and valid. The authorization server MUST verify that the redirection URI to which
+            it will redirect the access token matches a redirection URI registered by the client as
+            described in <xref target='redirect-uri' />.
+         </t>
+         <t>
+            If the request is valid, the authorization server authenticates the resource owner and
+            obtains an authorization decision (by asking the resource owner or by establishing
+            approval via other means).
+         </t>
+         <t>
             When a decision is established, the authorization server directs the user-agent to the
             provided client redirection URI using an HTTP redirection response, or by other means
             available to it via the user-agent.
@@ -1323,10 +1350,17 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 302 Found
-  Location: http://example.com/rd#access_token=FJQbwq9&
+  Location: http://example.com/rd#access_token=FJQbwq9&state=xyz&
             token_type=example&expires_in=3600
 ]]>
             </artwork>
+            <postamble>
+	          Developers should note that some HTTP client implementations do not support the
+	          inclusion of a fragment component in the HTTP <spanx style='verb'>Location</spanx>
+	          response header field. Such client will require using other methods for redirecting
+	   		  the client than a 3xx redirection response. For example, returning an HTML page which
+	   		  includes a 'continue' button with an action linked to the redirection URI.
+		    </postamble>
           </figure>
           <t>
             The client SHOULD ignore unrecognized response parameters. The access token string size
@@ -1339,8 +1373,8 @@
             <t>
               If the request fails due to a missing, invalid, or mismatching redirection URI, or if
               the client identifier provided is invalid, the authorization server SHOULD inform the
-              resource owner of the error, and MUST NOT redirect the user-agent to the invalid
-              redirection URI.
+              resource owner of the error, and MUST NOT automatically redirect the user-agent to
+              the invalid redirection URI.
             </t>
             <t>
               If the resource owner denies the access request or if the request fails for reasons
@@ -1378,27 +1412,27 @@
                       <vspace />
                       The requested scope is invalid, unknown, or malformed.
                     </t>
-                    <t hangText='a 4xx or 5xx HTTP status code (except for 400 and 401)'>
+                    <t hangText='server_error'>
                       <vspace />
-                      The authorization server MAY set the <spanx style='verb'>error</spanx>
-                      parameter value to a numerical HTTP status code from the 4xx or 5xx range, with
-                      the exception of the 400 (Bad Request) and 401 (Unauthorized) status codes.
-                      For example, if the service is temporarily unavailable, the authorization
-                      server MAY return an error response with <spanx style='verb'>error</spanx>
-                      set to <spanx style='verb'>503</spanx>.
+                      The authorization server encountered an unexpected condition which prevented
+                      it from fulfilling the request.
+                    </t>
+                    <t hangText='temporarily_unavailable'>
+                      <vspace />
+                      The authorization server is currently unable to handle the request due to a
+                      temporary overloading or maintenance of the server.
                     </t>
                   </list>
                 </t>
                 <t hangText='error_description'>
                   <vspace />
-                  OPTIONAL. A human-readable text providing additional information, used to assist
-                  in the understanding and resolution of the error occurred. [[ add language and
-                  encoding information ]]
+                  OPTIONAL. A human-readable UTF-8 encoded text providing additional information,
+                  used to assist the client developer in understanding the error that occurred.
                 </t>
                 <t hangText='error_uri'>
                   <vspace />
                   OPTIONAL. A URI identifying a human-readable web page with information about the
-                  error, used to provide the resource owner with additional information about the
+                  error, used to provide the client developer with additional information about the
                   error.
                 </t>
                 <t hangText='state'>
@@ -1416,7 +1450,7 @@
               <artwork>
                 <![CDATA[
   HTTP/1.1 302 Found
-  Location: https://client.example.com/cb#error=access_denied
+  Location: https://client.example.com/cb#error=access_denied&state=xyz
 ]]>
               </artwork>
             </figure>
@@ -1437,7 +1471,7 @@
           The grant type is suitable for clients capable of obtaining the resource owner credentials
           (username and password, typically using an interactive form). It is also used to migrate
           existing clients using direct authentication schemes such as HTTP Basic or Digest
-          authentication to OAuth by converting the stored credentials with an access token.
+          authentication to OAuth by converting the stored credentials to an access token.
         </t>
         <figure title='Resource Owner Password Credentials Flow' anchor='Figure-5'>
           <artwork>
@@ -1539,7 +1573,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
   grant_type=password&client_id=s6BhdRkqt3&
   username=johndoe&password=A3ddj3w
@@ -1559,6 +1593,10 @@
               </t>
             </list>
           </t>
+          <t>
+            Since this access token request utilizes the resource owner's password, the
+            authorization server MUST protect the endpoint against brute force attacks.
+          </t>
         </section>
 
         <section title='Access Token Response'>
@@ -1575,8 +1613,9 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 200 OK
-  Content-Type: application/json
+  Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
+  Pragma: no-cache
 
   {
     "access_token":"SlAV32hkKG",
@@ -1607,7 +1646,7 @@
   |         |>--(A)--- Client Credentials ---->| Authorization |
   | Client  |                                  |     Server    |
   |         |<--(B)---- Access Token ---------<|               |
-  |         |    (w/ Optional Refresh Token)   |               |
+  |         |                                  |               |
   +---------+                                  +---------------+
 ]]>
           </artwork>
@@ -1675,7 +1714,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
   grant_type=client_credentials&client_id=s6BhdRkqt3
 ]]>
@@ -1689,9 +1728,10 @@
         <section title='Access Token Response'>
           <t>
             If the access token request is valid and authorized, the authorization server issues an
-            access token and optional refresh token as described in <xref target='token-response' />.
-            If the request failed client authentication or is invalid, the authorization server returns
-            an error response as described in <xref target='token-errors' />.
+            access token as described in <xref target='token-response' />. A refresh token SHOULD
+            NOT be included. If the request failed client authentication or is invalid, the
+            authorization server returns an error response as described in
+            <xref target='token-errors' />.
           </t>
           <figure>
             <preamble>
@@ -1700,14 +1740,14 @@
             <artwork>
               <![CDATA[
   HTTP/1.1 200 OK
-  Content-Type: application/json
+  Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
-
+  Pragma: no-cache
+  
   {
     "access_token":"SlAV32hkKG",
     "token_type":"example",
     "expires_in":3600,
-    "refresh_token":"8xLOxBtZp8",
     "example_parameter":"example_value"
   }
 ]]>
@@ -1735,7 +1775,7 @@
             <![CDATA[
   POST /token HTTP/1.1
   Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
   grant_type=http%3A%2F%2Foauth.net%2Fgrant_type%2Fassertion%2F
   saml%2F2.0%2Fbearer&assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ
@@ -1811,7 +1851,9 @@
           The authorization server MUST include the HTTP
           <spanx style='verb'>Cache-Control</spanx> response header field <xref target='RFC2616' />
           with a value of <spanx style='verb'>no-store</spanx> in any response containing tokens,
-          secrets, or other sensitive information.
+          secrets, or other sensitive information, as well as the
+          <spanx style='verb'>Pragma</spanx> response header field <xref target='RFC2616' /> with a
+          value of <spanx style='verb'>no-cache</spanx>.
         </t>
         <figure>
           <preamble>
@@ -1820,8 +1862,9 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 200 OK
-  Content-Type: application/json
+  Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
+  Pragma: no-cache
 
   {
     "access_token":"SlAV32hkKG",
@@ -1894,14 +1937,13 @@
             </t>
             <t hangText='error_description'>
               <vspace />
-              OPTIONAL. A human-readable text providing additional information, used to assist
-              in the understanding and resolution of the error occurred. [[ add language and
-              encoding information ]]
+              OPTIONAL. A human-readable UTF-8 encoded text providing additional information,
+              used to assist the client developer in understanding the error that occurred.
             </t>
             <t hangText='error_uri'>
               <vspace />
               OPTIONAL. A URI identifying a human-readable web page with information about the
-              error, used to provide the resource owner with additional information about the
+              error, used to provide the client developer with additional information about the
               error.
             </t>
           </list>
@@ -1920,33 +1962,12 @@
           <artwork>
             <![CDATA[
   HTTP/1.1 400 Bad Request
-  Content-Type: application/json
+  Content-Type: application/json;charset=UTF-8
   Cache-Control: no-store
+  Pragma: no-cache
 
   {
     "error":"invalid_request"
-  }
-]]>
-          </artwork>
-        </figure>
-        <t>
-          If the authorization server encounters an error condition other than the 400 (Bad
-          Request) and 401 (Unauthorized) responses described above (e.g. the service is
-          temporarily unavailable), the authorization server SHOULD include an error response in
-          the entity body, and set the <spanx style='verb'>error</spanx> parameter value to the
-          numerical HTTP status code returned.
-        </t>
-        <figure>
-          <preamble>
-            For example:
-          </preamble>
-          <artwork>
-            <![CDATA[
-  HTTP/1.1 503 Service Unavailable
-  Content-Type: application/json
-
-  {
-    "error":"503"
   }
 ]]>
           </artwork>
@@ -2003,7 +2024,7 @@
   POST /token HTTP/1.1
   Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded
+  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
   grant_type=refresh_token&client_id=s6BhdRkqt3&
   refresh_token=n4E9O119d
@@ -2020,8 +2041,9 @@
         <xref target='token-errors' />.
       </t>
       <t>
-        The authorization server MAY issue a new refresh token, in which case, the client MUST
-        discard the old refresh token and replace it with the new refresh token.
+        The authorization server MAY issue a new refresh token, in which case the client MUST
+        discard the old refresh token and replace it with the new refresh token. The authorization
+        server MAY revoke the old refresh token after issuing a new refresh token to the client.
       </t>
     </section>
 
@@ -2287,8 +2309,13 @@
             <vspace />
             A native application is a client which is installed and executes on the end-user's
             device. The OAuth protocol data and credentials are accessible to the end-user. It is
-            assumed that such an application can protect dynamically issued credentials, such as
-            refresh tokens, from eavesdropping by other applications residing on the same device.
+            assumed that any client authentication credentials included in the application can be
+            extracted, and furthermore that rotation of the client authentication credentials is
+            not practical. Dynamically issued credentials such as access tokens or refresh tokens,
+            on the other hand, can receive an acceptable level of protection. At a minimum these
+            credentials are protected from hostile servers which the application may contact. On
+            some platform those credentials might be protected from other applications residing on
+            the same device.
           </t>
         </list>
       </t>
@@ -2335,9 +2362,9 @@
           impersonator.
         </t>
         <t>
-          The authorization server SHOULD require the client to pre-register its redirection URI
+          The authorization server SHOULD require the client to register its redirection URI
           and validate the value of the <spanx style='verb'>redirect_uri</spanx> against the
-          pre-registered value. The client MUST NOT serve an open redirector resource which can be
+          registered value. The client MUST NOT serve an open redirector resource which can be
           used by an attacker to construct an URI that will pass the authorization server's
           redirection URI matching rules, and will redirect the end-user's user-agent to the
           attacker's server.
@@ -2403,9 +2430,10 @@
       <section title='Endpoints Authenticity'>
         <t>
           In order to prevent man-in-the-middle and phishing attacks, the authorization server
-          MUST implement and require TLS with server-side authentication in all exchanges. The
-          client MUST verify the authorization server's TLS certificate, as well as the respective
-          certificate chain.
+          MUST implement and require TLS with server authentication in all exchanges as described
+          by <xref target='RFC2818' />. The client MUST validate the authorization server's TLS
+          certificate in accordance with its requirements for authentication of the server's
+          identity.
         </t>
       </section>
 
@@ -2453,7 +2481,7 @@
           MUST require TLS.
         </t>
         <t>
-          Authorization codes SHOULD be short lived and MUST be single use. If the authorization
+          Authorization codes MUST be short lived and single use. If the authorization
           server observes multiple attempts to exchange an authorization code for an access token,
           the authorization server SHOULD revoke all access tokens already granted based on the
           compromised authorization code.
@@ -2478,9 +2506,9 @@
           In order to prevent such an attack, authorization servers MUST ensure that the
           redirection URI used to obtain the authorization code, is the same as the redirection URI
           provided when exchanging the authorization code for an access token. The authorization
-          server SHOULD require the client to pre-register their redirection URI and if provided,
+          server SHOULD require the client to register their redirection URI and if provided,
           MUST validate the redirection URI received in the authorization request against the
-          pre-registered value.
+          registered value.
         </t>
       </section>
 
@@ -3076,6 +3104,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml' ?>
