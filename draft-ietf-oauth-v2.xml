@@ -147,7 +147,7 @@
         <section title='Client Types'>
           <t>
             OAuth defines two client types, based on their ability to maintain the confidentiality
-            of their client credential, used to authentication with the authorization server:
+            of their client credential, used to authenticate with the authorization server:
           </t>
           <t>
             <list style='hanging'>
@@ -155,13 +155,14 @@
                 <vspace />
                 Clients capable of maintaining the confidentiality of their credentials (e.g.
                 client implemented on a secure server with restricted access to the client
-                credentials).
+                credentials), or capable of secure client authentication using other means.
               </t>
               <t hangText='public'>
                 <vspace />
                 Clients incapable of maintaining the confidentiality of their credentials (e.g.
                 clients executing on the resource owner's device such as an installed native
-                application or a user-agent-based application).
+                application or a user-agent-based application), and incapable of secure client
+                authentication via any other mean.
               </t>
             </list>
           </t>
@@ -169,10 +170,10 @@
         
       </section>
       
-      <section title='Client Registration'>
+      <section title='Client Registration' anchor='client-registration'>
         <t>
-          Before initiating the protocol, the client registers with with the authorization server.
-          The means through which the client registers with the authorization server are beyond the
+          Before initiating the protocol, the client registers with the authorization server. The
+          means through which the client registers with the authorization server are beyond the
           scope of this specification, but typically involve human interaction with an HTML
           registration form.
         </t>
@@ -186,7 +187,27 @@
           The authorization server issues the registered client a client identifier - a unique
           string representing the registration information provided by the client. In addition, the
           client and authorization server establish a client authentication method suitable for the
-          client type and security requirements of the authorization server.
+          client type and security requirements of the authorization server. Private clients are
+          typically issued (or establish) a set of client credentials used for client
+          authentication.
+        </t>
+        <t>
+          For the sole purpose of improving readability, this specification is written using the
+          assumption that client authentication is accomplished via client credentials, but does
+          not exclude other means.
+        </t>
+        <t>
+          Client registration does not require a direct interaction between the client and the
+          authorization server. When supported by the authorization server, registration can rely
+          on other means for establishing trust and obtaining the required client properties (e.g.
+          redirection URI, client type). For example, registration can be accomplished using a
+          self-issued or third-party-issued assertion, or by the authorization server performing
+          client discovery using a trusted channel.
+        </t>
+        <t>
+          OAuth does not exclude the use of unregistered clients, however, its use with
+          such clients is beyond the scope of this specification, and requires additional security
+          analysis and review of its impact on interoperability.
         </t>
       </section>
 
@@ -371,19 +392,23 @@
 
       <section title='Refresh Token'>
         <t>
-          A refresh token is optionally issued by the authorization server to the client together
-          with an access token. The refresh token can be used to obtain a new access token when the
-	      current access token becomes invalid or expires, or to obtain additional access tokens
-	      with identical or narrower scope (access tokens may have a shorter lifetime and fewer
-	      permissions than authorized by the resource owner).
+          Refresh tokens are issued to the client by the authorization server and are used to
+          obtain a new access token when the current access token becomes invalid or expires, or to
+          obtain additional access tokens with identical or narrower scope (access tokens may have
+          a shorter lifetime and fewer permissions than authorized by the resource owner). Issuing
+          a refresh token is optional and is included when issuing an access token.
         </t>
         <t>
           A refresh token is a string representing the authorization granted to the client by the
-          resource owner. The string is usually opaque to the client. The token denote an
-          identifier used to retrieve the authorization information. The refresh token is bound to
-          the client it was issued to, and its usage requires client authentication. Unlike access
-          tokens, refresh tokens are intended for use only with authorization servers and are never
-          sent to resource servers.
+          resource owner. The string is usually opaque to the client. The token denotes an
+          identifier used to retrieve the authorization information. Unlike access tokens, refresh
+          tokens are intended for use only with authorization servers and are never sent to
+          resource servers.
+        </t>
+        <t>
+          Because refresh tokens are typically long lasting credentials used to request additional
+          access tokens, the refresh token is bound to the client it was issued and its usage
+          requires client authentication for private client.
         </t>
         <figure title='Refreshing an Expired Access Token' anchor='Figure-2'>
           <artwork>
@@ -669,35 +694,27 @@
           The client identifier is used as the username, and the client password is used as the
           password.
         </t>
-        <t>
-          When using the HTTP Basic authentication scheme, the client identifier is included twice
-          in the request (in the <spanx style='verb'>Authorization</spanx> header and in the
-          <spanx style='verb'>client_id</spanx> parameter). The authorization server MUST ensure
-          the two identifiers belong to the same client.
-        </t>
         <figure>
           <preamble>
             For example (extra line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
-  POST /token HTTP/1.1
-  Host: server.example.com
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  Content-Type: application/x-www-form-urlencoded;charset=UTF-8
-
-  grant_type=authorization_code&client_id=s6BhdRkqt3&
-  code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
           </artwork>
         </figure>
         <t>
-          Alternatively, the authorization server MAY allow including the client secret in the
-          request body using the following parameter:
+          Alternatively, the authorization server MAY allow including the client credentials in the
+          request body using the following parameters:
         </t>
         <t>
           <list style='hanging' hangIndent='6'>
+            <t hangText='client_id'>
+              <vspace />
+              REQUIRED. The client identifier issued to the client during the registration process
+              described by <xref target='client-registration' />.
+              </t>
             <t hangText='client_secret'>
               <vspace />
               REQUIRED. The client secret.
@@ -705,13 +722,14 @@
           </list>
         </t>
         <t>
-          The use of the <spanx style='verb'>client_secret</spanx> parameter is NOT RECOMMENDED,
-          and should be limited to clients unable to directly utilize the HTTP Basic authentication
-          scheme.
+          Including the client credentials in the request body using the two parameters is NOT
+          RECOMMENDED, and should be limited to clients unable to directly utilize the HTTP Basic
+          authentication scheme (or other password-based HTTP authentication schemes).
         </t>
         <figure>
           <preamble>
-            For example (extra line breaks are for display purposes only):
+            For example, requesting to refresh an access token (<xref target='token-refresh' />)
+            using the body parameters (extra line breaks are for display purposes only):
           </preamble>
           <artwork>
             <![CDATA[
@@ -719,9 +737,8 @@
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
-  grant_type=authorization_code&client_id=s6BhdRkqt3&
-  client_secret=gX1fBat3bV&code=i1WsRn1uB1&
-  redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+  grant_type=refresh_token&refresh_token=n4E9O119d&
+  client_id=s6BhdRkqt3&client_secret=gX1fBat3bV
 ]]>
           </artwork>
         </figure>
@@ -842,7 +859,7 @@
               <t hangText='client_id'>
                 <vspace />
                 REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />.
+                <xref target='client-registration' />.
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
@@ -1039,11 +1056,6 @@
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>authorization_code</spanx>.
               </t>
-              <t hangText='client_id'>
-                <vspace />
-                REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />.
-              </t>
               <t hangText='code'>
                 <vspace />
                 REQUIRED. The authorization code received from the authorization server.
@@ -1072,8 +1084,7 @@
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
-  grant_type=authorization_code&client_id=s6BhdRkqt3&
-  code=i1WsRn1uB1&
+  grant_type=authorization_code&code=i1WsRn1uB1&
   redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 ]]>
             </artwork>
@@ -1246,7 +1257,7 @@
               <t hangText='client_id'>
                 <vspace />
                 REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />.
+                <xref target='client-registration' />.
               </t>
               <t hangText='redirect_uri'>
                 <vspace />
@@ -1537,11 +1548,6 @@
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>password</spanx>.
               </t>
-              <t hangText='client_id'>
-                <vspace />
-                REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />.
-              </t>
               <t hangText='username'>
                 <vspace />
                 REQUIRED. The resource owner username, encoded as UTF-8.
@@ -1575,8 +1581,7 @@
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
-  grant_type=password&client_id=s6BhdRkqt3&
-  username=johndoe&password=A3ddj3w
+  grant_type=password&username=johndoe&password=A3ddj3w
 ]]>
             </artwork>
           </figure>
@@ -1686,11 +1691,6 @@
                 <vspace />
                 REQUIRED. Value MUST be set to <spanx style='verb'>client_credentials</spanx>.
               </t>
-              <t hangText='client_id'>
-                <vspace />
-                REQUIRED. The client identifier as described in
-                <xref target='client-authentication' />.
-              </t>
               <t hangText='scope'>
                 <vspace />
                 OPTIONAL. The scope of the access request expressed as a list of space-delimited,
@@ -1716,7 +1716,7 @@
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
-  grant_type=client_credentials&client_id=s6BhdRkqt3
+  grant_type=client_credentials
 ]]>
             </artwork>
           </figure>
@@ -1989,11 +1989,6 @@
             <vspace />
             REQUIRED. Value MUST be set to <spanx style='verb'>refresh_token</spanx>.
           </t>
-          <t hangText='client_id'>
-            <vspace />
-            REQUIRED. The client identifier as described in
-            <xref target='client-authentication' />.
-          </t>
           <t hangText='refresh_token'>
             <vspace />
             REQUIRED. The refresh token issued to the client.
@@ -2026,8 +2021,7 @@
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
   
-  grant_type=refresh_token&client_id=s6BhdRkqt3&
-  refresh_token=n4E9O119d
+  grant_type=refresh_token&refresh_token=n4E9O119d
 ]]>
         </artwork>
       </figure>
@@ -3072,7 +3066,7 @@
         While many people contributed to this specification throughout its long journey, the editor
         would like to acknowledge and thank a few individuals for their outstanding and invaluable
         efforts leading up to the publication of this specification. It is these individuals without
-        whom this work would not have existed, or reached its successful conclusion.
+        whom this work would not have existed or reached its successful conclusion.
       </t>
       <t>
         David Recordon for continuously being one of OAuth’s most valuable assets, bringing
