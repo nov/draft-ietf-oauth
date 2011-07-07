@@ -467,7 +467,7 @@
         </t>
         <t>
           The client type designation is based on the authorization server's definition of secure
-          authentication and its accaptable exposure levels of client credentials.
+          authentication and its acceptable exposure levels of client credentials.
         </t>
       </section>
 
@@ -695,7 +695,7 @@
             client), the client SHOULD require the use of a transport-layer security mechanism.
             Lack of transport-layer security can have a severe impact on the security of the client
             and the protected resources it is authorized to access. The use of transport-layer
-            security is particularily critical when the authorization process is used as a form of
+            security is particularly critical when the authorization process is used as a form of
             delegated end-user authentication by the client (e.g. third-party sign-in service).
           </t>
           <t>
@@ -721,7 +721,7 @@
           <t>
             If multiple redirection URIs have been registered, if only part of the redirection URI
             has been registered, or if no redirection URI has been registered, the client MUST
-            includes a redirection URI with the authorization request using the
+            include a redirection URI with the authorization request using the
             <spanx style='verb'>redirect_uri</spanx> request parameter. When a redirection URI is
             included in an authorization request, the authorization server MUST compare and match
             the value received against at least one of the registered redirection URIs (or URI
@@ -802,7 +802,7 @@
           </t>
           <t>
             The security ramifications of allowing unauthenticated access by public clients to the
-            token endpoint MUST be considered, as well as the issuence of refresh tokens to public
+            token endpoint MUST be considered, as well as the issuance of refresh tokens to public
             clients, their scope, and lifetime.
           </t>
         </section>
@@ -822,10 +822,11 @@
 
       <section title='Authorization Code' anchor='grant-code'>
         <t>
-          The authorization code grant type is suitable for private clients. As a redirection-based
-          flow, the client must be capable of interacting with the resource owner's user-agent
-          (typically a web browser) and capable of receiving incoming requests (via redirection)
-          from the authorization server.
+          The authorization code grant type is used to obtain both access tokens and refresh
+          tokens and is optimized for private clients. As a redirection-based flow, the client must
+          be capable of interacting with the resource owner's user-agent (typically a web browser)
+          and capable of receiving incoming requests (via redirection) from the authorization
+          server.
         </t>
         <figure title='Authorization Code Flow' anchor='Figure-3'>
           <artwork>
@@ -1201,9 +1202,10 @@
 
       <section title='Implicit Grant' anchor='grant-implicit'>
         <t>
-          The implicit grant type is suitable for public clients which can be known to operate a
-          particular redirection URI. These clients are typically implemented in a browser using a
-          scripting language such as JavaScript.
+          The implicit grant type is used to obtain access tokens (it does not support the issuance
+          of refresh tokens) and is optimized for public clients known to operate a particular
+          redirection URI. These clients are typically implemented in a browser using a scripting
+          language such as JavaScript.
         </t>
         <t>
           As a redirection-based flow, the client must be capable of interacting with the
@@ -1216,11 +1218,10 @@
           authorization request.
         </t>
         <t>
-          Using the implicit grant type does not include client authentication since the client is
-          unable to maintain their credentials confidentiality (the client resides on the resource
-          owner's computer or device which makes the client credentials accessible and
-          exploitable). Because the access token is encoded into the redirection URI, it may be
-          exposed to the resource owner and other applications residing on its computer or device.
+          The implicit grant type does not include client authentication, and relies on the
+          presence of the resource owner and the registration of the redirection URI. Because the
+          access token is encoded into the redirection URI, it may be exposed to the resource owner
+          and other applications residing on its computer or device.
         </t>
         <figure title='Implicit Grant Flow' anchor='Figure-4'>
           <artwork>
@@ -2103,7 +2104,7 @@
           </t>
           <t>
             authenticate the client if client authentication is included and ensure the
-            the refresh token was issued to the authenticated client,
+            refresh token was issued to the authenticated client,
           </t>
           <t>
             validate the refresh token, and
@@ -3135,14 +3136,15 @@
       </t>
       <t>
         Michael Adams, Andrew Arnott, Dirk Balfanz, Scott Cantor, Blaine Cook, Brian Campbell,
-        Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg, George Fletcher,
-        Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman, Kristoffer Gronowski, Justin Hart,
-        Craig Heath, Phil Hunt, Michael B. Jones, John Kemp, Mark Kent, Raffi Krikorian,
-        Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt, Hui-Lan Lu, Paul Madsen,
-        Alastair Mair, Eve Maler, James Manger, Mark McGloin, Laurence Miao, Chuck Mortimore,
-        Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah,
-        Luke Shepard, Vlad Skvortsov, Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan,
-        Allen Tom, Franklin Tse, Nick Walker, Skylar Woodward.
+        Brian Eaton, Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg,
+        George Fletcher, Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman,
+        Kristoffer Gronowski, Justin Hart, Dick Hardt, Craig Heath, Phil Hunt, Michael B. Jones,
+        John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt,
+        Hui-Lan Lu, Paul Madsen, Alastair Mair, Eve Maler, James Manger, Mark McGloin,
+        Laurence Miao, Chuck Mortimore, Justin Richer, Peter Saint-Andre, Nat Sakimura, Rob Sayre,
+        Marius Scurtescu, Naitik Shah, Luke Shepard, Vlad Skvortsov, Justin Smith, Jeremy Suriel,
+        Christian Stübner, Paul Tarjan, Allen Tom, Franklin Tse, Nick Walker, Shane Weeden, and
+        Skylar Woodward.
       </t>
     </section>
 
