@@ -147,7 +147,7 @@
         <section title='Client Types'>
           <t>
             OAuth defines two client types, based on their ability to maintain the confidentiality
-            of their client credential, used to authenticate with the authorization server:
+            of their client credentials, used to authenticate with the authorization server:
           </t>
           <t>
             <list style='hanging'>
@@ -188,13 +188,8 @@
           string representing the registration information provided by the client. In addition, the
           client and authorization server establish a client authentication method suitable for the
           client type and security requirements of the authorization server. Private clients are
-          typically issued (or establish) a set of client credentials used for client
-          authentication.
-        </t>
-        <t>
-          For the sole purpose of improving readability, this specification is written using the
-          assumption that client authentication is accomplished via client credentials, but does
-          not exclude other means.
+          typically issued (or establish) a set of client credentials used for authenticating with
+          the authorization server.
         </t>
         <t>
           Client registration does not require a direct interaction between the client and the
@@ -221,8 +216,8 @@
   |        |<-(B)-- Authorization Grant ---|               |
   |        |                               +---------------+
   |        |
-  |        |        Authorization Grant &  +---------------+
-  |        |--(C)--- Client Credentials -->| Authorization |
+  |        |                               +---------------+
+  |        |--(C)-- Authorization Grant -->| Authorization |
   | Client |                               |     Server    |
   |        |<-(D)----- Access Token -------|               |
   |        |                               +---------------+
@@ -248,17 +243,16 @@
             </t>
             <t>
               The client receives an authorization grant which represents the authorization
-              provided by the resource owner. The authorization grant type depends on the method used by
-              the client and supported by the authorization server to obtain it.
+              provided by the resource owner. The authorization grant type depends on the method
+              used by the client and supported by the authorization server to obtain it.
             </t>
             <t>
               The client requests an access token by authenticating with the authorization server
-              using its client credentials (prearranged between the client and authorization
-              server) and presenting the authorization grant.
+              and presenting the authorization grant.
             </t>
             <t>
-              The authorization server validates the client credentials and the authorization grant, and
-              if valid issues an access token.
+              The authorization server authenticates the client and validates the authorization
+              grant, and if valid issues an access token.
             </t>
             <t>
               The client requests the protected resource from the resource server and authenticates
@@ -281,8 +275,9 @@
         <t>
           The token may denote an identifier used to retrieve the authorization information, or
           self-contain the authorization information in a verifiable manner (i.e. a token string
-          consisting of some data and a signature). Additional authentication credentials may be
-          required in order for the client to use a token.
+          consisting of some data and a signature). Additional authentication credentials, which
+          are beyond the scope of this specification, may be required in order for the client to
+          use a token.
         </t>
         <t>
           The access token provides an abstraction layer, replacing different authorization
@@ -371,11 +366,11 @@
 
         <section title='Client Credentials'>
           <t>
-            The client credentials can be used as an authorization grant when the authorization
-            scope is limited to the protected resources under the control of the client, or to
-            protected resources previously arranged with the authorization server. Client
-            credentials are used as an authorization grant typically when the client is acting on
-            its own behalf (the client is also the resource owner).
+            The client credentials (or other forms of client authentication) can be used as an
+            authorization grant when the authorization scope is limited to the protected resources
+            under the control of the client, or to protected resources previously arranged with the
+            authorization server. Client credentials are used as an authorization grant typically
+            when the client is acting on its own behalf (the client is also the resource owner).
           </t>
         </section>
 
@@ -406,15 +401,15 @@
           resource servers.
         </t>
         <t>
-          Because refresh tokens are typically long lasting credentials used to request additional
-          access tokens, the refresh token is bound to the client it was issued and its usage
-          requires client authentication for private client.
+          Because refresh tokens are typically long-lasting credentials used to request additional
+          access tokens, the refresh token is bound to the client it was issued and its usage by
+          private clients requires client authentication.
         </t>
         <figure title='Refreshing an Expired Access Token' anchor='Figure-2'>
           <artwork>
             <![CDATA[
-  +--------+            Authorization Grant &          +---------------+
-  |        |--(A)-------- Client Credentials --------->|               |
+  +--------+                                           +---------------+
+  |        |--(A)------- Authorization Grant --------->|               |
   |        |                                           |               |
   |        |<-(B)----------- Access Token -------------|               |
   |        |               & Refresh Token             |               |
@@ -429,8 +424,7 @@
   |        |<-(F)- Invalid Token Error -|          |   |               |
   |        |                            +----------+   |               |
   |        |                                           |               |
-  |        |                Refresh Token &            |               |
-  |        |--(G)-------- Client Credentials --------->|               |
+  |        |--(G)----------- Refresh Token ----------->|               |
   |        |                                           |               |
   |        |<-(H)----------- Access Token -------------|               |
   +--------+           & Optional Refresh Token        +---------------+
@@ -443,11 +437,11 @@
         <t>
           <list style='format (%C)'>
             <t>
-              The client requests an access token by authenticating with the authorization server
-              using its client credentials, and presenting an authorization grant.
+              The client requests an access token by authenticating with the authorization server,
+              and presenting an authorization grant.
             </t>
             <t>
-              The authorization server validates the client credentials and the authorization
+              The authorization server authenticates the client and validates the authorization
               grant, and if valid issues an access token and a refresh token.
             </t>
             <t>
@@ -468,10 +462,10 @@
             </t>
             <t>
               The client requests a new access token by authenticating with the authorization
-              server using its client credentials, and presenting the refresh token.
+              server and presenting the refresh token.
             </t>
             <t>
-              The authorization server validates the client credentials and the refresh token,
+              The authorization server authenticates the client and validates the refresh token,
               and if valid issues a new access token (and optionally, a new refresh token).
             </t>
           </list>
@@ -799,9 +793,8 @@
     |    |                                         |      |
     ^    v                                         |      |
   +---------+                                      |      |
-  |         |>---(D)-- Client Credentials, --------'      |
-  |         |          Authorization Code,                |
-  | Client  |           & Redirection URI                 |
+  |         |>---(D)-- Authorization Code ---------'      |
+  |  Client |          & Redirection URI                  |
   |         |                                             |
   |         |<---(E)----- Access Token -------------------'
   +---------+       (w/ Optional Refresh Token)
@@ -831,12 +824,12 @@
             </t>
             <t>
               The client requests an access token from the authorization server's token endpoint
-              by authenticating using its client credentials, and includes the authorization code
-              received in the previous step. The client includes the redirection URI used to obtain
-              the authorization code for verification.
+              by including the authorization code received in the previous step. When making the
+              request, the client authenticates with the authorization server. The client includes
+              the redirection URI used to obtain the authorization code for verification.
             </t>
             <t>
-              The authorization server validates the client credentials, the authorization code,
+              The authorization server authenticates the client, validates the authorization code,
               and ensures the redirection URI received matches the URI used to redirect the client
               in step (C). If valid, responds back with an access token.
             </t>
@@ -1069,8 +1062,8 @@
             </list>
           </t>
           <t>
-            The client includes its authentication credentials as described in
-            <xref target='client-authentication' />
+            If the client type is private, the client MUST authenticate with the authorization
+            server as described in <xref target='client-authentication' />.
           </t>
           <figure>
             <preamble>
@@ -1095,15 +1088,19 @@
           <t>
             <list style='symbols'>
               <t>
-                validate the client credentials and ensure that the authorization code was issued
-                to that client,
+                require client authentication for private clients or for any client issued client
+                credentials (or with other authentication requirements),
+              </t>
+              <t>
+                authenticate the client if client authentication is included and ensure the
+                authorization code was issued to the authenticated client,
               </t>
               <t>
                 verify that the authorization code is valid, and
               </t>
               <t>
                 ensure that the <spanx style='verb'>redirect_uri</spanx> parameter is present if
-                the <spanx style='verb'>redirect_uri</spanx> parameter was included in the
+                the <spanx style='verb'>redirect_uri</spanx> parameter was included in the initial
                 authorization request described in <xref target='code-authz-req' />, and that their
                 values are identical.
               </t>
@@ -1161,7 +1158,7 @@
         </t>
         <t>
           Using the implicit grant type does not include client authentication since the client is
-          unable to maintain their credential confidentiality (the client resides on the resource
+          unable to maintain their credentials confidentiality (the client resides on the resource
           owner's computer or device which makes the client credentials accessible and
           exploitable). Because the access token is encoded into the redirection URI, it may be
           exposed to the resource owner and other applications residing on its computer or device.
@@ -1493,15 +1490,14 @@
   |          |
   +----------+
        v
-       |
+       |    Resource Owner
       (A) Password Credentials
        |
        v
   +---------+                                  +---------------+
-  |         |          Client Credentials      |               |
-  |         |>--(B)---- & Resource Owner ----->|               |
-  | Client  |         Password Credentials     | Authorization |
-  |         |                                  |     Server    |
+  |         |>--(B)---- Resource Owner ------->|               |
+  |         |         Password Credentials     | Authorization |
+  | Client  |                                  |     Server    |
   |         |<--(C)---- Access Token ---------<|               |
   |         |    (w/ Optional Refresh Token)   |               |
   +---------+                                  +---------------+
@@ -1518,12 +1514,12 @@
             </t>
             <t>
               The client requests an access token from the authorization server's token endpoint by
-              authenticating using its client credentials, and includes the credentials received
-              from the resource owner.
+              including the credentials received from the resource owner. When making the request,
+              the client authenticates with the authorization server.
             </t>
             <t>
-              The authorization server validates the resource owner credentials and the client
-              credentials and issues an access token.
+              The authorization server authenticates the client and validates the resource owner
+              credentials, and if valid issues an access token.
             </t>
           </list>
         </t>
@@ -1566,8 +1562,8 @@
             </list>
           </t>
           <t>
-            The client includes its authentication credentials as described in
-            <xref target='client-authentication' />
+            If the client type is private, the client MUST authenticate with the authorization
+            server as described in <xref target='client-authentication' />.
           </t>
           <figure>
             <preamble>
@@ -1591,10 +1587,14 @@
           <t>
             <list style='symbols'>
               <t>
-                Validate the client credentials.
+                require client authentication for private clients or for any client issued client
+                credentials (or with other authentication requirements),
               </t>
               <t>
-                Validate the resource owner password credentials.
+                authenticate the client if client authentication is included, and
+              </t>
+              <t>
+                validate the resource owner password credentials.
               </t>
             </list>
           </t>
@@ -1638,17 +1638,21 @@
 
       <section title='Client Credentials' anchor='grant-client'>
         <t>
-          The client can request an access token using only its client credentials when the client
-          is requesting access to the protected resources under its control, or those of another
-          resource owner which has been previously arranged with the authorization server (the
-          method of which is beyond the scope of this specification).
+          The client can request an access token using only its client credentials (or other
+          supported means of authentication) when the client is requesting access to the
+          protected resources under its control, or those of another resource owner which has been
+          previously arranged with the authorization server (the method of which is beyond the
+          scope of this specification).
+        </t>
+        <t>
+          The client credentials grant type MUST only be used by private clients.
         </t>
         <figure title='Client Credentials Flow' anchor='Figure-6'>
           <artwork>
             <![CDATA[
   +---------+                                  +---------------+
   |         |                                  |               |
-  |         |>--(A)--- Client Credentials ---->| Authorization |
+  |         |>--(A)- Client Authentication --->| Authorization |
   | Client  |                                  |     Server    |
   |         |<--(B)---- Access Token ---------<|               |
   |         |                                  |               |
@@ -1662,20 +1666,20 @@
         <t>
           <list style='format (%C)'>
             <t>
-              The client requests an access token from the token endpoint by authenticating using
-              its client credentials.
+              The client authenticates with the authorization server and requests an access token
+              from the token endpoint.
             </t>
             <t>
-              The authorization server validates the client credentials and issues an access token.
+              The authorization server authenticates the client, and if valid issues an access
+              token.
             </t>
           </list>
         </t>
 
         <section title='Authorization Request and Response'>
           <t>
-            Since the client credentials are used as the authorization grant, no additional
-            authorization request is needed as the client is already in the possession of its
-            client credentials.
+            Since the client authentication is used as the authorization grant, no additional
+            authorization request is needed.
           </t>
         </section>
 
@@ -1701,8 +1705,8 @@
             </list>
           </t>
           <t>
-            The client includes its authentication credentials as described in
-            <xref target='client-authentication' />
+            The client MUST authenticate with the authorization server as described in
+            <xref target='client-authentication' />.
           </t>
           <figure>
             <preamble>
@@ -1721,7 +1725,7 @@
             </artwork>
           </figure>
           <t>
-            The authorization server MUST validate the client credentials.
+            The authorization server MUST authenticate the client.
           </t>
         </section>
 
@@ -1905,10 +1909,10 @@
                 </t>
                 <t hangText='invalid_client'>
                   <vspace />
-                  Client authentication failed (e.g. unknown client, no client credentials
-                  included, multiple client credentials included, or unsupported credentials
-                  type). The authorization server MAY return an HTTP 401 (Unauthorized) status code
-                  to indicate which HTTP authentication schemes are supported. If the client
+                  Client authentication failed (e.g. unknown client, no client authentication
+                  included, multiple client authentications included, or unsupported authentication
+                  method). The authorization server MAY return an HTTP 401 (Unauthorized) status
+                  code to indicate which HTTP authentication schemes are supported. If the client
                   attempted to authenticate via the <spanx style='verb'>Authorization</spanx>
                   request header field, the authorization server MUST respond with an HTTP 401
                   (Unauthorized) status code, and include the
@@ -2006,8 +2010,8 @@
         </list>
       </t>
       <t>
-        The client includes its authentication credentials as described in
-        <xref target='client-authentication' />.
+        If the client type is private, the client MUST authenticate with the authorization
+        server as described in <xref target='client-authentication' />.
       </t>
       <figure>
         <preamble>
@@ -2026,10 +2030,28 @@
         </artwork>
       </figure>
       <t>
-        The authorization server MUST validate the client credentials, ensure that the refresh
-        token was issued to the authenticated client, validate the refresh token, and
-        verify that the resource owner's authorization is still valid. If valid and authorized, the
-        authorization server issues an access token as described in
+        The authorization server MUST:
+      </t>
+      <t>
+        <list style='symbols'>
+          <t>
+            require client authentication for private clients or for any client issued client
+            credentials (or with other authentication requirements),
+          </t>
+          <t>
+            authenticate the client if client authentication is included and ensure the
+            the refresh token was issued to the authenticated client,
+          </t>
+          <t>
+            validate the refresh token, and
+          </t>
+          <t>
+            verify that the resource owner's authorization is still valid.
+          </t>
+        </list>
+      </t>
+      <t>
+        If valid and authorized, the authorization server issues an access token as described in
         <xref target='token-response' />. If the request failed verification or is invalid, the
         authorization server returns an error response as described in
         <xref target='token-errors' />.
