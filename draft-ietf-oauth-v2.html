@@ -315,54 +315,52 @@ Client Authentication<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor44">10.2.</a>&nbsp;
 Client Impersonation<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor45">10.3.</a>&nbsp;
-Access Token Credentials<br />
+Access Tokens<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor46">10.4.</a>&nbsp;
 Refresh Tokens<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor47">10.5.</a>&nbsp;
-Request Confidentiality<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor48">10.6.</a>&nbsp;
-Endpoints Authenticity<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor49">10.7.</a>&nbsp;
-Credentials Guessing Attacks<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor50">10.8.</a>&nbsp;
-Phishing Attacks<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor51">10.9.</a>&nbsp;
 Authorization Codes<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor52">10.10.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor48">10.6.</a>&nbsp;
 Authorization Code Leakage<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor53">10.11.</a>&nbsp;
-Redirection URI Validation<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor54">10.12.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor49">10.7.</a>&nbsp;
 Resource Owner Password Credentials<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor55">10.13.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor50">10.8.</a>&nbsp;
+Request Confidentiality<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor51">10.9.</a>&nbsp;
+Endpoints Authenticity<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor52">10.10.</a>&nbsp;
+Credentials Guessing Attacks<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor53">10.11.</a>&nbsp;
+Phishing Attacks<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor54">10.12.</a>&nbsp;
 Cross-Site Request Forgery<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor56">10.14.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor55">10.13.</a>&nbsp;
 Clickjacking<br />
-<a href="#anchor57">11.</a>&nbsp;
+<a href="#anchor56">11.</a>&nbsp;
 IANA Considerations<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#type-registry">11.1.</a>&nbsp;
 The OAuth Access Token Type Registry<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor58">11.1.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor57">11.1.1.</a>&nbsp;
 Registration Template<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#parameters-registry">11.2.</a>&nbsp;
 The OAuth Parameters Registry<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor59">11.2.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor58">11.2.1.</a>&nbsp;
 Registration Template<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor60">11.2.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor59">11.2.2.</a>&nbsp;
 Initial Registry Contents<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#response-type-registry">11.3.</a>&nbsp;
 The OAuth Authorization Endpoint Response Type Registry<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor61">11.3.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor60">11.3.1.</a>&nbsp;
 Registration Template<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor62">11.3.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor61">11.3.2.</a>&nbsp;
 Initial Registry Contents<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#error-registry">11.4.</a>&nbsp;
 The OAuth Extensions Error Registry<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor63">11.4.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor62">11.4.1.</a>&nbsp;
 Registration Template<br />
-<a href="#anchor64">12.</a>&nbsp;
+<a href="#anchor63">12.</a>&nbsp;
 Acknowledgements<br />
-<a href="#anchor65">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor64">Appendix&nbsp;A.</a>&nbsp;
 Editor's Notes<br />
 <a href="#rfc.references1">13.</a>&nbsp;
 References<br />
@@ -429,7 +427,7 @@ Introduction</h3>
 </p>
 <p>
         Instead of using the resource owner's credentials to access protected resources, the client
-        obtains an access token - a string denoting a specific scope, duration, and other access
+        obtains an access token - a string denoting a specific scope, lifetime, and other access
         attributes. Access tokens are issued to third-party clients by an authorization server with
         the approval of the resource owner. The client uses the access token to access the
         protected resources hosted by the resource server.
@@ -689,7 +687,7 @@ Resource Owner Password Credentials</h3>
             The resource owner password credentials (e.g. a username and password) can be used
             directly as an authorization grant to obtain an access token. The credentials should
             only be used when there is a high degree of trust between the resource owner and the
-            client (e.g. its computer operating system or a highly privileged application), and
+            client (e.g. its device operating system or a highly privileged application), and
             when other authorization grant types are not available (such as an authorization code).
           
 </p>
@@ -870,7 +868,7 @@ Client Registration</h3>
 <p>
         Before initiating the protocol, the client registers with the authorization server. The
         means through which the client registers with the authorization server are beyond the
-        scope of this specification, but typically involve human interaction with an HTML
+        scope of this specification, but typically involve end-user interaction with an HTML
         registration form.
       
 </p>
@@ -1916,7 +1914,7 @@ Implicit Grant</h3>
           The implicit grant type does not include client authentication, and relies on the
           presence of the resource owner and the registration of the redirection URI. Because the
           access token is encoded into the redirection URI, it may be exposed to the resource owner
-          and other applications residing on its computer or device.
+          and other applications residing on its device.
         
 </p><br /><hr class="insert" />
 <a name="Figure-4"></a>
@@ -2128,9 +2126,9 @@ Access Token Response</h3>
 <dt>expires_in</dt>
 <dd>
                 
-                OPTIONAL. The duration in seconds of the access token lifetime. For example, the
-                value <tt>3600</tt> denotes that the access token will expire in
-                one hour from the time the response was generated.
+                OPTIONAL. The lifetime in seconds of the access token. For example, the value
+                <tt>3600</tt> denotes that the access token will expire in one
+                hour from the time the response was generated.
               
 </dd>
 <dt>scope</dt>
@@ -2301,7 +2299,7 @@ Resource Owner Password Credentials</h3>
 
 <p>
           The resource owner password credentials grant type is suitable in cases where the
-          resource owner has a trust relationship with the client, such as its computer operating
+          resource owner has a trust relationship with the client, such as its device operating
           system or a highly privileged application. The authorization server should take special
           care when enabling the grant type, and only when other flows are not viable.
         
@@ -2724,9 +2722,9 @@ Successful Response</h3>
 <dt>expires_in</dt>
 <dd>
               
-              OPTIONAL. The duration in seconds of the access token lifetime. For example, the
-              value <tt>3600</tt> denotes that the access token will expire in
-              one hour from the time the response was generated.
+              OPTIONAL. The lifetime in seconds of the access token. For example, the value
+              <tt>3600</tt> denotes that the access token will expire in one
+              hour from the time the response was generated.
             
 </dd>
 <dt>refresh_token</dt>
@@ -2762,7 +2760,7 @@ Successful Response</h3>
           The authorization server MUST include the HTTP
           <tt>Cache-Control</tt> response header field <a class='info' href='#RFC2616'>[RFC2616]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a>
           with a value of <tt>no-store</tt> in any response containing tokens,
-          secrets, or other sensitive information, as well as the
+          credentials, or other sensitive information, as well as the
           <tt>Pragma</tt> response header field <a class='info' href='#RFC2616'>[RFC2616]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> with a
           value of <tt>no-cache</tt>.
         
@@ -3254,7 +3252,7 @@ Native Applications</h3>
             External user-agent - the native application can capture the response from the
             authorization server using a redirection URI with an scheme registered with the
             operating system to invoke the client as the handler, manual copy-and-paste of the
-            credentials, running a local web server, installing a user-agent plug-in, or by
+            credentials, running a local web server, installing a user-agent extension, or by
             providing a redirection URI identifying a server-hosted resource under the client's
             control, which in turn makes the response available to the native application.
           
@@ -3262,8 +3260,7 @@ Native Applications</h3>
 <li>
             Embedded user-agent - the native application obtains the response by directly
             communicating with the embedded user-agent by monitoring state changes emitted during
-            the resource load, monitoring HTTP headers, or accessing the user-agent's cookies
-            storage.
+            the resource load, or accessing the user-agent's cookies storage.
           
 </li>
 </ul><p>
@@ -3277,29 +3274,40 @@ Native Applications</h3>
         </p>
 <ul class="text">
 <li>
-            External user-agents may improve completion rate as the resource owner may already have an active session with the authorization server removing the need to re-authenticate, and provide a familiar user-agent user experience and functionality.  The resource owner may also rely on extensions or add-ons to assist with authentication (e.g. password managers or 2-factor device reader).
+            External user-agents may improve completion rate as the resource owner may already have
+            an active session with the authorization server removing the need to re-authenticate. It
+            provides a familiar end-user experience and functionality. The resource owner may also
+            rely on user-agent features or extensions to assist with authentication (e.g. password
+            manager, 2-factor device reader).
           
 </li>
 <li>
-            Embedded user-agents may offer an improved usability, as they remove the need to switch context and open new windows.
+            Embedded user-agents may offer an improved usability, as they remove the need to switch
+            context and open new windows.
           
 </li>
 <li>
-            Embedded user-agents pose a security challenge because resource owners are authenticating in an unidentified window without access to the visual protections found on by many of the external user-agents.  Embedded user-agents educate end-user to trust unidentified requests for authentication (making phishing attacks easier to execute).
+            Embedded user-agents pose a security challenge because resource owners are
+            authenticating in an unidentified window without access to the visual protections found
+            in most external user-agents.  Embedded user-agents educate end-user to trust
+            unidentified requests for authentication (making phishing attacks easier to execute).
           
 </li>
 </ul><p>
       
 </p>
 <p>
-        When choosing between implicit and authorization code grant types, the following should be considered:
+        When choosing between the implicit grant type and the authorization code grant type, the
+        following should be considered:
       
 </p>
 <p>
         </p>
 <ul class="text">
 <li>
-            Native applications that use the authorization code grant type flow SHOULD do so without using client password credentials, due to the native application’s inability to keep those credentials secure.
+            Native applications that use the authorization code grant type SHOULD do so without
+            using client credentials, due to the native application’s inability to keep credentials
+            confidential.
           
 </li>
 <li>
@@ -3336,24 +3344,24 @@ Security Considerations</h3>
 <dd>
             
             A user-agent-based application is a client in which the client code is downloaded from
-            a web server and executes within a user-agent on the resource owner's device. The OAuth
-            protocol data and credentials are accessible to the resource owner. Since such applications
-            directly reside within the user-agent, they can make seamless use of the user-agent
-            capabilities in the resource owner authorization process.
+            a web server and executes within a user-agent on the resource owner's device. Protocol
+            data and credentials are easily accessible (and often visible) to the resource owner.
+            Since such applications reside within the user-agent, they can make seamless use of the
+            user-agent capabilities when requesting authorization.
           
 </dd>
 <dt>Native Application</dt>
 <dd>
             
-            A native application is a client which is installed and executes on the resource owner's
-            device. The OAuth protocol data and credentials are accessible to the resource owner. It is
-            assumed that any client authentication credentials included in the application can be
-            extracted, and furthermore that rotation of the client authentication credentials is
-            not practical. Dynamically issued credentials such as access tokens or refresh tokens,
-            on the other hand, can receive an acceptable level of protection. At a minimum these
-            credentials are protected from hostile servers which the application may contact. On
-            some platform those credentials might be protected from other applications residing on
-            the same device.
+            A native application is a client installed and executed on the resource owner's device.
+            Protocol data and credentials are accessible to the resource owner. It is assumed that
+            any client authentication credentials included in the application can be extracted, and
+            furthermore that rotation of the client authentication credentials is impractical. On
+            the other hand, dynamically issued credentials such access tokens or refresh tokens,
+            can receive an acceptable level of protection. At a minimum, these credentials are
+            protected from hostile servers which the application may interact with. On some
+            platform these credentials might be protected from other applications residing on the
+            same device.
           
 </dd>
 </dl></blockquote><p>
@@ -3361,7 +3369,7 @@ Security Considerations</h3>
 </p>
 <p>
         A comprehensive OAuth security model and analysis, as well as background for the protocol
-        design is provided in <a class='info' href='#I-D.lodderstedt-oauth-security'>[I&#8209;D.lodderstedt&#8209;oauth&#8209;security]<span> (</span><span class='info'>Lodderstedt, T., McGloin, M., and P. Hunt, &ldquo;OAuth 2.0 Threat Model and Security Considerations,&rdquo; March&nbsp;2011.</span><span>)</span></a>.
+        design is provided by <a class='info' href='#I-D.lodderstedt-oauth-security'>[I&#8209;D.lodderstedt&#8209;oauth&#8209;security]<span> (</span><span class='info'>Lodderstedt, T., McGloin, M., and P. Hunt, &ldquo;OAuth 2.0 Threat Model and Security Considerations,&rdquo; March&nbsp;2011.</span><span>)</span></a>.
       
 </p>
 <a name="anchor43"></a><br /><hr />
@@ -3370,17 +3378,17 @@ Security Considerations</h3>
 Client Authentication</h3>
 
 <p>
-          The authorization server issues client credentials to web applications for the purpose of
-          authenticating them. The authorization server is encouraged to consider using stronger
-          client authentication means than a client password. Application developers MUST ensure
-          confidentiality of client passwords and other credentials.
+          The authorization server establishes client credentials with web application clients for
+          the purpose of client authentication. The authorization server is encouraged to consider
+          stronger client authentication means than a client password. Web application clients MUST
+          ensure confidentiality of client passwords and other client credentials.
         
 </p>
 <p>
-          The authorization server MUST NOT issue client passwords or other credentials to native
-          or user-agent-based applications for the purpose of client authentication. The
-          authorization server MAY issue a client password or other credentials for a specific
-          installation of a native application on a specific device.
+          The authorization server MUST NOT issue client passwords or other client credentials to
+          native application or user-agent-based application clients for the purpose of client
+          authentication. The authorization server MAY issue a client password or other credentials
+          for a specific installation of a native application client on a specific device.
         
 </p>
 <a name="anchor44"></a><br /><hr />
@@ -3389,64 +3397,60 @@ Client Authentication</h3>
 Client Impersonation</h3>
 
 <p>
-          Given the inability of some clients to keep their client credentials confidential, a
-          malicious client can impersonate another client and obtain access to protected resources.
-          The authorization server MUST authenticate the client whenever possible. If the
-          authorization server cannot authenticate the a client due to the client's limitations,
-          the authorization server should utilize other means to protect resource owners from such
-          malicious clients, including but not limited to engaging the resource owner to assist in
-          identifying the client and its source.
+          A malicious client can impersonate another client and obtain access to protected
+          resources, if the impersonated client fails to, or is unable to, keep is client
+          credentials confidential.
         
 </p>
 <p>
-          The authorization server SHOULD enforce explicit resource owner authentication, or prompt the
-          resource owner to authorize access again, providing the resource owner with information about the
-          client, scope, and duration of the authorization. It is up to the resource owner to review the
+          The authorization server MUST authenticate the client whenever possible. If the
+          authorization server cannot authenticate the client due to the client nature, the
+          authorization server MUST require the registration of any redirection URI used for
+          receiving authorization, and SHOULD utilize other means to protect resource owners
+          from such malicious clients. For example, engage the resource owner to assist in
+          identifying the client and its origin.
+        
+</p>
+<p>
+          The authorization server SHOULD enforce explicit resource owner authentication and
+          provide the resource owner with information about the client and the requested
+          authorization scope and lifetime. It is up to the resource owner to review the
           information in the context of the current client, and authorize the request.
         
 </p>
 <p>
-          The authorization server SHOULD NOT automatically, without active resource owner interaction,
-          process repeated authorization requests without authenticating the client or relying on
-          other measures to ensure the repeated request comes from a valid client and not an
-          impersonator.
-        
-</p>
-<p>
-          The authorization server SHOULD require the client to register its redirection URI
-          and validate the value of the <tt>redirect_uri</tt> against the
-          registered value. The client MUST NOT serve an open redirector resource which can be
-          used by an attacker to construct an URI that will pass the authorization server's
-          redirection URI matching rules, and will redirect the resource owner's user-agent to the
-          attacker's server.
+          The authorization server SHOULD NOT process repeated authorization requests
+          automatically (without active resource owner interaction) without authenticating the
+          client or relying on other measures to ensure the repeated request comes from an
+          authentic client and not an impersonator.
         
 </p>
 <a name="anchor45"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10.3"></a><h3>10.3.&nbsp;
-Access Token Credentials</h3>
+Access Tokens</h3>
 
 <p>
-          Access token credentials MUST be kept confidential in transit and storage, and shared
-          only among the authorization server, the resource servers the credentials are valid for,
-          and the client to whom the credentials were issued.
+          Access token (as well as any type-specific attributes) MUST be kept confidential in
+          transit and storage, and only shared among the authorization server, the resource servers
+          the access token is valid for, and the client to whom the access token is issued.
         
 </p>
 <p>
-          When using the implicit grant type, the access token credentials are transmitted in the
-          URI fragment, which can expose the credentials to unauthorized parties.
+          When using the implicit grant type, the access token is transmitted in the URI fragment,
+          which can expose it to unauthorized parties.
         
 </p>
 <p>
-          The authorization server MUST ensure that access token credentials cannot be generated,
-          modified, or guessed to produce valid access token credentials.
+          The authorization server MUST ensure that access tokens cannot be generated, modified, or
+          guessed to produce valid access tokens.
         
 </p>
 <p>
-          The client SHOULD request access token credentials with the minimal scope and duration
-          necessary. The authorization server SHOULD take the client identity into account when
-          choosing to honor the requested scope, and MAY issue credentials with a lesser scope than
-          requested.
+          The client SHOULD request access tokens with the minimal scope and lifetime necessary.
+          The authorization server SHOULD take the client identity into account when choosing how
+          to honor the requested scope and lifetime, and MAY issue an access token with a less
+          rights than requested.
         
 </p>
 <a name="anchor46"></a><br /><hr />
@@ -3455,21 +3459,22 @@ Access Token Credentials</h3>
 Refresh Tokens</h3>
 
 <p>
-          Authorization servers MAY issue refresh tokens to web and native applications.
+          Authorization servers MAY issue refresh tokens to web application clients and native
+          application clients.
         
 </p>
 <p>
           Refresh tokens MUST be kept confidential in transit and storage, and shared only among
-          the authorization server and the client to whom the refresh tokens were issued.
-          The authorization server MUST maintain the link between a refresh token and the client to
+          the authorization server and the client to whom the refresh tokens were issued. The
+          authorization server MUST maintain the binding between a refresh token and the client to
           whom it was issued.
         
 </p>
 <p>
-          The authorization server MUST verify the link between the refresh token and client
-          identity whenever the client's identity can be authenticated. When client authentication is
+          The authorization server MUST verify the binding between the refresh token and client
+          identity whenever the client identity can be authenticated. When client authentication is
           not possible, the authorization server SHOULD deploy other means to detect refresh token
-          abuse.
+          abuse [[ add example ]].
         
 </p>
 <p>
@@ -3480,89 +3485,29 @@ Refresh Tokens</h3>
 <a name="anchor47"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.10.5"></a><h3>10.5.&nbsp;
-Request Confidentiality</h3>
-
-<p>
-          Access token credentials, refresh tokens, resource owner passwords, and client secrets
-          MUST NOT be transmitted in the clear. Authorization codes SHOULD NOT be transmitted in
-          the clear.
-        
-</p>
-<a name="anchor48"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.6"></a><h3>10.6.&nbsp;
-Endpoints Authenticity</h3>
-
-<p>
-          In order to prevent man-in-the-middle and phishing attacks, the authorization server
-          MUST implement and require TLS with server authentication in all exchanges as described
-          by <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a>. The client MUST validate the authorization server's TLS
-          certificate in accordance with its requirements for authentication of the server's
-          identity.
-        
-</p>
-<a name="anchor49"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.7"></a><h3>10.7.&nbsp;
-Credentials Guessing Attacks</h3>
-
-<p>
-          The authorization server MUST prevent attackers from guessing access tokens,
-          authorization codes, refresh tokens, resource owner passwords, and client secrets.
-        
-</p>
-<p>
-          When generating tokens and other secrets not intended for direct human utilization, the
-          authorization server MUST use a reasonable level of entropy in order to mitigate the risk
-          of guessing attacks. When creating secrets intended for human usage, the authorization
-          server MUST utilize other means to protect those secrets.
-        
-</p>
-<a name="anchor50"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.8"></a><h3>10.8.&nbsp;
-Phishing Attacks</h3>
-
-<p>
-          Native applications SHOULD use external browsers instead of embedding browsers within the
-          application when requesting resource owner authorization. External browsers offer a familiar
-          user experience and a trusted environment in which resource owners can confirm the
-          authenticity of the authorization server.
-        
-</p>
-<p>
-          To reduce the risk of phishing attacks, the authorization servers MUST utilize TLS to
-          allow user-agents to validate the authorization server's identity. Service providers
-          should educate their end-users about the risks of phishing attacks and how they can
-          verify the authorization server's identity.
-        
-</p>
-<a name="anchor51"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.9"></a><h3>10.9.&nbsp;
 Authorization Codes</h3>
 
 <p>
           The transmission of authorization codes SHOULD be made over a secure channel, and the
           client SHOULD implement TLS for use with its redirection URI if the URI identifies a
-          network resource. Authorization codes MUST be kept confidential. Since authorization
-          codes are transmitted via user-agent redirections, they could potentially be disclosed
-          through user-agent history and HTTP referrer headers.
+          network resource. Effort should be made to keep authorization codes confidential. Since
+          authorization codes are transmitted via user-agent redirections, they could potentially
+          be disclosed through user-agent history and HTTP referrer headers.
         
 </p>
 <p>
           Authorization codes operate as plaintext bearer credentials, used to verify that the
-          resource owner who granted authorization at the authorization server, is the same resource owner
-          returning to the client to complete the process. Therefore, if the client relies on the
-          authorization code for its own resource owner authentication, the client redirection endpoint
-          MUST require TLS.
+          resource owner who granted authorization at the authorization server, is the same
+          resource owner returning to the client to complete the process. Therefore, if the client
+          relies on the authorization code for its own resource owner authentication, the client
+          redirection endpoint MUST require TLS.
         
 </p>
 <p>
-          Authorization codes MUST be short lived and single use. If the authorization
-          server observes multiple attempts to exchange an authorization code for an access token,
-          the authorization server SHOULD attempt to revoke all access tokens already granted based
-          on the compromised authorization code.
+          Authorization codes MUST be short lived and single use. If the authorization server
+          observes multiple attempts to exchange an authorization code for an access token, the
+          authorization server SHOULD attempt to revoke all access tokens already granted based on
+          the compromised authorization code.
         
 </p>
 <p>
@@ -3570,19 +3515,23 @@ Authorization Codes</h3>
           client and ensure that the authorization code was issued to the same client.
         
 </p>
-<a name="anchor52"></a><br /><hr />
+<a name="anchor48"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.10"></a><h3>10.10.&nbsp;
+<a name="rfc.section.10.6"></a><h3>10.6.&nbsp;
 Authorization Code Leakage</h3>
 
 <p>
           Session fixation attacks leverage the authorization code grant type, by tricking a
-          resource owner to authorize access to a legitimate client, but to a client account under the
-          control of the attacker. The only difference between a valid flow and the attack flow is
-          in how the victim reached the authorization server to grant access. Once at the
-          authorization server, the victim is prompted with a normal, valid request on behalf of a
-          legitimate and familiar client. The attacker then uses the victim's authorization to gain
-          access to the information authorized by the victim.
+          resource owner to authorize access to a legitimate client, but using a client account
+          under the control of the attacker. The only difference between a valid request and the
+          attack request is in how the victim reached the authorization server to grant access.
+        
+</p>
+<p>
+          Once at the authorization server, the victim is prompted with a normal, valid request on
+          behalf of a legitimate and familiar client. The attacker then uses the victim's
+          authorization to gain access to the information authorized by the victim (via the
+          client).
         
 </p>
 <p>
@@ -3594,39 +3543,30 @@ Authorization Code Leakage</h3>
           registered value.
         
 </p>
-<a name="anchor53"></a><br /><hr />
+<a name="anchor49"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.11"></a><h3>10.11.&nbsp;
-Redirection URI Validation</h3>
-
-<p>
-          [[ Add specific recommendations about redirection validation and matching ]]
-        
-</p>
-<a name="anchor54"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.12"></a><h3>10.12.&nbsp;
+<a name="rfc.section.10.7"></a><h3>10.7.&nbsp;
 Resource Owner Password Credentials</h3>
 
 <p>
           The resource owner password credentials grant type is often used for legacy or migration
-          reasons. It reduces the overall risk of storing username and password in the client, but
+          reasons. It reduces the overall risk of storing username and password by the client, but
           does not eliminate the need to expose highly privileged credentials to the client.
         
 </p>
 <p>
-          This grant type carries a higher risk than the other grant types because it maintains the
-          password anti-pattern OAuth seeks to avoid. The client could abuse the password or the
-          password could unintentionally be disclosed to an attacker (e.g. via log files or other
-          records kept by the client).
+          This grant type carries a higher risk than other grant types because it maintains the
+          password anti-pattern this protocol seeks to avoid. The client could abuse the password
+          or the password could unintentionally be disclosed to an attacker (e.g. via log files or
+          other records kept by the client).
         
 </p>
 <p>
           Additionally, because the resource owner does not have control over the authorization
           process (the resource owner involvement ends when it hands over its credentials to the
-          client), the client can obtain access tokens with a broader scope and longer duration
+          client), the client can obtain access tokens with a broader scope and longer lifetime
           than desired by the resource owner. The authorization server SHOULD restrict the scope
-          and duration of access tokens issued via this grant type.
+          and lifetime of access tokens issued via this grant type.
         
 </p>
 <p>
@@ -3634,9 +3574,75 @@ Resource Owner Password Credentials</h3>
           other grant types whenever possible.
         
 </p>
-<a name="anchor55"></a><br /><hr />
+<a name="anchor50"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.13"></a><h3>10.13.&nbsp;
+<a name="rfc.section.10.8"></a><h3>10.8.&nbsp;
+Request Confidentiality</h3>
+
+<p>
+          Access tokens, refresh tokens, resource owner passwords, and client credentials MUST NOT
+          be transmitted in the clear. Authorization codes SHOULD NOT be transmitted in the clear.
+        
+</p>
+<a name="anchor51"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.10.9"></a><h3>10.9.&nbsp;
+Endpoints Authenticity</h3>
+
+<p>
+          In order to prevent man-in-the-middle and phishing attacks, the authorization server
+          MUST implement and require TLS with server authentication as defined by
+          <a class='info' href='#RFC2818'>[RFC2818]<span> (</span><span class='info'>Rescorla, E., &ldquo;HTTP Over TLS,&rdquo; May&nbsp;2000.</span><span>)</span></a> for any request sent to the authorization and token endpoints.
+          The client MUST validate the authorization server's TLS certificate in accordance with
+          its requirements for server identity authentication.
+        
+</p>
+<a name="anchor52"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.10.10"></a><h3>10.10.&nbsp;
+Credentials Guessing Attacks</h3>
+
+<p>
+          The authorization server MUST prevent attackers from guessing access tokens,
+          authorization codes, refresh tokens, resource owner passwords, and client credentials.
+        
+</p>
+<p>
+          When generating tokens and other credentials not intended for handling by end-users, the
+          authorization server MUST use a reasonable level of entropy in order to mitigate the risk
+          of guessing attacks. The authorization server MUST utilize other means to protect
+          credentials intended for end-user usage.
+        
+</p>
+<a name="anchor53"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.10.11"></a><h3>10.11.&nbsp;
+Phishing Attacks</h3>
+
+<p>
+          Wide deployment of this and similar protocols may cause end-users to become inured
+          to the practice of being redirected to websites where they are asked to enter their
+          passwords. If end-users are not careful to verify the authenticity of these websites
+          before entering their credentials, it will be possible for attackers to exploit this
+          practice to steal resource owners' passwords.
+        
+</p>
+<p>
+          Service providers should attempt to educate end-users about the risks phishing attacks
+          pose, and should provide mechanisms that make it easy for end-users to confirm the
+          authenticity of their sites. Client developers should consider the security implications
+          of how they interact with the user-agent (e.g., external, embedded), and the ability of
+          the end-user to verify the authenticity of the authorization server.
+        
+</p>
+<p>
+          To reduce the risk of phishing attacks, the authorization servers MUST utilize TLS on
+          every endpoint used for end-user interaction.
+        
+</p>
+<a name="anchor54"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.10.12"></a><h3>10.12.&nbsp;
 Cross-Site Request Forgery</h3>
 
 <p>
@@ -3665,21 +3671,42 @@ Cross-Site Request Forgery</h3>
 </p>
 <p>
           For example, using a DOM variable (protected by JavaScript or other DOM-binding
-          language's enforcement of SOP), HTTP cookie, or HTML5 client-side storage. The
+          language's enforcement of SOP [[ add reference ]]), HTTP cookie, or HTML5 client-side storage. The
           authorization server includes the value of the <tt>state</tt>
           parameter when redirecting the user-agent back to the client which MUST then ensure the
           received value matches the stored value.
         
 </p>
-<a name="anchor56"></a><br /><hr />
+<a name="anchor55"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.10.14"></a><h3>10.14.&nbsp;
+<a name="rfc.section.10.13"></a><h3>10.13.&nbsp;
 Clickjacking</h3>
 
 <p>
+          [[ Rework to use specification terminology ]]
         
 </p>
-<a name="anchor57"></a><br /><hr />
+<p>
+          Clickjacking is the process of tricking end-users into revealing confidential information
+          or taking control of their device while clicking on seemingly innocuous web pages. In
+          more detail, a malicious site loads the target site in a transparent iframe overlaid on
+          top of a set of dummy buttons which are carefully constructed to be placed directly under
+          important buttons on the target site. When a user clicks a visible button, they are
+          actually clicking a button (such as an "Authorize" button) on the hidden page.
+        
+</p>
+<p>
+          To prevent clickjacking (and phishing attacks), native applications SHOULD use external
+          browsers instead of embedding browsers in an iframe when requesting end-user
+          authorization. For newer browsers, avoidance of iframes can be enforced by the
+          authorization server using the <tt>x-frame-options</tt> header
+          [[ Add reference ]]. This header can have two values, <tt>deny</tt>
+          and <tt>sameorigin</tt>, which will block any framing or framing by
+          sites with a different origin, respectively. For older browsers, javascript framebusting
+          techniques can be used but may not be effective in all browsers.
+        
+</p>
+<a name="anchor56"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11"></a><h3>11.&nbsp;
 IANA Considerations</h3>
@@ -3728,7 +3755,7 @@ The OAuth Access Token Type Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor58"></a><br /><hr />
+<a name="anchor57"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.1.1"></a><h3>11.1.1.&nbsp;
 Registration Template</h3>
@@ -3823,7 +3850,7 @@ The OAuth Parameters Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor59"></a><br /><hr />
+<a name="anchor58"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.2.1"></a><h3>11.2.1.&nbsp;
 Registration Template</h3>
@@ -3863,7 +3890,7 @@ Registration Template</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor60"></a><br /><hr />
+<a name="anchor59"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.2.2"></a><h3>11.2.2.&nbsp;
 Initial Registry Contents</h3>
@@ -4269,7 +4296,7 @@ The OAuth Authorization Endpoint Response Type Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor61"></a><br /><hr />
+<a name="anchor60"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.3.1"></a><h3>11.3.1.&nbsp;
 Registration Template</h3>
@@ -4302,7 +4329,7 @@ Registration Template</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor62"></a><br /><hr />
+<a name="anchor61"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.3.2"></a><h3>11.3.2.&nbsp;
 Initial Registry Contents</h3>
@@ -4392,7 +4419,7 @@ The OAuth Extensions Error Registry</h3>
           all requests for registration to the review mailing list.
         
 </p>
-<a name="anchor63"></a><br /><hr />
+<a name="anchor62"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.11.4.1"></a><h3>11.4.1.&nbsp;
 Registration Template</h3>
@@ -4441,7 +4468,7 @@ Registration Template</h3>
 </dl></blockquote><p>
           
 </p>
-<a name="anchor64"></a><br /><hr />
+<a name="anchor63"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.12"></a><h3>12.&nbsp;
 Acknowledgements</h3>
@@ -4486,7 +4513,7 @@ Acknowledgements</h3>
         Nick Walker, Shane Weeden, and Skylar Woodward.
       
 </p>
-<a name="anchor65"></a><br /><hr />
+<a name="anchor64"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Editor's Notes</h3>
