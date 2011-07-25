@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-19'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-20'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -455,7 +455,7 @@
         </t>
         <t>
           <list style='hanging'>
-            <t hangText='private'>
+            <t hangText='confidential'>
               <vspace />
               Clients capable of maintaining the confidentiality of their credentials (e.g.
               client implemented on a secure server with restricted access to the client
@@ -481,7 +481,7 @@
           <list style='hanging'>
             <t hangText='web application'>
               <vspace />
-              A web application is a private client running on a web server. Resource owners access
+              A web application is a confidential client running on a web server. Resource owners access
               the client via an HTML user interface rendered in a user-agent on the resource
               owner's device. The client credentials as well as any access token issued to the
               client are stored on the web server and are not exposed to or accessible by the
@@ -542,13 +542,13 @@
 
       <section title='Client Authentication' anchor='client-authentication'>
         <t>
-          If the client type is private, the client and authorization server establish a client
+          If the client type is confidential, the client and authorization server establish a client
           authentication method suitable for the security requirements of the authorization server.
           The authorization server MAY accept any form of client authentication meeting its
           security requirements.
         </t>
         <t>
-          Private clients are typically issued (or establish) a set of client credentials used for
+          Confidential clients are typically issued (or establish) a set of client credentials used for
           authenticating with the authorization server (e.g. password, public/private key pair).
         </t>
         <t>
@@ -746,7 +746,7 @@
             NOT include a fragment component.
           </t>
 
-          <section title='Endpoint Confidentiality'>
+          <section title='Endpoint Request Confidentiality'>
             <t>
               If a redirection request will result in the transmission of an authorization code or
               access token over an open network (between the resource owner's user-agent and the
@@ -822,15 +822,15 @@
               contains.
             </t>
             <t>
-              The client SHOULD NOT include any third-party scripts in the redirection endpoint
-              response. Instead, it should extract the credentials from the URI and redirect the
-              user-agent again to another endpoint without the credentials in the URI.
-            </t>
-            <t>
               The client MUST NOT include any untrusted third-party scripts in the redirection
               endpoint response (e.g. third-party analytics, social plug-ins, ad networks) without
               first ensuring that its own scripts used to extract and remove the credentials from
               the URI will execute first.
+            </t>
+            <t>
+              The client SHOULD NOT include any third-party scripts in the redirection endpoint
+              response. Instead, it should extract the credentials from the URI and redirect the
+              user-agent again to another endpoint without the credentials in the URI.
             </t>
           </section>
           
@@ -869,7 +869,7 @@
 
         <section title='Client Authentication' anchor='token-endpoint-auth'>
           <t>
-            Private clients, clients issued client credentials, or clients assigned other
+            Confidential clients, clients issued client credentials, or clients assigned other
             authentication requirements, MUST authenticate with the authorization server as
             described in <xref target='client-authentication' /> when making requests to the token
             endpoint. Client authentication is used for:
@@ -919,10 +919,10 @@
       <section title='Authorization Code' anchor='grant-code'>
         <t>
           The authorization code grant type is used to obtain both access tokens and refresh
-          tokens and is optimized for private clients. As a redirection-based flow, the client must
-          be capable of interacting with the resource owner's user-agent (typically a web browser)
-          and capable of receiving incoming requests (via redirection) from the authorization
-          server.
+          tokens and is optimized for confidential clients. As a redirection-based flow, the client
+          must be capable of interacting with the resource owner's user-agent (typically a web
+          browser) and capable of receiving incoming requests (via redirection) from the
+          authorization server.
         </t>
         <figure title='Authorization Code Flow' anchor='Figure-3'>
           <artwork>
@@ -1217,7 +1217,7 @@
             </list>
           </t>
           <t>
-            If the client type is private or was issued client credentials (or assigned other
+            If the client type is confidential or was issued client credentials (or assigned other
             authentication requirements), the client MUST authenticate with the authorization
             server as described in <xref target='token-endpoint-auth' />.
           </t>
@@ -1244,8 +1244,8 @@
           <t>
             <list style='symbols'>
               <t>
-                require client authentication for private clients or for any client issued client
-                credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client issued
+                client credentials (or with other authentication requirements),
               </t>
               <t>
                 authenticate the client if client authentication is included and ensure the
@@ -1718,7 +1718,7 @@
             </list>
           </t>
           <t>
-            If the client type is private or was issued client credentials (or assigned other
+            If the client type is confidential or was issued client credentials (or assigned other
             authentication requirements), the client MUST authenticate with the authorization
             server as described in <xref target='token-endpoint-auth' />.
           </t>
@@ -1744,8 +1744,8 @@
           <t>
             <list style='symbols'>
               <t>
-                require client authentication for private clients or for any client issued client
-                credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client issued
+                client credentials (or with other authentication requirements),
               </t>
               <t>
                 authenticate the client if client authentication is included, and
@@ -1802,7 +1802,7 @@
           scope of this specification).
         </t>
         <t>
-          The client credentials grant type MUST only be used by private clients.
+          The client credentials grant type MUST only be used by confidential clients.
         </t>
         <figure title='Client Credentials Flow' anchor='Figure-6'>
           <artwork>
@@ -2169,7 +2169,7 @@
       <t>
         Because refresh tokens are typically long-lasting credentials used to request additional
         access tokens, the refresh token is bound to the client it was issued. If the client type
-        is private or was issued client credentials (or assigned other authentication
+        is confidential or was issued client credentials (or assigned other authentication
         requirements), the client MUST authenticate with the authorization server as described in
         <xref target='token-endpoint-auth' />.
       </t>
@@ -2195,7 +2195,7 @@
       <t>
         <list style='symbols'>
           <t>
-            require client authentication for private clients or for any client issued client
+            require client authentication for confidential clients or for any client issued client
             credentials (or with other authentication requirements),
           </t>
           <t>
@@ -3463,8 +3463,8 @@
     <references title='Informative References'>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-04.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-03.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-06.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-04.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-threatmodel-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
