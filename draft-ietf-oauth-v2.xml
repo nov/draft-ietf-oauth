@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-18'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-19'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -433,9 +433,6 @@
 
     <section title='Client Registration'>
       <t>
-        [[ Pending Consensus ]]
-      </t>
-      <t>
         Before initiating the protocol, the client registers with the authorization server. The
         means through which the client registers with the authorization server are beyond the
         scope of this specification, but typically involve end-user interaction with an HTML
@@ -477,23 +474,58 @@
           The client type designation is based on the authorization server's definition of secure
           authentication and its acceptable exposure levels of client credentials.
         </t>
+        <t>
+          This specification has been designed around the following client profiles:
+        </t>
+        <t>
+          <list style='hanging'>
+            <t hangText='web application'>
+              <vspace />
+              A web application is a private client running on a web server. Resource owners access
+              the client via an HTML user interface rendered in a user-agent on the resource
+              owner's device. The client credentials as well as any access token issued to the
+              client are stored on the web server and are not exposed to or accessible by the
+              resource owner.
+            </t>
+            <t hangText='user-agent-based application'>
+              <vspace />
+              A user-agent-based application is a public client in which the client code is
+              downloaded from a web server and executes within a user-agent on the resource owner's
+              device. Protocol data and credentials are easily accessible (and often visible) to
+              the resource owner. Since such applications reside within the user-agent, they can
+              make seamless use of the user-agent capabilities when requesting authorization.
+            </t>
+            <t hangText='native application'>
+              <vspace />
+              A native application is a public client installed and executed on the resource
+              owner's device. Protocol data and credentials are accessible to the resource owner.
+              It is assumed that any client authentication credentials included in the application
+              can be extracted. On the other hand, dynamically issued credentials such access
+              tokens or refresh tokens, can receive an acceptable level of protection. At a
+              minimum, these credentials are protected from hostile servers which the application
+              may interact with. On some platform these credentials might be protected from other
+              applications residing on the same device.
+            </t>
+          </list>
+        </t>
       </section>
 
       <section title='Registration Requirements'>
         <t>
-          When registering a client, the client developer MUST specify:
+          When registering a client, the client developer:
         </t>
         <t>
           <list style='symbols'>
             <t>
-              the client type as described in <xref target='client-types' />,
+              specifies the client type as described in <xref target='client-types' />,
             </t>
             <t>
-              the client redirection URIs as described in <xref target='redirect-uri' />, and
+              provides its client redirection URIs as described in
+              <xref target='redirect-uri' />, and
             </t>
             <t>
-              any other information required by the authorization server (e.g. application name,
-              website, description, logo image, the acceptance of legal terms).
+              includes any other information required by the authorization server (e.g. application
+              name, website, description, logo image, the acceptance of legal terms).
             </t>
           </list>
         </t>
@@ -503,17 +535,17 @@
         <t>
           The authorization server issues the registered client a client identifier - a unique
           string representing the registration information provided by the client. The client
-          identifier is not a secret, it is exposed to the resource owner, and cannot not be used
+          identifier is not a secret, it is exposed to the resource owner, and cannot be used
           alone for client authentication.
         </t>
       </section>
 
       <section title='Client Authentication' anchor='client-authentication'>
         <t>
-          In addition, the client and authorization server establish a client authentication method
-          suitable for the client type and security requirements of the authorization server. The
-          authorization server MAY accept any form of client authentication meeting its security
-          requirements.
+          If the client type is private, the client and authorization server establish a client
+          authentication method suitable for the security requirements of the authorization server.
+          The authorization server MAY accept any form of client authentication meeting its
+          security requirements.
         </t>
         <t>
           Private clients are typically issued (or establish) a set of client credentials used for
@@ -522,8 +554,9 @@
         <t>
           The authorization server SHOULD NOT make assumptions about the client type or accept the
           type information provided without establishing trust with the client or its developer.
-          The authorization server MUST NOT rely on client authentication performed by public
-          clients.
+          The authorization server MAY establish a client authentication method with public
+          clients. However, the authorization server MUST NOT rely on public client authentication
+          for the purpose of identifying the client.
         </t>
         <t>
           The client MUST NOT use more than one authentication method in each request.
@@ -684,7 +717,10 @@
                 an authorization code as described by <xref target='code-authz-req' />,
                 <spanx style='verb'>token</spanx> for requesting an access token (implicit grant)
                 as described by <xref target='implicit-authz-req' />, or a registered extension
-                value as described by <xref target='response-type-ext' />.
+                value as described by <xref target='response-type-ext' />. If the response type
+                contains one or more space characters (%x20), it is interpreted as a
+                space-delimited list of values, where the order of values does not matter (e.g.
+                <spanx style='verb'>a b</spanx> is the same as <spanx style='verb'>b a</spanx>).
               </t>
             </list>
           </t>
@@ -695,21 +731,19 @@
           </t>
         </section>
 
-        <section title='Redirection URI' anchor='redirect-uri'>
-          <t>
-            [[ Pending Consensus ]]
-          </t>
+        <section title='Redirection Endpoint' anchor='redirect-uri'>
           <t>
             After completing its interaction with the resource owner, the authorization server
             directs the resource owner's user-agent back to the client. The authorization server
-            redirects the user-agent to the client's redirection URI previously established with
-            the authorization server during the client registration process.
+            redirects the user-agent to the client's redirection endpoint previously established
+            with the authorization server during the client registration process or when initiating
+            the authorization request.
           </t>
           <t>
-            The redirection URI MUST be an absolute URI as defined by <xref target='RFC3986' />
-            section 4.3, MAY include a query component which MUST be retained by the authorization
-            server when adding additional query parameters, and MUST NOT include a fragment
-            component.
+            The redirection endpoint URI MUST be an absolute URI as defined by
+            <xref target='RFC3986' /> section 4.3, MAY include a query component which MUST be
+            retained by the authorization server when adding additional query parameters, and MUST
+            NOT include a fragment component.
           </t>
 
           <section title='Endpoint Confidentiality'>
@@ -835,9 +869,6 @@
 
         <section title='Client Authentication' anchor='token-endpoint-auth'>
           <t>
-            [[ Pending Consensus ]]
-          </t>
-          <t>
             Private clients, clients issued client credentials, or clients assigned other
             authentication requirements, MUST authenticate with the authorization server as
             described in <xref target='client-authentication' /> when making requests to the token
@@ -848,7 +879,7 @@
               <t>
                 Enforcing the binding of refresh tokens and authorization codes to the client they
                 are issued. Client authentication is critical when an authorization code is
-                transmitted to the redirection URI endpoint over an insecure channel, or when the
+                transmitted to the redirection endpoint over an insecure channel, or when the
                 redirection URI has not been registered in full.
               </t>
               <t>
@@ -861,8 +892,7 @@
                 Implementing authentication management best practices which require periodic
                 credentials rotation. Rotation of an entire set of refresh tokens can be
                 challenging, while rotation of a single set of client credentials is significantly
-                easier. In addition, this specification does not provide a mechanism for refresh
-                token rotation.
+                easier.
               </t>
             </list>
           </t>
@@ -2175,9 +2205,6 @@
           <t>
             validate the refresh token, and
           </t>
-          <t>
-            verify that the resource owner's authorization is still valid.
-          </t>
         </list>
       </t>
       <t>
@@ -2330,9 +2357,6 @@
 
       <section title='Defining New Authorization Endpoint Response Types' anchor='response-type-ext'>
         <t>
-          [[ Pending consensus ]]
-        </t>
-        <t>
           New response types for use with the authorization endpoint are defined and registered in
           the authorization endpoint response type registry following the procedure in
           <xref target='response-type-registry' />. Response type names MUST conform to the
@@ -2341,24 +2365,24 @@
         <figure>
           <artwork>
             <![CDATA[
-  response-type  = response-name *( "+" response-name )
+  response-type  = response-name *( SP response-name )
   response-name  = 1*response-char
   response-char  = "_" / DIGIT / ALPHA
 ]]>
           </artwork>
         </figure>
         <t>
-          The "+" character is reserved for defining composite response types made up of two or
-          more existing registered response types. Only one response type of each combination may
-          be registered and used for making requests. Composite response types are treated and
-          compared in the same as manner as non-composite response types. The "+" notation is meant
-          only to improve human readability and is not used for machine parsing.
+          If a response type contains one of more space characters (%x20), it is compared as a
+          space-delimited list of values in which the order of values does not matter. Only one
+          order of values can be registered, which covers all other arrangements of the same set of
+          values.
         </t>
         <t>
-          For example, an extension can define and register the
-          <spanx style='verb'>token+code</spanx> response type. However, once registered, the
-          same combination cannot be registered as <spanx style='verb'>code+token</spanx>, or used
-          to make an authorization request.
+          For example, the response type <spanx style='verb'>token code</spanx> is left undefined
+          by this specification. However, an extension can define and register the
+          <spanx style='verb'>token code</spanx> response type. Once registered, the same
+          combination cannot be registered as <spanx style='verb'>code token</spanx>, but both
+          values can be used to denote the same response type.
         </t>
       </section>
 
@@ -2469,42 +2493,12 @@
       <t>
         As a flexible and extensible framework, OAuth's security considerations depend on many
         factors. The following sections provide implementers with security guidelines focused on
-        three common client types:
-      </t>
-      <t>
-        <list style='hanging'>
-          <t hangText='Web Application'>
-            <vspace />
-            A web application is a client running on a web server. Resource owners access the client via
-            an HTML user interface rendered in a user-agent on the resource-owner's device. The client
-            credentials as well as any access token issued to the client are stored on the web
-            server and are not exposed to or accessible by the resource owner.
-          </t>
-          <t hangText='User-Agent-based Application'>
-            <vspace />
-            A user-agent-based application is a client in which the client code is downloaded from
-            a web server and executes within a user-agent on the resource owner's device. Protocol
-            data and credentials are easily accessible (and often visible) to the resource owner.
-            Since such applications reside within the user-agent, they can make seamless use of the
-            user-agent capabilities when requesting authorization.
-          </t>
-          <t hangText='Native Application'>
-            <vspace />
-            A native application is a client installed and executed on the resource owner's device.
-            Protocol data and credentials are accessible to the resource owner. It is assumed that
-            any client authentication credentials included in the application can be extracted, and
-            furthermore that rotation of the client authentication credentials is impractical. On
-            the other hand, dynamically issued credentials such access tokens or refresh tokens,
-            can receive an acceptable level of protection. At a minimum, these credentials are
-            protected from hostile servers which the application may interact with. On some
-            platform these credentials might be protected from other applications residing on the
-            same device.
-          </t>
-        </list>
+        the three client profiles described in <xref target='client-types' />: web application,
+        user-agent-based application, and native application.
       </t>
       <t>
         A comprehensive OAuth security model and analysis, as well as background for the protocol
-        design is provided by <xref target='I-D.lodderstedt-oauth-security' />.
+        design is provided by <xref target='I-D.ietf-oauth-v2-threatmodel' />.
       </t>
 
       <section title='Client Authentication'>
@@ -2519,6 +2513,14 @@
           native application or user-agent-based application clients for the purpose of client
           authentication. The authorization server MAY issue a client password or other credentials
           for a specific installation of a native application client on a specific device.
+        </t>
+        <t>
+          When client authentication is not possible, the authorization server SHOULD employ other
+          means to validate the client's identity. For example, by requiring the registration of
+          the client redirection URI or enlisting the resource owner to confirm identity. The
+          authorization server must consider the security implications of interacting with
+          unauthenticated clients and take measures to limit the potential exposure of other
+          credentials (e.g. refresh tokens) issued to such clients.
         </t>
       </section>
 
@@ -2545,16 +2547,17 @@
         <t>
           The authorization server SHOULD NOT process repeated authorization requests
           automatically (without active resource owner interaction) without authenticating the
-          client or relying on other measures to ensure the repeated request comes from an
-          authentic client and not an impersonator.
+          client or relying on other measures to ensure the repeated request comes from the
+          original client and not an impersonator.
         </t>
       </section>
 
       <section title='Access Tokens'>
         <t>
-          Access token (as well as any type-specific attributes) MUST be kept confidential in
-          transit and storage, and only shared among the authorization server, the resource servers
-          the access token is valid for, and the client to whom the access token is issued.
+          Access token (as well as any access token type-specific attributes) MUST be kept
+          confidential in transit and storage, and only shared among the authorization server, the
+          resource servers the access token is valid for, and the client to whom the access token
+          is issued.
         </t>
         <t>
           When using the implicit grant type, the access token is transmitted in the URI fragment,
@@ -2587,7 +2590,15 @@
           The authorization server MUST verify the binding between the refresh token and client
           identity whenever the client identity can be authenticated. When client authentication is
           not possible, the authorization server SHOULD deploy other means to detect refresh token
-          abuse [[ add example ]].
+          abuse.
+        </t>
+        <t>
+          For example, the authorization server could employ refresh tokens rotation in which a new
+          refresh token is issued with every access token refresh response. The previous refresh
+          token is invalidated but retained by the authorization server. If a refresh token is
+          compromised and subsequently used by both the attacker and the legitimate client, one of
+          them will present an invalidated refresh token which will inform the authorization server
+          of the breach.
         </t>
         <t>
           The authorization server MUST ensure that refresh tokens cannot be generated, modified,
@@ -2624,10 +2635,10 @@
 
       <section title='Authorization Code Leakage'>
         <t>
-          Session fixation attacks leverage the authorization code grant type, by tricking a
-          resource owner to authorize access to a legitimate client, but using a client account
-          under the control of the attacker. The only difference between a valid request and the
-          attack request is in how the victim reached the authorization server to grant access.
+          An attacker can leverage the authorization code grant type by tricking a resource owner
+          to authorize access to a legitimate client, but using a client account under the control
+          of the attacker. The only difference between a valid request and the attack request is in
+          how the victim reached the authorization server to grant access.
         </t>
         <t>
           Once at the authorization server, the victim is prompted with a normal, valid request on
@@ -2773,6 +2784,20 @@
           and <spanx style='verb'>sameorigin</spanx>, which will block any framing or framing by
           sites with a different origin, respectively. For older browsers, javascript framebusting
           techniques can be used but may not be effective in all browsers.
+        </t>
+      </section>
+
+      <section title='Code Injection and Input Validation'>
+        <t>
+          A code injection attack occurs when an input or otherwise external variable is used by an
+          application in which that input can cause modification of the application logic when used
+          unsanitized. This may allow an attacker to gain access to the application device or its
+          data, cause denial of service, or a wide range of malicious side-effects.
+        </t>
+        <t>
+          The Authorization server and client MUST validate and sanitize any value received, and in
+          particular, the value of the <spanx style='verb'>state</spanx> and
+          <spanx style='verb'>redirect_uri</spanx> parameters.
         </t>
       </section>
 
@@ -3374,7 +3399,7 @@
         feedback, and wording which shaped and formed the final specification:
       </t>
       <t>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Scott Cantor, Blaine Cook, Brian Campbell,
+        Michael Adams, Andrew Arnott, Dirk Balfanz, Aiden Bell, Scott Cantor, Marcos Caceres, Blaine Cook, Brian Campbell,
         Brian Eaton, Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg,
         George Fletcher, Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman,
         Kristoffer Gronowski, Justin Hart, Dick Hardt, Craig Heath, Phil Hunt, Michael B. Jones,
@@ -3441,7 +3466,7 @@
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-04.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-03.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-00.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-lodderstedt-oauth-security-01.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-threatmodel-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>
 
       <reference anchor="I-D.draft-hardt-oauth-01">
