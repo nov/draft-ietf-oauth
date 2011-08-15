@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-20'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-21'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -235,7 +235,7 @@
       <section title='Authorization Grant'>
         <t>
           An authorization grant is a general term used to describe the intermediate credentials
-          representing the resource owner authorization (to access its protected resources), and
+          representing the resource owner's authorization (to access its protected resources), and
           serves as an abstraction layer. An authorization grant is used by the client to obtain
           an access token.
         </t>
@@ -260,31 +260,33 @@
             resource owner's credentials are never shared with the client.
           </t>
           <t>
-            The authorization code provides a few important security benefits such as the ability to
-            authenticate the client and issuing the access token directly to the client without
+            The authorization code provides a few important security benefits such as the ability
+            to authenticate the client and issuing the access token directly to the client without
             potentially exposing it to others, including the resource owner.
           </t>
         </section>
 
         <section title='Implicit'>
           <t>
-            The authorization grant is implicit when an access token is issued to the client
-            directly as the result of the resource owner authorization, without using intermediate
-            credentials (such as an authorization code).
+            The implicit grant is a simplified authorization code flow optimized for clients
+            implemented in a browser using a scripting language such as JavaScript. In the implicit
+            flow, instead of issuing the client an authorization code, the client is issued an
+            access token directly (as the result of the resource owner authorization). The grant
+            type is implicit as no intermediate credentials (such as an authorization code) are
+            issued (and later used to obtain an access token).
           </t>
           <t>
             When issuing an implicit grant, the authorization server does not authenticate the
-            client and the client identity is verified via the redirection URI used to deliver the
-            access token to the client. The access token may be exposed to the resource owner or
-            other applications with access to the resource owner's user-agent.
+            client and in some cases, the client identity can be verified via the redirection URI
+            used to deliver the access token to the client. The access token may be exposed to the
+            resource owner or other applications with access to the resource owner's user-agent.
           </t>
           <t>
             Implicit grants improve the responsiveness and efficiency of some clients (such as a
             client implemented as an in-browser application) since it reduces the number of round
-            trips required to obtain an access token. However, this convenience should be weighted
+            trips required to obtain an access token. However, this convenience should be weighed
             against the security implications of using implicit grants, especially when the
             authorization code grant type is available.
-
           </t>
         </section>
 
@@ -592,7 +594,8 @@
               </t>
               <t hangText='client_secret'>
                 <vspace />
-                REQUIRED. The client secret.
+                REQUIRED. The client secret. The client MAY omit the parameter if the client secret
+                is an empty string.
               </t>
             </list>
           </t>
@@ -763,10 +766,19 @@
 
           <section title='Registration Requirements'>
             <t>
-              The authorization server MUST require public clients to register their redirection
-              URI, MUST require all clients to register their redirection URI prior to utilizing
-              the implicit grant type, and SHOULD require all clients to register their redirection
-              URI prior to utilizing the authorization code grant type.
+              The authorization server SHOULD require all clients to register their redirection URI
+              prior to using the authorization endpoint, and MUST require the following clients to
+              register their redirection URI:
+            </t>
+            <t>
+              <list style='symbols'>
+                <t>
+                  Public clients.
+                </t>
+                <t>
+                  Confidential clients utilizing the implicit grant type.
+                </t>
+              </list>
             </t>
             <t>
               The authorization server SHOULD require the client to provide the complete
@@ -897,6 +909,11 @@
             </list>
           </t>
           <t>
+            A public client that was not issued a client password MAY use the
+            <spanx style='verb'>client_id</spanx> request parameter to identify itself when sending
+            requests to the token endpoint.
+          </t>
+          <t>
             The security ramifications of allowing unauthenticated access by public clients to the
             token endpoint MUST be considered, as well as the issuance of refresh tokens to public
             clients, their scope, and lifetime.
@@ -1023,7 +1040,9 @@
                 <vspace />
                 OPTIONAL. An opaque value used by the client to maintain state between the request
                 and callback. The authorization server includes this value when redirecting the
-                user-agent back to the client.
+                user-agent back to the client. Use of the <spanx style='verb'>state</spanx>
+                parameter is RECOMMENDED for preventing cross-site request forgery as described in
+                <xref target='CSRF' />.
               </t>
             </list>
           </t>
@@ -1223,7 +1242,7 @@
           </t>
           <figure>
             <preamble>
-              For example, the client makes the following HTTP using transport-layer security
+              For example, the client makes the following HTTP request using transport-layer security
               (extra line breaks are for display purposes only):
             </preamble>
             <artwork>
@@ -1427,7 +1446,9 @@
                 <vspace />
                 OPTIONAL. An opaque value used by the client to maintain state between the request
                 and callback. The authorization server includes this value when redirecting the
-                user-agent back to the client.
+                user-agent back to the client. Use of the <spanx style='verb'>state</spanx>
+                parameter is RECOMMENDED for preventing cross-site request forgery as described in
+                <xref target='CSRF' />.
               </t>
             </list>
           </t>
@@ -2200,10 +2221,10 @@
           </t>
           <t>
             authenticate the client if client authentication is included and ensure the
-            refresh token was issued to the authenticated client,
+            refresh token was issued to the authenticated client, and
           </t>
           <t>
-            validate the refresh token, and
+            validate the refresh token.
           </t>
         </list>
       </t>
@@ -2217,8 +2238,8 @@
         The authorization server MAY issue a new refresh token, in which case the client MUST
         discard the old refresh token and replace it with the new refresh token. The authorization
         server MAY revoke the old refresh token after issuing a new refresh token to the client. If
-        a new refresh token is issued, its scope MUST be identical to that of the refresh token
-        included in the request.
+        a new refresh token is issued, the refresh token scope MUST be identical to that of the
+        refresh token included by the client in the request.
       </t>
     </section>
 
@@ -2527,7 +2548,7 @@
       <section title='Client Impersonation'>
         <t>
           A malicious client can impersonate another client and obtain access to protected
-          resources, if the impersonated client fails to, or is unable to, keep is client
+          resources, if the impersonated client fails to, or is unable to, keep its client
           credentials confidential.
         </t>
         <t>
@@ -2732,58 +2753,59 @@
         </t>
       </section>
 
-      <section title='Cross-Site Request Forgery'>
+      <section title='Cross-Site Request Forgery' anchor='CSRF'>
         <t>
           Cross-site request forgery (CSRF) is a web-based attack whereby HTTP requests are
           transmitted from the user-agent of an end-user the server trusts or has authenticated.
-          CSRF attacks on the authorization endpoint can allow an attacker to obtain authorization
-          without the consent of the resource owner.
+          CSRF attacks enable the attacker to intermix the attacker's security context with that
+          of the resource owner resulting in a compromise of either the resource server or of the
+          client application itself.
         </t>
         <t>
-          The <spanx style='verb'>state</spanx> request parameter SHOULD be used to mitigate
-          against CSRF attacks, particularly for login CSRF attacks. CSRF attacks against the
-          client's redirection URI allow an attacker to inject their own authorization code or
-          access token, which can result in the client using an access token associated with the
-          attacker's account rather than the victim's. Depending on the nature of the client and
-          the protected resources, this can have undesirable and damaging effects.
+          In the OAuth context, such attacks allow an attacker to inject their own authorization
+          code or access token into the client, which can result in the client associating the
+          attacker's protected resources to the victim's account on the client. Depending on the
+          nature of the client and the protected resources, this can have undesirable and damaging
+          effects. In order to prevent such attacks, the client MUST employ CSRF protection.
         </t>
         <t>
-          It is strongly RECOMMENDED that the client includes the <spanx style='verb'>state</spanx>
-          request parameter with authorization requests to the authorization server. The
-          <spanx style='verb'>state</spanx> request parameter MUST contain a non-guessable value,
-          and the client MUST keep it in a location accessible only by the client or the user-agent
-          (i.e., protected by same-origin policy).
+          It is strongly RECOMMENDED for the client to utilize the <spanx style='verb'>state</spanx>
+          request parameter with authorization requests to the authorization server. When used for
+          CSRF prevention, the <spanx style='verb'>state</spanx> request parameter MUST contain a
+          non-guessable value, which the client MUST also store with the resource owner's
+          user-agent in a location accessible only to the client or the resource owner's user-agent
+          (i.e., protected by same-origin policy). For example, the client can using a DOM
+          variable, HTTP cookie, or HTML5 client-side storage.
         </t>
         <t>
-          For example, using a DOM variable (protected by JavaScript or other DOM-binding
-          language's enforcement of SOP [[ add reference ]]), HTTP cookie, or HTML5 client-side storage. The
-          authorization server includes the value of the <spanx style='verb'>state</spanx>
-          parameter when redirecting the user-agent back to the client which MUST then ensure the
-          received value matches the stored value.
+          When redirecting the resource owner's user-agent back to the client, the authorization
+          server includes the value of the <spanx style='verb'>state</spanx> parameter. Upon
+          receiving the redirection request, the client MUST confirm that returned value of the
+          <spanx style='verb'>state</spanx> parameter matches the value stored with the resource
+          owner's user-agent.
         </t>
       </section>
 
       <section title='Clickjacking'>
         <t>
-          [[ Rework to use specification terminology ]]
+          In a clickjacking attack, an attacker registers a legitimate client and then constructs a
+          malicious site in which it loads the authorization server's authorization endpoint web
+          page in a transparent iframe overlaid on top of a set of dummy buttons which are
+          carefully constructed to be placed directly under important buttons on the authorization
+          page. When an end-user clicks a misleading visible button, the end-user is actually
+          clicking an invisible button on the authorization page (such as an "Authorize" button).
+          This allows an attacker to trick a resource owner into granting its client access without
+          their knowledge.
         </t>
         <t>
-          Clickjacking is the process of tricking end-users into revealing confidential information
-          or taking control of their device while clicking on seemingly innocuous web pages. In
-          more detail, a malicious site loads the target site in a transparent iframe overlaid on
-          top of a set of dummy buttons which are carefully constructed to be placed directly under
-          important buttons on the target site. When a user clicks a visible button, they are
-          actually clicking a button (such as an "Authorize" button) on the hidden page.
-        </t>
-        <t>
-          To prevent clickjacking (and phishing attacks), native applications SHOULD use external
-          browsers instead of embedding browsers in an iframe when requesting end-user
-          authorization. For newer browsers, avoidance of iframes can be enforced by the
-          authorization server using the <spanx style='verb'>x-frame-options</spanx> header
-          [[ Add reference ]]. This header can have two values, <spanx style='verb'>deny</spanx>
-          and <spanx style='verb'>sameorigin</spanx>, which will block any framing or framing by
-          sites with a different origin, respectively. For older browsers, javascript framebusting
-          techniques can be used but may not be effective in all browsers.
+          To prevent this form of attack, native applications SHOULD use external browsers instead
+          of embedding browsers in an iframe when requesting end-user authorization. For most newer
+          browsers, avoidance of iframes can be enforced by the authorization server using the
+          (non-standard) <spanx style='verb'>x-frame-options</spanx> header. This header can have
+          two values, <spanx style='verb'>deny</spanx> and <spanx style='verb'>sameorigin</spanx>,
+          which will block any framing, or framing by sites with a different origin, respectively.
+          For older browsers, javascript framebusting techniques can be used but may not be
+          effective in all browsers.
         </t>
       </section>
 
@@ -3404,10 +3426,10 @@
         George Fletcher, Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman,
         Kristoffer Gronowski, Justin Hart, Dick Hardt, Craig Heath, Phil Hunt, Michael B. Jones,
         John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt,
-        Hui-Lan Lu, Paul Madsen, Alastair Mair, Eve Maler, James Manger, Mark McGloin,
+        Hui-Lan Lu, Casey Lucas, Paul Madsen, Alastair Mair, Eve Maler, James Manger, Mark McGloin,
         Laurence Miao, Chuck Mortimore, Anthony Nadalin, Justin Richer, Peter Saint-Andre,
         Nat Sakimura, Rob Sayre, Marius Scurtescu, Naitik Shah, Luke Shepard, Vlad Skvortsov,
-        Justin Smith, Jeremy Suriel, Christian Stübner, Paul Tarjan, Allen Tom, Franklin Tse,
+        Justin Smith, Niv Steingarten, Christian Stübner, Jeremy Suriel, Paul Tarjan, Allen Tom, Franklin Tse,
         Nick Walker, Shane Weeden, and Skylar Woodward.
       </t>
     </section>

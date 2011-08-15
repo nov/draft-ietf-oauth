@@ -149,7 +149,7 @@
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">July 25, 2011</td></tr>
 </table></td></tr></table>
-<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-19</h1>
+<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-20</h1>
 
 <h3>Abstract</h3>
 
@@ -893,7 +893,7 @@ Client Types</h3>
 <p>
           </p>
 <blockquote class="text"><dl>
-<dt>private</dt>
+<dt>confidential</dt>
 <dd>
               
               Clients capable of maintaining the confidentiality of their credentials (e.g.
@@ -928,7 +928,7 @@ Client Types</h3>
 <dt>web application</dt>
 <dd>
               
-              A web application is a private client running on a web server. Resource owners access
+              A web application is a confidential client running on a web server. Resource owners access
               the client via an HTML user interface rendered in a user-agent on the resource
               owner's device. The client credentials as well as any access token issued to the
               client are stored on the web server and are not exposed to or accessible by the
@@ -1008,14 +1008,14 @@ Client Identifier</h3>
 Client Authentication</h3>
 
 <p>
-          If the client type is private, the client and authorization server establish a client
+          If the client type is confidential, the client and authorization server establish a client
           authentication method suitable for the security requirements of the authorization server.
           The authorization server MAY accept any form of client authentication meeting its
           security requirements.
         
 </p>
 <p>
-          Private clients are typically issued (or establish) a set of client credentials used for
+          Confidential clients are typically issued (or establish) a set of client credentials used for
           authenticating with the authorization server (e.g. password, public/private key pair).
         
 </p>
@@ -1259,7 +1259,7 @@ Redirection Endpoint</h3>
 <a name="anchor21"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3.1.2.1"></a><h3>3.1.2.1.&nbsp;
-Endpoint Confidentiality</h3>
+Endpoint Request Confidentiality</h3>
 
 <p>
               If a redirection request will result in the transmission of an authorization code or
@@ -1354,16 +1354,16 @@ Endpoint Content</h3>
             
 </p>
 <p>
-              The client SHOULD NOT include any third-party scripts in the redirection endpoint
-              response. Instead, it should extract the credentials from the URI and redirect the
-              user-agent again to another endpoint without the credentials in the URI.
-            
-</p>
-<p>
               The client MUST NOT include any untrusted third-party scripts in the redirection
               endpoint response (e.g. third-party analytics, social plug-ins, ad networks) without
               first ensuring that its own scripts used to extract and remove the credentials from
               the URI will execute first.
+            
+</p>
+<p>
+              The client SHOULD NOT include any third-party scripts in the redirection endpoint
+              response. Instead, it should extract the credentials from the URI and redirect the
+              user-agent again to another endpoint without the credentials in the URI.
             
 </p>
 <a name="anchor26"></a><br /><hr />
@@ -1409,7 +1409,7 @@ Token Endpoint</h3>
 Client Authentication</h3>
 
 <p>
-            Private clients, clients issued client credentials, or clients assigned other
+            Confidential clients, clients issued client credentials, or clients assigned other
             authentication requirements, MUST authenticate with the authorization server as
             described in <a class='info' href='#client-authentication'>Section&nbsp;2.4<span> (</span><span class='info'>Client Authentication</span><span>)</span></a> when making requests to the token
             endpoint. Client authentication is used for:
@@ -1468,10 +1468,10 @@ Authorization Code</h3>
 
 <p>
           The authorization code grant type is used to obtain both access tokens and refresh
-          tokens and is optimized for private clients. As a redirection-based flow, the client must
-          be capable of interacting with the resource owner's user-agent (typically a web browser)
-          and capable of receiving incoming requests (via redirection) from the authorization
-          server.
+          tokens and is optimized for confidential clients. As a redirection-based flow, the client
+          must be capable of interacting with the resource owner's user-agent (typically a web
+          browser) and capable of receiving incoming requests (via redirection) from the
+          authorization server.
         
 </p><br /><hr class="insert" />
 <a name="Figure-3"></a>
@@ -1842,7 +1842,7 @@ Access Token Request</h3>
           
 </p>
 <p>
-            If the client type is private or was issued client credentials (or assigned other
+            If the client type is confidential or was issued client credentials (or assigned other
             authentication requirements), the client MUST authenticate with the authorization
             server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
           
@@ -1870,8 +1870,8 @@ Access Token Request</h3>
             </p>
 <ul class="text">
 <li>
-                require client authentication for private clients or for any client issued client
-                credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client issued
+                client credentials (or with other authentication requirements),
               
 </li>
 <li>
@@ -2456,7 +2456,7 @@ Access Token Request</h3>
           
 </p>
 <p>
-            If the client type is private or was issued client credentials (or assigned other
+            If the client type is confidential or was issued client credentials (or assigned other
             authentication requirements), the client MUST authenticate with the authorization
             server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
           
@@ -2483,8 +2483,8 @@ Access Token Request</h3>
             </p>
 <ul class="text">
 <li>
-                require client authentication for private clients or for any client issued client
-                credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client issued
+                client credentials (or with other authentication requirements),
               
 </li>
 <li>
@@ -2548,7 +2548,7 @@ Client Credentials</h3>
         
 </p>
 <p>
-          The client credentials grant type MUST only be used by private clients.
+          The client credentials grant type MUST only be used by confidential clients.
         
 </p><br /><hr class="insert" />
 <a name="Figure-6"></a>
@@ -2696,7 +2696,7 @@ Extensions</h3>
 </p>
 <p>
             For example, to request an access token using a SAML 2.0 assertion grant type as
-            defined by <a class='info' href='#I-D.ietf-oauth-saml2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;saml2&#8209;bearer]<span> (</span><span class='info'>Campbell, B. and C. Mortimore, &ldquo;SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0,&rdquo; February&nbsp;2011.</span><span>)</span></a>, the client makes the
+            defined by <a class='info' href='#I-D.ietf-oauth-saml2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;saml2&#8209;bearer]<span> (</span><span class='info'>Mortimore, C., &ldquo;SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0,&rdquo; May&nbsp;2011.</span><span>)</span></a>, the client makes the
             following HTTP request using transport-layer security (line breaks are for display
             purposes only):
           
@@ -2987,7 +2987,7 @@ Refreshing an Access Token</h3>
 <p>
         Because refresh tokens are typically long-lasting credentials used to request additional
         access tokens, the refresh token is bound to the client it was issued. If the client type
-        is private or was issued client credentials (or assigned other authentication
+        is confidential or was issued client credentials (or assigned other authentication
         requirements), the client MUST authenticate with the authorization server as described in
         <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
       
@@ -3014,7 +3014,7 @@ Refreshing an Access Token</h3>
         </p>
 <ul class="text">
 <li>
-            require client authentication for private clients or for any client issued client
+            require client authentication for confidential clients or for any client issued client
             credentials (or with other authentication requirements),
           
 </li>
@@ -3081,7 +3081,7 @@ Access Token Types</h3>
 </p>
 <p>
             For example, the <tt>bearer</tt> token type defined in
-            <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; March&nbsp;2011.</span><span>)</span></a> is utilized by simply including the access
+            <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; June&nbsp;2011.</span><span>)</span></a> is utilized by simply including the access
             token string in the request:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -3108,7 +3108,7 @@ Access Token Types</h3>
 </pre></div>
 <p>
           The above examples are provided for illustration purposes only. Developers are advised to
-          consult the <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; March&nbsp;2011.</span><span>)</span></a> and
+          consult the <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; June&nbsp;2011.</span><span>)</span></a> and
           <a class='info' href='#I-D.ietf-oauth-v2-http-mac'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;http&#8209;mac]<span> (</span><span class='info'>Hammer-Lahav, E., Barth, A., and B. Adida, &ldquo;HTTP Authentication: MAC Access Authentication,&rdquo; May&nbsp;2011.</span><span>)</span></a> specifications before use.
         
 </p>
@@ -3681,8 +3681,7 @@ Cross-Site Request Forgery</h3>
         
 </p>
 <p>
-          For example, using a DOM variable (protected by JavaScript or other DOM-binding
-          language's enforcement of SOP [[ add reference ]]), HTTP cookie, or HTML5 client-side storage. The
+          For example, using a DOM variable, HTTP cookie, or HTML5 client-side storage. The
           authorization server includes the value of the <tt>state</tt>
           parameter when redirecting the user-agent back to the client which MUST then ensure the
           received value matches the stored value.
@@ -3694,27 +3693,25 @@ Cross-Site Request Forgery</h3>
 Clickjacking</h3>
 
 <p>
-          [[ Rework to use specification terminology ]]
+          In a clickjacking attack, an attacker registers a legitimate client and then constructs a
+          malicious site in which it loads the authorization server's authorization endpoint web
+          page in a transparent iframe overlaid on top of a set of dummy buttons which are
+          carefully constructed to be placed directly under important buttons on the authorization
+          page. When an end-user clicks a misleading visible button, the end-user is actually
+          clicking an invisible button on the authorization page (such as an "Authorize" button).
+          This allows an attacker to trick a resource owner into granting its client access without
+          their knowledge.
         
 </p>
 <p>
-          Clickjacking is the process of tricking end-users into revealing confidential information
-          or taking control of their device while clicking on seemingly innocuous web pages. In
-          more detail, a malicious site loads the target site in a transparent iframe overlaid on
-          top of a set of dummy buttons which are carefully constructed to be placed directly under
-          important buttons on the target site. When a user clicks a visible button, they are
-          actually clicking a button (such as an "Authorize" button) on the hidden page.
-        
-</p>
-<p>
-          To prevent clickjacking (and phishing attacks), native applications SHOULD use external
-          browsers instead of embedding browsers in an iframe when requesting end-user
-          authorization. For newer browsers, avoidance of iframes can be enforced by the
-          authorization server using the <tt>x-frame-options</tt> header
-          [[ Add reference ]]. This header can have two values, <tt>deny</tt>
-          and <tt>sameorigin</tt>, which will block any framing or framing by
-          sites with a different origin, respectively. For older browsers, javascript framebusting
-          techniques can be used but may not be effective in all browsers.
+          To prevent this form of attack, native applications SHOULD use external browsers instead
+          of embedding browsers in an iframe when requesting end-user authorization. For most newer
+          browsers, avoidance of iframes can be enforced by the authorization server using the
+          (non-standard) <tt>x-frame-options</tt> header. This header can have
+          two values, <tt>deny</tt> and <tt>sameorigin</tt>,
+          which will block any framing, or framing by sites with a different origin, respectively.
+          For older browsers, javascript framebusting techniques can be used but may not be
+          effective in all browsers.
         
 </p>
 <a name="anchor56"></a><br /><hr />
@@ -4617,9 +4614,9 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="I-D.draft-hardt-oauth-01">[I-D.draft-hardt-oauth-01]</a></td>
 <td class="author-text">Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-hardt-oauth-01.txt">OAuth Web Resource Authorization Profiles</a>,&rdquo; January&nbsp;2010.</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-saml2-bearer">[I-D.ietf-oauth-saml2-bearer]</a></td>
-<td class="author-text">Campbell, B. and C. Mortimore, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-03">SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-03 (work in progress), February&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-03.txt">TXT</a>).</td></tr>
+<td class="author-text">Mortimore, C., &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-04">SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-04 (work in progress), May&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-04.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</a></td>
-<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-04">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-04 (work in progress), March&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-04.txt">TXT</a>).</td></tr>
+<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-06">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-06 (work in progress), June&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-06.txt">TXT</a>, <a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-06.pdf">PDF</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-http-mac">[I-D.ietf-oauth-v2-http-mac]</a></td>
 <td class="author-text">Hammer-Lahav, E., Barth, A., and B. Adida, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-00">HTTP Authentication: MAC Access Authentication</a>,&rdquo; draft-ietf-oauth-v2-http-mac-00 (work in progress), May&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-http-mac-00.txt">TXT</a>, <a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-http-mac-00.pdf">PDF</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-threatmodel">[I-D.ietf-oauth-v2-threatmodel]</a></td>
