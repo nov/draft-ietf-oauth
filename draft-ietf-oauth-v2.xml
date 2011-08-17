@@ -180,9 +180,11 @@
               an intermediary such as an authorization server.
             </t>
             <t>
-              The client receives an authorization grant which represents the authorization
-              provided by the resource owner. The authorization grant type depends on the method
-              used by the client and supported by the authorization server to obtain it.
+              The client receives an authorization grant which is a credential representing
+              the resource owner's authorization, expressed using one of four grant types defined
+              in this specification or using an extension grant type. The authorization grant type
+              depends on the method used by the client to request authorization and the types
+              supported by the authorization server.
             </t>
             <t>
               The client requests an access token by authenticating with the authorization server
@@ -234,13 +236,9 @@
 
       <section title='Authorization Grant'>
         <t>
-          An authorization grant is a general term used to describe the intermediate credentials
-          representing the resource owner's authorization (to access its protected resources), and
-          serves as an abstraction layer. An authorization grant is used by the client to obtain
-          an access token.
-        </t>
-        <t>
-          This specification defines four grant types: authorization code, implicit, resource owner
+          An authorization grant is a credential representing the resource owner's authorization
+          (to access its protected resources) used by the client to obtain an access token. This
+          specification defines four grant types: authorization code, implicit, resource owner
           password credentials, and client credentials, as well as an extensibility mechanism for
           defining additional types.
         </t>
@@ -533,7 +531,7 @@
         <t>
           The authorization server issues the registered client a client identifier - a unique
           string representing the registration information provided by the client. The client
-          identifier is not a secret, it is exposed to the resource owner, and cannot be used
+          identifier is not a secret, it is exposed to the resource owner, and MUST NOT be used
           alone for client authentication.
         </t>
       </section>
@@ -672,9 +670,10 @@
       <section title='Authorization Endpoint'>
         <t>
           The authorization endpoint is used to interact with the resource owner and obtain
-          authorization. The authorization server MUST first verify the identity of the resource
-          owner. The way in which the authorization server authenticates the resource owner (e.g.
-          username and password login, session cookies) is beyond the scope of this specification.
+          an authorization grant. The authorization server MUST first verify the identity of the
+          resource owner. The way in which the authorization server authenticates the resource
+          owner (e.g. username and password login, session cookies) is beyond the scope of this
+          specification.
         </t>
         <t>
           The means through which the client obtains the location of the authorization endpoint are
