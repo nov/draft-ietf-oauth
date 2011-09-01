@@ -11,6 +11,7 @@
   <?rfc compact='yes' ?>
   <?rfc subcompact='yes' ?>
 
+  
   <front>
     <title abbrev='OAuth 2.0'>The OAuth 2.0 Authorization Protocol</title>
 
@@ -205,35 +206,6 @@
         </t>
       </section>
 
-      <section title='Access Token'>
-        <t>
-          Access tokens are credentials used to access protected resources. An access token is a
-          string representing an authorization issued to the client. The string is usually opaque
-          to the client. Tokens represent specific scopes and durations of access, granted by the
-          resource owner, and enforced by the resource server and authorization server.
-        </t>
-        <t>
-          The token may denote an identifier used to retrieve the authorization information, or
-          self-contain the authorization information in a verifiable manner (i.e. a token string
-          consisting of some data and a signature). Additional authentication credentials, which
-          are beyond the scope of this specification, may be required in order for the client to
-          use a token.
-        </t>
-        <t>
-          The access token provides an abstraction layer, replacing different authorization
-          constructs (e.g. username and password) with a single token understood by the resource
-          server. This abstraction enables issuing access tokens more restrictive than the
-          authorization grant used to obtain them, as well as removing the resource server's need to
-          understand a wide range of authentication methods.
-        </t>
-        <t>
-          Access tokens can have different formats, structures, and methods of utilization (e.g.
-          cryptographic properties) based on the resource server security requirements. Access token
-          attributes and the methods used to access protected resources are beyond the scope of this
-          specification and are defined by companion specifications.
-        </t>
-      </section>
-
       <section title='Authorization Grant'>
         <t>
           An authorization grant is a credential representing the resource owner's authorization
@@ -259,8 +231,9 @@
           </t>
           <t>
             The authorization code provides a few important security benefits such as the ability
-            to authenticate the client and issuing the access token directly to the client without
-            potentially exposing it to others, including the resource owner.
+            to authenticate the client, and the transmission of the the access token directly to
+            the client without passing it through the resource owner's user-agnet, potentially
+            exposing it to others, including the resource owner.
           </t>
         </section>
 
@@ -317,6 +290,35 @@
           </t>
         </section>
 
+      </section>
+
+      <section title='Access Token'>
+        <t>
+          Access tokens are credentials used to access protected resources. An access token is a
+          string representing an authorization issued to the client. The string is usually opaque
+          to the client. Tokens represent specific scopes and durations of access, granted by the
+          resource owner, and enforced by the resource server and authorization server.
+        </t>
+        <t>
+          The token may denote an identifier used to retrieve the authorization information, or
+          self-contain the authorization information in a verifiable manner (i.e. a token string
+          consisting of some data and a signature). Additional authentication credentials, which
+          are beyond the scope of this specification, may be required in order for the client to
+          use a token.
+        </t>
+        <t>
+          The access token provides an abstraction layer, replacing different authorization
+          constructs (e.g. username and password) with a single token understood by the resource
+          server. This abstraction enables issuing access tokens more restrictive than the
+          authorization grant used to obtain them, as well as removing the resource server's need to
+          understand a wide range of authentication methods.
+        </t>
+        <t>
+          Access tokens can have different formats, structures, and methods of utilization (e.g.
+          cryptographic properties) based on the resource server security requirements. Access token
+          attributes and the methods used to access protected resources are beyond the scope of this
+          specification and are defined by companion specifications.
+        </t>
       </section>
 
       <section title='Refresh Token'>
@@ -441,6 +443,24 @@
         self-issued or third-party-issued assertion, or by the authorization server performing
         client discovery using a trusted channel.
       </t>
+      <t>
+        When registering a client, the client developer:
+      </t>
+      <t>
+        <list style='symbols'>
+          <t>
+            specifies the client type as described in <xref target='client-types' />,
+          </t>
+          <t>
+            provides its client redirection URIs as described in
+            <xref target='redirect-uri' />, and
+          </t>
+          <t>
+            includes any other information required by the authorization server (e.g. application
+            name, website, description, logo image, the acceptance of legal terms).
+          </t>
+        </list>
+      </t>
 
       <section title='Client Types' anchor='client-types'>
         <t>
@@ -501,27 +521,6 @@
               minimum, these credentials are protected from hostile servers which the application
               may interact with. On some platform these credentials might be protected from other
               applications residing on the same device.
-            </t>
-          </list>
-        </t>
-      </section>
-
-      <section title='Registration Requirements'>
-        <t>
-          When registering a client, the client developer:
-        </t>
-        <t>
-          <list style='symbols'>
-            <t>
-              specifies the client type as described in <xref target='client-types' />,
-            </t>
-            <t>
-              provides its client redirection URIs as described in
-              <xref target='redirect-uri' />, and
-            </t>
-            <t>
-              includes any other information required by the authorization server (e.g. application
-              name, website, description, logo image, the acceptance of legal terms).
             </t>
           </list>
         </t>
