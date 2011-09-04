@@ -272,9 +272,9 @@
           <t>
             Even though this grant type requires direct client access to the resource owner
             credentials, the resource owner credentials are used for a single request and are
-            exchanged for an access token. Unlike the HTTP Basic authentication scheme defined in
-            <xref target='RFC2617' />, this grant type eliminates the need for the client to store
-            the resource owner credentials for future use.
+            exchanged for an access token. This grant type can eliminate the need for the client
+            to store the resource owner credentials for future use, by exchanging the credentials
+            with a long-lived access token or refresh token.
           </t>
         </section>
 
@@ -690,9 +690,10 @@
           Since requests to the authorization endpoint result in user authentication and the
           transmission of clear-text credentials (in the HTTP response), the authorization server
           MUST require the use of a transport-layer security mechanism when sending requests to the
-          authorization endpoint. The authorization server MUST support TLS 1.2 as defined in
-          <xref target='RFC5246' />, and MAY support additional transport-layer mechanisms meeting
-          its security requirements.
+          authorization endpoint. The authorization server MUST support TLS 1.0
+          (<xref target='RFC2246' />), SHOULD support TLS 1.2 (<xref target='RFC5246' />) and its
+          future replacements, and MAY support additional transport-layer mechanisms meeting its
+          security requirements.
         </t>
         <t>
           The authorization server MUST support the use of the HTTP <spanx style='verb'>GET</spanx>
@@ -878,8 +879,9 @@
           Since requests to the token endpoint result in the transmission of clear-text credentials
           (in the HTTP request and response), the authorization server MUST require the use of a
           transport-layer security mechanism when sending requests to the token endpoint. The
-          authorization server MUST support TLS 1.2 as defined in <xref target='RFC5246' />, and
-          MAY support additional transport-layer mechanisms meeting its security requirements.
+          authorization server MUST support TLS 1.0 (<xref target='RFC2246' />), SHOULD support TLS
+          1.2 (<xref target='RFC5246' />) and its future replacements, and MAY support additional
+          transport-layer mechanisms meeting its security requirements.
         </t>
         <t>
           The client MUST use the HTTP <spanx style='verb'>POST</spanx> method when making access
@@ -927,8 +929,8 @@
           </t>
           <t>
             The security ramifications of allowing unauthenticated access by public clients to the
-            token endpoint MUST be considered, as well as the issuance of refresh tokens to public
-            clients, their scope, and lifetime.
+            token endpoint, as well as the issuance of refresh tokens to public clients MUST be
+            taken into consideration.
           </t>
         </section>
 
@@ -1069,11 +1071,10 @@
               </t>
               <t hangText='state'>
                 <vspace />
-                OPTIONAL. An opaque value used by the client to maintain state between the request
+                RECOMMENDED. An opaque value used by the client to maintain state between the request
                 and callback. The authorization server includes this value when redirecting the
-                user-agent back to the client. Use of the <spanx style='verb'>state</spanx>
-                parameter is RECOMMENDED for preventing cross-site request forgery as described in
-                <xref target='CSRF' />.
+                user-agent back to the client. The parameter SHOULD be used for preventing
+                cross-site request forgery as described in <xref target='CSRF' />.
               </t>
             </list>
           </t>
@@ -1472,11 +1473,10 @@
               </t>
               <t hangText='state'>
                 <vspace />
-                OPTIONAL. An opaque value used by the client to maintain state between the request
+                RECOMMENDED. An opaque value used by the client to maintain state between the request
                 and callback. The authorization server includes this value when redirecting the
-                user-agent back to the client. Use of the <spanx style='verb'>state</spanx>
-                parameter is RECOMMENDED for preventing cross-site request forgery as described in
-                <xref target='CSRF' />.
+                user-agent back to the client. The parameter SHOULD be used for preventing
+                cross-site request forgery as described in <xref target='CSRF' />.
               </t>
             </list>
           </t>
@@ -2550,8 +2550,13 @@
         <t>
           When client authentication is not possible, the authorization server SHOULD employ other
           means to validate the client's identity. For example, by requiring the registration of
-          the client redirection URI or enlisting the resource owner to confirm identity. The
-          authorization server must consider the security implications of interacting with
+          the client redirection URI or enlisting the resource owner to confirm identity. A valid
+          redirection URI is not sufficient to verify the client's identity when asking for
+          end-user authorization, but can be used to prevent delivering credentials to a
+          counterfeit client after obtaining end-user authorization.
+        </t>
+        <t>
+          The authorization server must consider the security implications of interacting with
           unauthenticated clients and take measures to limit the potential exposure of other
           credentials (e.g. refresh tokens) issued to such clients.
         </t>
@@ -2780,34 +2785,45 @@
 
       <section title='Cross-Site Request Forgery' anchor='CSRF'>
         <t>
-          Cross-site request forgery (CSRF) is a web-based attack whereby HTTP requests are
-          transmitted from the user-agent of an end-user the server trusts or has authenticated.
-          CSRF attacks enable the attacker to intermix the attacker's security context with that
-          of the resource owner resulting in a compromise of either the resource server or of the
-          client application itself.
+          Cross-site request forgery (CSRF) is an exploit in which an attacker causes the
+          user-agent of a victim end-user to follow a malicious URI (e.g. provided to the
+          user-agent as a misleading link, image, or redirection) to a trusting server (usually
+          established via the presence of a valid session cookie).
         </t>
         <t>
-          In the OAuth context, such attacks allow an attacker to inject their own authorization
-          code or access token into the client, which can result in the client associating the
-          attacker's protected resources to the victim's account on the client. Depending on the
-          nature of the client and the protected resources, this can have undesirable and damaging
-          effects. In order to prevent such attacks, the client MUST employ CSRF protection.
+          A CSRF attack against the client's redirection URI allows an attacker to inject their own
+          authorization code or access token, which can result in the client using an access token
+          associated with the attacker's protected resources rather than the victim's (e.g. save
+          the victim's bank account information to a protected resource controlled by the
+          attacker).
         </t>
         <t>
-          It is strongly RECOMMENDED for the client to utilize the <spanx style='verb'>state</spanx>
-          request parameter with authorization requests to the authorization server. When used for
-          CSRF prevention, the <spanx style='verb'>state</spanx> request parameter MUST contain a
-          non-guessable value, which the client MUST also store with the resource owner's
-          user-agent in a location accessible only to the client or the resource owner's user-agent
-          (i.e., protected by same-origin policy). For example, the client can using a DOM
-          variable, HTTP cookie, or HTML5 client-side storage.
+          The client MUST implement CSRF protection for its redirection URI. This is typically
+          accomplished by requiring any request sent to the redirection URI endpoint to include a
+          value that binds the request to the user-agent's authenticated state (e.g. a hash of the
+          session cookie used to authentication the user-agent). The client SHOULD utilize the
+          <spanx style='verb'>state</spanx> request parameter to deliver this value to the
+          authorization server when making an authorization request.
         </t>
         <t>
-          When redirecting the resource owner's user-agent back to the client, the authorization
-          server includes the value of the <spanx style='verb'>state</spanx> parameter. Upon
-          receiving the redirection request, the client MUST confirm that returned value of the
-          <spanx style='verb'>state</spanx> parameter matches the value stored with the resource
-          owner's user-agent.
+          Once authorization has been obtained from the end-user, the authorization server
+          redirects the end-user's user-agent back to the client with the required binding value
+          contained in the <spanx style='verb'>state</spanx> parameter. The binding value enables
+          the client to validate the validity of the request by matching the binding value to the
+          user-agent's authenticated state. The binding value used for CSRF protection MUST contain
+          a non-guessable value, and the user-agent's authenticated state (e.g. session cookie,
+          HTML5 local storage) MUST be kept in a location accessible only to the client and the
+          user-agent (i.e., protected by same-origin policy).
+        </t>
+        <t>
+          A CSRF attack against the against the authorization server's authorization endpoint can
+          result in an attacker obtaining end-user authorization for a malicious client without
+          involving or alerting the end-user.
+        </t>
+        <t>
+          The authorization server MUST implement CSRF protection for its authorization endpoint,
+          and ensure that a malicious client cannot obtain authorization without the awareness and
+          explicit consent of the resource owner.
         </t>
       </section>
 
@@ -3512,6 +3528,7 @@
     <references title='Normative References'>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2246.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml' ?>
