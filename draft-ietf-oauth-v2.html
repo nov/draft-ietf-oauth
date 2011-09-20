@@ -145,11 +145,11 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: March 8, 2012</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: March 24, 2012</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">September 5, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">September 21, 2011</td></tr>
 </table></td></tr></table>
-<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-21</h1>
+<h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-22</h1>
 
 <h3>Abstract</h3>
 
@@ -175,7 +175,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on March 8, 2012.</p>
+This Internet-Draft will expire on March 24, 2012.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -381,11 +381,11 @@ Authors' Addresses<br />
 Introduction</h3>
 
 <p>
-        In the traditional client-server authentication model, the client accesses a protected
-        resource on the server by authenticating with the server using the resource owner's
-        credentials. In order to provide third-party applications access to protected resources,
-        the resource owner shares its credentials with the third-party. This creates several
-        problems and limitations:
+        In the traditional client-server authentication model, the client requests an access
+        restricted resource (protected resource) on the server by authenticating with the server
+        using the resource owner's credentials. In order to provide third-party applications access
+        to restricted resources, the resource owner shares its credentials with the third-party.
+        This creates several problems and limitations:
       
 </p>
 <p>
@@ -454,8 +454,7 @@ Introduction</h3>
 Roles</h3>
 
 <p>
-          OAuth includes four roles working together to grant and provide access to protected
-          resources - access restricted resources requiring authentication:
+          OAuth defines four roles:
         
 </p>
 <p>
@@ -538,7 +537,7 @@ Protocol Flow</h3>
 <dd>
               The client requests authorization from the resource owner. The authorization request
               can be made directly to the resource owner (as shown), or preferably indirectly via
-              an intermediary such as an authorization server.
+              the authorization server as an intermediary.
             
 </dd>
 <dt>(B)</dt>
@@ -611,8 +610,8 @@ Authorization Code</h3>
 </p>
 <p>
             The authorization code provides a few important security benefits such as the ability
-            to authenticate the client, and the transmission of the the access token directly to
-            the client without passing it through the resource owner's user-agnet, potentially
+            to authenticate the client, and the transmission of the access token directly to
+            the client without passing it through the resource owner's user-agent, potentially
             exposing it to others, including the resource owner.
           
 </p>
@@ -632,7 +631,7 @@ Implicit</h3>
 </p>
 <p>
             When issuing an implicit grant, the authorization server does not authenticate the
-            client and in some cases, the client identity can be verified via the redirection URI
+            client. In some cases, the client identity can be verified via the redirection URI
             used to deliver the access token to the client. The access token may be exposed to the
             resource owner or other applications with access to the resource owner's user-agent.
           
@@ -651,7 +650,7 @@ Implicit</h3>
 Resource Owner Password Credentials</h3>
 
 <p>
-            The resource owner password credentials (e.g. a username and password) can be used
+            The resource owner password credentials (i.e. username and password) can be used
             directly as an authorization grant to obtain an access token. The credentials should
             only be used when there is a high degree of trust between the resource owner and the
             client (e.g. its device operating system or a highly privileged application), and
@@ -726,8 +725,9 @@ Refresh Token</h3>
           the client by the authorization server and are used to obtain a new access token when the
           current access token becomes invalid or expires, or to obtain additional access tokens
           with identical or narrower scope (access tokens may have a shorter lifetime and fewer
-          permissions than authorized by the resource owner). Issuing a refresh token is optional
-          and is included when issuing an access token.
+          permissions than authorized by the resource owner). Issuing a refresh token is optional.
+          If the authorization server issues a refresh token, it is included when issuing an access
+          token.
         
 </p>
 <p>
@@ -923,7 +923,7 @@ Client Types</h3>
               Clients incapable of maintaining the confidentiality of their credentials (e.g.
               clients executing on the resource owner's device such as an installed native
               application or a web browser-based application), and incapable of secure client
-              authentication via any other mean.
+              authentication via any other means.
             
 </dd>
 </dl></blockquote><p>
@@ -969,7 +969,7 @@ Client Types</h3>
               owner's device. Protocol data and credentials are accessible to the resource owner.
               It is assumed that any client authentication credentials included in the application
               can be extracted. On the other hand, dynamically issued credentials such access
-              tokens or refresh tokens, can receive an acceptable level of protection. At a
+              tokens or refresh tokens can receive an acceptable level of protection. At a
               minimum, these credentials are protected from hostile servers which the application
               may interact with. On some platform these credentials might be protected from other
               applications residing on the same device.
@@ -1163,14 +1163,14 @@ Authorization Endpoint</h3>
 </p>
 <p>
           The means through which the client obtains the location of the authorization endpoint are
-          beyond the scope of this specification but the location is typically provided in the
+          beyond the scope of this specification, but the location is typically provided in the
           service documentation.
         
 </p>
 <p>
           The endpoint URI MAY include an
           <tt>application/x-www-form-urlencoded</tt> formatted
-          (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
+          (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
           section 3.4), which MUST be retained when adding additional query parameters. The
           endpoint URI MUST NOT include a fragment component.
         
@@ -1250,7 +1250,7 @@ Redirection Endpoint</h3>
             The redirection endpoint URI MUST be an absolute URI as defined by
             <a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a> section 4.3. The endpoint URI MAY include an
             <tt>application/x-www-form-urlencoded</tt> formatted
-            (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
+            (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
             section 3.4), which MUST be retained when adding additional query parameters. The
             endpoint URI MUST NOT include a fragment component.
           
@@ -1403,7 +1403,7 @@ Token Endpoint</h3>
 <p>
           The endpoint URI MAY include an
           <tt>application/x-www-form-urlencoded</tt> formatted
-          (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
+          (<a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>) query component (<a class='info' href='#RFC3986'>[RFC3986]<span> (</span><span class='info'>Berners-Lee, T., Fielding, R., and L. Masinter, &ldquo;Uniform Resource Identifier (URI): Generic Syntax,&rdquo; January&nbsp;2005.</span><span>)</span></a>
           section 3.4), which MUST be retained when adding additional query parameters. The
           endpoint URI MUST NOT include a fragment component.
         
@@ -1435,7 +1435,7 @@ Client Authentication</h3>
 
 <p>
             Confidential clients, clients issued client credentials, or clients assigned other
-            authentication requirements, MUST authenticate with the authorization server as
+            authentication requirements MUST authenticate with the authorization server as
             described in <a class='info' href='#client-authentication'>Section&nbsp;2.3<span> (</span><span class='info'>Client Authentication</span><span>)</span></a> when making requests to the token
             endpoint. Client authentication is used for:
           
@@ -1587,9 +1587,9 @@ Authorization Code</h3>
 <dt>(C)</dt>
 <dd>
               Assuming the resource owner grants access, the authorization server redirects the
-              user-agent back to the client using the redirection URI provided earlier. The
-              redirection URI includes an authorization code and any local state provided by the
-              client earlier.
+              user-agent back to the client using the redirection URI provided earlier (in the
+              request or during client registration). The redirection URI includes an authorization
+              code and any local state provided by the client earlier.
             
 </dd>
 <dt>(D)</dt>
@@ -1604,7 +1604,8 @@ Authorization Code</h3>
 <dd>
               The authorization server authenticates the client, validates the authorization code,
               and ensures the redirection URI received matches the URI used to redirect the client
-              in step (C). If valid, responds back with an access token and optional refresh token.
+              in step (C). If valid, the authorization server responds back with an access token
+              and optional refresh token.
             
 </dd>
 </dl></blockquote><p>
@@ -1619,7 +1620,7 @@ Authorization Request</h3>
             The client constructs the request URI by adding the following parameters to the
             query component of the authorization endpoint URI using the
             <tt>application/x-www-form-urlencoded</tt> format as defined by
-            <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Raggett, D., Hors, A., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
+            <a class='info' href='#W3C.REC-html401-19991224'>[W3C.REC&#8209;html401&#8209;19991224]<span> (</span><span class='info'>Hors, A., Raggett, D., and I. Jacobs, &ldquo;HTML 4.01 Specification,&rdquo; December&nbsp;1999.</span><span>)</span></a>:
           
 </p>
 <p>
@@ -1712,17 +1713,17 @@ Authorization Response</h3>
                 REQUIRED. The authorization code generated by the authorization server. The
                 authorization code MUST expire shortly after it is issued to mitigate the risk of
                 leaks. A maximum authorization code lifetime of 10 minutes is RECOMMENDED. The
-                client MUST NOT reuse the authorization code. If an authorization code is used more
-                than once, the authorization server SHOULD attempt to revoke all tokens previously
-                issued based on that authorization code. The authorization code is bound to the
-                client identifier and redirection URI.
+                client MUST NOT use the authorization code more than once. If an authorization code
+                is used more than once, the authorization server MUST deny the request and SHOULD
+                attempt to revoke all tokens previously issued based on that authorization code.
+                The authorization code is bound to the client identifier and redirection URI.
               
 </dd>
 <dt>state</dt>
 <dd>
                 
                 REQUIRED if the <tt>state</tt> parameter was present in the
-                client authorization request. Set to the exact value received from the client.
+                client authorization request. The exact value received from the client.
               
 </dd>
 </dl></blockquote><p>
@@ -1779,7 +1780,7 @@ Error Response</h3>
 <dd>
                       
                       The request is missing a required parameter, includes an unsupported
-                      parameter or parameter value, or is otherwise malformed.
+                      parameter value, or is otherwise malformed.
                     
 </dd>
 <dt>unauthorized_client</dt>
@@ -1844,7 +1845,7 @@ Error Response</h3>
 <dd>
                   
                   REQUIRED if a valid <tt>state</tt> parameter was present in the
-                  client authorization request. Set to the exact value received from the client.
+                  client authorization request. The exact value received from the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -1890,17 +1891,17 @@ Access Token Request</h3>
 <dd>
                 
                 REQUIRED, if the <tt>redirect_uri</tt> parameter was included in
-                the authorization request described in <a class='info' href='#code-authz-req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>, and their
-                values MUST be identical.
+                the authorization request as described in <a class='info' href='#code-authz-req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>, and
+                their values MUST be identical.
               
 </dd>
 </dl></blockquote><p>
           
 </p>
 <p>
-            If the client type is confidential or was issued client credentials (or assigned other
-            authentication requirements), the client MUST authenticate with the authorization
-            server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
+            If the client type is confidential or the client was issued client credentials (or
+            assigned other authentication requirements), the client MUST authenticate with the
+            authorization server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
           
 </p>
 <p>
@@ -1926,8 +1927,8 @@ Access Token Request</h3>
             </p>
 <ul class="text">
 <li>
-                require client authentication for confidential clients or for any client issued
-                client credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client that was
+                issued client credentials (or with other authentication requirements),
               
 </li>
 <li>
@@ -1942,8 +1943,8 @@ Access Token Request</h3>
 <li>
                 ensure that the <tt>redirect_uri</tt> parameter is present if
                 the <tt>redirect_uri</tt> parameter was included in the initial
-                authorization request described in <a class='info' href='#code-authz-req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>, and that their
-                values are identical.
+                authorization request as described in <a class='info' href='#code-authz-req'>Section&nbsp;4.1.1<span> (</span><span class='info'>Authorization Request</span><span>)</span></a>, and if
+                included ensure their values are identical.
               
 </li>
 </ul><p>
@@ -2226,17 +2227,21 @@ Access Token Response</h3>
 <dt>scope</dt>
 <dd>
                 
-                OPTIONAL. The scope of the access request as described by <a class='info' href='#scope'>Section&nbsp;3.3<span> (</span><span class='info'>Access Token Scope</span><span>)</span></a>.
+                OPTIONAL. The scope of the access token as described by <a class='info' href='#scope'>Section&nbsp;3.3<span> (</span><span class='info'>Access Token Scope</span><span>)</span></a>.
               
 </dd>
 <dt>state</dt>
 <dd>
                 
                 REQUIRED if the <tt>state</tt> parameter was present in the
-                client authorization request. Set to the exact value received from the client.
+                client authorization request. The exact value received from the client.
               
 </dd>
 </dl></blockquote><p>
+          
+</p>
+<p>
+            The authorization server MUST NOT issue a refresh token.
           
 </p>
 <p>
@@ -2299,7 +2304,7 @@ Error Response</h3>
 <dd>
                       
                       The request is missing a required parameter, includes an unsupported
-                      parameter or parameter value, or is otherwise malformed.
+                      parameter value, or is otherwise malformed.
                     
 </dd>
 <dt>unauthorized_client</dt>
@@ -2363,7 +2368,7 @@ Error Response</h3>
 <dd>
                   
                   REQUIRED if a valid <tt>state</tt> parameter was present in the
-                  client authorization request. Set to the exact value received from the client.
+                  client authorization request. The exact value received from the client.
                 
 </dd>
 </dl></blockquote><p>
@@ -2502,9 +2507,9 @@ Access Token Request</h3>
           
 </p>
 <p>
-            If the client type is confidential or was issued client credentials (or assigned other
-            authentication requirements), the client MUST authenticate with the authorization
-            server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
+            If the client type is confidential or the client was issued client credentials (or
+            assigned other authentication requirements), the client MUST authenticate with the
+            authorization server as described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
           
 </p>
 <p>
@@ -2529,8 +2534,8 @@ Access Token Request</h3>
             </p>
 <ul class="text">
 <li>
-                require client authentication for confidential clients or for any client issued
-                client credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client that was
+                issued client credentials (or with other authentication requirements),
               
 </li>
 <li>
@@ -2749,9 +2754,9 @@ Extensions</h3>
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
-  grant_type=http%3A%2F%2Foauth.net%2Fgrant_type%2Fassertion%2F
-  saml%2F2.0%2Fbearer&amp;assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ
-  [...omitted for brevity...]V0aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
+  grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Asaml2-
+  bearer&amp;assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ9IjIwMTEtMDU
+  [...omitted for brevity...]aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
 
 </pre></div>
 <p>
@@ -2818,7 +2823,7 @@ Successful Response</h3>
 <dt>scope</dt>
 <dd>
               
-              OPTIONAL. The scope of the access request as described by <a class='info' href='#scope'>Section&nbsp;3.3<span> (</span><span class='info'>Access Token Scope</span><span>)</span></a>.
+              OPTIONAL. The scope of the access token as described by <a class='info' href='#scope'>Section&nbsp;3.3<span> (</span><span class='info'>Access Token Scope</span><span>)</span></a>.
             
 </dd>
 </dl></blockquote><p>
@@ -2892,7 +2897,7 @@ Error Response</h3>
 <dd>
                   
                   The request is missing a required parameter, includes an unsupported
-                  parameter or parameter value, repeats a parameter, includes multiple
+                  parameter value, repeats a parameter, includes multiple
                   credentials, utilizes more than one mechanism for authenticating the client,
                   or is otherwise malformed.
                 
@@ -2913,7 +2918,8 @@ Error Response</h3>
 <dt>invalid_grant</dt>
 <dd>
                   
-                  The provided authorization grant is invalid, expired, revoked, does not match the
+                  The provided authorization grant (e.g. authorization code, resource owner
+                  credentials, client credentials) is invalid, expired, revoked, does not match the
                   redirection URI used in the authorization request, or was issued to another client.
                 
 </dd>
@@ -3012,9 +3018,9 @@ Refreshing an Access Token</h3>
 <dd>
             
             OPTIONAL. The scope of the access request as described by <a class='info' href='#scope'>Section&nbsp;3.3<span> (</span><span class='info'>Access Token Scope</span><span>)</span></a>.
-            The requested scope MUST be equal or lesser than the scope originally granted by the
-            resource owner, and if omitted is treated as equal to the scope originally granted by
-            the resource owner.
+            The requested scope MUST NOT include any scope not originally granted by the resource
+            owner, and if omitted is treated as equal to the scope originally granted by the
+            resource owner.
           
 </dd>
 </dl></blockquote><p>
@@ -3023,9 +3029,9 @@ Refreshing an Access Token</h3>
 <p>
         Because refresh tokens are typically long-lasting credentials used to request additional
         access tokens, the refresh token is bound to the client it was issued. If the client type
-        is confidential or was issued client credentials (or assigned other authentication
-        requirements), the client MUST authenticate with the authorization server as described in
-        <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
+        is confidential or the client was issued client credentials (or assigned other
+        authentication requirements), the client MUST authenticate with the authorization server as
+        described in <a class='info' href='#token-endpoint-auth'>Section&nbsp;3.2.1<span> (</span><span class='info'>Client Authentication</span><span>)</span></a>.
       
 </p>
 <p>
@@ -3050,8 +3056,8 @@ Refreshing an Access Token</h3>
         </p>
 <ul class="text">
 <li>
-            require client authentication for confidential clients or for any client issued client
-            credentials (or with other authentication requirements),
+            require client authentication for confidential clients or for any client that was
+            issued client credentials (or with other authentication requirements),
           
 </li>
 <li>
@@ -3452,8 +3458,8 @@ Client Impersonation</h3>
           authorization server cannot authenticate the client due to the client's nature, the
           authorization server MUST require the registration of any redirection URI used for
           receiving authorization responses, and SHOULD utilize other means to protect resource
-          owners from such malicious clients. For example, engaging the resource owner to assist in
-          identifying the client and its origin.
+          owners from such malicious clients. For example, the authorization server can engage
+          the resource owner to assist in identifying the client and its origin.
         
 </p>
 <p>
@@ -3552,7 +3558,7 @@ Authorization Codes</h3>
 </p>
 <p>
           Authorization codes operate as plaintext bearer credentials, used to verify that the
-          resource owner who granted authorization at the authorization server, is the same
+          resource owner who granted authorization at the authorization server is the same
           resource owner returning to the client to complete the process. Therefore, if the client
           relies on the authorization code for its own resource owner authentication, the client
           redirection endpoint MUST require TLS.
@@ -3594,7 +3600,7 @@ Authorization Code Redirection URI Manipulation</h3>
 </p>
 <p>
           Once at the authorization server, the victim is prompted with a normal, valid request on
-          behalf of a legitimate and familiar client, and authorizes the request. The victim is
+          behalf of a legitimate and trusted client, and authorizes the request. The victim is
           then redirected to an endpoint under the control of the attacker with the authorization
           code. The attacker completes the authorization flow by sending the authorization code to
           the client using the original redirection URI provided by the client. The client
@@ -3605,11 +3611,11 @@ Authorization Code Redirection URI Manipulation</h3>
 </p>
 <p>
           In order to prevent such an attack, the authorization server MUST ensure that the
-          redirection URI used to obtain the authorization code, is the same as the redirection URI
+          redirection URI used to obtain the authorization code is identical to the redirection URI
           provided when exchanging the authorization code for an access token. The authorization
           server MUST require public clients and SHOULD require confidential clients to register
-          their redirection URI and if provided in the request, MUST validate the redirection URI
-          received in the authorization request against the registered value.
+          their redirection URIs. If a redirection URI is provided in the request, the
+          authorization server MUST validate it against the registered value.
         
 </p>
 <a name="anchor47"></a><br /><hr />
@@ -3733,7 +3739,7 @@ Cross-Site Request Forgery</h3>
           The client MUST implement CSRF protection for its redirection URI. This is typically
           accomplished by requiring any request sent to the redirection URI endpoint to include a
           value that binds the request to the user-agent's authenticated state (e.g. a hash of the
-          session cookie used to authentication the user-agent). The client SHOULD utilize the
+          session cookie used to authenticate the user-agent). The client SHOULD utilize the
           <tt>state</tt> request parameter to deliver this value to the
           authorization server when making an authorization request.
         
@@ -3742,7 +3748,7 @@ Cross-Site Request Forgery</h3>
           Once authorization has been obtained from the end-user, the authorization server
           redirects the end-user's user-agent back to the client with the required binding value
           contained in the <tt>state</tt> parameter. The binding value enables
-          the client to validate the validity of the request by matching the binding value to the
+          the client to verify the validity of the request by matching the binding value to the
           user-agent's authenticated state. The binding value used for CSRF protection MUST contain
           a non-guessable value, and the user-agent's authenticated state (e.g. session cookie,
           HTML5 local storage) MUST be kept in a location accessible only to the client and the
@@ -3750,9 +3756,9 @@ Cross-Site Request Forgery</h3>
         
 </p>
 <p>
-          A CSRF attack against the against the authorization server's authorization endpoint can
-          result in an attacker obtaining end-user authorization for a malicious client without
-          involving or alerting the end-user.
+          A CSRF attack against the authorization server's authorization endpoint can result in an
+          attacker obtaining end-user authorization for a malicious client without involving or
+          alerting the end-user.
         
 </p>
 <p>
@@ -3795,9 +3801,9 @@ Code Injection and Input Validation</h3>
 
 <p>
           A code injection attack occurs when an input or otherwise external variable is used by an
-          application in which that input can cause modification of the application logic when used
-          unsanitized. This may allow an attacker to gain access to the application device or its
-          data, cause denial of service, or a wide range of malicious side-effects.
+          application unsanitized and causes modification to the application logic. This may allow
+          an attacker to gain access to the application device or its data, cause denial of
+          service, or a wide range of malicious side-effects.
         
 </p>
 <p>
@@ -3865,7 +3871,7 @@ The OAuth Access Token Type Registry</h3>
         
 </p>
 <p>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -3938,7 +3944,7 @@ The OAuth Parameters Registry</h3>
 <p>
           Additional parameters for inclusion in the authorization endpoint request, the
           authorization endpoint response, the token endpoint request, or the token endpoint
-          response, are registered on the advice of one or more Designated Experts (appointed by
+          response are registered on the advice of one or more Designated Experts (appointed by
           the IESG or their delegate), with a Specification Required (using terminology from
           <a class='info' href='#RFC5226'>[RFC5226]<span> (</span><span class='info'>Narten, T. and H. Alvestrand, &ldquo;Guidelines for Writing an IANA Considerations Section in RFCs,&rdquo; May&nbsp;2008.</span><span>)</span></a>). However, to allow for the allocation of values prior to
           publication, the Designated Expert(s) may approve registration once they are satisfied
@@ -3960,7 +3966,7 @@ The OAuth Parameters Registry</h3>
         
 </p>
 <p>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -4406,7 +4412,7 @@ The OAuth Authorization Endpoint Response Type Registry</h3>
         
 </p>
 <p>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -4529,7 +4535,7 @@ The OAuth Extensions Error Registry</h3>
         
 </p>
 <p>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -4623,8 +4629,8 @@ Acknowledgements</h3>
       
 </p>
 <p>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Aiden Bell, Scott Cantor, Marcos Caceres, Blaine Cook, Brian Campbell,
-        Brian Eaton, Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg,
+        Michael Adams, Amanda Anganes, Andrew Arnott, Dirk Balfanz, Aiden Bell, Scott Cantor, Marcos Caceres, Blaine Cook, Brian Campbell,
+        Brian Eaton, Leah Culver, Bill de hÓra, André DeMarre, Brian Eaton, Brian Ellin, Igor Faynberg,
         George Fletcher, Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman,
         Kristoffer Gronowski, Justin Hart, Dick Hardt, Craig Heath, Phil Hunt, Michael B. Jones,
         John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt,
@@ -4702,7 +4708,7 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="RFC5246">[RFC5246]</a></td>
 <td class="author-text">Dierks, T. and E. Rescorla, &ldquo;<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>,&rdquo; RFC&nbsp;5246, August&nbsp;2008 (<a href="http://www.rfc-editor.org/rfc/rfc5246.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="W3C.REC-html401-19991224">[W3C.REC-html401-19991224]</a></td>
-<td class="author-text">Raggett, D., Hors, A., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
+<td class="author-text">Hors, A., Raggett, D., and I. Jacobs, &ldquo;<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML 4.01 Specification</a>,&rdquo; World Wide Web Consortium Recommendation&nbsp;REC-html401-19991224, December&nbsp;1999 (<a href="http://www.w3.org/TR/1999/REC-html401-19991224">HTML</a>).</td></tr>
 </table>
 
 <a name="rfc.references2"></a><br /><hr />

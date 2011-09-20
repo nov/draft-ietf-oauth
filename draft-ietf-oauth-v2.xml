@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM 'rfc2629.dtd'>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-21'>
+<rfc category='std' ipr='trust200902' obsoletes='5849' docName='draft-ietf-oauth-v2-22'>
   <?rfc strict='yes' ?>
   <?rfc toc='yes' ?>
   <?rfc tocdepth='3' ?>
@@ -53,11 +53,11 @@
 
     <section title='Introduction'>
       <t>
-        In the traditional client-server authentication model, the client accesses a protected
-        resource on the server by authenticating with the server using the resource owner's
-        credentials. In order to provide third-party applications access to protected resources,
-        the resource owner shares its credentials with the third-party. This creates several
-        problems and limitations:
+        In the traditional client-server authentication model, the client requests an access
+        restricted resource (protected resource) on the server by authenticating with the server
+        using the resource owner's credentials. In order to provide third-party applications access
+        to restricted resources, the resource owner shares its credentials with the third-party.
+        This creates several problems and limitations:
       </t>
       <t>
         <list style='symbols'>
@@ -111,8 +111,7 @@
 
       <section title='Roles'>
         <t>
-          OAuth includes four roles working together to grant and provide access to protected
-          resources - access restricted resources requiring authentication:
+          OAuth defines four roles:
         </t>
         <t>
           <list style='hanging'>
@@ -178,7 +177,7 @@
             <t>
               The client requests authorization from the resource owner. The authorization request
               can be made directly to the resource owner (as shown), or preferably indirectly via
-              an intermediary such as an authorization server.
+              the authorization server as an intermediary.
             </t>
             <t>
               The client receives an authorization grant which is a credential representing
@@ -231,8 +230,8 @@
           </t>
           <t>
             The authorization code provides a few important security benefits such as the ability
-            to authenticate the client, and the transmission of the the access token directly to
-            the client without passing it through the resource owner's user-agnet, potentially
+            to authenticate the client, and the transmission of the access token directly to
+            the client without passing it through the resource owner's user-agent, potentially
             exposing it to others, including the resource owner.
           </t>
         </section>
@@ -248,7 +247,7 @@
           </t>
           <t>
             When issuing an implicit grant, the authorization server does not authenticate the
-            client and in some cases, the client identity can be verified via the redirection URI
+            client. In some cases, the client identity can be verified via the redirection URI
             used to deliver the access token to the client. The access token may be exposed to the
             resource owner or other applications with access to the resource owner's user-agent.
           </t>
@@ -263,7 +262,7 @@
 
         <section title="Resource Owner Password Credentials">
           <t>
-            The resource owner password credentials (e.g. a username and password) can be used
+            The resource owner password credentials (i.e. username and password) can be used
             directly as an authorization grant to obtain an access token. The credentials should
             only be used when there is a high degree of trust between the resource owner and the
             client (e.g. its device operating system or a highly privileged application), and
@@ -327,8 +326,9 @@
           the client by the authorization server and are used to obtain a new access token when the
           current access token becomes invalid or expires, or to obtain additional access tokens
           with identical or narrower scope (access tokens may have a shorter lifetime and fewer
-          permissions than authorized by the resource owner). Issuing a refresh token is optional
-          and is included when issuing an access token.
+          permissions than authorized by the resource owner). Issuing a refresh token is optional.
+          If the authorization server issues a refresh token, it is included when issuing an access
+          token.
         </t>
         <t>
           A refresh token is a string representing the authorization granted to the client by the
@@ -481,7 +481,7 @@
               Clients incapable of maintaining the confidentiality of their credentials (e.g.
               clients executing on the resource owner's device such as an installed native
               application or a web browser-based application), and incapable of secure client
-              authentication via any other mean.
+              authentication via any other means.
             </t>
           </list>
         </t>
@@ -517,7 +517,7 @@
               owner's device. Protocol data and credentials are accessible to the resource owner.
               It is assumed that any client authentication credentials included in the application
               can be extracted. On the other hand, dynamically issued credentials such access
-              tokens or refresh tokens, can receive an acceptable level of protection. At a
+              tokens or refresh tokens can receive an acceptable level of protection. At a
               minimum, these credentials are protected from hostile servers which the application
               may interact with. On some platform these credentials might be protected from other
               applications residing on the same device.
@@ -676,7 +676,7 @@
         </t>
         <t>
           The means through which the client obtains the location of the authorization endpoint are
-          beyond the scope of this specification but the location is typically provided in the
+          beyond the scope of this specification, but the location is typically provided in the
           service documentation.
         </t>
         <t>
@@ -896,7 +896,7 @@
         <section title='Client Authentication' anchor='token-endpoint-auth'>
           <t>
             Confidential clients, clients issued client credentials, or clients assigned other
-            authentication requirements, MUST authenticate with the authorization server as
+            authentication requirements MUST authenticate with the authorization server as
             described in <xref target='client-authentication' /> when making requests to the token
             endpoint. Client authentication is used for:
           </t>
@@ -1025,9 +1025,9 @@
             </t>
             <t>
               Assuming the resource owner grants access, the authorization server redirects the
-              user-agent back to the client using the redirection URI provided earlier. The
-              redirection URI includes an authorization code and any local state provided by the
-              client earlier.
+              user-agent back to the client using the redirection URI provided earlier (in the
+              request or during client registration). The redirection URI includes an authorization
+              code and any local state provided by the client earlier.
             </t>
             <t>
               The client requests an access token from the authorization server's token endpoint
@@ -1038,7 +1038,8 @@
             <t>
               The authorization server authenticates the client, validates the authorization code,
               and ensures the redirection URI received matches the URI used to redirect the client
-              in step (C). If valid, responds back with an access token and optional refresh token.
+              in step (C). If valid, the authorization server responds back with an access token
+              and optional refresh token.
             </t>
           </list>
         </t>
@@ -1122,15 +1123,15 @@
                 REQUIRED. The authorization code generated by the authorization server. The
                 authorization code MUST expire shortly after it is issued to mitigate the risk of
                 leaks. A maximum authorization code lifetime of 10 minutes is RECOMMENDED. The
-                client MUST NOT reuse the authorization code. If an authorization code is used more
-                than once, the authorization server SHOULD attempt to revoke all tokens previously
-                issued based on that authorization code. The authorization code is bound to the
-                client identifier and redirection URI.
+                client MUST NOT use the authorization code more than once. If an authorization code
+                is used more than once, the authorization server MUST deny the request and SHOULD
+                attempt to revoke all tokens previously issued based on that authorization code.
+                The authorization code is bound to the client identifier and redirection URI.
               </t>
               <t hangText='state'>
                 <vspace />
                 REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
-                client authorization request. Set to the exact value received from the client.
+                client authorization request. The exact value received from the client.
               </t>
             </list>
           </t>
@@ -1177,7 +1178,7 @@
                     <t hangText='invalid_request'>
                       <vspace />
                       The request is missing a required parameter, includes an unsupported
-                      parameter or parameter value, or is otherwise malformed.
+                      parameter value, or is otherwise malformed.
                     </t>
                     <t hangText='unauthorized_client'>
                       <vspace />
@@ -1223,7 +1224,7 @@
                 <t hangText='state'>
                   <vspace />
                   REQUIRED if a valid <spanx style='verb'>state</spanx> parameter was present in the
-                  client authorization request. Set to the exact value received from the client.
+                  client authorization request. The exact value received from the client.
                 </t>
               </list>
             </t>
@@ -1262,15 +1263,15 @@
               <t hangText='redirect_uri'>
                 <vspace />
                 REQUIRED, if the <spanx style='verb'>redirect_uri</spanx> parameter was included in
-                the authorization request described in <xref target='code-authz-req' />, and their
-                values MUST be identical.
+                the authorization request as described in <xref target='code-authz-req' />, and
+                their values MUST be identical.
               </t>
             </list>
           </t>
           <t>
-            If the client type is confidential or was issued client credentials (or assigned other
-            authentication requirements), the client MUST authenticate with the authorization
-            server as described in <xref target='token-endpoint-auth' />.
+            If the client type is confidential or the client was issued client credentials (or
+            assigned other authentication requirements), the client MUST authenticate with the
+            authorization server as described in <xref target='token-endpoint-auth' />.
           </t>
           <figure>
             <preamble>
@@ -1295,8 +1296,8 @@
           <t>
             <list style='symbols'>
               <t>
-                require client authentication for confidential clients or for any client issued
-                client credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client that was
+                issued client credentials (or with other authentication requirements),
               </t>
               <t>
                 authenticate the client if client authentication is included and ensure the
@@ -1308,8 +1309,8 @@
               <t>
                 ensure that the <spanx style='verb'>redirect_uri</spanx> parameter is present if
                 the <spanx style='verb'>redirect_uri</spanx> parameter was included in the initial
-                authorization request described in <xref target='code-authz-req' />, and that their
-                values are identical.
+                authorization request as described in <xref target='code-authz-req' />, and if
+                included ensure their values are identical.
               </t>
             </list>
           </t>
@@ -1541,14 +1542,17 @@
               </t>
               <t hangText='scope'>
                 <vspace />
-                OPTIONAL. The scope of the access request as described by <xref target='scope' />.
+                OPTIONAL. The scope of the access token as described by <xref target='scope' />.
               </t>
               <t hangText='state'>
                 <vspace />
                 REQUIRED if the <spanx style='verb'>state</spanx> parameter was present in the
-                client authorization request. Set to the exact value received from the client.
+                client authorization request. The exact value received from the client.
               </t>
             </list>
+          </t>
+          <t>
+            The authorization server MUST NOT issue a refresh token.
           </t>
           <figure>
             <preamble>
@@ -1601,7 +1605,7 @@
                     <t hangText='invalid_request'>
                       <vspace />
                       The request is missing a required parameter, includes an unsupported
-                      parameter or parameter value, or is otherwise malformed.
+                      parameter value, or is otherwise malformed.
                     </t>
                     <t hangText='unauthorized_client'>
                       <vspace />
@@ -1646,7 +1650,7 @@
                 <t hangText='state'>
                   <vspace />
                   REQUIRED if a valid <spanx style='verb'>state</spanx> parameter was present in the
-                  client authorization request. Set to the exact value received from the client.
+                  client authorization request. The exact value received from the client.
                 </t>
               </list>
             </t>
@@ -1759,9 +1763,9 @@
             </list>
           </t>
           <t>
-            If the client type is confidential or was issued client credentials (or assigned other
-            authentication requirements), the client MUST authenticate with the authorization
-            server as described in <xref target='token-endpoint-auth' />.
+            If the client type is confidential or the client was issued client credentials (or
+            assigned other authentication requirements), the client MUST authenticate with the
+            authorization server as described in <xref target='token-endpoint-auth' />.
           </t>
           <figure>
             <preamble>
@@ -1785,8 +1789,8 @@
           <t>
             <list style='symbols'>
               <t>
-                require client authentication for confidential clients or for any client issued
-                client credentials (or with other authentication requirements),
+                require client authentication for confidential clients or for any client that was
+                issued client credentials (or with other authentication requirements),
               </t>
               <t>
                 authenticate the client if client authentication is included, and
@@ -1976,9 +1980,9 @@
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded;charset=UTF-8
 
-  grant_type=http%3A%2F%2Foauth.net%2Fgrant_type%2Fassertion%2F
-  saml%2F2.0%2Fbearer&assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ
-  [...omitted for brevity...]V0aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
+  grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Asaml2-
+  bearer&assertion=PEFzc2VydGlvbiBJc3N1ZUluc3RhbnQ9IjIwMTEtMDU
+  [...omitted for brevity...]aG5TdGF0ZW1lbnQ-PC9Bc3NlcnRpb24-
 ]]>
           </artwork>
         </figure>
@@ -2030,7 +2034,7 @@
             </t>
             <t hangText='scope'>
               <vspace />
-              OPTIONAL. The scope of the access request as described by <xref target='scope' />.
+              OPTIONAL. The scope of the access token as described by <xref target='scope' />.
             </t>
           </list>
         </t>
@@ -2094,7 +2098,7 @@
                 <t hangText='invalid_request'>
                   <vspace />
                   The request is missing a required parameter, includes an unsupported
-                  parameter or parameter value, repeats a parameter, includes multiple
+                  parameter value, repeats a parameter, includes multiple
                   credentials, utilizes more than one mechanism for authenticating the client,
                   or is otherwise malformed.
                 </t>
@@ -2111,7 +2115,8 @@
                 </t>
                 <t hangText='invalid_grant'>
                   <vspace />
-                  The provided authorization grant is invalid, expired, revoked, does not match the
+                  The provided authorization grant (e.g. authorization code, resource owner
+                  credentials, client credentials) is invalid, expired, revoked, does not match the
                   redirection URI used in the authorization request, or was issued to another client.
                 </t>
                 <t hangText='unauthorized_client'>
@@ -2191,18 +2196,18 @@
           <t hangText='scope'>
             <vspace />
             OPTIONAL. The scope of the access request as described by <xref target='scope' />.
-            The requested scope MUST be equal or lesser than the scope originally granted by the
-            resource owner, and if omitted is treated as equal to the scope originally granted by
-            the resource owner.
+            The requested scope MUST NOT include any scope not originally granted by the resource
+            owner, and if omitted is treated as equal to the scope originally granted by the
+            resource owner.
           </t>
         </list>
       </t>
       <t>
         Because refresh tokens are typically long-lasting credentials used to request additional
         access tokens, the refresh token is bound to the client it was issued. If the client type
-        is confidential or was issued client credentials (or assigned other authentication
-        requirements), the client MUST authenticate with the authorization server as described in
-        <xref target='token-endpoint-auth' />.
+        is confidential or the client was issued client credentials (or assigned other
+        authentication requirements), the client MUST authenticate with the authorization server as
+        described in <xref target='token-endpoint-auth' />.
       </t>
       <figure>
         <preamble>
@@ -2226,8 +2231,8 @@
       <t>
         <list style='symbols'>
           <t>
-            require client authentication for confidential clients or for any client issued client
-            credentials (or with other authentication requirements),
+            require client authentication for confidential clients or for any client that was
+            issued client credentials (or with other authentication requirements),
           </t>
           <t>
             authenticate the client if client authentication is included and ensure the
@@ -2573,8 +2578,8 @@
           authorization server cannot authenticate the client due to the client's nature, the
           authorization server MUST require the registration of any redirection URI used for
           receiving authorization responses, and SHOULD utilize other means to protect resource
-          owners from such malicious clients. For example, engaging the resource owner to assist in
-          identifying the client and its origin.
+          owners from such malicious clients. For example, the authorization server can engage
+          the resource owner to assist in identifying the client and its origin.
         </t>
         <t>
           The authorization server SHOULD enforce explicit resource owner authentication and
@@ -2654,7 +2659,7 @@
         </t>
         <t>
           Authorization codes operate as plaintext bearer credentials, used to verify that the
-          resource owner who granted authorization at the authorization server, is the same
+          resource owner who granted authorization at the authorization server is the same
           resource owner returning to the client to complete the process. Therefore, if the client
           relies on the authorization code for its own resource owner authentication, the client
           redirection endpoint MUST require TLS.
@@ -2689,7 +2694,7 @@
         </t>
         <t>
           Once at the authorization server, the victim is prompted with a normal, valid request on
-          behalf of a legitimate and familiar client, and authorizes the request. The victim is
+          behalf of a legitimate and trusted client, and authorizes the request. The victim is
           then redirected to an endpoint under the control of the attacker with the authorization
           code. The attacker completes the authorization flow by sending the authorization code to
           the client using the original redirection URI provided by the client. The client
@@ -2699,11 +2704,11 @@
         </t>
         <t>
           In order to prevent such an attack, the authorization server MUST ensure that the
-          redirection URI used to obtain the authorization code, is the same as the redirection URI
+          redirection URI used to obtain the authorization code is identical to the redirection URI
           provided when exchanging the authorization code for an access token. The authorization
           server MUST require public clients and SHOULD require confidential clients to register
-          their redirection URI and if provided in the request, MUST validate the redirection URI
-          received in the authorization request against the registered value.
+          their redirection URIs. If a redirection URI is provided in the request, the
+          authorization server MUST validate it against the registered value.
         </t>
       </section>
 
@@ -2801,7 +2806,7 @@
           The client MUST implement CSRF protection for its redirection URI. This is typically
           accomplished by requiring any request sent to the redirection URI endpoint to include a
           value that binds the request to the user-agent's authenticated state (e.g. a hash of the
-          session cookie used to authentication the user-agent). The client SHOULD utilize the
+          session cookie used to authenticate the user-agent). The client SHOULD utilize the
           <spanx style='verb'>state</spanx> request parameter to deliver this value to the
           authorization server when making an authorization request.
         </t>
@@ -2809,16 +2814,16 @@
           Once authorization has been obtained from the end-user, the authorization server
           redirects the end-user's user-agent back to the client with the required binding value
           contained in the <spanx style='verb'>state</spanx> parameter. The binding value enables
-          the client to validate the validity of the request by matching the binding value to the
+          the client to verify the validity of the request by matching the binding value to the
           user-agent's authenticated state. The binding value used for CSRF protection MUST contain
           a non-guessable value, and the user-agent's authenticated state (e.g. session cookie,
           HTML5 local storage) MUST be kept in a location accessible only to the client and the
           user-agent (i.e., protected by same-origin policy).
         </t>
         <t>
-          A CSRF attack against the against the authorization server's authorization endpoint can
-          result in an attacker obtaining end-user authorization for a malicious client without
-          involving or alerting the end-user.
+          A CSRF attack against the authorization server's authorization endpoint can result in an
+          attacker obtaining end-user authorization for a malicious client without involving or
+          alerting the end-user.
         </t>
         <t>
           The authorization server MUST implement CSRF protection for its authorization endpoint,
@@ -2853,9 +2858,9 @@
       <section title='Code Injection and Input Validation'>
         <t>
           A code injection attack occurs when an input or otherwise external variable is used by an
-          application in which that input can cause modification of the application logic when used
-          unsanitized. This may allow an attacker to gain access to the application device or its
-          data, cause denial of service, or a wide range of malicious side-effects.
+          application unsanitized and causes modification to the application logic. This may allow
+          an attacker to gain access to the application device or its data, cause denial of
+          service, or a wide range of malicious side-effects.
         </t>
         <t>
           The Authorization server and client MUST validate and sanitize any value received, and in
@@ -2910,7 +2915,7 @@
           the request successful.
         </t>
         <t>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -2965,7 +2970,7 @@
         <t>
           Additional parameters for inclusion in the authorization endpoint request, the
           authorization endpoint response, the token endpoint request, or the token endpoint
-          response, are registered on the advice of one or more Designated Experts (appointed by
+          response are registered on the advice of one or more Designated Experts (appointed by
           the IESG or their delegate), with a Specification Required (using terminology from
           <xref target='RFC5226' />). However, to allow for the allocation of values prior to
           publication, the Designated Expert(s) may approve registration once they are satisfied
@@ -2984,7 +2989,7 @@
           the request successful.
         </t>
         <t>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -3312,7 +3317,7 @@
           the request successful.
         </t>
         <t>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -3405,7 +3410,7 @@
           the request successful.
         </t>
         <t>
-          Decisions (or lack thereof) made by the Designated Expert can be first appealed to
+          Decisions (or lack thereof) made by the Designated Expert(s) can be first appealed to
           Application Area Directors (contactable using app-ads@tools.ietf.org email address or
           directly by looking up their email addresses on http://www.iesg.org/ website) and, if the
           appellant is not satisfied with the response, to the full IESG (using the iesg@iesg.org
@@ -3480,8 +3485,8 @@
         feedback, and wording which shaped and formed the final specification:
       </t>
       <t>
-        Michael Adams, Andrew Arnott, Dirk Balfanz, Aiden Bell, Scott Cantor, Marcos Caceres, Blaine Cook, Brian Campbell,
-        Brian Eaton, Leah Culver, Bill de hÓra, Brian Eaton, Brian Ellin, Igor Faynberg,
+        Michael Adams, Amanda Anganes, Andrew Arnott, Dirk Balfanz, Aiden Bell, Scott Cantor, Marcos Caceres, Blaine Cook, Brian Campbell,
+        Brian Eaton, Leah Culver, Bill de hÓra, André DeMarre, Brian Eaton, Brian Ellin, Igor Faynberg,
         George Fletcher, Tim Freeman, Evan Gilbert, Yaron Goland, Brent Goldman,
         Kristoffer Gronowski, Justin Hart, Dick Hardt, Craig Heath, Phil Hunt, Michael B. Jones,
         John Kemp, Mark Kent, Raffi Krikorian, Chasen Le Hara, Rasmus Lerdorf, Torsten Lodderstedt,
