@@ -44,7 +44,8 @@
         The OAuth 2.0 authorization protocol enables a third-party application to obtain limited
         access to an HTTP service, either on behalf of a resource owner by orchestrating an approval
         interaction between the resource owner and the HTTP service, or by allowing the third-party
-        application to obtain access on its own behalf.
+        application to obtain access on its own behalf. This specification replaces and obsoletes
+        the OAuth 1.0 protocol described in RFC 5849.
       </t>
     </abstract>
   </front>
@@ -3550,8 +3551,8 @@
     <references title='Informative References'>
 
       <?rfc include='http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-06.xml' ?>
-      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-04.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-08.xml' ?>
+      <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-saml2-bearer-08.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-threatmodel-00.xml' ?>
       <?rfc include='http://xml.resource.org/public/rfc/bibxml2/reference.OASIS.saml-core-2.0-os.xml' ?>

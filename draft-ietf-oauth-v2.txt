@@ -5,9 +5,9 @@ Network Working Group                               E. Hammer-Lahav, Ed.
 Internet-Draft                                                    Yahoo!
 Obsoletes: 5849 (if approved)                                D. Recordon
 Intended status: Standards Track                                Facebook
-Expires: March 24, 2012                                         D. Hardt
+Expires: March 25, 2012                                         D. Hardt
                                                                Microsoft
-                                                      September 21, 2011
+                                                      September 22, 2011
 
 
                   The OAuth 2.0 Authorization Protocol
@@ -19,7 +19,9 @@ Abstract
    application to obtain limited access to an HTTP service, either on
    behalf of a resource owner by orchestrating an approval interaction
    between the resource owner and the HTTP service, or by allowing the
-   third-party application to obtain access on its own behalf.
+   third-party application to obtain access on its own behalf.  This
+   specification replaces and obsoletes the OAuth 1.0 protocol described
+   in RFC 5849.
 
 Status of this Memo
 
@@ -36,7 +38,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 24, 2012.
+   This Internet-Draft will expire on March 25, 2012.
 
 Copyright Notice
 
@@ -47,16 +49,16 @@ Copyright Notice
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
-   carefully, as they describe your rights and restrictions with respect
-   to this document.  Code Components extracted from this document must
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 1]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 1]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
 
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
@@ -103,16 +105,16 @@ Table of Contents
        4.3.2.  Access Token Request . . . . . . . . . . . . . . . . . 33
        4.3.3.  Access Token Response  . . . . . . . . . . . . . . . . 34
      4.4.   Client Credentials  . . . . . . . . . . . . . . . . . . . 34
-       4.4.1.  Authorization Request and Response . . . . . . . . . . 35
-       4.4.2.  Access Token Request . . . . . . . . . . . . . . . . . 35
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 2]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 2]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
 
+       4.4.1.  Authorization Request and Response . . . . . . . . . . 35
+       4.4.2.  Access Token Request . . . . . . . . . . . . . . . . . 35
        4.4.3.  Access Token Response  . . . . . . . . . . . . . . . . 36
      4.5.   Extensions  . . . . . . . . . . . . . . . . . . . . . . . 36
    5.  Issuing an Access Token  . . . . . . . . . . . . . . . . . . . 37
@@ -159,16 +161,16 @@ Internet-Draft                  OAuth 2.0                 September 2011
    12. Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . 60
    Appendix A.  Editor's Notes  . . . . . . . . . . . . . . . . . . . 60
    13. References . . . . . . . . . . . . . . . . . . . . . . . . . . 61
-     13.1.  Normative References  . . . . . . . . . . . . . . . . . . 61
-     13.2.  Informative References  . . . . . . . . . . . . . . . . . 62
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 3]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 3]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
 
+     13.1.  Normative References  . . . . . . . . . . . . . . . . . . 61
+     13.2.  Informative References  . . . . . . . . . . . . . . . . . 62
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 63
 
 
@@ -218,9 +220,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-
-
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 4]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 4]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -276,7 +276,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 5]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 5]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -332,7 +332,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 6]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 6]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -388,7 +388,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 7]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 7]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -444,7 +444,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 8]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 8]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -500,7 +500,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                 [Page 9]
+Hammer-Lahav, et al.     Expires March 25, 2012                 [Page 9]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -556,7 +556,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 10]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 10]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -612,7 +612,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 11]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 11]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -668,7 +668,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 12]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 12]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -724,7 +724,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 13]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 13]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -780,7 +780,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 14]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 14]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -836,7 +836,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 15]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 15]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -892,7 +892,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 16]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 16]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -948,7 +948,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 17]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 17]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1004,7 +1004,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 18]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 18]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1060,7 +1060,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 19]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 19]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1116,7 +1116,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 20]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 20]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1172,7 +1172,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 21]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 21]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1228,7 +1228,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 22]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 22]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1284,7 +1284,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 23]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 23]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1340,7 +1340,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 24]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 24]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1396,7 +1396,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 25]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 25]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1452,7 +1452,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 26]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 26]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1508,7 +1508,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 27]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 27]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1564,7 +1564,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 28]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 28]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1620,7 +1620,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 29]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 29]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1676,7 +1676,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 30]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 30]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1732,7 +1732,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 31]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 31]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1788,7 +1788,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 32]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 32]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1844,7 +1844,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 33]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 33]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1900,7 +1900,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 34]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 34]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -1956,7 +1956,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 35]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 35]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2012,7 +2012,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 36]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 36]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2068,7 +2068,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 37]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 37]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2124,7 +2124,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 38]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 38]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2180,7 +2180,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 39]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 39]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2236,7 +2236,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 40]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 40]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2292,7 +2292,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 41]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 41]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2348,7 +2348,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 42]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 42]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2404,7 +2404,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 43]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 43]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2460,7 +2460,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 44]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 44]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2516,7 +2516,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 45]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 45]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2572,7 +2572,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 46]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 46]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2628,7 +2628,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 47]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 47]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2684,7 +2684,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 48]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 48]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2740,7 +2740,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 49]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 49]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2796,7 +2796,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 50]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 50]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2852,7 +2852,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 51]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 51]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2908,7 +2908,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 52]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 52]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -2964,7 +2964,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 53]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 53]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3020,7 +3020,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 54]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 54]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3076,7 +3076,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 55]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 55]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3132,7 +3132,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 56]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 56]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3188,7 +3188,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 57]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 57]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3244,7 +3244,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 58]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 58]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3300,7 +3300,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 59]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 59]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3356,7 +3356,7 @@ Appendix A.  Editor's Notes
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 60]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 60]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3412,7 +3412,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 61]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 61]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3443,14 +3443,14 @@ Internet-Draft                  OAuth 2.0                 September 2011
               Web Resource Authorization Profiles", January 2010.
 
    [I-D.ietf-oauth-saml2-bearer]
-              Mortimore, C., "SAML 2.0 Bearer Assertion Grant Type
-              Profile for OAuth 2.0", draft-ietf-oauth-saml2-bearer-04
-              (work in progress), May 2011.
+              Mortimore, C., "SAML 2.0 Bearer Assertion Profiles for
+              OAuth 2.0", draft-ietf-oauth-saml2-bearer-08 (work in
+              progress), August 2011.
 
    [I-D.ietf-oauth-v2-bearer]
               Jones, M., Hardt, D., and D. Recordon, "The OAuth 2.0
-              Protocol: Bearer Tokens", draft-ietf-oauth-v2-bearer-06
-              (work in progress), June 2011.
+              Protocol: Bearer Tokens", draft-ietf-oauth-v2-bearer-08
+              (work in progress), July 2011.
 
    [I-D.ietf-oauth-v2-http-mac]
               Hammer-Lahav, E., Barth, A., and B. Adida, "HTTP
@@ -3468,7 +3468,7 @@ Internet-Draft                  OAuth 2.0                 September 2011
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 62]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 62]
 
 Internet-Draft                  OAuth 2.0                 September 2011
 
@@ -3524,5 +3524,5 @@ Authors' Addresses
 
 
 
-Hammer-Lahav, et al.     Expires March 24, 2012                [Page 63]
+Hammer-Lahav, et al.     Expires March 25, 2012                [Page 63]
 

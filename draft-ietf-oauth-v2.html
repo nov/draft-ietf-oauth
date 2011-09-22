@@ -145,9 +145,9 @@
 <tr><td class="header">Internet-Draft</td><td class="header">Yahoo!</td></tr>
 <tr><td class="header">Obsoletes: <a href='http://tools.ietf.org/html/rfc5849'>5849</a> (if&nbsp;approved)</td><td class="header">D. Recordon</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">Facebook</td></tr>
-<tr><td class="header">Expires: March 24, 2012</td><td class="header">D. Hardt</td></tr>
+<tr><td class="header">Expires: March 25, 2012</td><td class="header">D. Hardt</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">Microsoft</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">September 21, 2011</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">September 22, 2011</td></tr>
 </table></td></tr></table>
 <h1><br />The OAuth 2.0 Authorization Protocol<br />draft-ietf-oauth-v2-22</h1>
 
@@ -157,7 +157,8 @@
         The OAuth 2.0 authorization protocol enables a third-party application to obtain limited
         access to an HTTP service, either on behalf of a resource owner by orchestrating an approval
         interaction between the resource owner and the HTTP service, or by allowing the third-party
-        application to obtain access on its own behalf.
+        application to obtain access on its own behalf. This specification replaces and obsoletes
+        the OAuth 1.0 protocol described in RFC 5849.
       
 </p>
 <h3>Status of this Memo</h3>
@@ -175,7 +176,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on March 24, 2012.</p>
+This Internet-Draft will expire on March 25, 2012.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -2744,7 +2745,7 @@ Extensions</h3>
 </p>
 <p>
             For example, to request an access token using a SAML 2.0 assertion grant type as
-            defined by <a class='info' href='#I-D.ietf-oauth-saml2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;saml2&#8209;bearer]<span> (</span><span class='info'>Mortimore, C., &ldquo;SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0,&rdquo; May&nbsp;2011.</span><span>)</span></a>, the client makes the
+            defined by <a class='info' href='#I-D.ietf-oauth-saml2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;saml2&#8209;bearer]<span> (</span><span class='info'>Mortimore, C., &ldquo;SAML 2.0 Bearer Assertion Profiles for OAuth 2.0,&rdquo; August&nbsp;2011.</span><span>)</span></a>, the client makes the
             following HTTP request using transport-layer security (line breaks are for display
             purposes only):
           
@@ -3123,7 +3124,7 @@ Access Token Types</h3>
 </p>
 <p>
             For example, the <tt>bearer</tt> token type defined in
-            <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; June&nbsp;2011.</span><span>)</span></a> is utilized by simply including the access
+            <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; July&nbsp;2011.</span><span>)</span></a> is utilized by simply including the access
             token string in the request:
           
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -3150,7 +3151,7 @@ Access Token Types</h3>
 </pre></div>
 <p>
           The above examples are provided for illustration purposes only. Developers are advised to
-          consult the <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; June&nbsp;2011.</span><span>)</span></a> and
+          consult the <a class='info' href='#I-D.ietf-oauth-v2-bearer'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;bearer]<span> (</span><span class='info'>Jones, M., Hardt, D., and D. Recordon, &ldquo;The OAuth 2.0 Protocol: Bearer Tokens,&rdquo; July&nbsp;2011.</span><span>)</span></a> and
           <a class='info' href='#I-D.ietf-oauth-v2-http-mac'>[I&#8209;D.ietf&#8209;oauth&#8209;v2&#8209;http&#8209;mac]<span> (</span><span class='info'>Hammer-Lahav, E., Barth, A., and B. Adida, &ldquo;HTTP Authentication: MAC Access Authentication,&rdquo; May&nbsp;2011.</span><span>)</span></a> specifications before use.
         
 </p>
@@ -4718,9 +4719,9 @@ References</h3>
 <tr><td class="author-text" valign="top"><a name="I-D.draft-hardt-oauth-01">[I-D.draft-hardt-oauth-01]</a></td>
 <td class="author-text">Hardt, D., Ed., Tom, A., Eaton, B., and Y. Goland, &ldquo;<a href="http://www.ietf.org/internet-drafts/draft-hardt-oauth-01.txt">OAuth Web Resource Authorization Profiles</a>,&rdquo; January&nbsp;2010.</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-saml2-bearer">[I-D.ietf-oauth-saml2-bearer]</a></td>
-<td class="author-text">Mortimore, C., &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-04">SAML 2.0 Bearer Assertion Grant Type Profile for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-04 (work in progress), May&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-04.txt">TXT</a>).</td></tr>
+<td class="author-text">Mortimore, C., &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-08">SAML 2.0 Bearer Assertion Profiles for OAuth 2.0</a>,&rdquo; draft-ietf-oauth-saml2-bearer-08 (work in progress), August&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-saml2-bearer-08.txt">TXT</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</a></td>
-<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-06">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-06 (work in progress), June&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-06.txt">TXT</a>, <a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-06.pdf">PDF</a>).</td></tr>
+<td class="author-text">Jones, M., Hardt, D., and D. Recordon, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08">The OAuth 2.0 Protocol: Bearer Tokens</a>,&rdquo; draft-ietf-oauth-v2-bearer-08 (work in progress), July&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-08.txt">TXT</a>, <a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-bearer-08.pdf">PDF</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-http-mac">[I-D.ietf-oauth-v2-http-mac]</a></td>
 <td class="author-text">Hammer-Lahav, E., Barth, A., and B. Adida, &ldquo;<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-00">HTTP Authentication: MAC Access Authentication</a>,&rdquo; draft-ietf-oauth-v2-http-mac-00 (work in progress), May&nbsp;2011 (<a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-http-mac-00.txt">TXT</a>, <a href="http://www.ietf.org/internet-drafts/draft-ietf-oauth-v2-http-mac-00.pdf">PDF</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="I-D.ietf-oauth-v2-threatmodel">[I-D.ietf-oauth-v2-threatmodel]</a></td>
